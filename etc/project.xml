@@ -43,7 +43,7 @@
   -->
 <project>
     <pomVersion>3</pomVersion>
-    <groupId>fortuna</groupId>
+    <groupId>mstor</groupId>
     <id>mstor</id>
     <name>mstor</name>
     <currentVersion>0.9.3</currentVersion>

@@ -332,7 +332,7 @@ public class MboxFile {
         catch (IOException ioe) {
             log.warn("Error reading message using nio. Trying random access file..", ioe);
             
-            RandomAccessFile raf = new RandomAccessFile(file,mode); 
+            RandomAccessFile raf = new RandomAccessFile(file, mode); 
             byte[] b = new byte[(int) size]; 
             getRaf().seek(position); 
             getRaf().read(b);

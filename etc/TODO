@@ -13,5 +13,6 @@
  - Work on memory-management features including
  caching and smart loading of message content
 
+ - Add support for categories (similar to labels in Gmail)
  - Fix outstanding issue with MboxFile.purge() not renaming
  old file
