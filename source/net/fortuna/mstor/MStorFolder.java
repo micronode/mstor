@@ -1,8 +1,8 @@
 /*
  * $Id$
- * 
+ *
  * Created: [6/07/2004]
- * 
+ *
  * Contributors: Paul Legato - fix for expunge() method
  *
  * Copyright (c) 2004, Ben Fortuna

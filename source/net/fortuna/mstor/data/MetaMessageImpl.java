@@ -1,6 +1,6 @@
 /*
  * $Id$
- * 
+ *
  * Created: 18/08/2004
  *
  * Copyright (c) 2004, Ben Fortuna
