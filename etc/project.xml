@@ -13,14 +13,14 @@
   - modification, are permitted provided that the following conditions
   - are met:
   -
-  - 	o Redistributions of source code must retain the above copyright
+  -     o Redistributions of source code must retain the above copyright
   - notice, this list of conditions and the following disclaimer.
   -
-  - 	o Redistributions in binary form must reproduce the above copyright
+  -     o Redistributions in binary form must reproduce the above copyright
   - notice, this list of conditions and the following disclaimer in the
   - documentation and/or other materials provided with the distribution.
   -
-  - 	o Neither the name of Ben Fortuna nor the names of any other contributors
+  -     o Neither the name of Ben Fortuna nor the names of any other contributors
   - may be used to endorse or promote products derived from this software
   - without specific prior written permission.
   -
@@ -43,24 +43,26 @@
   -->
 <project>
     <pomVersion>3</pomVersion>
+    <groupId>fortuna</groupId>
     <id>mstor</id>
     <name>mstor</name>
-    <groupId>fortuna</groupId>
-    <currentVersion>0.9.2</currentVersion>
+    <currentVersion>0.9.3</currentVersion>
+
     <organization>
         <name>Ben Fortuna</name>
-        <url>http://users.on.net/~benfortuna/journal/ben.html</url>
+        <url>http://sourceforge.net/users/fortuna</url>
         <logo/>
     </organization>
+    
     <inceptionYear>2004</inceptionYear>
     <package>net.fortuna.mstor</package>
     <logo/>
     <description>
-    	mstor is a local store provider for JavaMail. Based on the mbox format,
-	mstor facilitates the storage and retrieval of email messages in the
-	local filesystem. In addition, mstor supports additional metadata not
-	inherently supported by the mbox format, and is designed to handle large
-	mailboxes without a significant degradation in performance.
+        mstor is a local store provider for JavaMail. Based on the mbox format,
+    mstor facilitates the storage and retrieval of email messages in the
+    local filesystem. In addition, mstor supports additional metadata not
+    inherently supported by the mbox format, and is designed to handle large
+    mailboxes without a significant degradation in performance.
     </description>
     <shortDescription>mstor is a JavaMail local store provider based on the mbox email storage format</shortDescription>
     <url>http://mstor.sourceforge.net</url>
