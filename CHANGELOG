@@ -1,0 +1,36 @@
+=================
+ mstor - Changes
+=================
+
+
+0.9.2_01:
+
+ - Recompiled with JDK 1.4.2 for compatibility with pre-1.5 JVM
+
+
+0.9.2:
+
+ - Added patches to MboxFile.purge() and MstorFolder.expunge()
+ to work on Unix/Linux - provided by Paul Legato
+ 
+ - Added fix to mask/unmask patterns in message content that
+ match the "From_" line pattern - provided by Michael G. Kaiser
+ 
+ - From_ line now specifies date message is appended to the
+ mbox file (rather than "1 Jan 1970")
+ 
+ - Added support for folders that hold both messages and subfolders
+ 
+ 
+0.9.1:
+
+ - Improved meta-data implementation
+ 
+ 
+0.9:
+
+ - Initial Release
+ 
+ - Reading from/appending to mbox files
+ 
+ - Basic message caching

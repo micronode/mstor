@@ -1,0 +1,18 @@
+<!--
+   - [mstor.dtd] Created: 23/05/2004
+   -
+   - Copyright (c) 2004 Ben Fortuna, All Rights Reserved.
+   -
+   -
+   -  <!DOCTYPE mstor PUBLIC "-//Ben Fortuna//DTD mstor 0.1//EN"
+   -                   "http://mstor.sourceforge.net/dtd/mstor.dtd">
+   -->
+
+<!ELEMENT mstor (message*)>
+<!ATTLIST message id ID #REQUIRED>
+
+<!ELEMENT message (received, flags)>
+
+<!ELEMENT flags (flag*)>
+
+<!ELEMENT flag (#PCDATA)>

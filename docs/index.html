@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>mstor</title>
+	<link rel="stylesheet" href="css/default.css" type="text/css" />
+	<link rel="alternate" href="http://sourceforge.net/export/rss2_projnews.php?group_id=114229&rss_fulltext=1" type="application/rss+xml" title="mstor - News"/>
+	<meta name="author" content="Ben Fortuna"/>
+	<meta name="description" content="A JavaMail local store provider"/>
+	<meta name="keywords" content="email, mbox, JavaMail, provider, store, local, Java, Library, API"/>
+</head>
+<body>
+<table class="page"><tbody><tr><td>
+
+	<table>
+		<thead>
+			<tr>
+				<td colspan="13" class="title"><span style="background:blue;border:1px solid black;padding-right:2px"><span style="color:white">m</span>stor</span></td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td><a href="index.html">Home</a></td>
+				<td>|</td>
+				<td><a href="features.html">Features</a></td>
+				<td>|</td>
+				<td><a href="api/index.html">Documentation</a></td>
+				<td>|</td>
+				<td><a href="http://sourceforge.net/news/?group_id=114229">News</a></td>
+				<td>|</td>
+				<td><a href="http://sourceforge.net/forum/?group_id=114229">Support</a></td>
+				<td>|</td>
+				<td><a href="http://sourceforge.net/project/showfiles.php?group_id=114229">Download</a></td>
+				<td>|</td>
+				<td style="width:100%"><a href="license.html">License</a></td>
+			</tr>
+		</tbody>
+	</table>
+
+	<table id="overview">
+		<thead>
+			<tr>
+				<td>
+					Overview
+					<a href="#overview">&raquo;</a>
+				</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>
+					mstor is a local store provider for JavaMail. Based on the mbox format,
+					mstor facilitates the storage and retrieval of email messages in the
+					local filesystem. In addition, mstor supports additional metadata not
+					inherently supported by the mbox format, and is designed to handle large
+					mailboxes without a significant degradation in performance.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<table id="usage">
+		<thead>
+			<tr>
+				<td>
+					Usage
+					<a href="#usage">&raquo;</a>
+				</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>
+					To use mstor as a JavaMail provider simply include the mstor, commons-logging
+					and jdom JARs in your
+					classpath. The protocol supported by mstor is called &quot;mstor&quot;
+					and there are no authentication requirements.
+					<p/>
+					An example url for accessing an mstor mailbox might be:
+					<code>mstor:c:/mail</code> on a Microsoft Windows machine,
+					or <code>mstor:/home/me/mail</code> on a Unix box.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<table style="border: 1px solid black; background: silver">
+						<tbody>
+							<tr>
+								<th>
+									Reading messages from a local store
+								</th>
+							</tr>
+							<tr><td><pre><code>
+Session session = Session.getDefaultInstance(new Properties());
+
+Store store = session.getStore(new URLName("mstor:c:/mailbox/MyStore"));
+store.connect();
+
+// read messages from Inbox..
+Folder inbox = store.getDefaultFolder().getFolder("Inbox");
+inbox.open(Folder.READ_ONLY);
+
+Message[] messages = inbox.getMessages();
+							</code></pre></td></tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<table id="popularity">
+		<thead>
+			<tr>
+				<td>
+					Popularity
+					<a href="#popularity">&raquo;</a>
+				</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>
+					<a href="http://sourceforge.net/project/stats/?group_id=114229">
+						<img src="http://sourceforge.net/project/stats/stats_graph.png?group_id=114229&report=last_30" alt="SourceForge.net Statistics"/>
+					</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<table id="versioninfo">
+		<thead>
+			<tr>
+				<td colspan="2">
+					Version Information
+					<a href="#versioninfo">&raquo;</a>
+				</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th>0.9</th>
+				<td style="width:100%">
+					<ul>
+						<li>Initial release</li>
+					</ul>
+				</td>
+			</tr>
+			<tr>
+				<th>0.9.1</th>
+				<td style="width:100%">
+					<ul>
+						<li>Interim release</li>
+						<li>Improved metadata implementation</li>
+					</ul>
+				</td>
+			</tr>
+			<tr>
+				<th>0.9.2</th>
+				<td style="width:100%">
+					<ul>
+						<li>Interim release</li>
+						<li>Support for subfolders and messages in the same folder</li>
+					</ul>
+				</td>
+			</tr>
+			<tr style="color: silver">
+				<th>0.9.x</th>
+				<td style="width:100%">
+					<ul>
+						<li>Milestone release</li>
+					</ul>
+				</td>
+			</tr>
+			<tr style="color: silver">
+				<th>1.0</th>
+				<td style="width:100%">
+					<ul>
+						<li>Stable Release</li>
+					</ul>
+				</td>
+			</tr>
+		<tbody>
+	</table>
+
+	<table id="dependencies">
+		<thead>
+			<tr>
+				<td>
+					Dependencies
+					<a href="#dependencies">&raquo;</a>
+				</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>
+					<ul>
+						<li>
+							<a href="http://java.sun.com/products/javamail/">JavaMail</a>
+						</li>
+						<li>
+							<a href="http://jakarta.apache.org/commons/logging/">Jakarta Commons:Logging</a>
+						</li>
+						<li>
+							<a href="http://jdom.org">JDOM</a>
+						</li>
+					</ul>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<table style="width:80%;text-align:center">
+		<tbody>
+			<tr>
+				<td colspan="3" style="font-size:xx-small;text-align:center">Copyright 2004 &#169;, Ben Fortun<span style="background:red">a</span></td>
+			</tr>
+			<tr>
+				<td>
+					<a href="http://sourceforge.net"><img src="http://sourceforge.net/sflogo.php?group_id=114229&type=1" width="88" height="31" border="0" alt="SourceForge.net Logo" /></a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+</td></tr></tbody></table>
+</body>
+</html>

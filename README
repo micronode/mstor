@@ -1,0 +1,15 @@
+=======================
+ mstor - Release Notes
+=======================
+
+mstor is a local store provider for JavaMail. mstor builds on the mbox format and provides the following benefits:
+
+ * implemented using Java "New I/O" (java.nio.*) to (theoretically) provide better performance
+ 
+ * uses the mbox format for storing messages
+ 
+ * incorporates a "metafile" for each mbox folder to store additional metadata for messages (and alleviate the need to modify the mbox file)
+ 
+ * provides basic caching configuration to allow control over the performance vs. memory usage equation
+ 
+ * better performance for large mailboxes

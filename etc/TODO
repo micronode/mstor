@@ -1,0 +1,17 @@
+============
+ To-do List
+============
+
+ NOTE: system properties should be
+ added to allow suppression of metadata and dual
+ folder content support. This is to allow for direct
+ access to an existing mbox store with a guarantee
+ that the filesystem will not be modified in a
+ way that is incompatible with traditional mbox
+ implementations.
+
+ - Work on memory-management features including
+ caching and smart loading of message content
+ 
+ - Save headers to metadata to facilitate access to message
+ information without loading entire message
