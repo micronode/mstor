@@ -50,6 +50,7 @@ import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
+import java.nio.channels.Channel;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
@@ -135,6 +136,8 @@ public class MboxFile {
 
     private String mode;
 
+    private RandomAccessFile raf;
+    
     /**
      * Used to access the mbox file in a random manner.
      */
@@ -159,6 +162,18 @@ public class MboxFile {
         this.file = file;
         this.mode = mode;
     }
+    
+    /**
+     * Returns a random access file providing access to the mbox file.
+     * @return a random access file
+     * @throws FileNotFoundException
+     */
+    private RandomAccessFile getRaf() throws FileNotFoundException {
+        if (raf == null) {
+            raf = new RandomAccessFile(file, mode);
+        }
+        return raf;
+    }
 
     /**
      * Returns a channel for reading and writing to the mbox file.
@@ -167,7 +182,7 @@ public class MboxFile {
      */
     private FileChannel getChannel() throws FileNotFoundException {
         if (channel == null) {
-            channel = new RandomAccessFile(file, mode).getChannel();
+            channel = getRaf().getChannel();
         }
 
         return channel;
@@ -190,15 +205,31 @@ public class MboxFile {
 
             // read mbox file to determine the message
             // positions..
-            ByteBuffer buffer = getChannel().map(FileChannel.MapMode.READ_ONLY, 0, (getChannel().size() < DEFAULT_BUFFER_SIZE) ? getChannel().size() : DEFAULT_BUFFER_SIZE);
-
-            CharBuffer cb = decoder.decode(buffer);
+            CharSequence cs = null;
+            
+            long bufferSize = (getChannel().size() < DEFAULT_BUFFER_SIZE) ? getChannel().size() : DEFAULT_BUFFER_SIZE;
+            
+            try {
+                // temporary test..
+//                throw new IOException("Test error handling");
+                
+                ByteBuffer buffer = getChannel().map(FileChannel.MapMode.READ_ONLY, 0, bufferSize);
+                cs = decoder.decode(buffer);
+            }
+            catch (IOException ioe) {
+                log.warn("Error reading message positions using nio. Trying random access file..", ioe);
+                
+                byte[] b = new byte[(int) bufferSize]; 
+                getRaf().seek(0); 
+                getRaf().read(b);
+                cs = new String(b);
+            }
 
             // debugging..
-            log.debug("Buffer [" + cb + "]");
+            log.debug("Buffer [" + cs + "]");
 
             // check that first message is correct..
-            if (Pattern.compile(INITIAL_FROM__PATTERN, Pattern.DOTALL).matcher(cb).matches()) {
+            if (Pattern.compile(INITIAL_FROM__PATTERN, Pattern.DOTALL).matcher(cs).matches()) {
                 // debugging..
                 log.debug("Matched first message..");
 
@@ -212,7 +243,7 @@ public class MboxFile {
 
             for (;;) {
                 //Matcher matcher = fromPattern.matcher(buffer.asCharBuffer());
-                Matcher matcher = fromPattern.matcher(cb);
+                Matcher matcher = fromPattern.matcher(cs);
     
                 while (matcher.find()) {
                     // debugging..
@@ -222,15 +253,33 @@ public class MboxFile {
                     posList.add(new Long(offset + matcher.start() + 1));
                 }
                 
-                if (offset + cb.limit() >= getChannel().size()) {
+//                if (offset + cb.limit() >= getChannel().size()) {
+                if (offset + bufferSize >= getChannel().size()) {
                     break;
                 }
                 else {
                     // preserve the end of the buffer as it may contain
                     // part of a From_ pattern..
-                    offset += cb.limit() - FROM__PATTERN.length();
-                    buffer = getChannel().map(FileChannel.MapMode.READ_ONLY, offset,  (getChannel().size() - offset < DEFAULT_BUFFER_SIZE) ? getChannel().size() - offset : DEFAULT_BUFFER_SIZE);
-                    cb = decoder.decode(buffer);
+//                    offset += cb.limit() - FROM__PATTERN.length();
+                    offset += bufferSize - FROM__PATTERN.length();
+                    
+                    bufferSize = (getChannel().size() - offset < DEFAULT_BUFFER_SIZE) ? getChannel().size() - offset : DEFAULT_BUFFER_SIZE;
+                    
+                    try {
+                        // temporary test..
+//                        throw new IOException("Test error handling");
+                        
+                        ByteBuffer buffer = getChannel().map(FileChannel.MapMode.READ_ONLY, offset, bufferSize);
+                        cs = decoder.decode(buffer);
+                    }
+                    catch (IOException ioe) {
+                        log.warn("Error reading message positions using nio. Trying random access file..", ioe);
+                        
+                        byte[] b = new byte[(int) bufferSize]; 
+                        getRaf().seek(offset); 
+                        getRaf().read(b);
+                        cs = new String(b);
+                    }
                 }
             }
 
@@ -272,7 +321,23 @@ public class MboxFile {
             size = getChannel().size() - getMessagePositions()[index];
         }
 
-        CharSequence message = decoder.decode(getChannel().map(FileChannel.MapMode.READ_ONLY, position, size));
+        CharSequence message = null;
+        
+        try {
+            // temporary test..
+//            throw new IOException("Test error handling");
+            
+            message = decoder.decode(getChannel().map(FileChannel.MapMode.READ_ONLY, position, size));
+        }
+        catch (IOException ioe) {
+            log.warn("Error reading message using nio. Trying random access file..", ioe);
+            
+            RandomAccessFile raf = new RandomAccessFile(file,mode); 
+            byte[] b = new byte[(int) size]; 
+            getRaf().seek(position); 
+            getRaf().read(b);
+            message = new String(b);
+        }
 
         // remove extraneous ">" characters added to maintain integrity of mbox file..
 //        Pattern maskedFromPattern = Pattern.compile("\\n>From ");
@@ -383,9 +448,24 @@ public class MboxFile {
         // release system resources..
         close();
 
+        //// Testing..
+        File test = new File(file.getParent(), "test");
+        test.createNewFile();
+        Channel c = new RandomAccessFile(test, "rw").getChannel();
+        c.close();
+        c = null;
+        ////
+        
+        
         // delete old file..
         File tempFile = new File(file.getParent(), file.getName() + "." + System.currentTimeMillis());
-        file.renameTo(tempFile);
+        // remove any existing temporary files..
+        if (tempFile.exists()) {
+            tempFile.delete();
+        }
+        if (!test.renameTo(tempFile)) {
+            throw new IOException("Unable to rename existing file");
+        }
         // wait until exit to delete in case program terminates
         // abnormally and need to recover data..
         tempFile.deleteOnExit();
@@ -393,7 +473,7 @@ public class MboxFile {
         // rename new file..
         newFile.renameTo(file);
 
-        this.file = newFile;
+//        this.file = newFile;
     }
 
     /**
@@ -404,6 +484,10 @@ public class MboxFile {
         if (channel != null) {
             channel.close();
             channel = null;
+        }
+        if (raf != null) {
+            raf.close();
+            raf = null;
         }
     }
 
