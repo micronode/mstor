@@ -34,9 +34,10 @@ public class MboxFileTest extends TestCase {
 
         //File f = new File("d:/Mail/Eudora/In.mbx");
 //        File f = new File("c:/temp/mail/store/Inbox");
-        File f = new File("E:/development/workspace/mstor/etc/samples/samples.mbx");
+        File f = new File("f:/development/workspace/mstor/etc/samples/samples.mbx");
+//        File f = new File("c:/temp/mail/test/Copy/Copy2");
 
-        mbox = new MboxFile(f);
+        mbox = new MboxFile(f, MboxFile.READ_WRITE);
     }
 
     public void testGetMessageCount() throws IOException {
@@ -54,5 +55,9 @@ public class MboxFileTest extends TestCase {
 
             log.info("Message [" + i + "]\n=================\n" + buffer);
         }
+    }
+    
+    public void testPurge() throws IOException {
+        mbox.purge(new int[] {1});
     }
 }

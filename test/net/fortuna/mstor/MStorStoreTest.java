@@ -39,7 +39,7 @@ public class MStorStoreTest extends TestCase {
 
 //        URLName url = new URLName("mstor:c:/temp/mail/store");
 //        URLName url = new URLName("mstor:c:/temp/mail/Fastmail/archive2");
-        URLName url = new URLName("mstor:E:/development/workspace/mstor/etc/samples");
+        URLName url = new URLName("mstor:f:/development/workspace/mstor/etc/samples");
 
         store = new MStorStore(Session.getDefaultInstance(new Properties()), url);
         store.connect();
