@@ -9,11 +9,30 @@
  
  - Support for headers in metadata. This has some implications:
  
- 	* metadata is no longer created for existing mailboxes if it
- 	doesn't already exist
+ 	* metadata is only created for existing mailboxes if its
+ 	contents are changed (i.e. headers, flags, etc.)
  	
- 	* if metadata exists, headers are read from metadata (only
- 	a problem for mailboxes created prior to this change)
+ 	* if metadata exists, headers are read from metadata in an
+ 	attempt to delay loading of the entire message
+ 	
+ 	* all headers are currently save which means the metadata
+ 	file can get quite large. Will review this at a later date
+ 	
+ - metadata reworked to use message number as identifier as opposed
+ to message id. This means that:
+ 
+    * the message content no longer requires loading to get the
+    message id and obtain the metadata (sort of defeated the purpose
+    previously..)
+ 
+    * non-MIME messages can now save metadata (MIME messages don't
+    have a message id)
+    
+    * when messages are expunged other messages' metadata must have their
+    message numbers updated to stay in synch with the folder
+ 
+ - Added error handling to MboxFile to "fall back" on using a random access
+ file where java.nio fails. This seems to occur on Windows 98 consistently.
  
 
 0.9.2_01:

@@ -12,6 +12,3 @@
 
  - Work on memory-management features including
  caching and smart loading of message content
- 
- - Save headers to metadata to facilitate access to message
- information without loading entire message
