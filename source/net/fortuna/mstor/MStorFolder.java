@@ -64,7 +64,7 @@ import org.apache.commons.logging.LogFactory;
  * @author benfortuna
  */
 public class MStorFolder extends Folder {
-    
+
     private static final String DIR_EXTENSION = ".sbd";
 
     private static Log log = LogFactory.getLog(MStorFolder.class);
@@ -159,7 +159,7 @@ public class MStorFolder extends Folder {
         List folders = new ArrayList();
 
         File[] files = null;
-        
+
         if (file.isDirectory()) {
             files = file.listFiles();
         }
@@ -169,7 +169,8 @@ public class MStorFolder extends Folder {
 
         for (int i = 0; files != null && i < files.length; i++) {
             if (!files[i].getName().endsWith(MetaFolderImpl.FILE_EXTENSION)
-                    && !files[i].getName().endsWith(DIR_EXTENSION)) {
+                    && !files[i].getName().endsWith(DIR_EXTENSION)
+                    && (files[i].isDirectory() || files[i].length() == 0 || MboxFile.isValid(files[i]))) {
 //                && ((type & Folder.HOLDS_MESSAGES) == 0
 //                    || !files[i].isDirectory())) {
                 folders.add(new MStorFolder(store, files[i]));
@@ -291,7 +292,7 @@ public class MStorFolder extends Folder {
 
         File metafile = new File(file.getAbsolutePath() + MetaFolderImpl.FILE_EXTENSION);
         metafile.delete();
-        
+
         // attempt to delete the directory/file..
         return file.delete();
     }
@@ -380,7 +381,7 @@ public class MStorFolder extends Folder {
         if ((getType() & HOLDS_MESSAGES) == 0) {
             throw new MessagingException("Invalid folder type");
         }
-        
+
         if (!isOpen()) {
             return -1;
         }
