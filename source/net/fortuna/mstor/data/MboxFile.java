@@ -44,15 +44,13 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
-import java.io.Reader;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
-import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
@@ -192,10 +190,12 @@ public class MboxFile {
 
             // read mbox file to determine the message
             // positions..
-            /*
-            ByteBuffer buffer = getChannel().map(FileChannel.MapMode.READ_ONLY, 0, getChannel().size());
+            ByteBuffer buffer = getChannel().map(FileChannel.MapMode.READ_ONLY, 0, (getChannel().size() < DEFAULT_BUFFER_SIZE) ? getChannel().size() : DEFAULT_BUFFER_SIZE);
 
             CharBuffer cb = decoder.decode(buffer);
+
+            // debugging..
+            log.debug("Buffer [" + cb + "]");
 
             // check that first message is correct..
             if (Pattern.compile(INITIAL_FROM__PATTERN, Pattern.DOTALL).matcher(cb).matches()) {
@@ -205,47 +205,34 @@ public class MboxFile {
                 posList.add(new Long(0));
             }
 
-            //Pattern fromPattern = Pattern.compile("\n\r\n" + FROM_);
             Pattern fromPattern = Pattern.compile(FROM__PATTERN);
+            
+            // indicates the offset of the current buffer..
+            long offset = 0;
 
-            //Matcher matcher = fromPattern.matcher(buffer.asCharBuffer());
-            Matcher matcher = fromPattern.matcher(cb);
-
-            while (matcher.find()) {
-                // debugging..
-                log.debug("Found match at [" + matcher.start() + "]");
-
-                // add one (1) to position to account for newline..
-                posList.add(new Long(matcher.start() + 1));
+            for (;;) {
+                //Matcher matcher = fromPattern.matcher(buffer.asCharBuffer());
+                Matcher matcher = fromPattern.matcher(cb);
+    
+                while (matcher.find()) {
+                    // debugging..
+                    log.debug("Found match at [" + (offset + matcher.start()) + "]");
+    
+                    // add one (1) to position to account for newline..
+                    posList.add(new Long(offset + matcher.start() + 1));
+                }
+                
+                if (offset + cb.limit() >= getChannel().size()) {
+                    break;
+                }
+                else {
+                    // preserve the end of the buffer as it may contain
+                    // part of a From_ pattern..
+                    offset += cb.limit() - FROM__PATTERN.length();
+                    buffer = getChannel().map(FileChannel.MapMode.READ_ONLY, offset,  (getChannel().size() - offset < DEFAULT_BUFFER_SIZE) ? getChannel().size() - offset : DEFAULT_BUFFER_SIZE);
+                    cb = decoder.decode(buffer);
+                }
             }
-            */
-
-			Reader fileReader = Channels.newReader((ReadableByteChannel) getChannel(), decoder, DEFAULT_BUFFER_SIZE);
-
-			BufferedReader reader = new BufferedReader(fileReader);
-
-			// check that first message is correct..
-			String line = reader.readLine();
-
-			if (Pattern.compile(INITIAL_FROM__PATTERN, Pattern.DOTALL).matcher(line).matches()) {
-				// debugging..
-				log.debug("Matched first message..");
-
-				posList.add(new Long(0));
-			}
-
-			long position = line.length() + 1;
-
-			while ((line = reader.readLine()) != null) {
-
-				if (line.startsWith(FROM__PREFIX)) {
-					// debugging..
-					log.debug("Found match at [" + position + "]");
-
-					posList.add(new Long(position));
-				}
-				position += line.length()+1;
-			}
 
             messagePositions = new long[posList.size()];
 
@@ -429,4 +416,37 @@ public class MboxFile {
     private boolean hasFrom_Line(CharSequence message) {
         return Pattern.compile(FROM__PREFIX + ".*", Pattern.DOTALL).matcher(message).matches();
     }
+
+	/**
+	 * Indicates whether the specified file appears to be a valid mbox file. Note that
+	 * this method does not check the entire file for validity, but rather checks the
+	 * first line for indication that this is an mbox file.
+	 */
+    public static boolean isValid(File file) {
+		BufferedReader reader = null;
+
+		try {
+			reader = new BufferedReader(new FileReader(file));
+
+			// check that first message is correct..
+			String line = reader.readLine();
+
+			return Pattern.compile(INITIAL_FROM__PATTERN, Pattern.DOTALL).matcher(line).matches();
+		}
+		catch (Exception e) {
+            log.info("Not a valid mbox file [" + file + "]", e);
+		}
+		finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				}
+				catch (IOException ioe) {
+                    log.info("Error closing stream [" + file + "]", ioe);
+				}
+			}
+		}
+
+		return false;
+	}
 }
