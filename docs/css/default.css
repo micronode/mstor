@@ -32,7 +32,8 @@ table.page {
 	margin-right: auto;
 	/* background-color: white; */
 	background-color: #FEFEFE;
-	width: 90%;
+	/* width: 90%; */
+	width: 700px;
 	/* float: right; */
 	border: 1px solid black;
 }
@@ -49,4 +50,10 @@ th {
 
 .title {
 	font-size: 36pt;
+}
+
+#footer {
+	text-align: center;
+	margin: 10px auto 10px auto;
+	font-size: xx-small;
 }
