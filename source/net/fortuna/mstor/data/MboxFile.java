@@ -83,7 +83,7 @@ public class MboxFile {
     /**
      * The prefix for all "From_" lines in an mbox file.
      */
-    private static final String FROM__PREFIX = "From ";
+    public static final String FROM__PREFIX = "From ";
 
     /**
      * A pattern representing the format of the "From_" line

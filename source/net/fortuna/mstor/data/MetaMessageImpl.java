@@ -36,9 +36,12 @@
 package net.fortuna.mstor.data;
 
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Iterator;
 
 import javax.mail.Flags;
+import javax.mail.Header;
+import javax.mail.internet.InternetHeaders;
 
 import net.fortuna.mstor.MetaFolder;
 import net.fortuna.mstor.MetaMessage;
@@ -61,6 +64,8 @@ public class MetaMessageImpl implements MetaMessage {
 
     private static final String ELEMENT_FLAGS = "flags";
 
+    private static final String ELEMENT_HEADERS = "headers";
+
     private static final String ELEMENT_EXPUNGED = "expunged";
 
     private static final String ELEMENT_RECEIVED = "received";
@@ -72,9 +77,9 @@ public class MetaMessageImpl implements MetaMessage {
     private static Log log = LogFactory.getLog(MetaMessageImpl.class);
 
     private Element element;
-    
+
     private MetaFolder folder;
-    
+
     /**
      * Constructs a new meta message instance based on
      * a new JDOM element with the specified message id.
@@ -93,7 +98,7 @@ public class MetaMessageImpl implements MetaMessage {
         this.element = element;
         this.folder = folder;
     }
-    
+
     /**
      * Returns the underlying JDOM element.
      * @return a JDOM element
@@ -101,7 +106,7 @@ public class MetaMessageImpl implements MetaMessage {
     protected Element getElement() {
         return element;
     }
-    
+
     /**
      * Returns the specified child element of the
      * element associated with this meta message. If
@@ -118,11 +123,11 @@ public class MetaMessageImpl implements MetaMessage {
         }
         return child;
     }
-    
+
     public final String getMessageId() {
         return element.getAttributeValue(ATTRIBUTE_MESSAGE_ID);
     }
-    
+
     public final Date getReceived() {
         String received = getElement(ELEMENT_RECEIVED).getText();
         try {
@@ -138,7 +143,7 @@ public class MetaMessageImpl implements MetaMessage {
         Element received = getElement(ELEMENT_RECEIVED);
         received.setText(MetaDateFormat.getInstance().format(date));
     }
-    
+
     public final Date getForwarded() {
         String forwarded = getElement(ELEMENT_FORWARDED).getText();
         try {
@@ -154,7 +159,7 @@ public class MetaMessageImpl implements MetaMessage {
         Element forwarded = getElement(ELEMENT_FORWARDED);
         forwarded.setText(MetaDateFormat.getInstance().format(date));
     }
-    
+
     public final Date getReplied() {
         String replied = getElement(ELEMENT_REPLIED).getText();
         try {
@@ -170,7 +175,7 @@ public class MetaMessageImpl implements MetaMessage {
         Element replied = getElement(ELEMENT_REPLIED);
         replied.setText(MetaDateFormat.getInstance().format(date));
     }
-    
+
     public final boolean isExpunged() {
         Element expunged = getElement(ELEMENT_EXPUNGED);
         return Boolean.valueOf(expunged.getText()).booleanValue();
@@ -180,7 +185,7 @@ public class MetaMessageImpl implements MetaMessage {
         Element expunged = getElement(ELEMENT_EXPUNGED);
         expunged.setText(String.valueOf(flag));
     }
-    
+
     public final Flags getFlags() {
         Flags flags = new Flags();
         for (Iterator i = getElement(ELEMENT_FLAGS).getChildren().iterator(); i.hasNext();) {
@@ -213,7 +218,7 @@ public class MetaMessageImpl implements MetaMessage {
         }
         return flags;
     }
-    
+
     public void setFlags(final Flags flags) {
         Element flagsElement = getElement(ELEMENT_FLAGS);
         flagsElement.removeContent();
@@ -242,12 +247,47 @@ public class MetaMessageImpl implements MetaMessage {
             }
             flagsElement.addContent(flag);
         }
-        
+
         for (int i = 0; i < flags.getUserFlags().length; i++) {
             // XML node names cannot have spaces, so for now as
             // a workaround replace spaces with underscore..
             String flag = flags.getUserFlags()[i].replaceAll(" ", "_");
             flagsElement.addContent(new Element(flag));
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.MetaMessage#getHeaders()
+     */
+    public final InternetHeaders getHeaders() {
+		InternetHeaders headers = new InternetHeaders();
+
+        for (Iterator i = getElement(ELEMENT_HEADERS).getChildren().iterator(); i.hasNext();) {
+            Element header = (Element) i.next();
+            headers.addHeader(header.getName(), header.getText());
+		}
+
+		return headers;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.fortuna.mstor.MetaMessage#setHeaders(javax.mail.internet.InternetHeaders)
+	 */
+	public final void setHeaders(final InternetHeaders headers) {
+	    setHeaders(headers.getAllHeaders());
+	}
+
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.MetaMessage#setHeaders(java.util.Enumeration)
+     */
+    public final void setHeaders(final Enumeration headers) {
+        Element headersElement = getElement(ELEMENT_HEADERS);
+        headersElement.removeContent();
+        for (;headers.hasMoreElements();) {
+            Header header = (Header) headers.nextElement();
+            if (!header.getName().startsWith(MboxFile.FROM__PREFIX)) {
+                headersElement.addContent(new Element(header.getName()).setText(header.getValue()));
+            }
         }
     }
     

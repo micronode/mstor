@@ -421,7 +421,7 @@ public class MStorFolder extends Folder {
             try {
                 // javamail uses 1-based indexing for messages..
                 message = new MStorMessage(this, mbox.getMessageAsStream(index - 1), index);
-                message.setMeta(getMeta().getMessage(message));
+//                message.setMeta(getMeta().getMessage(message));
 
                 getMessageCache().put(String.valueOf(index), message);
             }
@@ -454,6 +454,7 @@ public class MStorFolder extends Folder {
                 if (meta != null) {
                     meta.setReceived(new Date());
                     meta.setFlags(messages[i].getFlags());
+                    meta.setHeaders(messages[i].getAllHeaders());
                 }
             }
             catch (IOException ioe) {

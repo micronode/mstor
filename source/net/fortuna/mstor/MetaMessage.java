@@ -37,8 +37,10 @@ package net.fortuna.mstor;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Enumeration;
 
 import javax.mail.Flags;
+import javax.mail.internet.InternetHeaders;
 
 /**
  * Implements additional metadata not supported by a MimeMessage.
@@ -50,57 +52,71 @@ public interface MetaMessage extends Serializable {
      * @return Returns the expunged.
      */
     boolean isExpunged();
-    
+
     /**
      * @param expunged The expunged to set.
      */
     void setExpunged(boolean expunged);
+
+    /**
+     * @return headers saved in metadata
+     */
+    InternetHeaders getHeaders();
+
+    /**
+     * Saves headers to metadata. Implementations may choose
+     * to only save a subset of the specified headers.
+     * @param headers headers to save to metadata
+     */
+    void setHeaders(InternetHeaders headers);
     
+    void setHeaders(Enumeration headers);
+
     /**
      * @return Returns the flags.
      */
     Flags getFlags();
-    
+
     /**
      * @param flags The flags to set.
      */
     void setFlags(Flags flags);
-    
+
     /**
      * @return Returns the forwarded.
      */
     Date getForwarded();
-    
+
     /**
      * @param forwarded The forwarded to set.
      */
     void setForwarded(Date forwarded);
-    
+
     /**
      * @return Returns the messageId.
      */
     String getMessageId();
-    
+
     /**
      * @return Returns the received.
      */
     Date getReceived();
-    
+
     /**
      * @param received The received to set.
      */
     void setReceived(Date received);
-    
+
     /**
      * @return Returns the replied.
      */
     Date getReplied();
-    
+
     /**
      * @param replied The replied to set.
      */
     void setReplied(Date replied);
-    
+
     /**
      * Returns the meta folder this message belongs to.
      * @return a meta folder

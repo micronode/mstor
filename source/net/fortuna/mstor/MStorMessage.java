@@ -58,7 +58,7 @@ import org.apache.commons.logging.LogFactory;
  * @author benfortuna
  */
 public class MStorMessage extends MimeMessage implements Serializable {
-    
+
     private static Log log = LogFactory.getLog(MStorMessage.class);
 
     /**
@@ -170,6 +170,9 @@ public class MStorMessage extends MimeMessage implements Serializable {
      * @see javax.mail.internet.MimePart#getAllHeaderLines()
      */
     public Enumeration getAllHeaderLines() throws MessagingException {
+        if (getMeta() != null) {
+			return getMeta().getHeaders().getAllHeaderLines();
+		}
         checkParse();
         return super.getAllHeaderLines();
     }
@@ -177,6 +180,9 @@ public class MStorMessage extends MimeMessage implements Serializable {
      * @see javax.mail.Part#getAllHeaders()
      */
     public Enumeration getAllHeaders() throws MessagingException {
+        if (getMeta() != null) {
+			return getMeta().getHeaders().getAllHeaders();
+		}
         checkParse();
         return super.getAllHeaders();
     }
@@ -185,6 +191,9 @@ public class MStorMessage extends MimeMessage implements Serializable {
      * @see javax.mail.internet.MimePart#getHeader(java.lang.String, java.lang.String)
      */
     public String getHeader(String arg0, String arg1) throws MessagingException {
+        if (getMeta() != null) {
+			return getMeta().getHeaders().getHeader(arg0, arg1);
+		}
         checkParse();
         return super.getHeader(arg0, arg1);
     }
@@ -192,6 +201,9 @@ public class MStorMessage extends MimeMessage implements Serializable {
      * @see javax.mail.Part#getHeader(java.lang.String)
      */
     public String[] getHeader(String arg0) throws MessagingException {
+        if (getMeta() != null) {
+			return getMeta().getHeaders().getHeader(arg0);
+		}
         checkParse();
         return super.getHeader(arg0);
     }
@@ -201,6 +213,9 @@ public class MStorMessage extends MimeMessage implements Serializable {
      */
     public Enumeration getMatchingHeaderLines(String[] arg0)
             throws MessagingException {
+        if (getMeta() != null) {
+			return getMeta().getHeaders().getMatchingHeaderLines(arg0);
+		}
         checkParse();
         return super.getMatchingHeaderLines(arg0);
     }
@@ -209,6 +224,9 @@ public class MStorMessage extends MimeMessage implements Serializable {
      */
     public Enumeration getMatchingHeaders(String[] arg0)
             throws MessagingException {
+        if (getMeta() != null) {
+			return getMeta().getHeaders().getMatchingHeaders(arg0);
+		}
         checkParse();
         return super.getMatchingHeaders(arg0);
     }
@@ -218,6 +236,9 @@ public class MStorMessage extends MimeMessage implements Serializable {
      */
     public Enumeration getNonMatchingHeaderLines(String[] arg0)
             throws MessagingException {
+        if (getMeta() != null) {
+			return getMeta().getHeaders().getNonMatchingHeaderLines(arg0);
+		}
         checkParse();
         return super.getNonMatchingHeaderLines(arg0);
     }
@@ -226,6 +247,9 @@ public class MStorMessage extends MimeMessage implements Serializable {
      */
     public Enumeration getNonMatchingHeaders(String[] arg0)
             throws MessagingException {
+        if (getMeta() != null) {
+			return getMeta().getHeaders().getNonMatchingHeaders(arg0);
+		}
         checkParse();
         return super.getNonMatchingHeaders(arg0);
     }
@@ -244,12 +268,14 @@ public class MStorMessage extends MimeMessage implements Serializable {
     protected final void setExpunged(final boolean expunged) {
         if (getMeta() != null) {
             getMeta().setExpunged(expunged);
+            /*
             try {
                 getMeta().getFolder().save();
             }
             catch (IOException ioe) {
                 log.warn("Error saving metadata [" + getMeta().getMessageId() + "]", ioe);
             }
+            */
         }
         super.setExpunged(expunged);
     }
@@ -263,41 +289,106 @@ public class MStorMessage extends MimeMessage implements Serializable {
         }
         return super.getReceivedDate();
     }
-    
+
     /* (non-Javadoc)
      * @see javax.mail.internet.MimeMessage#setFlags(javax.mail.Flags, boolean)
      */
     public final synchronized void setFlags(final Flags flags, final boolean set)
             throws MessagingException {
         super.setFlags(flags, set);
-        
+
         // copy updated flags from mime message implementation..
         if (getMeta() != null) {
-            getMeta().setFlags(getFlags());
+            getMeta().setFlags(flags);
+            /*
             try {
                 getMeta().getFolder().save();
             }
             catch (IOException ioe) {
                 log.warn("Error saving metadata [" + getMeta().getMessageId() + "]", ioe);
             }
+            */
         }
     }
-    
+
     /* (non-Javadoc)
      * @see javax.mail.Message#setFlag(javax.mail.Flags.Flag, boolean)
      */
     public void setFlag(Flag flag, boolean set) throws MessagingException {
         super.setFlag(flag, set);
-        
+
         // copy updated flags from mime message implementation..
         if (getMeta() != null) {
-            getMeta().setFlags(getFlags());
+            getMeta().setFlags(flags);
+            /*
             try {
                 getMeta().getFolder().save();
             }
             catch (IOException ioe) {
                 log.warn("Error saving metadata [" + getMeta().getMessageId() + "]", ioe);
             }
+            */
         }
+    }
+
+    public void setHeader(String s, String s1) throws MessagingException {
+        super.setHeader(s, s1);
+        if (getMeta() != null) {
+			// update metadata..
+			getMeta().setHeaders(headers);
+		}
+    }
+
+    public void addHeader(String s, String s1) throws MessagingException {
+        super.addHeader(s, s1);
+        if (getMeta() != null) {
+			// update metadata..
+			getMeta().setHeaders(headers);
+		}
+    }
+
+    public void removeHeader(String s) throws MessagingException {
+        super.removeHeader(s);
+        if (getMeta() != null) {
+			// update metadata..
+			getMeta().setHeaders(headers);
+		}
+    }
+
+    public void addHeaderLine(String s) throws MessagingException {
+        super.addHeaderLine(s);
+        if (getMeta() != null) {
+			// update metadata..
+			getMeta().setHeaders(headers);
+		}
+    }
+
+    /**
+     * Attempts to save metadata after calling <code>saveChanges</code> in the superclass.
+     */
+    public void saveChanges() throws MessagingException {
+		super.saveChanges();
+        if (getMeta() != null) {
+			try {
+				getMeta().getFolder().save();
+			}
+			catch (IOException ioe) {
+				log.warn("Error saving metadata [" + getMeta().getMessageId() + "]", ioe);
+			}
+		}
+	}
+
+	/**
+	 * Attempts to update headers in metadata after updating headers in superclass.
+	 */
+	protected void updateHeaders() throws MessagingException {
+		super.updateHeaders();
+        if (getMeta() != null) {
+			getMeta().setHeaders(headers);
+		}
+	}
+    
+    InternetHeaders getHeaders() {
+        return headers;
     }
 }

@@ -3,6 +3,19 @@
 =================
 
 
+0.9.3:
+
+ - Added validation of mbox files to MStorFolder.list()
+ 
+ - Support for headers in metadata. This has some implications:
+ 
+ 	* metadata is no longer created for existing mailboxes if it
+ 	doesn't already exist
+ 	
+ 	* if metadata exists, headers are read from metadata (only
+ 	a problem for mailboxes created prior to this change)
+ 
+
 0.9.2_01:
 
  - Recompiled with JDK 1.4.2 for compatibility with pre-1.5 JVM
