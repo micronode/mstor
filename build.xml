@@ -69,11 +69,7 @@
 		</javadoc>
 	</target>
 	
-	<target name="clean-all">
-		<delete>
-			<fileset dir="${output.dir}"/>
-            <fileset dir="${package.dir}"/>
-		</delete>
+	<target name="clean-all" depends="clean-compile, clean-package">
 	</target>
 
 	<!-- source distribution -->
