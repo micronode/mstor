@@ -94,8 +94,18 @@ public interface MetaMessage extends Serializable {
 
     /**
      * @return Returns the messageId.
-     */
+     *
     String getMessageId();
+    */
+    
+    /**
+     * Returns the 1-based number of the message the metadata is associated with. If a
+     * message number is not set it is assumed the message does not belong to a folder
+     * and thus has a message number of zero (0).
+     * @return the message number associated with this metadata, or zero if no message
+     * number is identified
+     */
+    int getMessageNumber();
 
     /**
      * @return Returns the received.

@@ -58,9 +58,9 @@ import org.jdom.Element;
  */
 public class MetaMessageImpl implements MetaMessage {
 
-    private static final String ELEMENT_MESSAGE = "message";
+    protected static final String ELEMENT_MESSAGE = "message";
 
-    private static final String ATTRIBUTE_MESSAGE_ID = "id";
+    protected static final String ATTRIBUTE_MESSAGE_NUMBER = "messageNumber";
 
     private static final String ELEMENT_FLAGS = "flags";
 
@@ -85,8 +85,8 @@ public class MetaMessageImpl implements MetaMessage {
      * a new JDOM element with the specified message id.
      * @param messageId the message id of the new meta message
      */
-    public MetaMessageImpl(final String messageId, final MetaFolder folder) {
-        this(new Element(ELEMENT_MESSAGE).setAttribute(ATTRIBUTE_MESSAGE_ID, messageId), folder);
+    public MetaMessageImpl(final int messageNumber, final MetaFolder folder) {
+        this(new Element(ELEMENT_MESSAGE).setAttribute(ATTRIBUTE_MESSAGE_NUMBER, String.valueOf(messageNumber)), folder);
     }
 
     /**
@@ -124,8 +124,16 @@ public class MetaMessageImpl implements MetaMessage {
         return child;
     }
 
-    public final String getMessageId() {
-        return element.getAttributeValue(ATTRIBUTE_MESSAGE_ID);
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.MetaMessage#getMessageNumber()
+     */
+    public final int getMessageNumber() {
+        try {
+            return Integer.parseInt(element.getAttributeValue(ATTRIBUTE_MESSAGE_NUMBER));
+        }
+        catch (Exception e) {
+            return 0;
+        }
     }
 
     public final Date getReceived() {
@@ -178,7 +186,13 @@ public class MetaMessageImpl implements MetaMessage {
 
     public final boolean isExpunged() {
         Element expunged = getElement(ELEMENT_EXPUNGED);
-        return Boolean.valueOf(expunged.getText()).booleanValue();
+        try {
+	        return Boolean.valueOf(expunged.getText()).booleanValue();
+		}
+		catch (Exception e) {
+            log.info("Invalid expunged value [" + expunged.getText() + "]", e);
+		}
+		return false;
     }
 
     public final void setExpunged(final boolean flag) {
@@ -290,7 +304,7 @@ public class MetaMessageImpl implements MetaMessage {
             }
         }
     }
-    
+
     /* (non-Javadoc)
      * @see net.fortuna.mstor.MetaMessage#getFolder()
      */

@@ -421,7 +421,7 @@ public class MStorFolder extends Folder {
             try {
                 // javamail uses 1-based indexing for messages..
                 message = new MStorMessage(this, mbox.getMessageAsStream(index - 1), index);
-//                message.setMeta(getMeta().getMessage(message));
+                message.setMeta(getMeta().getMessage(message));
 
                 getMessageCache().put(String.valueOf(index), message);
             }
@@ -512,6 +512,8 @@ public class MStorFolder extends Folder {
         catch (IOException ioe) {
             throw new MessagingException("Error purging mbox file", ioe);
         }
+        
+        getMeta().removeMessages(indices);
 
         for (int i=0; i<deleted.length; i++) {
             deleted[i].setExpunged(true);

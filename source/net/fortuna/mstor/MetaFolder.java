@@ -72,11 +72,19 @@ public interface MetaFolder {
 
     /**
      * Removes the message metadata corresponding to the
-     * specified id.
-     * @param messageId the id of the message metadata to remove
+     * specified message number.
+     * @param messageNumber the number of the message metadata to remove
      * @return the removed message metadata
      */
-    MetaMessage removeMessage(String messageId);
+    MetaMessage removeMessage(int messageNumber);
+
+    /**
+     * Removes the message metadata corresponding to the
+     * specified message numbers.
+     * @param messageNumbers an array of numbers of the message metadata to remove
+     * @return an array of the removed message metadata
+     */
+    MetaMessage[] removeMessages(int[] messageNumber);
     
     /**
      * Saves the meta data to the filesystem.

@@ -52,9 +52,9 @@ import javax.mail.internet.MimeMessage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-
 /**
  * Implementation of a message for the mstor javamail provider.
+ * 
  * @author benfortuna
  */
 public class MStorMessage extends MimeMessage implements Serializable {
@@ -125,8 +125,8 @@ public class MStorMessage extends MimeMessage implements Serializable {
      * @param arg3
      * @throws javax.mail.MessagingException
      */
-    public MStorMessage(Folder folder, InternetHeaders headers, byte[] content, int msgnum)
-            throws MessagingException {
+    public MStorMessage(Folder folder, InternetHeaders headers, byte[] content,
+            int msgnum) throws MessagingException {
         super(folder, headers, content, msgnum);
     }
 
@@ -138,7 +138,8 @@ public class MStorMessage extends MimeMessage implements Serializable {
     }
 
     /**
-     * @param meta The meta to set.
+     * @param meta
+     *            The meta to set.
      */
     public void setMeta(MetaMessage meta) {
         this.meta = meta;
@@ -149,14 +150,16 @@ public class MStorMessage extends MimeMessage implements Serializable {
                 super.setFlags(meta.getFlags(), true);
             }
             catch (MessagingException me) {
-                log.warn("Error setting flags from metadata [" + meta.getMessageId() + "]", me);
+                log.warn("Error setting flags from metadata ["
+                        + meta.getMessageNumber() + "]", me);
             }
         }
     }
 
     /**
-     * Checks if the input stream has been parsed, and if not the
-     * parse is performed.
+     * Checks if the input stream has been parsed, and if not the parse is
+     * performed.
+     * 
      * @throws MessagingException
      */
     private void checkParse() throws MessagingException {
@@ -166,95 +169,108 @@ public class MStorMessage extends MimeMessage implements Serializable {
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.internet.MimePart#getAllHeaderLines()
      */
     public Enumeration getAllHeaderLines() throws MessagingException {
-        if (getMeta() != null) {
-			return getMeta().getHeaders().getAllHeaderLines();
-		}
+        if (getMeta() != null) { return getMeta().getHeaders()
+                .getAllHeaderLines(); }
         checkParse();
         return super.getAllHeaderLines();
     }
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Part#getAllHeaders()
      */
     public Enumeration getAllHeaders() throws MessagingException {
-        if (getMeta() != null) {
-			return getMeta().getHeaders().getAllHeaders();
-		}
+        if (getMeta() != null) { return getMeta().getHeaders().getAllHeaders(); }
         checkParse();
         return super.getAllHeaders();
     }
 
-    /* (non-Javadoc)
-     * @see javax.mail.internet.MimePart#getHeader(java.lang.String, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see javax.mail.internet.MimePart#getHeader(java.lang.String,
+     *      java.lang.String)
      */
     public String getHeader(String arg0, String arg1) throws MessagingException {
-        if (getMeta() != null) {
-			return getMeta().getHeaders().getHeader(arg0, arg1);
-		}
+        if (getMeta() != null) { return getMeta().getHeaders().getHeader(arg0,
+                arg1); }
         checkParse();
         return super.getHeader(arg0, arg1);
     }
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Part#getHeader(java.lang.String)
      */
     public String[] getHeader(String arg0) throws MessagingException {
-        if (getMeta() != null) {
-			return getMeta().getHeaders().getHeader(arg0);
-		}
+        if (getMeta() != null) { return getMeta().getHeaders().getHeader(arg0); }
         checkParse();
         return super.getHeader(arg0);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.internet.MimePart#getMatchingHeaderLines(java.lang.String[])
      */
     public Enumeration getMatchingHeaderLines(String[] arg0)
             throws MessagingException {
-        if (getMeta() != null) {
-			return getMeta().getHeaders().getMatchingHeaderLines(arg0);
-		}
+        if (getMeta() != null) { return getMeta().getHeaders()
+                .getMatchingHeaderLines(arg0); }
         checkParse();
         return super.getMatchingHeaderLines(arg0);
     }
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Part#getMatchingHeaders(java.lang.String[])
      */
     public Enumeration getMatchingHeaders(String[] arg0)
             throws MessagingException {
-        if (getMeta() != null) {
-			return getMeta().getHeaders().getMatchingHeaders(arg0);
-		}
+        if (getMeta() != null) { return getMeta().getHeaders()
+                .getMatchingHeaders(arg0); }
         checkParse();
         return super.getMatchingHeaders(arg0);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.internet.MimePart#getNonMatchingHeaderLines(java.lang.String[])
      */
     public Enumeration getNonMatchingHeaderLines(String[] arg0)
             throws MessagingException {
-        if (getMeta() != null) {
-			return getMeta().getHeaders().getNonMatchingHeaderLines(arg0);
-		}
+        if (getMeta() != null) { return getMeta().getHeaders()
+                .getNonMatchingHeaderLines(arg0); }
         checkParse();
         return super.getNonMatchingHeaderLines(arg0);
     }
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Part#getNonMatchingHeaders(java.lang.String[])
      */
     public Enumeration getNonMatchingHeaders(String[] arg0)
             throws MessagingException {
-        if (getMeta() != null) {
-			return getMeta().getHeaders().getNonMatchingHeaders(arg0);
-		}
+        if (getMeta() != null) { return getMeta().getHeaders()
+                .getNonMatchingHeaders(arg0); }
         checkParse();
         return super.getNonMatchingHeaders(arg0);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.internet.MimeMessage#getContentStream()
      */
     protected InputStream getContentStream() throws MessagingException {
@@ -262,132 +278,140 @@ public class MStorMessage extends MimeMessage implements Serializable {
         return super.getContentStream();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Message#setExpunged(boolean)
      */
     protected final void setExpunged(final boolean expunged) {
         if (getMeta() != null) {
             getMeta().setExpunged(expunged);
             /*
-            try {
-                getMeta().getFolder().save();
-            }
-            catch (IOException ioe) {
-                log.warn("Error saving metadata [" + getMeta().getMessageId() + "]", ioe);
-            }
-            */
+             * try { getMeta().getFolder().save(); } catch (IOException ioe) {
+             * log.warn("Error saving metadata [" + getMeta().getMessageId() +
+             * "]", ioe); }
+             */
         }
         super.setExpunged(expunged);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.internet.MimeMessage#getReceivedDate()
      */
     public final Date getReceivedDate() throws MessagingException {
-        if (getMeta() != null) {
-            return getMeta().getReceived();
-        }
+        if (getMeta() != null) { return getMeta().getReceived(); }
         return super.getReceivedDate();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.internet.MimeMessage#setFlags(javax.mail.Flags, boolean)
      */
     public final synchronized void setFlags(final Flags flags, final boolean set)
             throws MessagingException {
         super.setFlags(flags, set);
-
         // copy updated flags from mime message implementation..
         if (getMeta() != null) {
             getMeta().setFlags(flags);
             /*
-            try {
-                getMeta().getFolder().save();
-            }
-            catch (IOException ioe) {
-                log.warn("Error saving metadata [" + getMeta().getMessageId() + "]", ioe);
-            }
-            */
+             * try { getMeta().getFolder().save(); } catch (IOException ioe) {
+             * log.warn("Error saving metadata [" + getMeta().getMessageId() +
+             * "]", ioe); }
+             */
+            // we must call explicility even if superclass also calls as
+            // superclass will make
+            // call before we have updated metadata..
+            saveChanges();
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Message#setFlag(javax.mail.Flags.Flag, boolean)
      */
     public void setFlag(Flag flag, boolean set) throws MessagingException {
         super.setFlag(flag, set);
-
         // copy updated flags from mime message implementation..
         if (getMeta() != null) {
             getMeta().setFlags(flags);
             /*
-            try {
-                getMeta().getFolder().save();
-            }
-            catch (IOException ioe) {
-                log.warn("Error saving metadata [" + getMeta().getMessageId() + "]", ioe);
-            }
-            */
+             * try { getMeta().getFolder().save(); } catch (IOException ioe) {
+             * log.warn("Error saving metadata [" + getMeta().getMessageId() +
+             * "]", ioe); }
+             */
+            // we must call explicility even if superclass also calls as
+            // superclass will make
+            // call before we have updated metadata..
+            saveChanges();
         }
     }
 
     public void setHeader(String s, String s1) throws MessagingException {
+        // looks like we need to load the message before setting headers..
+        checkParse();
         super.setHeader(s, s1);
         if (getMeta() != null) {
-			// update metadata..
-			getMeta().setHeaders(headers);
-		}
+            // update metadata..
+            getMeta().setHeaders(headers);
+        }
     }
 
     public void addHeader(String s, String s1) throws MessagingException {
         super.addHeader(s, s1);
         if (getMeta() != null) {
-			// update metadata..
-			getMeta().setHeaders(headers);
-		}
+            // update metadata..
+            getMeta().setHeaders(headers);
+        }
     }
 
     public void removeHeader(String s) throws MessagingException {
         super.removeHeader(s);
         if (getMeta() != null) {
-			// update metadata..
-			getMeta().setHeaders(headers);
-		}
+            // update metadata..
+            getMeta().setHeaders(headers);
+        }
     }
 
     public void addHeaderLine(String s) throws MessagingException {
         super.addHeaderLine(s);
         if (getMeta() != null) {
-			// update metadata..
-			getMeta().setHeaders(headers);
-		}
+            // update metadata..
+            getMeta().setHeaders(headers);
+        }
     }
 
     /**
-     * Attempts to save metadata after calling <code>saveChanges</code> in the superclass.
+     * Attempts to save metadata after calling <code>saveChanges</code> in the
+     * superclass.
      */
     public void saveChanges() throws MessagingException {
-		super.saveChanges();
+        super.saveChanges();
         if (getMeta() != null) {
-			try {
-				getMeta().getFolder().save();
-			}
-			catch (IOException ioe) {
-				log.warn("Error saving metadata [" + getMeta().getMessageId() + "]", ioe);
-			}
-		}
-	}
+            try {
+                getMeta().getFolder().save();
+            }
+            catch (IOException ioe) {
+                log.warn("Error saving metadata [" + getMeta().getMessageNumber()
+                        + "]", ioe);
+            }
+        }
+    }
 
-	/**
-	 * Attempts to update headers in metadata after updating headers in superclass.
-	 */
-	protected void updateHeaders() throws MessagingException {
-		super.updateHeaders();
+    /**
+     * Attempts to update headers in metadata after updating headers in
+     * superclass.
+     */
+    protected void updateHeaders() throws MessagingException {
+        super.updateHeaders();
         if (getMeta() != null) {
-			getMeta().setHeaders(headers);
-		}
-	}
-    
+            getMeta().setHeaders(headers);
+        }
+    }
+
     InternetHeaders getHeaders() {
         return headers;
     }
