@@ -2,95 +2,95 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>mstor</title>
-	<link rel="stylesheet" href="css/default.css" type="text/css" />
-	<link rel="alternate" href="http://sourceforge.net/export/rss2_projnews.php?group_id=114229&rss_fulltext=1" type="application/rss+xml" title="mstor - News"/>
-	<meta name="author" content="Ben Fortuna"/>
-	<meta name="description" content="A JavaMail local store provider"/>
-	<meta name="keywords" content="email, mbox, JavaMail, provider, store, local, Java, Library, API"/>
+    <title>mstor</title>
+    <link rel="stylesheet" href="css/default.css" type="text/css" />
+    <link rel="alternate" href="http://sourceforge.net/export/rss2_projnews.php?group_id=114229&rss_fulltext=1" type="application/rss+xml" title="mstor - News"/>
+    <meta name="author" content="Ben Fortuna"/>
+    <meta name="description" content="A JavaMail local store provider"/>
+    <meta name="keywords" content="email, mbox, JavaMail, provider, store, local, Java, Library, API"/>
 </head>
 <body>
 <table class="page"><tbody><tr><td>
 
-	<table>
-		<thead>
-			<tr>
-				<td colspan="13" class="title"><span style="background:#6699CC;border:1px solid black;padding-right:2px"><span style="color:white">m</span>stor</span></td>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td><a href="index.html">Home</a></td>
-				<td>::</td>
-				<td><a href="features.html">Features</a></td>
-				<td>::</td>
-				<td><a href="api/index.html">Documentation</a></td>
-				<td>::</td>
-				<td><a href="http://sourceforge.net/news/?group_id=114229">News</a></td>
-				<td>::</td>
-				<td><a href="http://sourceforge.net/forum/?group_id=114229">Support</a></td>
-				<td>::</td>
-				<td><a href="http://sourceforge.net/project/showfiles.php?group_id=114229">Download</a></td>
-				<td>::</td>
-				<td style="width:100%"><a href="license.html">License</a></td>
-			</tr>
-		</tbody>
-	</table>
+    <table>
+        <thead>
+            <tr>
+                <td colspan="13" class="title"><span style="background:#6699CC;border:1px solid black;padding-right:2px"><span style="color:white">m</span>stor</span></td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><a href="index.html">Home</a></td>
+                <td>::</td>
+                <td><a href="features.html">Features</a></td>
+                <td>::</td>
+                <td><a href="api/index.html">Documentation</a></td>
+                <td>::</td>
+                <td><a href="http://sourceforge.net/news/?group_id=114229">News</a></td>
+                <td>::</td>
+                <td><a href="http://sourceforge.net/forum/?group_id=114229">Support</a></td>
+                <td>::</td>
+                <td><a href="http://sourceforge.net/project/showfiles.php?group_id=114229">Download</a></td>
+                <td>::</td>
+                <td style="width:100%"><a href="license.html">License</a></td>
+            </tr>
+        </tbody>
+    </table>
 
-	<table id="overview">
-		<thead>
-			<tr>
-				<td>
-					Overview
-					<a href="#overview">&raquo;</a>
-				</td>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td>
-					mstor is a local store provider for JavaMail. Based on the mbox format,
-					mstor facilitates the storage and retrieval of email messages in the
-					local filesystem. In addition, mstor supports additional metadata not
-					inherently supported by the mbox format, and is designed to handle large
-					mailboxes without a significant degradation in performance.
-				</td>
-			</tr>
-		</tbody>
-	</table>
+    <table id="overview">
+        <thead>
+            <tr>
+                <td>
+                    Overview
+                    <a href="#overview">&raquo;</a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    mstor is a local store provider for JavaMail. Based on the mbox format,
+                    mstor facilitates the storage and retrieval of email messages in the
+                    local filesystem. In addition, mstor supports additional metadata not
+                    inherently supported by the mbox format, and is designed to handle large
+                    mailboxes without a significant degradation in performance.
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-	<table id="usage">
-		<thead>
-			<tr>
-				<td>
-					Usage
-					<a href="#usage">&raquo;</a>
-				</td>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td>
-					To use mstor as a JavaMail provider simply include the mstor, commons-logging
-					and jdom JARs in your
-					classpath. The protocol supported by mstor is called &quot;mstor&quot;
-					and there are no authentication requirements.
-					<p/>
-					An example url for accessing an mstor mailbox might be:
-					<code>mstor:c:/mail</code> on a Microsoft Windows machine,
-					or <code>mstor:/home/me/mail</code> on a Unix box.
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<table style="border: 1px solid black; background: silver">
-						<tbody>
-							<tr>
-								<th>
-									Reading messages from a local store
-								</th>
-							</tr>
-							<tr><td><pre><code>
+    <table id="usage">
+        <thead>
+            <tr>
+                <td>
+                    Usage
+                    <a href="#usage">&raquo;</a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    To use mstor as a JavaMail provider simply include the mstor, commons-logging
+                    and jdom JARs in your
+                    classpath. The protocol supported by mstor is called &quot;mstor&quot;
+                    and there are no authentication requirements.
+                    <p/>
+                    An example url for accessing an mstor mailbox might be:
+                    <code>mstor:c:/mail</code> on a Microsoft Windows machine,
+                    or <code>mstor:/home/me/mail</code> on a Unix box.
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table style="border: 1px solid black; background: silver">
+                        <tbody>
+                            <tr>
+                                <th>
+                                    Reading messages from a local store
+                                </th>
+                            </tr>
+                            <tr><td><pre><code>
 Session session = Session.getDefaultInstance(new Properties());
 
 Store store = session.getStore(new URLName("mstor:c:/mailbox/MyStore"));

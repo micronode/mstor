@@ -2,96 +2,96 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>mstor - Features</title>
-	<link rel="stylesheet" href="css/default.css" type="text/css" />
-	<link rel="alternate" href="http://sourceforge.net/export/rss2_projnews.php?group_id=114229&rss_fulltext=1" type="application/rss+xml" title="mstor - News"/>
-	<meta name="author" content="Ben Fortuna"/>
-	<meta name="description" content="A JavaMail local store provider"/>
-	<meta name="keywords" content="email, mbox, JavaMail, provider, store, local, Java, Library, API"/>
+    <title>mstor - Features</title>
+    <link rel="stylesheet" href="css/default.css" type="text/css" />
+    <link rel="alternate" href="http://sourceforge.net/export/rss2_projnews.php?group_id=114229&rss_fulltext=1" type="application/rss+xml" title="mstor - News"/>
+    <meta name="author" content="Ben Fortuna"/>
+    <meta name="description" content="A JavaMail local store provider"/>
+    <meta name="keywords" content="email, mbox, JavaMail, provider, store, local, Java, Library, API"/>
 </head>
 <body>
 <table class="page"><tbody><tr><td>
 
-	<table>
-		<thead>
-			<tr>
-				<td colspan="13" class="title"><span style="background:#6699CC;border:1px solid black;padding-right:2px"><span style="color:white">m</span>stor</span></td>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td><a href="index.html">Home</a></td>
-				<td>::</td>
-				<td><a href="features.html">Features</a></td>
-				<td>::</td>
-				<td><a href="api/index.html">Documentation</a></td>
-				<td>::</td>
-				<td><a href="http://sourceforge.net/news/?group_id=114229">News</a></td>
-				<td>::</td>
-				<td><a href="http://sourceforge.net/forum/?group_id=114229">Support</a></td>
-				<td>::</td>
-				<td><a href="http://sourceforge.net/project/showfiles.php?group_id=114229">Download</a></td>
-				<td>::</td>
-				<td style="width:100%"><a href="license.html">License</a></td>
-			</tr>
-		</tbody>
-	</table>
+    <table>
+        <thead>
+            <tr>
+                <td colspan="13" class="title"><span style="background:#6699CC;border:1px solid black;padding-right:2px"><span style="color:white">m</span>stor</span></td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><a href="index.html">Home</a></td>
+                <td>::</td>
+                <td><a href="features.html">Features</a></td>
+                <td>::</td>
+                <td><a href="api/index.html">Documentation</a></td>
+                <td>::</td>
+                <td><a href="http://sourceforge.net/news/?group_id=114229">News</a></td>
+                <td>::</td>
+                <td><a href="http://sourceforge.net/forum/?group_id=114229">Support</a></td>
+                <td>::</td>
+                <td><a href="http://sourceforge.net/project/showfiles.php?group_id=114229">Download</a></td>
+                <td>::</td>
+                <td style="width:100%"><a href="license.html">License</a></td>
+            </tr>
+        </tbody>
+    </table>
 
-	<table id="features">
-		<thead>
-			<tr>
-				<td>
-					Features
-					<a href="#features">&raquo;</a>
-				</td>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td>
-					mstor includes the following notable features:
-					<ul>
-						<li><a href="#mbox">Mbox-compatible</a> email storage</li>
-						<li>Support for additional <a href="#metadata">metadata</a> not inherently supported by the mbox format</li>
-						<li>Designed for handling large mailboxes without significant <a href="#performance">performance</a> or memory degradation</li>
-					</ul>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+    <table id="features">
+        <thead>
+            <tr>
+                <td>
+                    Features
+                    <a href="#features">&raquo;</a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    mstor includes the following notable features:
+                    <ul>
+                        <li><a href="#mbox">Mbox-compatible</a> email storage</li>
+                        <li>Support for additional <a href="#metadata">metadata</a> not inherently supported by the mbox format</li>
+                        <li>Designed for handling large mailboxes without significant <a href="#performance">performance</a> or memory degradation</li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-	<table id="mbox">
-		<thead>
-			<tr>
-				<td>
-					Mbox-compatible
-					<a href="#mbox">&raquo;</a>
-				</td>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td>
-					Leveraging the wide-spread use of the unofficial mbox format, mstor may also be used
-					to access email in traditional mbox folders. The modular nature of mstor's design
-					also means that additional storage formats may also be included in later versions.
-					<p/>
-					mstor now provides folders that support both messages and subfolders. In order to maintain
-					greater compatibility with other mbox implementations mstor uses a filesystem structure
-					similar to that used by
-					<a href="http://www.mozilla.org/products/thunderbird/">Mozilla Thunderbird</a>.
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<table style="border: 1px solid black; background: silver">
-						<tbody>
-							<tr>
-								<th>
-									Anatomy of mstor
-								</th>
-							</tr>
-							<tr><td><pre><code>
+    <table id="mbox">
+        <thead>
+            <tr>
+                <td>
+                    Mbox-compatible
+                    <a href="#mbox">&raquo;</a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    Leveraging the wide-spread use of the unofficial mbox format, mstor may also be used
+                    to access email in traditional mbox folders. The modular nature of mstor's design
+                    also means that additional storage formats may also be included in later versions.
+                    <p/>
+                    mstor now provides folders that support both messages and subfolders. In order to maintain
+                    greater compatibility with other mbox implementations mstor uses a filesystem structure
+                    similar to that used by
+                    <a href="http://www.mozilla.org/products/thunderbird/">Mozilla Thunderbird</a>.
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table style="border: 1px solid black; background: silver">
+                        <tbody>
+                            <tr>
+                                <th>
+                                    Anatomy of mstor
+                                </th>
+                            </tr>
+                            <tr><td><pre><code>
 An example of an mstor store filesystem structure is as follows:
 
 MyStore/                 - default folder (holds folders only)
