@@ -2,14 +2,44 @@
  mstor - Release Notes
 =======================
 
-mstor is a local store provider for JavaMail. mstor builds on the mbox format and provides the following benefits:
+ mstor is a local store provider for JavaMail. mstor builds on the mbox format and
+ provides the following benefits:
 
- * implemented using Java "New I/O" (java.nio.*) to (theoretically) provide better performance
+ * implemented using Java "New I/O" (java.nio.*) to (theoretically) provide better
+ performance
  
  * uses the mbox format for storing messages
  
- * incorporates a "metafile" for each mbox folder to store additional metadata for messages (and alleviate the need to modify the mbox file)
+ * incorporates a "metafile" for each mbox folder to store additional metadata for
+ messages (and alleviate the need to modify the mbox file)
  
- * provides basic caching configuration to allow control over the performance vs. memory usage equation
+ * provides basic caching configuration to allow control over the performance vs.
+ memory usage equation
  
  * better performance for large mailboxes
+
+ Detailed descriptions of changes included in each release may be found
+ in the CHANGELOG.
+
+
+====================
+ Mbox File Encoding
+====================
+
+ The mbox format is essentially a concatenation of RFC822 messages with an
+ additional "From_" line inserted at the start of each message. Instances of
+ "From_" within the message body are also escaped with a preceding ">" character.
+ 
+ Because mbox is just RFC822 messages, file encoding should always be "US-ASCII".
+ 
+ Although mstor doesn't encode/decode message content (it is assumed appended
+ messages are valid RFC822 messages), we still need to use an encoding to
+ interpret message headers and create the "From_" line, for which "US-ASCII" is
+ used.
+ 
+ It is possible however, to override the mbox file encoding used by specifying the
+ following system property:
+ 
+     -Dmstor.mbox.encoding=<some_encoding>
+ 
+ 

@@ -446,7 +446,7 @@ public class MStorFolder extends Folder {
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
                 messages[i].writeTo(out);
 
-                mbox.appendMessage(out.toString());
+                mbox.appendMessage(out.toByteArray());
 
                 // create metadata..
                 MetaMessage meta = getMeta().getMessage(messages[i]);

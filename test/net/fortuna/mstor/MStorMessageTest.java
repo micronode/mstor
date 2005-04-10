@@ -38,7 +38,7 @@ public class MStorMessageTest extends TestCase {
         super.setUp();
         
 //        URLName url = new URLName("mstor:c:/temp/mail/Aardvark/store");
-        URLName url = new URLName("mstor:c:/temp/mail/test");
+        URLName url = new URLName("mstor:c:/temp/mstor_test");
         
         store = new MStorStore(Session.getDefaultInstance(new Properties()), url);
         store.connect();

@@ -2,6 +2,21 @@
  mstor - Changes
 =================
 
+0.9.4:
+
+ - Reimplemented aspects of MboxFile to reduce the amount of encoding/decoding
+ performed. Now decoding is only used to determine message positions and check
+ for existing "From_" lines. Message data is now returned in raw byte format.
+ Encoding is now only used for adding "From_" lines to appended messages, with
+ message data written in raw bytes.
+ 
+ - Added system property "mstor.mbox.encoding" to specify a non-default file
+ encoding.
+ 
+ - Removed functionality to strip "From " escaping when returning messages. It
+ seems that this cannot be performed reliably (various references on the Web)
+ and until confirmed otherwise I thought it best to disable this feature.
+
 
 0.9.3:
 

@@ -7,28 +7,28 @@
  *  Michael G. Kaiser - add/strip of ">" characters from message content
  *  matching "From_" pattern (appendMessage()/getMessage())
  *
- * Copyright (c) 2004, Ben Fortuna
+ * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 	o Redistributions of source code must retain the above copyright
+ *  o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
  *
- * 	o Redistributions in binary form must reproduce the above copyright
+ *  o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
  *
- * 	o Neither the name of Ben Fortuna nor the names of any other contributors
+ *  o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -40,7 +40,7 @@
 package net.fortuna.mstor.data;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -50,7 +50,6 @@ import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
-import java.nio.channels.Channel;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
@@ -71,7 +70,14 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Provides access to an mbox-formatted file.
- * @author benfortuna
+ * To read an mbox file using a non-standard file encoding you may specify
+ * the following system property:
+ * <pre>
+ *      -Dmstor.mbox.encoding=&lt;some_encoding&gt;
+ * </pre>
+ * If no encoding system property is specified the default file encoding
+ * will be used.
+ * @author Ben Fortuna
  */
 public class MboxFile {
 
@@ -116,7 +122,8 @@ public class MboxFile {
 
     // Charset and decoder for ISO-8859-15
 //    private static Charset charset = Charset.forName("ISO-8859-1");
-    private static Charset charset = Charset.forName(System.getProperty("file.encoding"));
+//    private static Charset charset = Charset.forName(System.getProperty("mstor.mbox.encoding", System.getProperty("file.encoding")));
+    private static Charset charset = Charset.forName(System.getProperty("mstor.mbox.encoding", "US-ASCII"));
 
     private static CharsetDecoder decoder = charset.newDecoder();
 
@@ -184,10 +191,30 @@ public class MboxFile {
         if (channel == null) {
             channel = getRaf().getChannel();
         }
-
         return channel;
     }
-
+    
+    /**
+     * Reads a sequence of bytes using a java nio channel. If the java nio
+     * approach fails, resort to random access file.
+     * @param position the position in the file to read from
+     * @param size the number of bytes to read
+     * @return a byte buffer containing the bytes read
+     * @throws IOException
+     */
+    private ByteBuffer readBytes(final long position, final int size) throws IOException {
+        try {
+//          throw new IOException("Test error handling");
+            return getChannel().map(FileChannel.MapMode.READ_ONLY, position, size);
+        }
+        catch (IOException ioe) {
+           log.warn("Error reading bytes using nio", ioe);
+           getRaf().seek(position);
+           byte[] buf = new byte[size];
+           getRaf().read(buf);
+           return ByteBuffer.wrap(buf);
+        }
+    }
 
     /**
      * Returns an initialised array of file positions
@@ -202,28 +229,14 @@ public class MboxFile {
 
             // debugging..
             log.debug("Channel size [" + getChannel().size() + "] bytes");
+            
+            long bufferSize = Math.min(getChannel().size(), DEFAULT_BUFFER_SIZE);
 
-            // read mbox file to determine the message
-            // positions..
+            // read mbox file to determine the message positions..
             CharSequence cs = null;
-            
-            long bufferSize = (getChannel().size() < DEFAULT_BUFFER_SIZE) ? getChannel().size() : DEFAULT_BUFFER_SIZE;
-            
-            try {
-                // temporary test..
-//                throw new IOException("Test error handling");
-                
-                ByteBuffer buffer = getChannel().map(FileChannel.MapMode.READ_ONLY, 0, bufferSize);
-                cs = decoder.decode(buffer);
-            }
-            catch (IOException ioe) {
-                log.warn("Error reading message positions using nio. Trying random access file..", ioe);
-                
-                byte[] b = new byte[(int) bufferSize]; 
-                getRaf().seek(0); 
-                getRaf().read(b);
-                cs = new String(b);
-            }
+
+            ByteBuffer buffer = readBytes(0, (int) bufferSize);
+            cs = decoder.decode(buffer);
 
             // debugging..
             log.debug("Buffer [" + cs + "]");
@@ -263,23 +276,10 @@ public class MboxFile {
 //                    offset += cb.limit() - FROM__PATTERN.length();
                     offset += bufferSize - FROM__PATTERN.length();
                     
-                    bufferSize = (getChannel().size() - offset < DEFAULT_BUFFER_SIZE) ? getChannel().size() - offset : DEFAULT_BUFFER_SIZE;
-                    
-                    try {
-                        // temporary test..
-//                        throw new IOException("Test error handling");
-                        
-                        ByteBuffer buffer = getChannel().map(FileChannel.MapMode.READ_ONLY, offset, bufferSize);
-                        cs = decoder.decode(buffer);
-                    }
-                    catch (IOException ioe) {
-                        log.warn("Error reading message positions using nio. Trying random access file..", ioe);
-                        
-                        byte[] b = new byte[(int) bufferSize]; 
-                        getRaf().seek(offset); 
-                        getRaf().read(b);
-                        cs = new String(b);
-                    }
+                    bufferSize = Math.min(getChannel().size() - offset, DEFAULT_BUFFER_SIZE);
+
+                    buffer = readBytes(offset, (int) bufferSize);
+                    cs = decoder.decode(buffer);
                 }
             }
 
@@ -291,13 +291,11 @@ public class MboxFile {
                 messagePositions[count] = ((Long) i.next()).longValue();
             }
         }
-
         return messagePositions;
     }
 
     /**
-     * Returns the total number of messages in the mbox
-     * file.
+     * Returns the total number of messages in the mbox file.
      * @return an int
      */
     public int getMessageCount() throws IOException {
@@ -305,12 +303,11 @@ public class MboxFile {
     }
 
     /**
-     * Returns a CharSequence containing the data for
-     * the message at the specified index.
-     * @param index the index of the message to retrieve
-     * @return a CharSequence
+     * Opens an input stream to the specified message data.
+     * @param index the index of the message to open a stream to
+     * @return an input stream
      */
-    public CharSequence getMessage(final int index) throws IOException {
+    public final InputStream getMessageAsStream(final int index) throws IOException {
         long position = getMessagePositions()[index];
         long size;
 
@@ -321,23 +318,50 @@ public class MboxFile {
             size = getChannel().size() - getMessagePositions()[index];
         }
 
-        CharSequence message = null;
-        
-        try {
-            // temporary test..
-//            throw new IOException("Test error handling");
-            
-            message = decoder.decode(getChannel().map(FileChannel.MapMode.READ_ONLY, position, size));
+        final ByteBuffer buffer = readBytes(position, (int) size);
+
+        return new InputStream() {
+            /* (non-Javadoc)
+             * @see java.io.InputStream#read()
+             */
+            public synchronized int read() throws IOException {
+                if (!buffer.hasRemaining()) {
+                    return -1;
+                }
+                return buffer.get();
+            }
+    
+            /* (non-Javadoc)
+             * @see java.io.InputStream#read(byte[], int, int)
+             */
+            public synchronized int read(final byte[] bytes, final int offset, final int length) throws IOException {
+                int read = Math.min(length, buffer.remaining());
+                buffer.get(bytes, offset, read);
+                return read;
+            }
+        };
+    }
+
+    /**
+     * Convenience method that returns a message as a byte array
+     * containing the data for the message at the specified index.
+     * @param index the index of the message to retrieve
+     * @return a byte array
+     */
+    public byte[] getMessage(final int index) throws IOException {
+        /*
+        long position = getMessagePositions()[index];
+        long size;
+
+        if (index < getMessagePositions().length - 1) {
+            size = getMessagePositions()[index + 1] - getMessagePositions()[index];
         }
-        catch (IOException ioe) {
-            log.warn("Error reading message using nio. Trying random access file..", ioe);
-            
-            RandomAccessFile raf = new RandomAccessFile(file, mode); 
-            byte[] b = new byte[(int) size]; 
-            getRaf().seek(position); 
-            getRaf().read(b);
-            message = new String(b);
+        else {
+            size = getChannel().size() - getMessagePositions()[index];
         }
+
+        ByteBuffer buffer = readBytes(position, (int) size);
+        CharSequence message = decoder.decode(buffer);
 
         // remove extraneous ">" characters added to maintain integrity of mbox file..
 //        Pattern maskedFromPattern = Pattern.compile("\\n>From ");
@@ -349,19 +373,15 @@ public class MboxFile {
             matcher.reset();
             message = matcher.replaceAll(FROM__PATTERN);
         }
-
         return message;
-    }
-
-    /**
-     * Opens an input stream to the specified message
-     * data.
-     * @param index the index of the message to open
-     * a stream to
-     * @return an input stream
-     */
-    public InputStream getMessageAsStream(int index) throws IOException {
-        return new ByteArrayInputStream(getMessage(index).toString().getBytes());
+        */
+        InputStream in = getMessageAsStream(index);
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        int read;
+        while ((read = in.read()) != -1) {
+            bout.write(read);
+        }
+        return bout.toByteArray();
     }
 
     /**
@@ -369,7 +389,7 @@ public class MboxFile {
      * mbox file.
      * @param message
      */
-    public final void appendMessage(final CharSequence message) throws IOException {
+    public final void appendMessage(final byte[] message) throws IOException {
         appendMessage(message, getChannel());
     }
 
@@ -380,9 +400,10 @@ public class MboxFile {
      * @param channel
      * @throws IOException
      */
-    private void appendMessage(final CharSequence message, final FileChannel channel) throws IOException {
+    private void appendMessage(final byte[] message, final FileChannel channel) throws IOException {
 //        ByteBuffer buffer = ByteBuffer.allocate(message.length());
 
+        /*
         // copy message to avoid modifying method arguments directly..
         CharSequence newMessage = message.toString();
 
@@ -402,8 +423,22 @@ public class MboxFile {
             matcher.reset();
             newMessage = matcher.replaceAll(MASKED_FROM__PATTERN);
         }
-
-        if (!hasFrom_Line(newMessage)) {
+        */
+        
+        ByteBuffer buffer = ByteBuffer.wrap(MboxEncoder.encode(message));
+        CharBuffer decoded = decoder.decode(buffer);
+        
+        // debugging..
+        if (log.isDebugEnabled()) {
+            log.debug("Appending message [" + decoded + "]");
+        }
+        
+        if (!hasFrom_Line(decoded)) {
+            // debugging..
+            if (log.isDebugEnabled()) {
+                log.debug("No From_ line found - inserting..");
+            }
+            
             // if not first message add required newlines..
             if (channel.size() > 0) {
                 channel.write(encoder.encode(CharBuffer.wrap("\n\n")), channel.size());
@@ -412,8 +447,8 @@ public class MboxFile {
             channel.write(encoder.encode(CharBuffer.wrap(FROM__PREFIX + "- " + from_DateFormat.format(new Date()) + "\n")), channel.size());
 //            encoder.encode(CharBuffer.wrap(DEFAULT_FROM__LINE), buffer, false);
         }
-
-        channel.write(encoder.encode(CharBuffer.wrap(newMessage)), channel.size());
+        buffer.rewind();
+        channel.write(buffer, channel.size());
 //        encoder.encode(CharBuffer.wrap(message), buffer, true);
 //        encoder.flush(buffer);
 
@@ -430,24 +465,23 @@ public class MboxFile {
 
         FileChannel newChannel = new FileOutputStream(newFile).getChannel();
 
-        loop: for (int i=0; i<getMessagePositions().length; i++) {
-            for (int j=0; j<msgnums.length; j++) {
+        loop: for (int i = 0; i < getMessagePositions().length; i++) {
+            for (int j = 0; j < msgnums.length; j++) {
                 if (msgnums[j] == i) {
                     // don't save message to file if in purge list..
                     continue loop;
                 }
             }
-
             // append current message to new file..
             appendMessage(getMessage(i), newChannel);
         }
-
         // ensure new file is properly written..
         newChannel.close();
 
         // release system resources..
         close();
 
+        /*
         //// Testing..
         File test = new File(file.getParent(), "test");
         test.createNewFile();
@@ -455,15 +489,20 @@ public class MboxFile {
         c.close();
         c = null;
         ////
-        
-        
+        */
         // delete old file..
         File tempFile = new File(file.getParent(), file.getName() + "." + System.currentTimeMillis());
         // remove any existing temporary files..
         if (tempFile.exists()) {
             tempFile.delete();
         }
-        if (!test.renameTo(tempFile)) {
+        
+        // debugging..
+        if (log.isDebugEnabled()) {
+            log.debug("Renaming [" + file + "] to [" + tempFile + "]");
+        }
+        
+        if (!file.renameTo(tempFile)) {
             throw new IOException("Unable to rename existing file");
         }
         // wait until exit to delete in case program terminates

@@ -36,7 +36,7 @@ public class MStorFolderTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
-        URLName url = new URLName("mstor:c:/temp/mail/test");
+        URLName url = new URLName("mstor:c:/temp/mstor_test");
 //        URLName url = new URLName("mstor:E:/development/workspace/mstor/etc/samples");
 
         store = new MStorStore(Session.getDefaultInstance(new Properties()), url);
