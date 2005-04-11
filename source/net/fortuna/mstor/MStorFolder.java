@@ -26,7 +26,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -50,7 +50,6 @@ import javax.mail.Folder;
 import javax.mail.FolderNotFoundException;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Store;
 
 import net.fortuna.mstor.data.MboxFile;
 import net.fortuna.mstor.data.MetaFolderImpl;
@@ -102,16 +101,28 @@ public class MStorFolder extends Folder {
      * A cache for messages.
      */
     private Map messageCache;
+    
+    private MStorStore mStore;
 
     /**
-     * Constructor.
+     * Constructs a new mstor folder with metadata enabled.
      * @param store
+     * @param file
      */
-    public MStorFolder(Store store, File file) {
+    public MStorFolder(MStorStore store, File file) {
+        this(store, file, true);
+    }
+
+    /**
+     * Constructs a new mstor folder instance.
+     * @param store
+     * @param file
+     * @param metaEnabled
+     */
+    public MStorFolder(MStorStore store, File file, final boolean metaEnabled) {
         super(store);
-
+        this.mStore = store;
         this.file = file;
-
         if (file.isDirectory()) {
             type = HOLDS_FOLDERS;
         }
@@ -138,7 +149,7 @@ public class MStorFolder extends Folder {
      * @see javax.mail.Folder#getParent()
      */
     public Folder getParent() throws MessagingException {
-        return new MStorFolder(store, file.getParentFile());
+        return new MStorFolder(mStore, file.getParentFile());
     }
 
     /* (non-Javadoc)
@@ -173,7 +184,7 @@ public class MStorFolder extends Folder {
                     && (files[i].isDirectory() || files[i].length() == 0 || MboxFile.isValid(files[i]))) {
 //                && ((type & Folder.HOLDS_MESSAGES) == 0
 //                    || !files[i].isDirectory())) {
-                folders.add(new MStorFolder(store, files[i]));
+                folders.add(new MStorFolder(mStore, files[i]));
             }
         }
 
@@ -265,7 +276,7 @@ public class MStorFolder extends Folder {
 
         // we need to initialise the metadata name in case
         // the folder does not exist..
-        return new MStorFolder(store, file);
+        return new MStorFolder(mStore, file);
     }
 
     /* (non-Javadoc)
@@ -421,8 +432,9 @@ public class MStorFolder extends Folder {
             try {
                 // javamail uses 1-based indexing for messages..
                 message = new MStorMessage(this, mbox.getMessageAsStream(index - 1), index);
-                message.setMeta(getMeta().getMessage(message));
-
+                if (mStore.isMetaEnabled()) {
+                    message.setMeta(getMeta().getMessage(message));
+                }
                 getMessageCache().put(String.valueOf(index), message);
             }
             catch (IOException ioe) {
@@ -433,28 +445,42 @@ public class MStorFolder extends Folder {
         return message;
     }
 
+    /**
+     * Appends the specified messages to this folder.
+     * NOTE: The specified message array is destroyed upon processing
+     * to alleviate memory concerns with large messages. You should ensure
+     * the messages specified in this array are referenced elsewhere if you
+     * want to retain them.
+     */
     /* (non-Javadoc)
      * @see javax.mail.Folder#appendMessages(javax.mail.Message[])
      */
-    public void appendMessages(Message[] messages) throws MessagingException {
+    public final void appendMessages(final Message[] messages) throws MessagingException {
         if (!exists()) {
             throw new FolderNotFoundException(this);
         }
 
+        Date received = new Date();
+        ByteArrayOutputStream out = new ByteArrayOutputStream(1024);
+        
         for (int i=0; i<messages.length; i++) {
             try {
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                out.reset();
                 messages[i].writeTo(out);
+                // prune messages as we go to allow for garbage
+                // collection..
+                messages[i] = null;
 
                 mbox.appendMessage(out.toByteArray());
 
                 // create metadata..
-                MetaMessage meta = getMeta().getMessage(messages[i]);
-
-                if (meta != null) {
-                    meta.setReceived(new Date());
-                    meta.setFlags(messages[i].getFlags());
-                    meta.setHeaders(messages[i].getAllHeaders());
+                if (mStore.isMetaEnabled()) {
+                    MetaMessage meta = getMeta().getMessage(messages[i]);
+                    if (meta != null) {
+                        meta.setReceived(received);
+                        meta.setFlags(messages[i].getFlags());
+                        meta.setHeaders(messages[i].getAllHeaders());
+                    }
                 }
             }
             catch (IOException ioe) {
@@ -464,11 +490,13 @@ public class MStorFolder extends Folder {
         }
 
         // save metadata..
-        try {
-            getMeta().save();
-        }
-        catch (IOException ioe) {
-            log.error("Error ocurred saving metadata", ioe);
+        if (mStore.isMetaEnabled()) {
+            try {
+                getMeta().save();
+            }
+            catch (IOException ioe) {
+                log.error("Error ocurred saving metadata", ioe);
+            }
         }
     }
 
@@ -513,7 +541,9 @@ public class MStorFolder extends Folder {
             throw new MessagingException("Error purging mbox file", ioe);
         }
         
-        getMeta().removeMessages(indices);
+        if (mStore.isMetaEnabled()) {
+            getMeta().removeMessages(indices);
+        }
 
         for (int i=0; i<deleted.length; i++) {
             deleted[i].setExpunged(true);
