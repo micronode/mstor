@@ -10,21 +10,21 @@
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 	o Redistributions of source code must retain the above copyright
+ *  o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
  *
- * 	o Redistributions in binary form must reproduce the above copyright
+ *  o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
  *
- * 	o Neither the name of Ben Fortuna nor the names of any other contributors
+ *  o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -44,14 +44,20 @@ import javax.mail.Store;
 import javax.mail.URLName;
 
 /**
- * Implementation of a javamail store for the mstor
- * provider.
- * @author benfortuna
+ * Implementation of a javamail store for the mstor provider.
+ * Metadata is enabled by default, however it may be disabled by specifying
+ * the following session property:
+ * <pre>
+ *      mstor.meta.enabled=false
+ * </pre>
+ * @author Ben Fortuna
  */
 public class MStorStore extends Store {
 
     private static final String INBOX = "Inbox";
 
+    private boolean metaEnabled;
+    
     /**
      * Constructor.
      * @param session
@@ -59,6 +65,13 @@ public class MStorStore extends Store {
      */
     public MStorStore(final Session session, final URLName url) {
         super(session, url);
+        try {
+            metaEnabled = new Boolean(session.getProperty("mstor.meta.enabled")).booleanValue();
+        }
+        catch (Exception e) {
+            // enable metadata by default..
+            metaEnabled = true;
+        }
     }
 
     /* (non-Javadoc)
@@ -105,5 +118,17 @@ public class MStorStore extends Store {
     protected boolean protocolConnect(String arg0, int arg1, String arg2,
             String arg3) throws MessagingException {
         return true;
+    }
+    /**
+     * @return Returns the metaEnabled.
+     */
+    public final boolean isMetaEnabled() {
+        return metaEnabled;
+    }
+    /**
+     * @param metaEnabled The metaEnabled to set.
+     */
+    public final void setMetaEnabled(boolean metaEnabled) {
+        this.metaEnabled = metaEnabled;
     }
 }
