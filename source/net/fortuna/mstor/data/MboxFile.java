@@ -48,6 +48,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
+import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.FileChannel;
@@ -55,6 +56,8 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.CodingErrorAction;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -64,6 +67,8 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import net.fortuna.mstor.util.Cache;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -121,9 +126,9 @@ public class MboxFile {
     }
 
     // Charset and decoder for ISO-8859-15
-//    private static Charset charset = Charset.forName("ISO-8859-1");
 //    private static Charset charset = Charset.forName(System.getProperty("mstor.mbox.encoding", System.getProperty("file.encoding")));
-    private static Charset charset = Charset.forName(System.getProperty("mstor.mbox.encoding", "US-ASCII"));
+//    private static Charset charset = Charset.forName(System.getProperty("mstor.mbox.encoding", "US-ASCII"));
+    private static Charset charset = Charset.forName(System.getProperty("mstor.mbox.encoding", "ISO-8859-1"));
 
     private static CharsetDecoder decoder = charset.newDecoder();
 
@@ -131,9 +136,40 @@ public class MboxFile {
 
     static {
         encoder.onUnmappableCharacter(CodingErrorAction.REPLACE);
+//        decoder.onMalformedInput(CodingErrorAction.REPLACE);
     }
 
     private static Log log = LogFactory.getLog(MboxFile.class);
+    
+    private class BufferInputStream extends InputStream {
+        private ByteBuffer buffer;
+        
+        /**
+         * @param buffer
+         */
+        public BufferInputStream(final ByteBuffer buffer) {
+            this.buffer = buffer;
+        }
+        
+        /* (non-Javadoc)
+         * @see java.io.InputStream#read()
+         */
+        public synchronized int read() throws IOException {
+            if (!buffer.hasRemaining()) {
+                return -1;
+            }
+            return buffer.get();
+        }
+
+        /* (non-Javadoc)
+         * @see java.io.InputStream#read(byte[], int, int)
+         */
+        public synchronized int read(final byte[] bytes, final int offset, final int length) throws IOException {
+            int read = Math.min(length, buffer.remaining());
+            buffer.get(bytes, offset, read);
+            return read;
+        }
+    }
 
     /**
      * Used primarily to provide information about
@@ -154,6 +190,12 @@ public class MboxFile {
      * Tracks all message positions within the mbox file.
      */
     private long[] messagePositions;
+    
+    /**
+     * A cache used to store mapped regions of the mbox file
+     * representing message data.
+     */
+    private Cache messageCache;
 
     /**
      * Constructor.
@@ -202,7 +244,31 @@ public class MboxFile {
      * @return a byte buffer containing the bytes read
      * @throws IOException
      */
-    private ByteBuffer readBytes(final long position, final int size) throws IOException {
+    private ByteBuffer readBytes(final long position, final ByteBuffer buffer) throws IOException {
+        try {
+//            throw new IOException("Test error handling..");
+            getChannel().position(position);
+            getChannel().read(buffer);
+        }
+        catch (IOException ioe) {
+           log.warn("Error reading bytes using nio", ioe);
+           getRaf().seek(position);
+           byte[] buf = new byte[buffer.capacity()];
+           getRaf().read(buf);
+           buffer.put(buf);
+        }
+        return buffer;
+    }
+    
+    /**
+     * Maps a sequence of bytes using java nio. If the java nio
+     * approach fails, resort to random access file to "simulate" the mapping.
+     * @param position the position in the file to read from
+     * @param size the number of bytes to read
+     * @return a byte buffer containing the bytes read
+     * @throws IOException
+     */
+    private ByteBuffer mapBytes(final long position, final int size) throws IOException {
         try {
 //          throw new IOException("Test error handling");
             return getChannel().map(FileChannel.MapMode.READ_ONLY, position, size);
@@ -230,12 +296,16 @@ public class MboxFile {
             // debugging..
             log.debug("Channel size [" + getChannel().size() + "] bytes");
             
-            long bufferSize = Math.min(getChannel().size(), DEFAULT_BUFFER_SIZE);
+            int bufferSize = (int) Math.min(getChannel().size(), DEFAULT_BUFFER_SIZE);
 
             // read mbox file to determine the message positions..
             CharSequence cs = null;
 
-            ByteBuffer buffer = readBytes(0, (int) bufferSize);
+//            ByteBuffer buffer = readBytes(0, (int) bufferSize);
+            ByteBuffer buffer = ByteBuffer.allocateDirect(bufferSize);
+            readBytes(0, buffer);
+            buffer.flip();
+            
             cs = decoder.decode(buffer);
 
             // debugging..
@@ -276,9 +346,12 @@ public class MboxFile {
 //                    offset += cb.limit() - FROM__PATTERN.length();
                     offset += bufferSize - FROM__PATTERN.length();
                     
-                    bufferSize = Math.min(getChannel().size() - offset, DEFAULT_BUFFER_SIZE);
+                    bufferSize = (int) Math.min(getChannel().size() - offset, DEFAULT_BUFFER_SIZE);
 
-                    buffer = readBytes(offset, (int) bufferSize);
+//                    buffer = readBytes(offset, (int) bufferSize);
+                    buffer.clear();
+                    readBytes(offset, buffer);
+                    buffer.flip();
                     cs = decoder.decode(buffer);
                 }
             }
@@ -301,6 +374,16 @@ public class MboxFile {
     public int getMessageCount() throws IOException {
         return getMessagePositions().length;
     }
+    
+    /**
+     * Returns the message cache.
+     */
+    private Cache getMessageCache() {
+        if (messageCache == null) {
+            messageCache = new Cache();
+        }
+        return messageCache;
+    }
 
     /**
      * Opens an input stream to the specified message data.
@@ -308,38 +391,24 @@ public class MboxFile {
      * @return an input stream
      */
     public final InputStream getMessageAsStream(final int index) throws IOException {
-        long position = getMessagePositions()[index];
-        long size;
+        ByteBuffer buffer = (ByteBuffer) getMessageCache().get(new Integer(index));
+        
+        if (buffer == null) {
+            long position = getMessagePositions()[index];
+            long size;
 
-        if (index < getMessagePositions().length - 1) {
-            size = getMessagePositions()[index + 1] - getMessagePositions()[index];
-        }
-        else {
-            size = getChannel().size() - getMessagePositions()[index];
-        }
-
-        final ByteBuffer buffer = readBytes(position, (int) size);
-
-        return new InputStream() {
-            /* (non-Javadoc)
-             * @see java.io.InputStream#read()
-             */
-            public synchronized int read() throws IOException {
-                if (!buffer.hasRemaining()) {
-                    return -1;
-                }
-                return buffer.get();
+            if (index < getMessagePositions().length - 1) {
+                size = getMessagePositions()[index + 1] - getMessagePositions()[index];
             }
-    
-            /* (non-Javadoc)
-             * @see java.io.InputStream#read(byte[], int, int)
-             */
-            public synchronized int read(final byte[] bytes, final int offset, final int length) throws IOException {
-                int read = Math.min(length, buffer.remaining());
-                buffer.get(bytes, offset, read);
-                return read;
+            else {
+                size = getChannel().size() - getMessagePositions()[index];
             }
-        };
+
+            buffer = mapBytes(position, (int) size);
+            // add buffer to cache..
+            getMessageCache().put(new Integer(index), buffer);
+        }
+        return new BufferInputStream(buffer);
     }
 
     /**
@@ -426,6 +495,7 @@ public class MboxFile {
         */
         
         ByteBuffer buffer = ByteBuffer.wrap(MboxEncoder.encode(message));
+//        ByteBuffer buffer = ByteBuffer.wrap(message);
         CharBuffer decoded = decoder.decode(buffer);
         
         // debugging..
@@ -511,7 +581,7 @@ public class MboxFile {
 
         // rename new file..
         newFile.renameTo(file);
-
+        
 //        this.file = newFile;
     }
 
@@ -529,7 +599,7 @@ public class MboxFile {
             raf = null;
         }
     }
-
+    
     /**
      * Indicates whether the specified CharSequence representation of
      * a message contains a "From_" line.
