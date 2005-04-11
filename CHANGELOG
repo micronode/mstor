@@ -16,6 +16,10 @@
  - Removed functionality to strip "From " escaping when returning messages. It
  seems that this cannot be performed reliably (various references on the Web)
  and until confirmed otherwise I thought it best to disable this feature.
+ 
+ - Improved memory performance in MstorFolder.appendMessages(): messages passed
+ to this method are now garbage collected on the fly to allow for very large
+ messages to be copied without running out of heap space.
 
 
 0.9.3:
