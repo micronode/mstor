@@ -35,7 +35,8 @@ public class MboxFileTest extends TestCase {
         //File f = new File("d:/Mail/Eudora/In.mbx");
 //        File f = new File("c:/temp/mail/store/Inbox");
 //        File f = new File("f:/development/workspace/mstor/etc/samples/samples.mbx");
-        File f = new File("c:/temp/mstor_test/samples.mbx");
+//        File f = new File("c:/temp/mstor_test/samples.mbx");
+        File f = new File("c:/temp/mstor_test/Inbox");
 
         mbox = new MboxFile(f, MboxFile.READ_WRITE);
     }

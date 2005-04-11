@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.Properties;
 
 import javax.mail.Folder;
+import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.URLName;
@@ -38,8 +39,11 @@ public class MStorFolderTest extends TestCase {
 
         URLName url = new URLName("mstor:c:/temp/mstor_test");
 //        URLName url = new URLName("mstor:E:/development/workspace/mstor/etc/samples");
-
-        store = new MStorStore(Session.getDefaultInstance(new Properties()), url);
+        
+        Properties p = new Properties();
+        // disable metadata..
+        p.setProperty("mstor.meta.enabled", "false");
+        store = new MStorStore(Session.getDefaultInstance(p), url);
         store.connect();
     }
 
@@ -214,7 +218,8 @@ public class MStorFolderTest extends TestCase {
         Folder inbox = store.getDefaultFolder().getFolder("Inbox");
         inbox.open(Folder.READ_ONLY);
 
-        copy2.appendMessages(inbox.getMessages());
+        Message[] messages = inbox.getMessages();
+        copy2.appendMessages(messages);
     }
 
     /*
