@@ -340,6 +340,7 @@ public class MStorFolder extends Folder {
             }
         }
 
+        this.mode = mode;
         open = true;
     }
 
