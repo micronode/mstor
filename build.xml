@@ -19,6 +19,8 @@
 	<property name="dist.dir" location=".."/>
 	<property name="dist.name" value="mstor"/>
 	
+    <property name="dist.maven.file" value="${dist.name}-${project.version}-bundle.jar"/>
+	
 	<!-- Library paths -->
     <property name="j2se.apiurl" value="http://java.sun.com/j2se/1.4/docs/api/"/>
 
