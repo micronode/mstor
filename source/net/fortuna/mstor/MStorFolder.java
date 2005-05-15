@@ -512,6 +512,10 @@ public class MStorFolder extends Folder {
         if (!isOpen()) {
             throw new IllegalStateException("Folder not open");
         }
+        
+        if (Folder.READ_ONLY == getMode()) {
+        	throw new MessagingException("Folder is read-only");
+        }
 
         int count = getDeletedMessageCount();
 
