@@ -2,26 +2,36 @@
 
 <project name="mstor" basedir="." default="package">
 
+	<!-- Project details -->
 	<property name="project.version" value="0.9.4"/>
+	
+	<!-- Project paths -->
 	<property name="source.dir" location="source"/>
 	<property name="test.source.dir" location="test"/>
 	<property name="output.dir" location="bin"/>
+	
 	<property name="package.dir" location="build"/>
 	<property name="package.file" value="mstor.jar"/>
-	<property name="javadoc.dir" location="docs/api"/>
+	
+	<property name="javadoc.dir" location="docs/api"/>	
 	<property name="javadoc.packages" value="net.fortuna.mstor.*"/>
+	
 	<property name="dist.dir" location=".."/>
 	<property name="dist.name" value="mstor"/>
-	<property name="plugin.name" value="net.fortuna.mstor"/>
 	
+	<!-- Library paths -->
+    <property name="j2se.apiurl" value="http://java.sun.com/j2se/1.4/docs/api/"/>
+
 	<property name="javamail.home" location="C:/libs/javamail-1.3.1"/>
+    <property name="javamail.apiurl" value="http://java.sun.com/products/javamail/javadocs/"/>
+
 	<property name="jaf.home" location="C:/libs/jaf-1.0.2"/>
  
-    <property name="j2se.apiurl" value="http://java.sun.com/j2se/1.4/docs/api/"/>
     <property name="jdom.apiurl" value="http://www.jdom.org/docs/apidocs/"/>
-    <property name="javamail.apiurl" value="http://java.sun.com/products/javamail/javadocs/"/>
+	
     <property name="jakarta-commons-logging.apiurl" value="http://jakarta.apache.org/commons/logging/api/"/>
 	
+	<!-- Targets -->
 	<target name="clean-compile">
 		<mkdir dir="${output.dir}"/>
 		<delete>
@@ -70,10 +80,10 @@
 				 Windowtitle="${ant.project.name}"
 				 Doctitle="${ant.project.name}"
 				 Overview="etc/overview.html">
- 		<link href="${j2se.apiurl}"/>
- 		<link href="${jdom.apiurl}"/>
- 		<link href="${javamail.apiurl}"/>
- 		<link href="${jakarta-commons-logging.apiurl}"/>
+	 		<link href="${j2se.apiurl}"/>
+	 		<link href="${jdom.apiurl}"/>
+	 		<link href="${javamail.apiurl}"/>
+	 		<link href="${jakarta-commons-logging.apiurl}"/>
 		</javadoc>
 	</target>
 	
@@ -97,17 +107,17 @@
 			<zipfileset dir="lib" prefix="${dist.name}-${project.version}/lib"/>
 		</zip>
 	</target>
-
-	<target name="dist-plugin" depends="package, javadoc">
-		<zip zipfile="${dist.dir}/${plugin.name}_${project.version}.zip">
-			<zipfileset dir="." prefix="${plugin.name}_${project.version}" includes="LICENSE,CHANGELOG,README"/>
-			<zipfileset dir="docs" prefix="${plugin.name}_${project.version}/docs"/>
-			<zipfileset dir="${package.dir}" prefix="${plugin.name}_${project.version}/lib"/>
-			<zipfileset dir="lib" prefix="${plugin.name}_${project.version}/lib"/>
-			<zipfileset dir="etc" prefix="${plugin.name}_${project.version}" includes="plugin.properties,plugin.xml"/>
-		</zip>
-	</target>
 	
+	<!-- Maven distribution -->
+    <target name="dist-maven" depends="package">
+        <jar jarfile="${dist.dir}/${dist.maven.file}">
+            <zipfileset dir="." includes="LICENSE" fullpath="LICENSE.txt"/>
+            <zipfileset dir="etc" includes="project.xml"/>
+            <zipfileset dir="build" includes="${package.file}" fullpath="${dist.name}-${project.version}.jar"/>
+        </jar>
+    </target>
+ 	
+	<!-- JUnit tests -->
 	<target name="run-tests" depends="compile, compile-tests">
 		<junit printsummary="yes" showoutput="yes" fork="no" haltonfailure="yes">
 			<formatter type="plain"/>
