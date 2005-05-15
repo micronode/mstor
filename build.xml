@@ -22,7 +22,7 @@
 	<!-- Library paths -->
     <property name="j2se.apiurl" value="http://java.sun.com/j2se/1.4/docs/api/"/>
 
-	<property name="javamail.home" location="C:/libs/javamail-1.3.1"/>
+	<property name="javamail.home" location="C:/libs/javamail-1.3.2"/>
     <property name="javamail.apiurl" value="http://java.sun.com/products/javamail/javadocs/"/>
 
 	<property name="jaf.home" location="C:/libs/jaf-1.0.2"/>
@@ -40,10 +40,8 @@
 	</target>
 	
 	<target name="compile">
-		<javac srcdir="${source.dir}" destdir="${output.dir}" debug="false" deprecation="true">
-			<!--
+		<javac srcdir="${source.dir}" destdir="${output.dir}" classpath="lib/commons-logging.jar;lib/jdom.jar;${javamail.home}/mail.jar;${output.dir}" debug="false" deprecation="true">
 			<compilerarg value="-Xlint:unchecked"/>
-			-->
 		</javac>
 	</target>
 	
