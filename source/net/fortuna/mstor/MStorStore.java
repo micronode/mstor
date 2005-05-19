@@ -89,13 +89,10 @@ public class MStorStore extends Store {
             throw new IllegalStateException("Store not connected");
         }
         
-        File file = null;
+        File file = new File(name);
 
-        // if path is absolute don't use url..
-        if (name.startsWith("/")) {
-            file = new File(name);
-        }
-        else {
+        // if path is not absolute use root of store to construct file..
+        if (!file.isAbsolute()) {
             file = new File(url.getFile(), name);
         }
 
