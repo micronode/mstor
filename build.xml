@@ -3,7 +3,7 @@
 <project name="mstor" basedir="." default="package">
 
 	<!-- Project details -->
-	<property name="project.version" value="0.9.4"/>
+	<property name="project.version" value="0.9.5"/>
 	
 	<!-- Project paths -->
 	<property name="source.dir" location="source"/>
@@ -42,7 +42,7 @@
 	</target>
 	
 	<target name="compile">
-		<javac srcdir="${source.dir}" destdir="${output.dir}" classpath="lib/commons-logging.jar;lib/jdom.jar;${javamail.home}/mail.jar;${output.dir}" debug="false" deprecation="true">
+		<javac source="1.4" srcdir="${source.dir}" destdir="${output.dir}" debug="false" deprecation="true">
 			<compilerarg value="-Xlint:unchecked"/>
 		</javac>
 	</target>
@@ -74,6 +74,9 @@
 	</target>
 	
 	<target name="javadoc" depends="clean-javadoc">
+		<!--
+    	<setproxy proxyhost="10.139.170.10" proxyport="8080" proxyuser="ap\ben_fortuna" proxypassword=""/>
+    	-->
 		<javadoc sourcepath="${source.dir}"
 				 destdir="${javadoc.dir}"
 				 packagenames="${javadoc.packages}"
