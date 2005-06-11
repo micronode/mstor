@@ -65,13 +65,9 @@ public class MStorStore extends Store {
      */
     public MStorStore(final Session session, final URLName url) {
         super(session, url);
-        try {
-            metaEnabled = new Boolean(session.getProperty("mstor.meta.enabled")).booleanValue();
-        }
-        catch (Exception e) {
-            // enable metadata by default..
-            metaEnabled = true;
-        }
+        
+        // enable metadata by default..
+        metaEnabled = !("false".equals(session.getProperty("mstor.meta.enabled")));
     }
 
     /* (non-Javadoc)
