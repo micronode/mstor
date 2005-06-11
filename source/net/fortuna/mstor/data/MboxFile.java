@@ -42,13 +42,14 @@ package net.fortuna.mstor.data;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.RandomAccessFile;
-import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.FileChannel;
@@ -56,8 +57,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.CodingErrorAction;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -178,6 +177,12 @@ public class MboxFile {
     private File file;
 
     private String mode;
+    
+    // by default, don't use nio mapping..
+    private boolean useNioMapping = "true".equals(System.getProperty("mstor.mbox.useNioMapping"));
+    
+    // by default, cache message buffers..
+    private boolean cacheBuffers = !("false".equals(System.getProperty("mstor.mbox.cacheBuffers")));
 
     private RandomAccessFile raf;
     
@@ -200,14 +205,14 @@ public class MboxFile {
     /**
      * Constructor.
      */
-    public MboxFile(File file) throws FileNotFoundException {
+    public MboxFile(final File file) throws FileNotFoundException {
         this(file, READ_ONLY);
     }
 
     /**
      * Constructor.
      */
-    public MboxFile(File file, String mode) {
+    public MboxFile(final File file, final String mode) {
         this.file = file;
         this.mode = mode;
     }
@@ -404,9 +409,18 @@ public class MboxFile {
                 size = getChannel().size() - getMessagePositions()[index];
             }
 
-            buffer = mapBytes(position, (int) size);
-            // add buffer to cache..
-            getMessageCache().put(new Integer(index), buffer);
+            if (useNioMapping) {
+                buffer = mapBytes(position, (int) size);
+            }
+            else {
+                buffer = ByteBuffer.allocateDirect((int) size);
+                readBytes(0, buffer);
+                buffer.flip();
+            }
+            if (cacheBuffers) {
+                // add buffer to cache..
+                getMessageCache().put(new Integer(index), buffer);
+            }
         }
         return new BufferInputStream(buffer);
     }
@@ -533,7 +547,8 @@ public class MboxFile {
         // create a new mailbox file..
         File newFile = new File(file.getParent(), file.getName() + TEMP_FILE_EXTENSION);
 
-        FileChannel newChannel = new FileOutputStream(newFile).getChannel();
+        FileOutputStream newOut = new FileOutputStream(newFile);
+        FileChannel newChannel = newOut.getChannel();
 
         loop: for (int i = 0; i < getMessagePositions().length; i++) {
             for (int j = 0; j < msgnums.length; j++) {
@@ -546,33 +561,13 @@ public class MboxFile {
             appendMessage(getMessage(i), newChannel);
         }
         // ensure new file is properly written..
-        newChannel.close();
+        newOut.close();
 
         // release system resources..
         close();
 
-        /*
-        //// Testing..
-        File test = new File(file.getParent(), "test");
-        test.createNewFile();
-        Channel c = new RandomAccessFile(test, "rw").getChannel();
-        c.close();
-        c = null;
-        ////
-        */
-        // delete old file..
         File tempFile = new File(file.getParent(), file.getName() + "." + System.currentTimeMillis());
-        // remove any existing temporary files..
-        if (tempFile.exists()) {
-            tempFile.delete();
-        }
-        
-        // debugging..
-        if (log.isDebugEnabled()) {
-            log.debug("Renaming [" + file + "] to [" + tempFile + "]");
-        }
-        
-        if (!file.renameTo(tempFile)) {
+        if (!renameTo(file, tempFile)) {
             throw new IOException("Unable to rename existing file");
         }
         // wait until exit to delete in case program terminates
@@ -580,9 +575,43 @@ public class MboxFile {
         tempFile.deleteOnExit();
 
         // rename new file..
-        newFile.renameTo(file);
-        
-//        this.file = newFile;
+        renameTo(newFile, file);
+    }
+    
+    /**
+     * @param source
+     * @param dest
+     * @return
+     */
+    private boolean renameTo(final File source, final File dest) {
+        // debugging..
+        if (log.isDebugEnabled()) {
+            log.debug("Renaming [" + source + "] to [" + dest + "]");
+        }
+
+        // remove any existing dest file..
+        if (dest.exists()) {
+            dest.delete();
+        }
+    	boolean success = source.renameTo(dest);
+    	if (!success) {
+    		try {
+        		InputStream in = new FileInputStream(source);
+        		OutputStream out = new FileOutputStream(dest);
+        		int length;
+        		byte[] buffer = new byte[1024];
+        		while ((length = in.read(buffer)) >= 0) {
+        			out.write(buffer, 0, length);
+        		}
+        		in.close();
+        		out.close();
+        		success = source.delete();
+    		}
+    		catch (IOException ioe) {
+    			log.error("Failed to rename [" + source + "] to [" + dest + "]", ioe);
+    		}
+    	}
+    	return success;
     }
 
     /**
@@ -590,13 +619,16 @@ public class MboxFile {
      * @throws IOException
      */
     public void close() throws IOException {
-        if (channel != null) {
-            channel.close();
-            channel = null;
-        }
+    	if (messageCache != null) {
+    		messageCache.clear();
+    	}
+    	if (messagePositions != null) {
+    		messagePositions = null;
+    	}
         if (raf != null) {
             raf.close();
             raf = null;
+            channel = null;
         }
     }
     
