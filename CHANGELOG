@@ -2,6 +2,21 @@
  mstor - Changes
 =================
 
+0.9.5:
+
+ - Provided system properties to configure the use of java.nio mapping and caching
+ (see README for details).
+ 
+ - Folders automatically closed when underlying store is closed.
+ 
+ - Fixed unit tests to correctly release resources (i.e. close the mbox file)
+ 
+ - File encoding defaults to "ISO-8859-1" again (may be overridden with system
+ property).
+ 
+ - Restored compatibility with Java 1.4.
+ 
+
 0.9.4:
 
  - Reimplemented aspects of MboxFile to reduce the amount of encoding/decoding
