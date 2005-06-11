@@ -45,10 +45,12 @@ public class MboxFileTest extends TestCase {
         assertTrue(mbox.getMessageCount() >= 0);
 
         log.info("Message count: " + mbox.getMessageCount());
+        
+        mbox.close();
     }
 
     public void testGetMessage() throws IOException {
-        for (int i=0; i<mbox.getMessageCount(); i++) {
+        for (int i=0; i< mbox.getMessageCount(); i++) {
 //        for (int i=0; i<3; i++) {
             byte[] buffer = mbox.getMessage(i);
 
@@ -56,9 +58,41 @@ public class MboxFileTest extends TestCase {
 
             log.info("Message [" + i + "]\n=================\n" + new String(buffer));
         }
+        mbox.close();
     }
-    
+
+    /**
+     * Removes the second message from the mbox file.
+     * @throws IOException
+     */
     public void testPurge() throws IOException {
         mbox.purge(new int[] {1});
+        mbox.close();
     }
+    
+    /*
+    public void testRafChannel() throws IOException {
+    	File f = new File("c:/temp/mstor_test/Inbox.tmp");
+    	RandomAccessFile raf = new RandomAccessFile(f, MboxFile.READ_WRITE);
+    	FileChannel channel = raf.getChannel();
+    	
+    	log.info("Channel size: " + channel.size());
+    	
+        ByteBuffer buffer = ByteBuffer.allocateDirect((int) channel.size());
+        channel.position(0);
+        channel.read(buffer);
+        buffer.flip();
+
+        CharSequence cs = Charset.forName("ISO-8859-1").newDecoder().decode(buffer);
+
+    	channel.close();
+    	
+        File tempFile = new File(f.getParent(), f.getName() + "." + System.currentTimeMillis());
+        // remove any existing temporary files..
+        if (tempFile.exists()) {
+            tempFile.delete();
+        }
+    	f.renameTo(tempFile);
+    }
+    */
 }

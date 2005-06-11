@@ -10,6 +10,7 @@ package net.fortuna.mstor;
 import java.io.File;
 import java.util.Properties;
 
+import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -43,9 +44,20 @@ public class MStorFolderTest extends TestCase {
         Properties p = new Properties();
         // disable metadata..
         p.setProperty("mstor.meta.enabled", "false");
+        p.setProperty("mstor.mbox.useNioMapping", "false");
         store = new MStorStore(Session.getDefaultInstance(p), url);
         store.connect();
     }
+    
+    /* (non-Javadoc)
+	 * @see junit.framework.TestCase#tearDown()
+	 */
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		if (store.isConnected()) {
+			store.close();
+		}
+	}
 
     public void testExists() throws MessagingException {
         assertTrue(store.getDefaultFolder().exists());
@@ -116,7 +128,7 @@ public class MStorFolderTest extends TestCase {
         Folder inbox = store.getDefaultFolder().getFolder("Inbox");
         inbox.open(Folder.READ_ONLY);
 
-        assertEquals(inbox.getMessageCount(), 82);
+        assertEquals(4, inbox.getMessageCount());
     }
 
     public void testMStorFolder() {
@@ -225,7 +237,16 @@ public class MStorFolderTest extends TestCase {
     /*
      * Class under test for Message[] expunge()
      */
-    public void testExpunge() {
+    public void testExpunge() throws MessagingException {
+        Folder inbox = store.getDefaultFolder().getFolder("Inbox");
+        inbox.open(Folder.READ_WRITE);
+        
+        Message message = inbox.getMessage(1);
+        message.setFlag(Flags.Flag.DELETED, true);
+        
+        Message[] expunged = inbox.expunge();
+        
+        log.info("Expunged [" + expunged + "]");
     }
 
 }
