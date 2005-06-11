@@ -413,8 +413,4 @@ public class MStorMessage extends MimeMessage implements Serializable {
             getMeta().setHeaders(headers);
         }
     }
-
-    InternetHeaders getHeaders() {
-        return headers;
-    }
 }
