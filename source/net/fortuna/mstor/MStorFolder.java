@@ -50,6 +50,8 @@ import javax.mail.Folder;
 import javax.mail.FolderNotFoundException;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.event.ConnectionEvent;
+import javax.mail.event.ConnectionListener;
 
 import net.fortuna.mstor.data.MboxFile;
 import net.fortuna.mstor.data.MetaFolderImpl;
@@ -129,6 +131,35 @@ public class MStorFolder extends Folder {
         else {
             type = HOLDS_FOLDERS | HOLDS_MESSAGES;
         }
+        // automatically close (release resources) when the
+        // store is closed..
+        store.addConnectionListener(new ConnectionListener() {
+        	/* (non-Javadoc)
+			 * @see javax.mail.event.ConnectionListener#closed(javax.mail.event.ConnectionEvent)
+			 */
+			public final void closed(final ConnectionEvent e) {
+				try {
+					if (isOpen()) {
+						close(false);
+					}
+				}
+				catch (MessagingException me) {
+					log.error("Error closing folder [" + this + "]", me);
+				}
+			}
+			
+			/* (non-Javadoc)
+			 * @see javax.mail.event.ConnectionListener#disconnected(javax.mail.event.ConnectionEvent)
+			 */
+			public final void disconnected(final ConnectionEvent e) {
+			}
+			
+			/* (non-Javadoc)
+			 * @see javax.mail.event.ConnectionListener#opened(javax.mail.event.ConnectionEvent)
+			 */
+			public final void opened(final ConnectionEvent e) {
+			}
+        });
     }
 
     /* (non-Javadoc)
