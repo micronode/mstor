@@ -46,7 +46,7 @@
     <groupId>mstor</groupId>
     <id>mstor</id>
     <name>mstor</name>
-    <currentVersion>0.9.3</currentVersion>
+    <currentVersion>0.9.5</currentVersion>
 
     <organization>
         <name>Ben Fortuna</name>
@@ -144,7 +144,7 @@
             <id>commons-logging</id>
             <groupId/>
             <artifactId/>
-            <version>1.0.3</version>
+            <version>1.0.4</version>
             <jar/>
             <type/>
             <url>http://jakarta.apache.org/commons/logging/</url>
