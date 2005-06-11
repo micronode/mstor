@@ -59,6 +59,8 @@ import org.apache.commons.logging.LogFactory;
  */
 public class MStorMessage extends MimeMessage implements Serializable {
 
+	private static final long serialVersionUID = 6413532435324648022L;
+	
     private static Log log = LogFactory.getLog(MStorMessage.class);
 
     /**

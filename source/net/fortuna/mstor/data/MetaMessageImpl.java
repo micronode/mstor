@@ -58,6 +58,8 @@ import org.jdom.Element;
  */
 public class MetaMessageImpl implements MetaMessage {
 
+	private static final long serialVersionUID = -3882112036857983804L;
+
     protected static final String ELEMENT_MESSAGE = "message";
 
     protected static final String ATTRIBUTE_MESSAGE_NUMBER = "messageNumber";
