@@ -358,6 +358,9 @@ public class MStorFolder extends Folder {
      * @see javax.mail.Folder#open(int)
      */
     public void open(int mode) throws MessagingException {
+    	if (!exists()) {
+    		throw new FolderNotFoundException(this, "Folder does not exist");
+    	}
         if (isOpen()) {
             throw new IllegalStateException("Folder not closed");
         }
@@ -499,10 +502,6 @@ public class MStorFolder extends Folder {
             try {
                 out.reset();
                 messages[i].writeTo(out);
-                // prune messages as we go to allow for garbage
-                // collection..
-                messages[i] = null;
-
                 mbox.appendMessage(out.toByteArray());
 
                 // create metadata..
@@ -514,6 +513,10 @@ public class MStorFolder extends Folder {
                         meta.setHeaders(messages[i].getAllHeaders());
                     }
                 }
+                
+                // prune messages as we go to allow for garbage
+                // collection..
+                messages[i] = null;
             }
             catch (IOException ioe) {
                 log.debug("Error appending message [" + i + "]", ioe);
