@@ -50,7 +50,7 @@ public class MboxFileTest extends TestCase {
     }
 
     public void testGetMessage() throws IOException {
-        for (int i=0; i< mbox.getMessageCount(); i++) {
+        for (int i = 0; i < mbox.getMessageCount(); i++) {
 //        for (int i=0; i<3; i++) {
             byte[] buffer = mbox.getMessage(i);
 
