@@ -1,6 +1,6 @@
 /*
  * $Id$
- * 
+ *
  * Created: 18/08/2004
  *
  * Copyright (c) 2004, Ben Fortuna
@@ -70,11 +70,11 @@ public class MetaFolderImpl implements MetaFolder {
     private static Log log = LogFactory.getLog(MetaFolderImpl.class);
 
     private File file;
-    
+
     private Document document;
 
     public static final String FILE_EXTENSION = ".emf";
-    
+
     /**
      * Constructs a new meta folder instance.
      * @param file the meta folder file
@@ -82,7 +82,7 @@ public class MetaFolderImpl implements MetaFolder {
     public MetaFolderImpl(final File file) {
         this.file = file;
     }
-    
+
     /**
      * Returns the JDOM document associated with this
      * meta folder.
@@ -100,7 +100,7 @@ public class MetaFolderImpl implements MetaFolder {
                     file.createNewFile();
                 }
                 */
-                
+
                 SAXBuilder builder = new SAXBuilder();
                 document = builder.build(file);
             }
@@ -112,14 +112,14 @@ public class MetaFolderImpl implements MetaFolder {
         }
         return document;
     }
-    
+
     /* (non-Javadoc)
      * @see net.fortuna.mstor.data.MetaFolder#getName()
      */
     public final String getName() {
         return getDocument().getRootElement().getAttributeValue(ATTRIBUTE_FOLDER_NAME);
     }
-    
+
     /* (non-Javadoc)
      * @see net.fortuna.mstor.data.MetaFolder#setName(java.lang.String)
      */
@@ -134,7 +134,7 @@ public class MetaFolderImpl implements MetaFolder {
         try {
 //            String messageId = ((MimeMessage) message).getMessageID();
             int messageNumber = message.getMessageNumber();
-            
+
             for (Iterator i = getDocument().getRootElement().getChildren(MetaMessageImpl.ELEMENT_MESSAGE).iterator(); i.hasNext();) {
                 Element messageElement = (Element) i.next();
                 try {
@@ -143,7 +143,7 @@ public class MetaFolderImpl implements MetaFolder {
                     }
                 }
                 catch (Exception e) {
-                    
+
                 }
             }
 
@@ -157,19 +157,19 @@ public class MetaFolderImpl implements MetaFolder {
             return mm;
         }
         catch (Exception e) {
-            log.warn("Message not MIME message - no metadata available", e);
+            log.warn("Error creating metadata - no metadata available", e);
         }
 
         return null;
     }
-    
+
     /* (non-Javadoc)
      * @see net.fortuna.mstor.data.MetaFolder#addMessage(net.fortuna.mstor.data.MetaMessage)
      */
     public final void addMessage(final MetaMessage message) {
         getDocument().getRootElement().addContent(((MetaMessageImpl)message).getElement());
     }
-    
+
     /* (non-Javadoc)
      * @see net.fortuna.mstor.data.MetaFolder#removeMessage(java.lang.String)
      */
@@ -184,7 +184,7 @@ public class MetaFolderImpl implements MetaFolder {
         }
         return null;
     }
-        
+
     /* (non-Javadoc)
      * @see net.fortuna.mstor.MetaFolder#removeMessages(int[])
      */
@@ -210,7 +210,7 @@ public class MetaFolderImpl implements MetaFolder {
         }
         return null;
     }
-    
+
     /**
      * Updates all message numbers according to the specified arguments.
      * Used when message metadata is removed from the list.
@@ -226,7 +226,7 @@ public class MetaFolderImpl implements MetaFolder {
             }
         }
     }
-    
+
     /* (non-Javadoc)
      * @see net.fortuna.mstor.data.MetaFolder#save()
      */
