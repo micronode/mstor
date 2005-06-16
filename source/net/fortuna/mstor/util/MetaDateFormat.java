@@ -39,6 +39,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Defines a date format used in metadata.
@@ -56,7 +57,7 @@ public class MetaDateFormat {
      * Constructor made private to enforce singleton.
      */
     private MetaDateFormat() {
-        format = new SimpleDateFormat(DATE_FORMAT);
+        format = new SimpleDateFormat(DATE_FORMAT, Locale.US);
     }
 
     /**
