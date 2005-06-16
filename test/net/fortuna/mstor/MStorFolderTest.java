@@ -249,4 +249,23 @@ public class MStorFolderTest extends TestCase {
         log.info("Expunged [" + expunged + "]");
     }
 
+    public void testCopyMessages() throws MessagingException {
+        Folder inbox = store.getDefaultFolder().getFolder("Inbox");
+        inbox.open(Folder.READ_ONLY);
+        
+        Folder copy = store.getDefaultFolder().getFolder("Inbox2");
+        if (!copy.exists()) {
+            copy.create(Folder.HOLDS_MESSAGES);
+        }
+        copy.open(Folder.READ_WRITE);
+        
+        for (int i = 1; i <= 5; i ++) {
+            Message message = inbox.getMessage(i);
+            
+            log.info("Message subject: [" + message.getSubject() + "]");
+            inbox.copyMessages(new Message[] {message}, copy);
+        }
+        
+        assertEquals(copy.getMessageCount(), 5);
+    }
 }
