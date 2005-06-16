@@ -213,9 +213,7 @@
             </resource>
         </resources>
     </build>
-    <reports>
-        <report>
-    </reports>
+    <reports/>
     <properties/>
 </project>
       
