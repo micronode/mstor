@@ -2,6 +2,20 @@
  mstor - Changes
 =================
 
+0.9.6:
+
+ - Fixed bug introduced in 0.9.5 causing message reads from incorrect postion
+ in mbox file.
+ 
+ - Fixed date lines (message headers, metadata) to US-specific locale
+ 
+ - Removed invalid tag from maven project descriptor
+ 
+ - Now throws FolderNotFoundException when opening a folder that doesn't exist
+ 
+ - Fixed appendMessages() retrieval of metadata
+ 
+ 
 0.9.5:
 
  - Provided system properties to configure the use of java.nio mapping and caching
