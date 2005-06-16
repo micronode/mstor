@@ -63,6 +63,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -118,7 +119,7 @@ public class MboxFile {
 
     private static final int DEFAULT_BUFFER_SIZE = 1024;
 
-    private static DateFormat from_DateFormat = new SimpleDateFormat(FROM__DATE_FORMAT);
+    private static DateFormat from_DateFormat = new SimpleDateFormat(FROM__DATE_FORMAT, Locale.US);
 
     static {
         from_DateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -414,7 +415,7 @@ public class MboxFile {
             }
             else {
                 buffer = ByteBuffer.allocateDirect((int) size);
-                readBytes(0, buffer);
+                readBytes(position, buffer);
                 buffer.flip();
             }
             if (cacheBuffers) {
