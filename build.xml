@@ -3,7 +3,7 @@
 <project name="mstor" basedir="." default="package">
 
 	<!-- Project details -->
-	<property name="project.version" value="0.9.5"/>
+	<property name="project.version" value="0.9.6"/>
 	
 	<!-- Project paths -->
 	<property name="source.dir" location="source"/>
