@@ -115,29 +115,14 @@ public class MboxFile {
      */
     private static final String MASKED_FROM__PATTERN = "\n>" + FROM__PREFIX;
 
-    private static final String FROM__DATE_FORMAT = "EEE MMM d HH:mm:ss yyyy";
+    private static final String FROM__DATE_PATTERN = "EEE MMM d HH:mm:ss yyyy";
 
     private static final int DEFAULT_BUFFER_SIZE = 1024;
-
-    private static DateFormat from_DateFormat = new SimpleDateFormat(FROM__DATE_FORMAT, Locale.US);
-
-    static {
-        from_DateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-    }
 
     // Charset and decoder for ISO-8859-15
 //    private static Charset charset = Charset.forName(System.getProperty("mstor.mbox.encoding", System.getProperty("file.encoding")));
 //    private static Charset charset = Charset.forName(System.getProperty("mstor.mbox.encoding", "US-ASCII"));
     private static Charset charset = Charset.forName(System.getProperty("mstor.mbox.encoding", "ISO-8859-1"));
-
-    private static CharsetDecoder decoder = charset.newDecoder();
-
-    private static CharsetEncoder encoder = charset.newEncoder();
-
-    static {
-        encoder.onUnmappableCharacter(CodingErrorAction.REPLACE);
-//        decoder.onMalformedInput(CodingErrorAction.REPLACE);
-    }
 
     private static Log log = LogFactory.getLog(MboxFile.class);
     
@@ -169,6 +154,19 @@ public class MboxFile {
             buffer.get(bytes, offset, read);
             return read;
         }
+    }
+
+    private CharsetDecoder decoder = charset.newDecoder();
+
+    private CharsetEncoder encoder = charset.newEncoder();
+    {
+        encoder.onUnmappableCharacter(CodingErrorAction.REPLACE);
+//        decoder.onMalformedInput(CodingErrorAction.REPLACE);
+    }
+
+    private DateFormat from_DateFormat = new SimpleDateFormat(FROM__DATE_PATTERN, Locale.US);
+    {
+        from_DateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 
     /**

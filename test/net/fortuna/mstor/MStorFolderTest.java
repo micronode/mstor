@@ -109,12 +109,19 @@ public class MStorFolderTest extends TestCase {
 
         try {
             inbox.close(false);
-
             fail("Should throw IllegalStateException");
         }
         catch (IllegalStateException ise) {
             log.info("Error ocurred", ise);
         }
+    }
+
+    public void testCloseExpunge() throws MessagingException {
+        Folder inbox = store.getDefaultFolder().getFolder("Inbox");
+        inbox.open(Folder.READ_WRITE);
+        Message message = inbox.getMessage(1);
+        message.setFlag(Flags.Flag.DELETED, true);
+        inbox.close(true);
     }
 
     public void testIsOpen() throws MessagingException {
@@ -266,6 +273,6 @@ public class MStorFolderTest extends TestCase {
             inbox.copyMessages(new Message[] {message}, copy);
         }
         
-        assertEquals(copy.getMessageCount(), 5);
+        assertEquals(5, copy.getMessageCount());
     }
 }
