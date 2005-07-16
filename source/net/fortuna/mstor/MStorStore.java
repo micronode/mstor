@@ -54,7 +54,7 @@ import javax.mail.URLName;
  */
 public class MStorStore extends Store {
 
-    private static final String INBOX = "Inbox";
+    public static final String INBOX = "Inbox";
 
     private boolean metaEnabled;
     
