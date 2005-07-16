@@ -226,10 +226,7 @@ public class MStorFolder extends Folder {
      * @see javax.mail.Folder#getSeparator()
      */
     public char getSeparator() throws MessagingException {
-        if (!exists()) {
-            throw new FolderNotFoundException(this);
-        }
-
+        assertExists();
         return File.separatorChar;
     }
 
@@ -237,10 +234,7 @@ public class MStorFolder extends Folder {
      * @see javax.mail.Folder#getType()
      */
     public int getType() throws MessagingException {
-        if (!exists()) {
-            throw new FolderNotFoundException(this);
-        }
-
+        assertExists();
         return type;
     }
 
@@ -314,9 +308,7 @@ public class MStorFolder extends Folder {
      * @see javax.mail.Folder#delete(boolean)
      */
     public boolean delete(boolean recurse) throws MessagingException {
-        if (isOpen()) {
-            throw new IllegalStateException("Folder not closed");
-        }
+        assertClosed();
 
         if ((getType() & HOLDS_FOLDERS) > 0) {
             if (recurse) {
@@ -343,13 +335,8 @@ public class MStorFolder extends Folder {
      * @see javax.mail.Folder#renameTo(javax.mail.Folder)
      */
     public boolean renameTo(Folder folder) throws MessagingException {
-        if (!exists()) {
-            throw new FolderNotFoundException(this);
-        }
-
-        if (isOpen()) {
-            throw new IllegalStateException("Folder not closed");
-        }
+        assertExists();
+        assertClosed();
 
         return file.renameTo(new File(file.getParent(), folder.getName()));
     }
@@ -358,12 +345,8 @@ public class MStorFolder extends Folder {
      * @see javax.mail.Folder#open(int)
      */
     public void open(int mode) throws MessagingException {
-    	if (!exists()) {
-    		throw new FolderNotFoundException(this, "Folder does not exist");
-    	}
-        if (isOpen()) {
-            throw new IllegalStateException("Folder not closed");
-        }
+        assertExists();
+        assertClosed();
 
         if ((getType() & HOLDS_MESSAGES) > 0) {
             if (mode == READ_WRITE) {
@@ -382,10 +365,7 @@ public class MStorFolder extends Folder {
      * @see javax.mail.Folder#close(boolean)
      */
     public final void close(final boolean expunge) throws MessagingException {
-        if (!isOpen()) {
-            throw new IllegalStateException("Folder not open");
-        }
-
+        assertOpen();
         if (expunge) {
             expunge();
         }
@@ -420,10 +400,7 @@ public class MStorFolder extends Folder {
      * @see javax.mail.Folder#getMessageCount()
      */
     public int getMessageCount() throws MessagingException {
-        if (!exists()) {
-            throw new FolderNotFoundException(this);
-        }
-
+        assertExists();
         if ((getType() & HOLDS_MESSAGES) == 0) {
             throw new MessagingException("Invalid folder type");
         }
@@ -445,13 +422,8 @@ public class MStorFolder extends Folder {
      * @see javax.mail.Folder#getMessage(int)
      */
     public Message getMessage(int index) throws MessagingException {
-        if (!exists()) {
-            throw new FolderNotFoundException(this);
-        }
-
-        if (!isOpen()) {
-            throw new IllegalStateException("Folder not open");
-        }
+        assertExists();
+        assertOpen();
 
         if (index <= 0 || index > getMessageCount()) {
             throw new IndexOutOfBoundsException("Message does not exist");
@@ -491,9 +463,7 @@ public class MStorFolder extends Folder {
      * @see javax.mail.Folder#appendMessages(javax.mail.Message[])
      */
     public final void appendMessages(final Message[] messages) throws MessagingException {
-        if (!exists()) {
-            throw new FolderNotFoundException(this);
-        }
+        assertExists();
 
         Date received = new Date();
         ByteArrayOutputStream out = new ByteArrayOutputStream(1024);
@@ -539,13 +509,9 @@ public class MStorFolder extends Folder {
      * @see javax.mail.Folder#expunge()
      */
     public Message[] expunge() throws MessagingException {
-        if (!exists()) {
-            throw new FolderNotFoundException(this);
-        }
+        assertExists();
 
-        if (!isOpen()) {
-            throw new IllegalStateException("Folder not open");
-        }
+        assertOpen();
         
         if (Folder.READ_ONLY == getMode()) {
         	throw new MessagingException("Folder is read-only");
@@ -615,11 +581,32 @@ public class MStorFolder extends Folder {
 
     /**
      * Check if this folder is open.
-     * @throws MessagingException thrown if the folder is not open
+     * @throws IllegalStateException thrown if the folder is not open
      */
-    private void checkOpen() throws MessagingException {
+    private void assertOpen() throws IllegalStateException {
         if (!isOpen()) {
-            throw new MessagingException("Folder not open");
+            throw new IllegalStateException("Folder not open");
+        }
+    }
+
+    /**
+     * Check if this folder is closed.
+     * @throws IllegalStateException thrown if the folder is not closed
+     */
+    private void assertClosed() throws IllegalStateException {
+        if (isOpen()) {
+            throw new IllegalStateException("Folder not closed");
+        }
+    }
+    
+    /**
+     * Asserts that this folder exists.
+     * @throws FolderNotFoundException
+     * @throws MessagingException
+     */
+    private void assertExists() throws FolderNotFoundException, MessagingException {
+        if (!exists()) {
+            throw new FolderNotFoundException(this);
         }
     }
 }
