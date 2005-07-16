@@ -472,7 +472,16 @@ public class MboxFile {
      * @param message
      */
     public final void appendMessage(final byte[] message) throws IOException {
+        long newMessagePosition = getChannel().size();
         appendMessage(message, getChannel());
+        
+        // update message positions..
+        if (messagePositions != null) {
+            long[] newMessagePositions = new long[messagePositions.length + 1];
+            System.arraycopy(messagePositions, 0, newMessagePositions, 0, messagePositions.length);
+            newMessagePositions[newMessagePositions.length - 1] = newMessagePosition;
+            messagePositions = newMessagePositions;
+        }
     }
 
     /**
@@ -531,6 +540,7 @@ public class MboxFile {
 //            encoder.encode(CharBuffer.wrap(DEFAULT_FROM__LINE), buffer, false);
         }
         buffer.rewind();
+        
         channel.write(buffer, channel.size());
 //        encoder.encode(CharBuffer.wrap(message), buffer, true);
 //        encoder.flush(buffer);
@@ -637,7 +647,7 @@ public class MboxFile {
      * @param message a CharSequence representing a message
      * @return true if a "From_" line is found, otherwise false
      */
-    private boolean hasFrom_Line(CharSequence message) {
+    private static boolean hasFrom_Line(CharSequence message) {
         return Pattern.compile(FROM__PREFIX + ".*", Pattern.DOTALL).matcher(message).matches();
     }
 

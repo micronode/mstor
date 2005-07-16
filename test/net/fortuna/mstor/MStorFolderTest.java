@@ -233,12 +233,16 @@ public class MStorFolderTest extends TestCase {
         Folder copy2 = copy.getFolder("Copy2");
         copy2.create(Folder.HOLDS_MESSAGES);
         copy2.open(Folder.READ_WRITE);
+        
+        int messageCount = copy2.getMessageCount();
 
         Folder inbox = store.getDefaultFolder().getFolder("Inbox");
         inbox.open(Folder.READ_ONLY);
 
         Message[] messages = inbox.getMessages();
         copy2.appendMessages(messages);
+        
+        assertEquals(messageCount + inbox.getMessageCount(), copy2.getMessageCount());
     }
 
     /*
