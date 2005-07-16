@@ -113,7 +113,7 @@ public class MboxFile {
      * A pattern representing the masked format of all message content
      * matching the "From_" line pattern
      */
-    private static final String MASKED_FROM__PATTERN = "\n>" + FROM__PREFIX;
+//    private static final String MASKED_FROM__PATTERN = "\n>" + FROM__PREFIX;
 
     private static final String FROM__DATE_PATTERN = "EEE MMM d HH:mm:ss yyyy";
 
