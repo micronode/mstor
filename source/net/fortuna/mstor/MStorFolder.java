@@ -111,7 +111,7 @@ public class MStorFolder extends Folder {
      * @param store
      * @param file
      */
-    public MStorFolder(MStorStore store, File file) {
+    public MStorFolder(final MStorStore store, final File file) {
         this(store, file, true);
     }
 
@@ -121,7 +121,7 @@ public class MStorFolder extends Folder {
      * @param file
      * @param metaEnabled
      */
-    public MStorFolder(MStorStore store, File file, final boolean metaEnabled) {
+    public MStorFolder(final MStorStore store, final File file, final boolean metaEnabled) {
         super(store);
         this.mStore = store;
         this.file = file;
@@ -193,7 +193,7 @@ public class MStorFolder extends Folder {
     /* (non-Javadoc)
      * @see javax.mail.Folder#list(java.lang.String)
      */
-    public Folder[] list(String pattern) throws MessagingException {
+    public Folder[] list(final String pattern) throws MessagingException {
         if ((getType() & HOLDS_FOLDERS) == 0) {
             throw new MessagingException("Invalid folder type");
         }
@@ -241,7 +241,7 @@ public class MStorFolder extends Folder {
     /* (non-Javadoc)
      * @see javax.mail.Folder#create(int)
      */
-    public boolean create(int type) throws MessagingException {
+    public boolean create(final int type) throws MessagingException {
         if (file.exists()) {
             throw new MessagingException("Folder already exists");
         }
@@ -280,7 +280,7 @@ public class MStorFolder extends Folder {
     /* (non-Javadoc)
      * @see javax.mail.Folder#getFolder(java.lang.String)
      */
-    public Folder getFolder(String name) throws MessagingException {
+    public Folder getFolder(final String name) throws MessagingException {
         File file = null;
 
         // if path is absolute don't use relative file..
@@ -307,7 +307,7 @@ public class MStorFolder extends Folder {
     /* (non-Javadoc)
      * @see javax.mail.Folder#delete(boolean)
      */
-    public boolean delete(boolean recurse) throws MessagingException {
+    public boolean delete(final boolean recurse) throws MessagingException {
         assertClosed();
 
         if ((getType() & HOLDS_FOLDERS) > 0) {
@@ -334,7 +334,7 @@ public class MStorFolder extends Folder {
     /* (non-Javadoc)
      * @see javax.mail.Folder#renameTo(javax.mail.Folder)
      */
-    public boolean renameTo(Folder folder) throws MessagingException {
+    public boolean renameTo(final Folder folder) throws MessagingException {
         assertExists();
         assertClosed();
 
@@ -344,7 +344,7 @@ public class MStorFolder extends Folder {
     /* (non-Javadoc)
      * @see javax.mail.Folder#open(int)
      */
-    public void open(int mode) throws MessagingException {
+    public void open(final int mode) throws MessagingException {
         assertExists();
         assertClosed();
 
@@ -421,7 +421,7 @@ public class MStorFolder extends Folder {
     /* (non-Javadoc)
      * @see javax.mail.Folder#getMessage(int)
      */
-    public Message getMessage(int index) throws MessagingException {
+    public Message getMessage(final int index) throws MessagingException {
         assertExists();
         assertOpen();
 
@@ -468,7 +468,7 @@ public class MStorFolder extends Folder {
         Date received = new Date();
         ByteArrayOutputStream out = new ByteArrayOutputStream(1024);
         
-        for (int i=0; i<messages.length; i++) {
+        for (int i = 0; i < messages.length; i++) {
             try {
                 out.reset();
                 messages[i].writeTo(out);
@@ -523,7 +523,7 @@ public class MStorFolder extends Folder {
 
         List deletedList = new ArrayList();
 
-        for (int i=0; i<messages.length && deletedList.size() < count; i++) {
+        for (int i = 0; i < messages.length && deletedList.size() < count; i++) {
             if (messages[i].isSet(Flags.Flag.DELETED)) {
                 deletedList.add(messages[i]);
             }
@@ -533,7 +533,7 @@ public class MStorFolder extends Folder {
 
         int[] indices = new int[deleted.length];
 
-        for (int i=0; i<deleted.length; i++) {
+        for (int i = 0; i < deleted.length; i++) {
             // have to subtract one, because the raw storage array is 0-based, but
             // the message numbers are 1-based
             indices[i] = deleted[i].getMessageNumber() - 1;
@@ -550,7 +550,7 @@ public class MStorFolder extends Folder {
             getMeta().removeMessages(indices);
         }
 
-        for (int i=0; i<deleted.length; i++) {
+        for (int i = 0; i < deleted.length; i++) {
             deleted[i].setExpunged(true);
         }
 
@@ -583,7 +583,7 @@ public class MStorFolder extends Folder {
      * Check if this folder is open.
      * @throws IllegalStateException thrown if the folder is not open
      */
-    private void assertOpen() throws IllegalStateException {
+    private void assertOpen() {
         if (!isOpen()) {
             throw new IllegalStateException("Folder not open");
         }
@@ -593,7 +593,7 @@ public class MStorFolder extends Folder {
      * Check if this folder is closed.
      * @throws IllegalStateException thrown if the folder is not closed
      */
-    private void assertClosed() throws IllegalStateException {
+    private void assertClosed() {
         if (isOpen()) {
             throw new IllegalStateException("Folder not closed");
         }
@@ -604,7 +604,7 @@ public class MStorFolder extends Folder {
      * @throws FolderNotFoundException
      * @throws MessagingException
      */
-    private void assertExists() throws FolderNotFoundException, MessagingException {
+    private void assertExists() throws MessagingException {
         if (!exists()) {
             throw new FolderNotFoundException(this);
         }

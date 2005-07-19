@@ -75,7 +75,7 @@ public class MStorMessage extends MimeMessage implements Serializable {
     /**
      * @param arg0
      */
-    public MStorMessage(Session session) {
+    public MStorMessage(final Session session) {
         super(session);
     }
 
@@ -84,7 +84,7 @@ public class MStorMessage extends MimeMessage implements Serializable {
      * @param arg1
      * @throws javax.mail.MessagingException
      */
-    public MStorMessage(Session session, InputStream in)
+    public MStorMessage(final Session session, final InputStream in)
             throws MessagingException {
         super(session);
 
@@ -95,7 +95,7 @@ public class MStorMessage extends MimeMessage implements Serializable {
      * @param arg0
      * @throws javax.mail.MessagingException
      */
-    public MStorMessage(MimeMessage m) throws MessagingException {
+    public MStorMessage(final MimeMessage m) throws MessagingException {
         super(m);
     }
 
@@ -103,7 +103,7 @@ public class MStorMessage extends MimeMessage implements Serializable {
      * @param arg0
      * @param arg1
      */
-    public MStorMessage(Folder folder, int msgnum) {
+    public MStorMessage(final Folder folder, final int msgnum) {
         super(folder, msgnum);
     }
 
@@ -113,7 +113,7 @@ public class MStorMessage extends MimeMessage implements Serializable {
      * @param arg2
      * @throws javax.mail.MessagingException
      */
-    public MStorMessage(Folder folder, InputStream in, int msgnum)
+    public MStorMessage(final Folder folder, final InputStream in, final int msgnum)
             throws MessagingException {
         super(folder, msgnum);
 
@@ -127,8 +127,8 @@ public class MStorMessage extends MimeMessage implements Serializable {
      * @param arg3
      * @throws javax.mail.MessagingException
      */
-    public MStorMessage(Folder folder, InternetHeaders headers, byte[] content,
-            int msgnum) throws MessagingException {
+    public MStorMessage(final Folder folder, final InternetHeaders headers, final byte[] content,
+            final int msgnum) throws MessagingException {
         super(folder, headers, content, msgnum);
     }
 
@@ -143,7 +143,7 @@ public class MStorMessage extends MimeMessage implements Serializable {
      * @param meta
      *            The meta to set.
      */
-    public void setMeta(MetaMessage meta) {
+    public void setMeta(final MetaMessage meta) {
         this.meta = meta;
         // update message from metadata..
         if (meta != null) {
@@ -200,7 +200,7 @@ public class MStorMessage extends MimeMessage implements Serializable {
      * @see javax.mail.internet.MimePart#getHeader(java.lang.String,
      *      java.lang.String)
      */
-    public String getHeader(String arg0, String arg1) throws MessagingException {
+    public String getHeader(final String arg0, final String arg1) throws MessagingException {
         if (getMeta() != null) { return getMeta().getHeaders().getHeader(arg0,
                 arg1); }
         checkParse();
@@ -212,7 +212,7 @@ public class MStorMessage extends MimeMessage implements Serializable {
      * 
      * @see javax.mail.Part#getHeader(java.lang.String)
      */
-    public String[] getHeader(String arg0) throws MessagingException {
+    public String[] getHeader(final String arg0) throws MessagingException {
         if (getMeta() != null) { return getMeta().getHeaders().getHeader(arg0); }
         checkParse();
         return super.getHeader(arg0);
@@ -223,7 +223,7 @@ public class MStorMessage extends MimeMessage implements Serializable {
      * 
      * @see javax.mail.internet.MimePart#getMatchingHeaderLines(java.lang.String[])
      */
-    public Enumeration getMatchingHeaderLines(String[] arg0)
+    public Enumeration getMatchingHeaderLines(final String[] arg0)
             throws MessagingException {
         if (getMeta() != null) { return getMeta().getHeaders()
                 .getMatchingHeaderLines(arg0); }
@@ -236,7 +236,7 @@ public class MStorMessage extends MimeMessage implements Serializable {
      * 
      * @see javax.mail.Part#getMatchingHeaders(java.lang.String[])
      */
-    public Enumeration getMatchingHeaders(String[] arg0)
+    public Enumeration getMatchingHeaders(final String[] arg0)
             throws MessagingException {
         if (getMeta() != null) { return getMeta().getHeaders()
                 .getMatchingHeaders(arg0); }
@@ -249,7 +249,7 @@ public class MStorMessage extends MimeMessage implements Serializable {
      * 
      * @see javax.mail.internet.MimePart#getNonMatchingHeaderLines(java.lang.String[])
      */
-    public Enumeration getNonMatchingHeaderLines(String[] arg0)
+    public Enumeration getNonMatchingHeaderLines(final String[] arg0)
             throws MessagingException {
         if (getMeta() != null) { return getMeta().getHeaders()
                 .getNonMatchingHeaderLines(arg0); }
@@ -262,7 +262,7 @@ public class MStorMessage extends MimeMessage implements Serializable {
      * 
      * @see javax.mail.Part#getNonMatchingHeaders(java.lang.String[])
      */
-    public Enumeration getNonMatchingHeaders(String[] arg0)
+    public Enumeration getNonMatchingHeaders(final String[] arg0)
             throws MessagingException {
         if (getMeta() != null) { return getMeta().getHeaders()
                 .getNonMatchingHeaders(arg0); }
@@ -335,7 +335,7 @@ public class MStorMessage extends MimeMessage implements Serializable {
      * 
      * @see javax.mail.Message#setFlag(javax.mail.Flags.Flag, boolean)
      */
-    public void setFlag(Flag flag, boolean set) throws MessagingException {
+    public void setFlag(final Flag flag, final boolean set) throws MessagingException {
         super.setFlag(flag, set);
         // copy updated flags from mime message implementation..
         if (getMeta() != null) {
@@ -352,7 +352,7 @@ public class MStorMessage extends MimeMessage implements Serializable {
         }
     }
 
-    public void setHeader(String s, String s1) throws MessagingException {
+    public void setHeader(final String s, final String s1) throws MessagingException {
         // looks like we need to load the message before setting headers..
         checkParse();
         super.setHeader(s, s1);
@@ -362,7 +362,7 @@ public class MStorMessage extends MimeMessage implements Serializable {
         }
     }
 
-    public void addHeader(String s, String s1) throws MessagingException {
+    public void addHeader(final String s, final String s1) throws MessagingException {
         super.addHeader(s, s1);
         if (getMeta() != null) {
             // update metadata..
@@ -370,7 +370,7 @@ public class MStorMessage extends MimeMessage implements Serializable {
         }
     }
 
-    public void removeHeader(String s) throws MessagingException {
+    public void removeHeader(final String s) throws MessagingException {
         super.removeHeader(s);
         if (getMeta() != null) {
             // update metadata..
@@ -378,7 +378,7 @@ public class MStorMessage extends MimeMessage implements Serializable {
         }
     }
 
-    public void addHeaderLine(String s) throws MessagingException {
+    public void addHeaderLine(final String s) throws MessagingException {
         super.addHeaderLine(s);
         if (getMeta() != null) {
             // update metadata..

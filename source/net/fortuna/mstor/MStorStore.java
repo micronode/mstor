@@ -108,8 +108,8 @@ public class MStorStore extends Store {
     /**
      * Override the superclass method to bypass authentication.
      */
-    protected boolean protocolConnect(String arg0, int arg1, String arg2,
-            String arg3) throws MessagingException {
+    protected boolean protocolConnect(final String arg0, final int arg1, final String arg2,
+            final String arg3) throws MessagingException {
         return true;
     }
     /**
@@ -121,7 +121,7 @@ public class MStorStore extends Store {
     /**
      * @param metaEnabled The metaEnabled to set.
      */
-    public final void setMetaEnabled(boolean metaEnabled) {
+    public final void setMetaEnabled(final boolean metaEnabled) {
         this.metaEnabled = metaEnabled;
     }
 }

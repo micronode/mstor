@@ -51,7 +51,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
@@ -143,7 +142,9 @@ public class MetaFolderImpl implements MetaFolder {
                     }
                 }
                 catch (Exception e) {
-
+                    if (log.isDebugEnabled()) {
+                        log.debug("Caught exception parsing message number", e);
+                    }
                 }
             }
 
@@ -167,7 +168,7 @@ public class MetaFolderImpl implements MetaFolder {
      * @see net.fortuna.mstor.data.MetaFolder#addMessage(net.fortuna.mstor.data.MetaMessage)
      */
     public final void addMessage(final MetaMessage message) {
-        getDocument().getRootElement().addContent(((MetaMessageImpl)message).getElement());
+        getDocument().getRootElement().addContent(((MetaMessageImpl) message).getElement());
     }
 
     /* (non-Javadoc)

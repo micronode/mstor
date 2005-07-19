@@ -270,7 +270,7 @@ public class MStorFolderTest extends TestCase {
         }
         copy.open(Folder.READ_WRITE);
         
-        for (int i = 1; i <= 5; i ++) {
+        for (int i = 1; i <= 5; i++) {
             Message message = inbox.getMessage(i);
             
             log.info("Message subject: [" + message.getSubject() + "]");

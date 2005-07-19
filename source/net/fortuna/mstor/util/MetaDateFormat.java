@@ -45,7 +45,7 @@ import java.util.Locale;
  * Defines a date format used in metadata.
  * @author benfortuna
  */
-public class MetaDateFormat {
+public final class MetaDateFormat {
 
     private static final String DATE_FORMAT = "EEE MMM d HH:mm:ss yyyy";
 

@@ -111,7 +111,7 @@ public class MboxFile {
 
     /**
      * A pattern representing the masked format of all message content
-     * matching the "From_" line pattern
+     * matching the "From_" line pattern.
      */
 //    private static final String MASKED_FROM__PATTERN = "\n>" + FROM__PREFIX;
 
@@ -126,6 +126,10 @@ public class MboxFile {
 
     private static Log log = LogFactory.getLog(MboxFile.class);
     
+    /**
+     * @author Ben Fortuna
+     *
+     */
     private class BufferInputStream extends InputStream {
         private ByteBuffer buffer;
         
@@ -552,7 +556,7 @@ public class MboxFile {
      * Purge the specified messages from the file.
      * @param msgnums the indices of the messages to purge
      */
-    public void purge(int[] msgnums) throws IOException {
+    public void purge(final int[] msgnums) throws IOException {
         // create a new mailbox file..
         File newFile = new File(file.getParent(), file.getName() + TEMP_FILE_EXTENSION);
 
@@ -647,7 +651,7 @@ public class MboxFile {
      * @param message a CharSequence representing a message
      * @return true if a "From_" line is found, otherwise false
      */
-    private static boolean hasFrom_Line(CharSequence message) {
+    private static boolean hasFrom_Line(final CharSequence message) {
         return Pattern.compile(FROM__PREFIX + ".*", Pattern.DOTALL).matcher(message).matches();
     }
 
@@ -656,7 +660,7 @@ public class MboxFile {
 	 * this method does not check the entire file for validity, but rather checks the
 	 * first line for indication that this is an mbox file.
 	 */
-    public static boolean isValid(File file) {
+    public static boolean isValid(final File file) {
 		BufferedReader reader = null;
 
 		try {
