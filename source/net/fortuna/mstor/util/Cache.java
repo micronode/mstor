@@ -10,14 +10,14 @@
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 	o Redistributions of source code must retain the above copyright
+ *  o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
  *
- * 	o Redistributions in binary form must reproduce the above copyright
+ *  o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
  *
- * 	o Neither the name of Ben Fortuna nor the names of any other contributors
+ *  o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
  *
@@ -45,7 +45,7 @@ import java.util.Map.Entry;
  */
 public class Cache extends LinkedHashMap {
 
-	private static final long serialVersionUID = 4000823529559716310L;
+    private static final long serialVersionUID = 4000823529559716310L;
 
     private static final int DEFAULT_MAX_ENTRIES = 100;
 

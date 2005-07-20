@@ -62,17 +62,19 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * A folder implementation for the mstor javamail provider.
+ * 
  * @author benfortuna
  */
 public class MStorFolder extends Folder {
 
     private static final String DIR_EXTENSION = ".sbd";
+    
+    private static final int DEFAULT_BUFFER_SIZE = 1024;
 
     private static Log log = LogFactory.getLog(MStorFolder.class);
 
     /**
-     * Indicates whether this folder holds messages
-     * or other folders.
+     * Indicates whether this folder holds messages or other folders.
      */
     private int type;
 
@@ -87,15 +89,15 @@ public class MStorFolder extends Folder {
     private File file;
 
     /**
-     * An mbox file where the folder holds messages.
-     * This variable is not applicable (and therefore not
-     * initialised) for folders that hold other folders.
+     * An mbox file where the folder holds messages. This variable is not
+     * applicable (and therefore not initialised) for folders that hold other
+     * folders.
      */
     private MboxFile mbox;
 
     /**
-     * Additional metadata for an mstor folder that is not
-     * provided by the standard mbox format.
+     * Additional metadata for an mstor folder that is not provided by the
+     * standard mbox format.
      */
     private MetaFolder meta;
 
@@ -103,11 +105,12 @@ public class MStorFolder extends Folder {
      * A cache for messages.
      */
     private Map messageCache;
-    
+
     private MStorStore mStore;
 
     /**
      * Constructs a new mstor folder with metadata enabled.
+     * 
      * @param store
      * @param file
      */
@@ -117,83 +120,99 @@ public class MStorFolder extends Folder {
 
     /**
      * Constructs a new mstor folder instance.
+     * 
      * @param store
      * @param file
      * @param metaEnabled
      */
-    public MStorFolder(final MStorStore store, final File file, final boolean metaEnabled) {
+    public MStorFolder(final MStorStore store, final File file,
+            final boolean metaEnabled) {
         super(store);
         this.mStore = store;
         this.file = file;
         if (file.isDirectory()) {
             type = HOLDS_FOLDERS;
-        }
-        else {
+        } else {
             type = HOLDS_FOLDERS | HOLDS_MESSAGES;
         }
         // automatically close (release resources) when the
         // store is closed..
         store.addConnectionListener(new ConnectionListener() {
-        	/* (non-Javadoc)
-			 * @see javax.mail.event.ConnectionListener#closed(javax.mail.event.ConnectionEvent)
-			 */
-			public final void closed(final ConnectionEvent e) {
-				try {
-					if (isOpen()) {
-						close(false);
-					}
-				}
-				catch (MessagingException me) {
-					log.error("Error closing folder [" + this + "]", me);
-				}
-			}
-			
-			/* (non-Javadoc)
-			 * @see javax.mail.event.ConnectionListener#disconnected(javax.mail.event.ConnectionEvent)
-			 */
-			public final void disconnected(final ConnectionEvent e) {
-			}
-			
-			/* (non-Javadoc)
-			 * @see javax.mail.event.ConnectionListener#opened(javax.mail.event.ConnectionEvent)
-			 */
-			public final void opened(final ConnectionEvent e) {
-			}
+            /*
+             * (non-Javadoc)
+             * 
+             * @see javax.mail.event.ConnectionListener#closed(javax.mail.event.ConnectionEvent)
+             */
+            public final void closed(final ConnectionEvent e) {
+                try {
+                    if (isOpen()) {
+                        close(false);
+                    }
+                } catch (MessagingException me) {
+                    log.error("Error closing folder [" + this + "]", me);
+                }
+            }
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see javax.mail.event.ConnectionListener#disconnected(javax.mail.event.ConnectionEvent)
+             */
+            public final void disconnected(final ConnectionEvent e) {
+            }
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see javax.mail.event.ConnectionListener#opened(javax.mail.event.ConnectionEvent)
+             */
+            public final void opened(final ConnectionEvent e) {
+            }
         });
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Folder#getName()
      */
-    public String getName() {
+    public final String getName() {
         return file.getName();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Folder#getFullName()
      */
-    public String getFullName() {
+    public final String getFullName() {
         return file.getPath();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Folder#getParent()
      */
-    public Folder getParent() throws MessagingException {
+    public final Folder getParent() throws MessagingException {
         return new MStorFolder(mStore, file.getParentFile());
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Folder#exists()
      */
-    public boolean exists() throws MessagingException {
+    public final boolean exists() throws MessagingException {
         return file.exists();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Folder#list(java.lang.String)
      */
-    public Folder[] list(final String pattern) throws MessagingException {
+    public final Folder[] list(final String pattern) throws MessagingException {
         if ((getType() & HOLDS_FOLDERS) == 0) {
             throw new MessagingException("Invalid folder type");
         }
@@ -204,17 +223,18 @@ public class MStorFolder extends Folder {
 
         if (file.isDirectory()) {
             files = file.listFiles();
-        }
-        else {
-            files = new File(file.getAbsolutePath() + DIR_EXTENSION).listFiles();
+        } else {
+            files = new File(file.getAbsolutePath() + DIR_EXTENSION)
+                    .listFiles();
         }
 
         for (int i = 0; files != null && i < files.length; i++) {
             if (!files[i].getName().endsWith(MetaFolderImpl.FILE_EXTENSION)
                     && !files[i].getName().endsWith(DIR_EXTENSION)
-                    && (files[i].isDirectory() || files[i].length() == 0 || MboxFile.isValid(files[i]))) {
-//                && ((type & Folder.HOLDS_MESSAGES) == 0
-//                    || !files[i].isDirectory())) {
+                    && (files[i].isDirectory() || files[i].length() == 0 || MboxFile
+                            .isValid(files[i]))) {
+                // && ((type & Folder.HOLDS_MESSAGES) == 0
+                // || !files[i].isDirectory())) {
                 folders.add(new MStorFolder(mStore, files[i]));
             }
         }
@@ -222,26 +242,32 @@ public class MStorFolder extends Folder {
         return (Folder[]) folders.toArray(new Folder[folders.size()]);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Folder#getSeparator()
      */
-    public char getSeparator() throws MessagingException {
+    public final char getSeparator() throws MessagingException {
         assertExists();
         return File.separatorChar;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Folder#getType()
      */
-    public int getType() throws MessagingException {
+    public final int getType() throws MessagingException {
         assertExists();
         return type;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Folder#create(int)
      */
-    public boolean create(final int type) throws MessagingException {
+    public final boolean create(final int type) throws MessagingException {
         if (file.exists()) {
             throw new MessagingException("Folder already exists");
         }
@@ -255,32 +281,34 @@ public class MStorFolder extends Folder {
             try {
                 file.getParentFile().mkdirs();
                 return file.createNewFile();
+            } catch (IOException ioe) {
+                throw new MessagingException("Unable to create folder [" + file
+                        + "]", ioe);
             }
-            catch (IOException ioe) {
-                throw new MessagingException("Unable to create folder [" + file + "]", ioe);
-            }
-        }
-        else if ((type & HOLDS_FOLDERS) > 0) {
+        } else if ((type & HOLDS_FOLDERS) > 0) {
             this.type = type;
             return file.mkdirs();
-        }
-        else {
+        } else {
             throw new MessagingException("Invalid folder type");
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Folder#hasNewMessages()
      */
-    public boolean hasNewMessages() throws MessagingException {
+    public final boolean hasNewMessages() throws MessagingException {
         // TODO Auto-generated method stub
         return false;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Folder#getFolder(java.lang.String)
      */
-    public Folder getFolder(final String name) throws MessagingException {
+    public final Folder getFolder(final String name) throws MessagingException {
         File file = null;
 
         // if path is absolute don't use relative file..
@@ -288,14 +316,13 @@ public class MStorFolder extends Folder {
             file = new File(name);
         }
         // default folder..
-//        else if ("".equals(getName())) {
+        // else if ("".equals(getName())) {
         // if a folder doesn't hold messages (ie. default
         // folder) we don't have a separate subdirectory
         // for sub-folders..
         else if ((getType() & HOLDS_MESSAGES) == 0) {
             file = new File(this.file, name);
-        }
-        else {
+        } else {
             file = new File(this.file.getAbsolutePath() + DIR_EXTENSION, name);
         }
 
@@ -304,10 +331,12 @@ public class MStorFolder extends Folder {
         return new MStorFolder(mStore, file);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Folder#delete(boolean)
      */
-    public boolean delete(final boolean recurse) throws MessagingException {
+    public final boolean delete(final boolean recurse) throws MessagingException {
         assertClosed();
 
         if ((getType() & HOLDS_FOLDERS) > 0) {
@@ -317,42 +346,45 @@ public class MStorFolder extends Folder {
                 for (int i = 0; i < subfolders.length; i++) {
                     subfolders[i].delete(recurse);
                 }
-            }
-            else if (list().length > 0) {
+            } else if (list().length > 0) {
                 // cannot delete if has subfolders..
                 return false;
             }
         }
 
-        File metafile = new File(file.getAbsolutePath() + MetaFolderImpl.FILE_EXTENSION);
+        File metafile = new File(file.getAbsolutePath()
+                + MetaFolderImpl.FILE_EXTENSION);
         metafile.delete();
 
         // attempt to delete the directory/file..
         return file.delete();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Folder#renameTo(javax.mail.Folder)
      */
-    public boolean renameTo(final Folder folder) throws MessagingException {
+    public final boolean renameTo(final Folder folder) throws MessagingException {
         assertExists();
         assertClosed();
 
         return file.renameTo(new File(file.getParent(), folder.getName()));
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Folder#open(int)
      */
-    public void open(final int mode) throws MessagingException {
+    public final void open(final int mode) throws MessagingException {
         assertExists();
         assertClosed();
 
         if ((getType() & HOLDS_MESSAGES) > 0) {
             if (mode == READ_WRITE) {
                 mbox = new MboxFile(file, MboxFile.READ_WRITE);
-            }
-            else {
+            } else {
                 mbox = new MboxFile(file, MboxFile.READ_ONLY);
             }
         }
@@ -361,7 +393,9 @@ public class MStorFolder extends Folder {
         open = true;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Folder#close(boolean)
      */
     public final void close(final boolean expunge) throws MessagingException {
@@ -373,33 +407,38 @@ public class MStorFolder extends Folder {
         try {
             mbox.close();
             mbox = null;
-        }
-        catch (IOException ioe) {
+        } catch (IOException ioe) {
             throw new MessagingException("Error ocurred closing mbox file", ioe);
         }
 
         open = false;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Folder#isOpen()
      */
-    public boolean isOpen() {
+    public final boolean isOpen() {
         return open;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Folder#getPermanentFlags()
      */
-    public Flags getPermanentFlags() {
+    public final Flags getPermanentFlags() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Folder#getMessageCount()
      */
-    public int getMessageCount() throws MessagingException {
+    public final int getMessageCount() throws MessagingException {
         assertExists();
         if ((getType() & HOLDS_MESSAGES) == 0) {
             throw new MessagingException("Invalid folder type");
@@ -407,21 +446,22 @@ public class MStorFolder extends Folder {
 
         if (!isOpen()) {
             return -1;
-        }
-        else {
+        } else {
             try {
                 return mbox.getMessageCount();
-            }
-            catch (IOException ioe) {
-                throw new MessagingException("Error ocurred reading message count", ioe);
+            } catch (IOException ioe) {
+                throw new MessagingException(
+                        "Error ocurred reading message count", ioe);
             }
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Folder#getMessage(int)
      */
-    public Message getMessage(final int index) throws MessagingException {
+    public final Message getMessage(final int index) throws MessagingException {
         assertExists();
         assertOpen();
 
@@ -433,19 +473,21 @@ public class MStorFolder extends Folder {
             throw new MessagingException("Invalid folder type");
         }
 
-        MStorMessage message = (MStorMessage) getMessageCache().get(String.valueOf(index));
+        MStorMessage message = (MStorMessage) getMessageCache().get(
+                String.valueOf(index));
 
         if (message == null) {
             try {
                 // javamail uses 1-based indexing for messages..
-                message = new MStorMessage(this, mbox.getMessageAsStream(index - 1), index);
+                message = new MStorMessage(this, mbox
+                        .getMessageAsStream(index - 1), index);
                 if (mStore.isMetaEnabled()) {
                     message.setMeta(getMeta().getMessage(message));
                 }
                 getMessageCache().put(String.valueOf(index), message);
-            }
-            catch (IOException ioe) {
-                throw new MessagingException("Error ocurred reading message [" + index + "]", ioe);
+            } catch (IOException ioe) {
+                throw new MessagingException("Error ocurred reading message ["
+                        + index + "]", ioe);
             }
         }
 
@@ -453,21 +495,23 @@ public class MStorFolder extends Folder {
     }
 
     /**
-     * Appends the specified messages to this folder.
-     * NOTE: The specified message array is destroyed upon processing
-     * to alleviate memory concerns with large messages. You should ensure
-     * the messages specified in this array are referenced elsewhere if you
-     * want to retain them.
+     * Appends the specified messages to this folder. NOTE: The specified
+     * message array is destroyed upon processing to alleviate memory concerns
+     * with large messages. You should ensure the messages specified in this
+     * array are referenced elsewhere if you want to retain them.
      */
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Folder#appendMessages(javax.mail.Message[])
      */
-    public final void appendMessages(final Message[] messages) throws MessagingException {
+    public final void appendMessages(final Message[] messages)
+            throws MessagingException {
         assertExists();
 
         Date received = new Date();
-        ByteArrayOutputStream out = new ByteArrayOutputStream(1024);
-        
+        ByteArrayOutputStream out = new ByteArrayOutputStream(DEFAULT_BUFFER_SIZE);
+
         for (int i = 0; i < messages.length; i++) {
             try {
                 out.reset();
@@ -483,14 +527,14 @@ public class MStorFolder extends Folder {
                         meta.setHeaders(messages[i].getAllHeaders());
                     }
                 }
-                
+
                 // prune messages as we go to allow for garbage
                 // collection..
                 messages[i] = null;
-            }
-            catch (IOException ioe) {
+            } catch (IOException ioe) {
                 log.debug("Error appending message [" + i + "]", ioe);
-                throw new MessagingException("Error appending message [" + i + "]", ioe);
+                throw new MessagingException("Error appending message [" + i
+                        + "]", ioe);
             }
         }
 
@@ -498,23 +542,24 @@ public class MStorFolder extends Folder {
         if (mStore.isMetaEnabled()) {
             try {
                 getMeta().save();
-            }
-            catch (IOException ioe) {
+            } catch (IOException ioe) {
                 log.error("Error ocurred saving metadata", ioe);
             }
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Folder#expunge()
      */
-    public Message[] expunge() throws MessagingException {
+    public final Message[] expunge() throws MessagingException {
         assertExists();
 
         assertOpen();
-        
+
         if (Folder.READ_ONLY == getMode()) {
-        	throw new MessagingException("Folder is read-only");
+            throw new MessagingException("Folder is read-only");
         }
 
         int count = getDeletedMessageCount();
@@ -529,23 +574,24 @@ public class MStorFolder extends Folder {
             }
         }
 
-        MStorMessage[] deleted = (MStorMessage[]) deletedList.toArray(new MStorMessage[deletedList.size()]);
+        MStorMessage[] deleted = (MStorMessage[]) deletedList
+                .toArray(new MStorMessage[deletedList.size()]);
 
         int[] indices = new int[deleted.length];
 
         for (int i = 0; i < deleted.length; i++) {
-            // have to subtract one, because the raw storage array is 0-based, but
+            // have to subtract one, because the raw storage array is 0-based,
+            // but
             // the message numbers are 1-based
             indices[i] = deleted[i].getMessageNumber() - 1;
         }
 
         try {
             mbox.purge(indices);
-        }
-        catch (IOException ioe) {
+        } catch (IOException ioe) {
             throw new MessagingException("Error purging mbox file", ioe);
         }
-        
+
         if (mStore.isMetaEnabled()) {
             getMeta().removeMessages(indices);
         }
@@ -571,9 +617,10 @@ public class MStorFolder extends Folder {
     /**
      * @return Returns the metadata for this folder.
      */
-    protected MetaFolder getMeta() {
+    protected final MetaFolder getMeta() {
         if (meta == null) {
-            meta = new MetaFolderImpl(new File(getFullName() + MetaFolderImpl.FILE_EXTENSION));
+            meta = new MetaFolderImpl(new File(getFullName()
+                    + MetaFolderImpl.FILE_EXTENSION));
         }
 
         return meta;
@@ -581,7 +628,9 @@ public class MStorFolder extends Folder {
 
     /**
      * Check if this folder is open.
-     * @throws IllegalStateException thrown if the folder is not open
+     * 
+     * @throws IllegalStateException
+     *             thrown if the folder is not open
      */
     private void assertOpen() {
         if (!isOpen()) {
@@ -591,16 +640,19 @@ public class MStorFolder extends Folder {
 
     /**
      * Check if this folder is closed.
-     * @throws IllegalStateException thrown if the folder is not closed
+     * 
+     * @throws IllegalStateException
+     *             thrown if the folder is not closed
      */
     private void assertClosed() {
         if (isOpen()) {
             throw new IllegalStateException("Folder not closed");
         }
     }
-    
+
     /**
      * Asserts that this folder exists.
+     * 
      * @throws FolderNotFoundException
      * @throws MessagingException
      */

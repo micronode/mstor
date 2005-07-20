@@ -51,14 +51,14 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jdom.Element;
 
-
 /**
  * A JDOM-based implementation of a meta message.
+ * 
  * @author benfortuna
  */
 public class MetaMessageImpl implements MetaMessage {
 
-	private static final long serialVersionUID = -3882112036857983804L;
+    private static final long serialVersionUID = -3882112036857983804L;
 
     protected static final String ELEMENT_MESSAGE = "message";
 
@@ -83,18 +83,24 @@ public class MetaMessageImpl implements MetaMessage {
     private MetaFolder folder;
 
     /**
-     * Constructs a new meta message instance based on
-     * a new JDOM element with the specified message id.
-     * @param messageId the message id of the new meta message
+     * Constructs a new meta message instance based on a new JDOM element with
+     * the specified message id.
+     * 
+     * @param messageId
+     *            the message id of the new meta message
      */
     public MetaMessageImpl(final int messageNumber, final MetaFolder folder) {
-        this(new Element(ELEMENT_MESSAGE).setAttribute(ATTRIBUTE_MESSAGE_NUMBER, String.valueOf(messageNumber)), folder);
+        this(new Element(ELEMENT_MESSAGE).setAttribute(
+                ATTRIBUTE_MESSAGE_NUMBER, String.valueOf(messageNumber)),
+                folder);
     }
 
     /**
-     * Constructs a new meta message instance based on the
-     * specified JDOM element.
-     * @param element a JDOM element for the meta message
+     * Constructs a new meta message instance based on the specified JDOM
+     * element.
+     * 
+     * @param element
+     *            a JDOM element for the meta message
      */
     public MetaMessageImpl(final Element element, final MetaFolder folder) {
         this.element = element;
@@ -103,18 +109,20 @@ public class MetaMessageImpl implements MetaMessage {
 
     /**
      * Returns the underlying JDOM element.
+     * 
      * @return a JDOM element
      */
-    protected Element getElement() {
+    protected final Element getElement() {
         return element;
     }
 
     /**
-     * Returns the specified child element of the
-     * element associated with this meta message. If
-     * the child does not exist it is created and added
-     * to the message element.
-     * @param name name of the child element
+     * Returns the specified child element of the element associated with this
+     * meta message. If the child does not exist it is created and added to the
+     * message element.
+     * 
+     * @param name
+     *            name of the child element
      * @return a JDOM element
      */
     private Element getElement(final String name) {
@@ -126,14 +134,16 @@ public class MetaMessageImpl implements MetaMessage {
         return child;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.MetaMessage#getMessageNumber()
      */
     public final int getMessageNumber() {
         try {
-            return Integer.parseInt(element.getAttributeValue(ATTRIBUTE_MESSAGE_NUMBER));
-        }
-        catch (Exception e) {
+            return Integer.parseInt(element
+                    .getAttributeValue(ATTRIBUTE_MESSAGE_NUMBER));
+        } catch (Exception e) {
             return 0;
         }
     }
@@ -142,8 +152,7 @@ public class MetaMessageImpl implements MetaMessage {
         String received = getElement(ELEMENT_RECEIVED).getText();
         try {
             return MetaDateFormat.getInstance().parse(received);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.info("Invalid received date [" + received + "]", e);
         }
         return null;
@@ -158,8 +167,7 @@ public class MetaMessageImpl implements MetaMessage {
         String forwarded = getElement(ELEMENT_FORWARDED).getText();
         try {
             return MetaDateFormat.getInstance().parse(forwarded);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.info("Invalid forwarded date [" + forwarded + "]", e);
         }
         return null;
@@ -174,8 +182,7 @@ public class MetaMessageImpl implements MetaMessage {
         String replied = getElement(ELEMENT_REPLIED).getText();
         try {
             return MetaDateFormat.getInstance().parse(replied);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.info("Invalid replied date [" + replied + "]", e);
         }
         return null;
@@ -189,12 +196,11 @@ public class MetaMessageImpl implements MetaMessage {
     public final boolean isExpunged() {
         Element expunged = getElement(ELEMENT_EXPUNGED);
         try {
-	        return Boolean.valueOf(expunged.getText()).booleanValue();
-		}
-		catch (Exception e) {
+            return Boolean.valueOf(expunged.getText()).booleanValue();
+        } catch (Exception e) {
             log.info("Invalid expunged value [" + expunged.getText() + "]", e);
-		}
-		return false;
+        }
+        return false;
     }
 
     public final void setExpunged(final boolean flag) {
@@ -204,30 +210,24 @@ public class MetaMessageImpl implements MetaMessage {
 
     public final Flags getFlags() {
         Flags flags = new Flags();
-        for (Iterator i = getElement(ELEMENT_FLAGS).getChildren().iterator(); i.hasNext();) {
+        for (Iterator i = getElement(ELEMENT_FLAGS).getChildren().iterator(); i
+                .hasNext();) {
             Element flag = (Element) i.next();
             if ("answered".equals(flag.getName())) {
                 flags.add(Flags.Flag.ANSWERED);
-            }
-            else if ("deleted".equals(flag.getName())) {
+            } else if ("deleted".equals(flag.getName())) {
                 flags.add(Flags.Flag.DELETED);
-            }
-            else if ("draft".equals(flag.getName())) {
+            } else if ("draft".equals(flag.getName())) {
                 flags.add(Flags.Flag.DRAFT);
-            }
-            else if ("flagged".equals(flag.getName())) {
+            } else if ("flagged".equals(flag.getName())) {
                 flags.add(Flags.Flag.FLAGGED);
-            }
-            else if ("recent".equals(flag.getName())) {
+            } else if ("recent".equals(flag.getName())) {
                 flags.add(Flags.Flag.RECENT);
-            }
-            else if ("seen".equals(flag.getName())) {
+            } else if ("seen".equals(flag.getName())) {
                 flags.add(Flags.Flag.SEEN);
-            }
-            else if ("user".equals(flag.getName())) {
+            } else if ("user".equals(flag.getName())) {
                 flags.add(Flags.Flag.USER);
-            }
-            else {
+            } else {
                 // user flag..
                 flags.add(flag.getName());
             }
@@ -235,30 +235,24 @@ public class MetaMessageImpl implements MetaMessage {
         return flags;
     }
 
-    public void setFlags(final Flags flags) {
+    public final void setFlags(final Flags flags) {
         Element flagsElement = getElement(ELEMENT_FLAGS);
         flagsElement.removeContent();
         for (int i = 0; i < flags.getSystemFlags().length; i++) {
             Element flag = null;
             if (Flags.Flag.ANSWERED.equals(flags.getSystemFlags()[i])) {
                 flag = new Element("answered");
-            }
-            else if (Flags.Flag.DELETED.equals(flags.getSystemFlags()[i])) {
+            } else if (Flags.Flag.DELETED.equals(flags.getSystemFlags()[i])) {
                 flag = new Element("deleted");
-            }
-            else if (Flags.Flag.DRAFT.equals(flags.getSystemFlags()[i])) {
+            } else if (Flags.Flag.DRAFT.equals(flags.getSystemFlags()[i])) {
                 flag = new Element("draft");
-            }
-            else if (Flags.Flag.FLAGGED.equals(flags.getSystemFlags()[i])) {
+            } else if (Flags.Flag.FLAGGED.equals(flags.getSystemFlags()[i])) {
                 flag = new Element("flagged");
-            }
-            else if (Flags.Flag.RECENT.equals(flags.getSystemFlags()[i])) {
+            } else if (Flags.Flag.RECENT.equals(flags.getSystemFlags()[i])) {
                 flag = new Element("recent");
-            }
-            else if (Flags.Flag.SEEN.equals(flags.getSystemFlags()[i])) {
+            } else if (Flags.Flag.SEEN.equals(flags.getSystemFlags()[i])) {
                 flag = new Element("seen");
-            }
-            else if (Flags.Flag.USER.equals(flags.getSystemFlags()[i])) {
+            } else if (Flags.Flag.USER.equals(flags.getSystemFlags()[i])) {
                 flag = new Element("user");
             }
             flagsElement.addContent(flag);
@@ -272,28 +266,35 @@ public class MetaMessageImpl implements MetaMessage {
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.MetaMessage#getHeaders()
      */
     public final InternetHeaders getHeaders() {
-		InternetHeaders headers = new InternetHeaders();
+        InternetHeaders headers = new InternetHeaders();
 
-        for (Iterator i = getElement(ELEMENT_HEADERS).getChildren().iterator(); i.hasNext();) {
+        for (Iterator i = getElement(ELEMENT_HEADERS).getChildren().iterator(); i
+                .hasNext();) {
             Element header = (Element) i.next();
             headers.addHeader(header.getName(), header.getText());
-		}
+        }
 
-		return headers;
-	}
+        return headers;
+    }
 
-	/* (non-Javadoc)
-	 * @see net.fortuna.mstor.MetaMessage#setHeaders(javax.mail.internet.InternetHeaders)
-	 */
-	public final void setHeaders(final InternetHeaders headers) {
-	    setHeaders(headers.getAllHeaders());
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.fortuna.mstor.MetaMessage#setHeaders(javax.mail.internet.InternetHeaders)
+     */
+    public final void setHeaders(final InternetHeaders headers) {
+        setHeaders(headers.getAllHeaders());
+    }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.MetaMessage#setHeaders(java.util.Enumeration)
      */
     public final void setHeaders(final Enumeration headers) {
@@ -302,15 +303,18 @@ public class MetaMessageImpl implements MetaMessage {
         for (; headers.hasMoreElements();) {
             Header header = (Header) headers.nextElement();
             if (!header.getName().startsWith(MboxFile.FROM__PREFIX)) {
-                headersElement.addContent(new Element(header.getName()).setText(header.getValue()));
+                headersElement.addContent(new Element(header.getName())
+                        .setText(header.getValue()));
             }
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.MetaMessage#getFolder()
      */
-    public MetaFolder getFolder() {
+    public final MetaFolder getFolder() {
         return folder;
     }
 }

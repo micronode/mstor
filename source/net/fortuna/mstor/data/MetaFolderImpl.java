@@ -189,7 +189,7 @@ public class MetaFolderImpl implements MetaFolder {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.MetaFolder#removeMessages(int[])
      */
-    public MetaMessage[] removeMessages(final int[] messageNumbers) {
+    public final MetaMessage[] removeMessages(final int[] messageNumbers) {
         List metas = new ArrayList();
         int delta = 0;
         int startIndex = Integer.MAX_VALUE;
@@ -231,7 +231,7 @@ public class MetaFolderImpl implements MetaFolder {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.data.MetaFolder#save()
      */
-    public void save() throws IOException {
+    public final void save() throws IOException {
         XMLOutputter xmlOut = new XMLOutputter(Format.getCompactFormat());
         xmlOut.getFormat().setIndent("  ");
         xmlOut.output(document, new FileOutputStream(file));

@@ -74,14 +74,16 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Provides access to an mbox-formatted file.
- * To read an mbox file using a non-standard file encoding you may specify
- * the following system property:
+ * Provides access to an mbox-formatted file. To read an mbox file using a
+ * non-standard file encoding you may specify the following system property:
+ * 
  * <pre>
- *      -Dmstor.mbox.encoding=&lt;some_encoding&gt;
+ *       -Dmstor.mbox.encoding=&lt;some_encoding&gt;
  * </pre>
- * If no encoding system property is specified the default file encoding
- * will be used.
+ * 
+ * If no encoding system property is specified the default file encoding will be
+ * used.
+ * 
  * @author Ben Fortuna
  */
 public class MboxFile {
@@ -98,49 +100,54 @@ public class MboxFile {
     public static final String FROM__PREFIX = "From ";
 
     /**
-     * A pattern representing the format of the "From_" line
-     * for the first message in an mbox file.
+     * A pattern representing the format of the "From_" line for the first
+     * message in an mbox file.
      */
     private static final String INITIAL_FROM__PATTERN = FROM__PREFIX + ".*";
 
     /**
-     * A pattern representing the format of all "From_" lines
-     * except for the first message in an mbox file.
+     * A pattern representing the format of all "From_" lines except for the
+     * first message in an mbox file.
      */
     private static final String FROM__PATTERN = "\n" + FROM__PREFIX;
 
     /**
-     * A pattern representing the masked format of all message content
-     * matching the "From_" line pattern.
+     * A pattern representing the masked format of all message content matching
+     * the "From_" line pattern.
      */
-//    private static final String MASKED_FROM__PATTERN = "\n>" + FROM__PREFIX;
-
+    // private static final String MASKED_FROM__PATTERN = "\n>" + FROM__PREFIX;
     private static final String FROM__DATE_PATTERN = "EEE MMM d HH:mm:ss yyyy";
 
     private static final int DEFAULT_BUFFER_SIZE = 1024;
 
     // Charset and decoder for ISO-8859-15
-//    private static Charset charset = Charset.forName(System.getProperty("mstor.mbox.encoding", System.getProperty("file.encoding")));
-//    private static Charset charset = Charset.forName(System.getProperty("mstor.mbox.encoding", "US-ASCII"));
-    private static Charset charset = Charset.forName(System.getProperty("mstor.mbox.encoding", "ISO-8859-1"));
+    // private static Charset charset =
+    // Charset.forName(System.getProperty("mstor.mbox.encoding",
+    // System.getProperty("file.encoding")));
+    // private static Charset charset =
+    // Charset.forName(System.getProperty("mstor.mbox.encoding", "US-ASCII"));
+    private static Charset charset = Charset.forName(System.getProperty(
+            "mstor.mbox.encoding", "ISO-8859-1"));
 
     private static Log log = LogFactory.getLog(MboxFile.class);
-    
+
     /**
      * @author Ben Fortuna
-     *
+     * 
      */
     private class BufferInputStream extends InputStream {
         private ByteBuffer buffer;
-        
+
         /**
          * @param buffer
          */
         public BufferInputStream(final ByteBuffer buffer) {
             this.buffer = buffer;
         }
-        
-        /* (non-Javadoc)
+
+        /*
+         * (non-Javadoc)
+         * 
          * @see java.io.InputStream#read()
          */
         public synchronized int read() throws IOException {
@@ -150,10 +157,13 @@ public class MboxFile {
             return buffer.get();
         }
 
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
+         * 
          * @see java.io.InputStream#read(byte[], int, int)
          */
-        public synchronized int read(final byte[] bytes, final int offset, final int length) throws IOException {
+        public synchronized int read(final byte[] bytes, final int offset,
+                final int length) throws IOException {
             int read = Math.min(length, buffer.remaining());
             buffer.get(bytes, offset, read);
             return read;
@@ -165,30 +175,32 @@ public class MboxFile {
     private CharsetEncoder encoder = charset.newEncoder();
     {
         encoder.onUnmappableCharacter(CodingErrorAction.REPLACE);
-//        decoder.onMalformedInput(CodingErrorAction.REPLACE);
+        // decoder.onMalformedInput(CodingErrorAction.REPLACE);
     }
 
-    private DateFormat from_DateFormat = new SimpleDateFormat(FROM__DATE_PATTERN, Locale.US);
+    private DateFormat from_DateFormat = new SimpleDateFormat(
+            FROM__DATE_PATTERN, Locale.US);
     {
         from_DateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 
     /**
-     * Used primarily to provide information about
-     * the mbox file.
+     * Used primarily to provide information about the mbox file.
      */
     private File file;
 
     private String mode;
-    
+
     // by default, don't use nio mapping..
-    private boolean useNioMapping = "true".equals(System.getProperty("mstor.mbox.useNioMapping"));
-    
+    private boolean useNioMapping = "true".equals(System
+            .getProperty("mstor.mbox.useNioMapping"));
+
     // by default, cache message buffers..
-    private boolean cacheBuffers = !("false".equals(System.getProperty("mstor.mbox.cacheBuffers")));
+    private boolean cacheBuffers = !("false".equals(System
+            .getProperty("mstor.mbox.cacheBuffers")));
 
     private RandomAccessFile raf;
-    
+
     /**
      * Used to access the mbox file in a random manner.
      */
@@ -198,10 +210,10 @@ public class MboxFile {
      * Tracks all message positions within the mbox file.
      */
     private long[] messagePositions;
-    
+
     /**
-     * A cache used to store mapped regions of the mbox file
-     * representing message data.
+     * A cache used to store mapped regions of the mbox file representing
+     * message data.
      */
     private Cache messageCache;
 
@@ -219,9 +231,10 @@ public class MboxFile {
         this.file = file;
         this.mode = mode;
     }
-    
+
     /**
      * Returns a random access file providing access to the mbox file.
+     * 
      * @return a random access file
      * @throws FileNotFoundException
      */
@@ -234,6 +247,7 @@ public class MboxFile {
 
     /**
      * Returns a channel for reading and writing to the mbox file.
+     * 
      * @return a file channel
      * @throws FileNotFoundException
      */
@@ -243,59 +257,67 @@ public class MboxFile {
         }
         return channel;
     }
-    
+
     /**
      * Reads a sequence of bytes using a java nio channel. If the java nio
      * approach fails, resort to random access file.
-     * @param position the position in the file to read from
-     * @param size the number of bytes to read
+     * 
+     * @param position
+     *            the position in the file to read from
+     * @param size
+     *            the number of bytes to read
      * @return a byte buffer containing the bytes read
      * @throws IOException
      */
-    private ByteBuffer readBytes(final long position, final ByteBuffer buffer) throws IOException {
+    private ByteBuffer readBytes(final long position, final ByteBuffer buffer)
+            throws IOException {
         try {
-//            throw new IOException("Test error handling..");
+            // throw new IOException("Test error handling..");
             getChannel().position(position);
             getChannel().read(buffer);
-        }
-        catch (IOException ioe) {
-           log.warn("Error reading bytes using nio", ioe);
-           getRaf().seek(position);
-           byte[] buf = new byte[buffer.capacity()];
-           getRaf().read(buf);
-           buffer.put(buf);
+        } catch (IOException ioe) {
+            log.warn("Error reading bytes using nio", ioe);
+            getRaf().seek(position);
+            byte[] buf = new byte[buffer.capacity()];
+            getRaf().read(buf);
+            buffer.put(buf);
         }
         return buffer;
     }
-    
+
     /**
-     * Maps a sequence of bytes using java nio. If the java nio
-     * approach fails, resort to random access file to "simulate" the mapping.
-     * @param position the position in the file to read from
-     * @param size the number of bytes to read
+     * Maps a sequence of bytes using java nio. If the java nio approach fails,
+     * resort to random access file to "simulate" the mapping.
+     * 
+     * @param position
+     *            the position in the file to read from
+     * @param size
+     *            the number of bytes to read
      * @return a byte buffer containing the bytes read
      * @throws IOException
      */
-    private ByteBuffer mapBytes(final long position, final int size) throws IOException {
+    private ByteBuffer mapBytes(final long position, final int size)
+            throws IOException {
         try {
-//          throw new IOException("Test error handling");
-            return getChannel().map(FileChannel.MapMode.READ_ONLY, position, size);
-        }
-        catch (IOException ioe) {
-           log.warn("Error reading bytes using nio", ioe);
-           getRaf().seek(position);
-           byte[] buf = new byte[size];
-           getRaf().read(buf);
-           return ByteBuffer.wrap(buf);
+            // throw new IOException("Test error handling");
+            return getChannel().map(FileChannel.MapMode.READ_ONLY, position,
+                    size);
+        } catch (IOException ioe) {
+            log.warn("Error reading bytes using nio", ioe);
+            getRaf().seek(position);
+            byte[] buf = new byte[size];
+            getRaf().read(buf);
+            return ByteBuffer.wrap(buf);
         }
     }
 
     /**
-     * Returns an initialised array of file positions
-     * for all messages in the mbox file.
+     * Returns an initialised array of file positions for all messages in the
+     * mbox file.
+     * 
      * @return a long array
-     * @throws IOException thrown when unable to read
-     * from the specified file channel
+     * @throws IOException
+     *             thrown when unable to read from the specified file channel
      */
     private long[] getMessagePositions() throws IOException {
         if (messagePositions == null) {
@@ -303,24 +325,26 @@ public class MboxFile {
 
             // debugging..
             log.debug("Channel size [" + getChannel().size() + "] bytes");
-            
-            int bufferSize = (int) Math.min(getChannel().size(), DEFAULT_BUFFER_SIZE);
+
+            int bufferSize = (int) Math.min(getChannel().size(),
+                    DEFAULT_BUFFER_SIZE);
 
             // read mbox file to determine the message positions..
             CharSequence cs = null;
 
-//            ByteBuffer buffer = readBytes(0, (int) bufferSize);
+            // ByteBuffer buffer = readBytes(0, (int) bufferSize);
             ByteBuffer buffer = ByteBuffer.allocateDirect(bufferSize);
             readBytes(0, buffer);
             buffer.flip();
-            
+
             cs = decoder.decode(buffer);
 
             // debugging..
             log.debug("Buffer [" + cs + "]");
 
             // check that first message is correct..
-            if (Pattern.compile(INITIAL_FROM__PATTERN, Pattern.DOTALL).matcher(cs).matches()) {
+            if (Pattern.compile(INITIAL_FROM__PATTERN, Pattern.DOTALL).matcher(
+                    cs).matches()) {
                 // debugging..
                 log.debug("Matched first message..");
 
@@ -328,35 +352,36 @@ public class MboxFile {
             }
 
             Pattern fromPattern = Pattern.compile(FROM__PATTERN);
-            
+
             // indicates the offset of the current buffer..
             long offset = 0;
 
             for (;;) {
-                //Matcher matcher = fromPattern.matcher(buffer.asCharBuffer());
+                // Matcher matcher = fromPattern.matcher(buffer.asCharBuffer());
                 Matcher matcher = fromPattern.matcher(cs);
-    
+
                 while (matcher.find()) {
                     // debugging..
-                    log.debug("Found match at [" + (offset + matcher.start()) + "]");
-    
+                    log.debug("Found match at [" + (offset + matcher.start())
+                            + "]");
+
                     // add one (1) to position to account for newline..
                     posList.add(new Long(offset + matcher.start() + 1));
                 }
-                
-//                if (offset + cb.limit() >= getChannel().size()) {
+
+                // if (offset + cb.limit() >= getChannel().size()) {
                 if (offset + bufferSize >= getChannel().size()) {
                     break;
-                }
-                else {
+                } else {
                     // preserve the end of the buffer as it may contain
                     // part of a From_ pattern..
-//                    offset += cb.limit() - FROM__PATTERN.length();
+                    // offset += cb.limit() - FROM__PATTERN.length();
                     offset += bufferSize - FROM__PATTERN.length();
-                    
-                    bufferSize = (int) Math.min(getChannel().size() - offset, DEFAULT_BUFFER_SIZE);
 
-//                    buffer = readBytes(offset, (int) bufferSize);
+                    bufferSize = (int) Math.min(getChannel().size() - offset,
+                            DEFAULT_BUFFER_SIZE);
+
+                    // buffer = readBytes(offset, (int) bufferSize);
                     buffer.clear();
                     readBytes(offset, buffer);
                     buffer.flip();
@@ -377,12 +402,13 @@ public class MboxFile {
 
     /**
      * Returns the total number of messages in the mbox file.
+     * 
      * @return an int
      */
-    public int getMessageCount() throws IOException {
+    public final int getMessageCount() throws IOException {
         return getMessagePositions().length;
     }
-    
+
     /**
      * Returns the message cache.
      */
@@ -395,27 +421,30 @@ public class MboxFile {
 
     /**
      * Opens an input stream to the specified message data.
-     * @param index the index of the message to open a stream to
+     * 
+     * @param index
+     *            the index of the message to open a stream to
      * @return an input stream
      */
-    public final InputStream getMessageAsStream(final int index) throws IOException {
-        ByteBuffer buffer = (ByteBuffer) getMessageCache().get(new Integer(index));
-        
+    public final InputStream getMessageAsStream(final int index)
+            throws IOException {
+        ByteBuffer buffer = (ByteBuffer) getMessageCache().get(
+                new Integer(index));
+
         if (buffer == null) {
             long position = getMessagePositions()[index];
             long size;
 
             if (index < getMessagePositions().length - 1) {
-                size = getMessagePositions()[index + 1] - getMessagePositions()[index];
-            }
-            else {
+                size = getMessagePositions()[index + 1]
+                        - getMessagePositions()[index];
+            } else {
                 size = getChannel().size() - getMessagePositions()[index];
             }
 
             if (useNioMapping) {
                 buffer = mapBytes(position, (int) size);
-            }
-            else {
+            } else {
                 buffer = ByteBuffer.allocateDirect((int) size);
                 readBytes(position, buffer);
                 buffer.flip();
@@ -429,38 +458,33 @@ public class MboxFile {
     }
 
     /**
-     * Convenience method that returns a message as a byte array
-     * containing the data for the message at the specified index.
-     * @param index the index of the message to retrieve
+     * Convenience method that returns a message as a byte array containing the
+     * data for the message at the specified index.
+     * 
+     * @param index
+     *            the index of the message to retrieve
      * @return a byte array
      */
-    public byte[] getMessage(final int index) throws IOException {
+    public final byte[] getMessage(final int index) throws IOException {
         /*
-        long position = getMessagePositions()[index];
-        long size;
-
-        if (index < getMessagePositions().length - 1) {
-            size = getMessagePositions()[index + 1] - getMessagePositions()[index];
-        }
-        else {
-            size = getChannel().size() - getMessagePositions()[index];
-        }
-
-        ByteBuffer buffer = readBytes(position, (int) size);
-        CharSequence message = decoder.decode(buffer);
-
-        // remove extraneous ">" characters added to maintain integrity of mbox file..
-//        Pattern maskedFromPattern = Pattern.compile("\\n>From ");
-        Pattern maskedFromPattern = Pattern.compile(MASKED_FROM__PATTERN);
-
-        //Matcher matcher = fromPattern.matcher(buffer.asCharBuffer());
-        Matcher matcher = maskedFromPattern.matcher(message);
-        if (matcher.find()) {
-            matcher.reset();
-            message = matcher.replaceAll(FROM__PATTERN);
-        }
-        return message;
-        */
+         * long position = getMessagePositions()[index]; long size;
+         * 
+         * if (index < getMessagePositions().length - 1) { size =
+         * getMessagePositions()[index + 1] - getMessagePositions()[index]; }
+         * else { size = getChannel().size() - getMessagePositions()[index]; }
+         * 
+         * ByteBuffer buffer = readBytes(position, (int) size); CharSequence
+         * message = decoder.decode(buffer);
+         *  // remove extraneous ">" characters added to maintain integrity of
+         * mbox file.. // Pattern maskedFromPattern = Pattern.compile("\\n>From
+         * "); Pattern maskedFromPattern =
+         * Pattern.compile(MASKED_FROM__PATTERN);
+         * 
+         * //Matcher matcher = fromPattern.matcher(buffer.asCharBuffer());
+         * Matcher matcher = maskedFromPattern.matcher(message); if
+         * (matcher.find()) { matcher.reset(); message =
+         * matcher.replaceAll(FROM__PATTERN); } return message;
+         */
         InputStream in = getMessageAsStream(index);
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         int read;
@@ -471,94 +495,101 @@ public class MboxFile {
     }
 
     /**
-     * Appends the specified message (represented by a CharSequence) to the
-     * mbox file.
+     * Appends the specified message (represented by a CharSequence) to the mbox
+     * file.
+     * 
      * @param message
      */
     public final void appendMessage(final byte[] message) throws IOException {
         long newMessagePosition = getChannel().size();
         appendMessage(message, getChannel());
-        
+
         // update message positions..
         if (messagePositions != null) {
             long[] newMessagePositions = new long[messagePositions.length + 1];
-            System.arraycopy(messagePositions, 0, newMessagePositions, 0, messagePositions.length);
+            System.arraycopy(messagePositions, 0, newMessagePositions, 0,
+                    messagePositions.length);
             newMessagePositions[newMessagePositions.length - 1] = newMessagePosition;
             messagePositions = newMessagePositions;
         }
     }
 
     /**
-     * Appends the specified message (represented by a CharSequence)
-     * to the specified channel.
+     * Appends the specified message (represented by a CharSequence) to the
+     * specified channel.
+     * 
      * @param message
      * @param channel
      * @throws IOException
      */
-    private void appendMessage(final byte[] message, final FileChannel channel) throws IOException {
-//        ByteBuffer buffer = ByteBuffer.allocate(message.length());
+    private void appendMessage(final byte[] message, final FileChannel channel)
+            throws IOException {
+        // ByteBuffer buffer = ByteBuffer.allocate(message.length());
 
         /*
-        // copy message to avoid modifying method arguments directly..
-        CharSequence newMessage = message.toString();
+         * // copy message to avoid modifying method arguments directly..
+         * CharSequence newMessage = message.toString();
+         *  // encoder.reset();
+         *  // add ">" characters to message content matching the "From_" line
+         * pattern // to maintain integrity of mbox file.. // NOTE: This
+         * shouldn't replace any existing "From_" line as the from pattern //
+         * contains a newline..
+         * 
+         * //Pattern fromPattern = Pattern.compile("\n\r\n" + FROM_); Pattern
+         * fromPattern = Pattern.compile(FROM__PATTERN);
+         * 
+         * //Matcher matcher = fromPattern.matcher(buffer.asCharBuffer());
+         * Matcher matcher = fromPattern.matcher(newMessage); if
+         * (matcher.find()) { matcher.reset(); newMessage =
+         * matcher.replaceAll(MASKED_FROM__PATTERN); }
+         */
 
-//        encoder.reset();
-
-        // add ">" characters to message content matching the "From_" line pattern
-        // to maintain integrity of mbox file..
-        // NOTE: This shouldn't replace any existing "From_" line as the from pattern
-        // contains a newline..
-
-        //Pattern fromPattern = Pattern.compile("\n\r\n" + FROM_);
-        Pattern fromPattern = Pattern.compile(FROM__PATTERN);
-
-        //Matcher matcher = fromPattern.matcher(buffer.asCharBuffer());
-        Matcher matcher = fromPattern.matcher(newMessage);
-        if (matcher.find()) {
-            matcher.reset();
-            newMessage = matcher.replaceAll(MASKED_FROM__PATTERN);
-        }
-        */
-        
         ByteBuffer buffer = ByteBuffer.wrap(MboxEncoder.encode(message));
-//        ByteBuffer buffer = ByteBuffer.wrap(message);
+        // ByteBuffer buffer = ByteBuffer.wrap(message);
         CharBuffer decoded = decoder.decode(buffer);
-        
+
         // debugging..
         if (log.isDebugEnabled()) {
             log.debug("Appending message [" + decoded + "]");
         }
-        
+
         if (!hasFrom_Line(decoded)) {
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("No From_ line found - inserting..");
             }
-            
+
             // if not first message add required newlines..
             if (channel.size() > 0) {
-                channel.write(encoder.encode(CharBuffer.wrap("\n\n")), channel.size());
-//                encoder.encode(CharBuffer.wrap("\n\n"), buffer, false);
+                channel.write(encoder.encode(CharBuffer.wrap("\n\n")), channel
+                        .size());
+                // encoder.encode(CharBuffer.wrap("\n\n"), buffer, false);
             }
-            channel.write(encoder.encode(CharBuffer.wrap(FROM__PREFIX + "- " + from_DateFormat.format(new Date()) + "\n")), channel.size());
-//            encoder.encode(CharBuffer.wrap(DEFAULT_FROM__LINE), buffer, false);
+            channel.write(encoder.encode(CharBuffer.wrap(FROM__PREFIX + "- "
+                    + from_DateFormat.format(new Date()) + "\n")), channel
+                    .size());
+            // encoder.encode(CharBuffer.wrap(DEFAULT_FROM__LINE), buffer,
+            // false);
         }
         buffer.rewind();
-        
-        channel.write(buffer, channel.size());
-//        encoder.encode(CharBuffer.wrap(message), buffer, true);
-//        encoder.flush(buffer);
 
-//        channel.write(buffer, channel.size());
+        channel.write(buffer, channel.size());
+        // encoder.encode(CharBuffer.wrap(message), buffer, true);
+        // encoder.flush(buffer);
+
+        // channel.write(buffer, channel.size());
     }
 
     /**
      * Purge the specified messages from the file.
-     * @param msgnums the indices of the messages to purge
+     * 
+     * @param msgnums
+     *            the indices of the messages to purge
      */
-    public void purge(final int[] msgnums) throws IOException {
+    public final void purge(final int[] msgnums) throws IOException {
         // create a new mailbox file..
-        File newFile = new File(file.getParent(), file.getName() + TEMP_FILE_EXTENSION);
+        File newFile = new File(file.getParent(), file.getName()
+                + TEMP_FILE_EXTENSION);
 
         FileOutputStream newOut = new FileOutputStream(newFile);
         FileChannel newChannel = newOut.getChannel();
@@ -579,7 +610,8 @@ public class MboxFile {
         // release system resources..
         close();
 
-        File tempFile = new File(file.getParent(), file.getName() + "." + System.currentTimeMillis());
+        File tempFile = new File(file.getParent(), file.getName() + "."
+                + System.currentTimeMillis());
         if (!renameTo(file, tempFile)) {
             throw new IOException("Unable to rename existing file");
         }
@@ -590,7 +622,7 @@ public class MboxFile {
         // rename new file..
         renameTo(newFile, file);
     }
-    
+
     /**
      * @param source
      * @param dest
@@ -606,85 +638,88 @@ public class MboxFile {
         if (dest.exists()) {
             dest.delete();
         }
-    	boolean success = source.renameTo(dest);
-    	if (!success) {
-    		try {
-        		InputStream in = new FileInputStream(source);
-        		OutputStream out = new FileOutputStream(dest);
-        		int length;
-        		byte[] buffer = new byte[1024];
-        		while ((length = in.read(buffer)) >= 0) {
-        			out.write(buffer, 0, length);
-        		}
-        		in.close();
-        		out.close();
-        		success = source.delete();
-    		}
-    		catch (IOException ioe) {
-    			log.error("Failed to rename [" + source + "] to [" + dest + "]", ioe);
-    		}
-    	}
-    	return success;
+        boolean success = source.renameTo(dest);
+        if (!success) {
+            try {
+                InputStream in = new FileInputStream(source);
+                OutputStream out = new FileOutputStream(dest);
+                int length;
+                byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+                while ((length = in.read(buffer)) >= 0) {
+                    out.write(buffer, 0, length);
+                }
+                in.close();
+                out.close();
+                success = source.delete();
+            } catch (IOException ioe) {
+                log.error(
+                        "Failed to rename [" + source + "] to [" + dest + "]",
+                        ioe);
+            }
+        }
+        return success;
     }
 
     /**
      * Close the mbox file and release any system resources.
+     * 
      * @throws IOException
      */
-    public void close() throws IOException {
-    	if (messageCache != null) {
-    		messageCache.clear();
-    	}
-    	if (messagePositions != null) {
-    		messagePositions = null;
-    	}
+    public final void close() throws IOException {
+        if (messageCache != null) {
+            messageCache.clear();
+        }
+        if (messagePositions != null) {
+            messagePositions = null;
+        }
         if (raf != null) {
             raf.close();
             raf = null;
             channel = null;
         }
     }
-    
+
     /**
-     * Indicates whether the specified CharSequence representation of
-     * a message contains a "From_" line.
-     * @param message a CharSequence representing a message
+     * Indicates whether the specified CharSequence representation of a message
+     * contains a "From_" line.
+     * 
+     * @param message
+     *            a CharSequence representing a message
      * @return true if a "From_" line is found, otherwise false
      */
     private static boolean hasFrom_Line(final CharSequence message) {
-        return Pattern.compile(FROM__PREFIX + ".*", Pattern.DOTALL).matcher(message).matches();
+        return Pattern.compile(FROM__PREFIX + ".*", Pattern.DOTALL).matcher(
+                message).matches();
     }
 
-	/**
-	 * Indicates whether the specified file appears to be a valid mbox file. Note that
-	 * this method does not check the entire file for validity, but rather checks the
-	 * first line for indication that this is an mbox file.
-	 */
+    /**
+     * Indicates whether the specified file appears to be a valid mbox file.
+     * Note that this method does not check the entire file for validity, but
+     * rather checks the first line for indication that this is an mbox file.
+     */
     public static boolean isValid(final File file) {
-		BufferedReader reader = null;
+        BufferedReader reader = null;
 
-		try {
-			reader = new BufferedReader(new FileReader(file));
+        try {
+            reader = new BufferedReader(new FileReader(file));
 
-			// check that first message is correct..
-			String line = reader.readLine();
+            // check that first message is correct..
+            String line = reader.readLine();
 
-			return Pattern.compile(INITIAL_FROM__PATTERN, Pattern.DOTALL).matcher(line).matches();
-		}
-		catch (Exception e) {
+            return Pattern.compile(INITIAL_FROM__PATTERN, Pattern.DOTALL)
+                    .matcher(line).matches();
+        } catch (Exception e) {
             log.info("Not a valid mbox file [" + file + "]", e);
-		}
-		finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				}
-				catch (IOException ioe) {
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException ioe) {
                     log.info("Error closing stream [" + file + "]", ioe);
-				}
-			}
-		}
+                }
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 }

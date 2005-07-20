@@ -24,6 +24,7 @@ import junit.framework.TestCase;
 
 /**
  * Test case for MStorFolder.
+ * 
  * @author benfortuna
  */
 public class MStorFolderTest extends TestCase {
@@ -39,8 +40,9 @@ public class MStorFolderTest extends TestCase {
         super.setUp();
 
         URLName url = new URLName("mstor:c:/temp/mstor_test");
-//        URLName url = new URLName("mstor:E:/development/workspace/mstor/etc/samples");
-        
+        // URLName url = new
+        // URLName("mstor:E:/development/workspace/mstor/etc/samples");
+
         Properties p = new Properties();
         // disable metadata..
         p.setProperty("mstor.meta.enabled", "false");
@@ -48,23 +50,26 @@ public class MStorFolderTest extends TestCase {
         store = new MStorStore(Session.getDefaultInstance(p), url);
         store.connect();
     }
-    
-    /* (non-Javadoc)
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		if (store.isConnected()) {
-			store.close();
-		}
-	}
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see junit.framework.TestCase#tearDown()
+     */
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        if (store.isConnected()) {
+            store.close();
+        }
+    }
 
     public void testExists() throws MessagingException {
         assertTrue(store.getDefaultFolder().exists());
     }
 
     public void testGetSeparator() throws MessagingException {
-        assertEquals(store.getDefaultFolder().getSeparator(), File.separatorChar);
+        assertEquals(store.getDefaultFolder().getSeparator(),
+                File.separatorChar);
     }
 
     public void testGetType() throws MessagingException {
@@ -110,8 +115,7 @@ public class MStorFolderTest extends TestCase {
         try {
             inbox.close(false);
             fail("Should throw IllegalStateException");
-        }
-        catch (IllegalStateException ise) {
+        } catch (IllegalStateException ise) {
             log.info("Error ocurred", ise);
         }
     }
@@ -145,7 +149,8 @@ public class MStorFolderTest extends TestCase {
      * Class under test for String getName()
      */
     public void testGetName() throws MessagingException {
-        assertEquals(store.getDefaultFolder().getFolder("Inbox").getName(), "Inbox");
+        assertEquals(store.getDefaultFolder().getFolder("Inbox").getName(),
+                "Inbox");
     }
 
     /*
@@ -158,7 +163,8 @@ public class MStorFolderTest extends TestCase {
      * Class under test for Folder getParent()
      */
     public void testGetParent() throws MessagingException {
-        assertEquals(store.getDefaultFolder().getFolder("Inbox").getParent().getFullName(), store.getDefaultFolder().getFullName());
+        assertEquals(store.getDefaultFolder().getFolder("Inbox").getParent()
+                .getFullName(), store.getDefaultFolder().getFullName());
     }
 
     /*
@@ -205,8 +211,7 @@ public class MStorFolderTest extends TestCase {
         try {
             inbox.getMessage(1);
             fail("Should throw IllegalStateException");
-        }
-        catch (IllegalStateException ise) {
+        } catch (IllegalStateException ise) {
             log.info("Error ocurred", ise);
         }
 
@@ -215,8 +220,7 @@ public class MStorFolderTest extends TestCase {
         try {
             inbox.getMessage(0);
             fail("Should throw IndexOutOfBoundsException");
-        }
-        catch (IndexOutOfBoundsException iobe) {
+        } catch (IndexOutOfBoundsException iobe) {
             log.info("Error ocurred", iobe);
         }
 
@@ -233,7 +237,7 @@ public class MStorFolderTest extends TestCase {
         Folder copy2 = copy.getFolder("Copy2");
         copy2.create(Folder.HOLDS_MESSAGES);
         copy2.open(Folder.READ_WRITE);
-        
+
         int messageCount = copy2.getMessageCount();
 
         Folder inbox = store.getDefaultFolder().getFolder("Inbox");
@@ -241,8 +245,9 @@ public class MStorFolderTest extends TestCase {
 
         Message[] messages = inbox.getMessages();
         copy2.appendMessages(messages);
-        
-        assertEquals(messageCount + inbox.getMessageCount(), copy2.getMessageCount());
+
+        assertEquals(messageCount + inbox.getMessageCount(), copy2
+                .getMessageCount());
     }
 
     /*
@@ -251,32 +256,32 @@ public class MStorFolderTest extends TestCase {
     public void testExpunge() throws MessagingException {
         Folder inbox = store.getDefaultFolder().getFolder("Inbox");
         inbox.open(Folder.READ_WRITE);
-        
+
         Message message = inbox.getMessage(1);
         message.setFlag(Flags.Flag.DELETED, true);
-        
+
         Message[] expunged = inbox.expunge();
-        
+
         log.info("Expunged [" + expunged + "]");
     }
 
     public void testCopyMessages() throws MessagingException {
         Folder inbox = store.getDefaultFolder().getFolder("Inbox");
         inbox.open(Folder.READ_ONLY);
-        
+
         Folder copy = store.getDefaultFolder().getFolder("Inbox2");
         if (!copy.exists()) {
             copy.create(Folder.HOLDS_MESSAGES);
         }
         copy.open(Folder.READ_WRITE);
-        
+
         for (int i = 1; i <= 5; i++) {
             Message message = inbox.getMessage(i);
-            
+
             log.info("Message subject: [" + message.getSubject() + "]");
-            inbox.copyMessages(new Message[] {message}, copy);
+            inbox.copyMessages(new Message[] { message }, copy);
         }
-        
+
         assertEquals(5, copy.getMessageCount());
     }
 }

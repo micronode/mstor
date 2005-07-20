@@ -108,7 +108,7 @@ public class MStorStore extends Store {
     /**
      * Override the superclass method to bypass authentication.
      */
-    protected boolean protocolConnect(final String arg0, final int arg1, final String arg2,
+    protected final boolean protocolConnect(final String arg0, final int arg1, final String arg2,
             final String arg3) throws MessagingException {
         return true;
     }
