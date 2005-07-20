@@ -2,6 +2,15 @@
  mstor - Changes
 =================
 
+0.9.7:
+
+ - Fixed bug where message count not updated after appending message to MboxFile
+ 
+ - Added assertions to MStorFolder
+ 
+ - Updated checkstyle configuration and clean up
+ 
+ 
 0.9.6:
 
  - Fixed bug introduced in 0.9.5 causing message reads from incorrect postion
