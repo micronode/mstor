@@ -52,6 +52,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.event.ConnectionEvent;
 import javax.mail.event.ConnectionListener;
+import javax.mail.event.FolderEvent;
 
 import net.fortuna.mstor.data.MboxFile;
 import net.fortuna.mstor.data.MetaFolderImpl;
@@ -62,8 +63,7 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * A folder implementation for the mstor javamail provider.
- * 
- * @author benfortuna
+ * @author Ben Fortuna
  */
 public class MStorFolder extends Folder {
 
@@ -273,24 +273,31 @@ public class MStorFolder extends Folder {
         }
 
         // debugging..
-        log.debug("Creating folder [" + file.getAbsolutePath() + "]");
+        if (log.isDebugEnabled()) {
+            log.debug("Creating folder [" + file.getAbsolutePath() + "]");
+        }
 
+        boolean created = false;
         if ((type & HOLDS_MESSAGES) > 0) {
             this.type = type;
 
             try {
                 file.getParentFile().mkdirs();
-                return file.createNewFile();
+                created = file.createNewFile();
             } catch (IOException ioe) {
                 throw new MessagingException("Unable to create folder [" + file
                         + "]", ioe);
             }
         } else if ((type & HOLDS_FOLDERS) > 0) {
             this.type = type;
-            return file.mkdirs();
+            created = file.mkdirs();
         } else {
             throw new MessagingException("Invalid folder type");
         }
+        if (created) {
+            notifyFolderListeners(FolderEvent.CREATED);
+        }
+        return created;
     }
 
     /*
@@ -357,7 +364,11 @@ public class MStorFolder extends Folder {
         metafile.delete();
 
         // attempt to delete the directory/file..
-        return file.delete();
+        boolean deleted = file.delete();
+        if (deleted) {
+            notifyFolderListeners(FolderEvent.DELETED);
+        }
+        return deleted;
     }
 
     /*
@@ -369,7 +380,11 @@ public class MStorFolder extends Folder {
         assertExists();
         assertClosed();
 
-        return file.renameTo(new File(file.getParent(), folder.getName()));
+        boolean renamed = file.renameTo(new File(file.getParent(), folder.getName()));
+        if (renamed) {
+            notifyFolderRenamedListeners(folder);
+        }
+        return renamed;
     }
 
     /*
@@ -391,6 +406,9 @@ public class MStorFolder extends Folder {
 
         this.mode = mode;
         open = true;
+        
+        // notify listeners only if successfully opened..
+        notifyConnectionListeners(ConnectionEvent.OPENED);
     }
 
     /*
@@ -404,14 +422,16 @@ public class MStorFolder extends Folder {
             expunge();
         }
 
+        // notify listeners and mark as closed even if not successfully closed..
+        notifyConnectionListeners(ConnectionEvent.CLOSED);
+        open = false;
+
         try {
             mbox.close();
             mbox = null;
         } catch (IOException ioe) {
             throw new MessagingException("Error ocurred closing mbox file", ioe);
         }
-
-        open = false;
     }
 
     /*
@@ -546,6 +566,9 @@ public class MStorFolder extends Folder {
                 log.error("Error ocurred saving metadata", ioe);
             }
         }
+        
+        // notify listeners..
+        notifyMessageAddedListeners(messages);
     }
 
     /*
@@ -599,6 +622,9 @@ public class MStorFolder extends Folder {
         for (int i = 0; i < deleted.length; i++) {
             deleted[i].setExpunged(true);
         }
+        
+        // notify listeners..
+        notifyMessageRemovedListeners(true, deleted);
 
         return deleted;
     }
