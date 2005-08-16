@@ -34,7 +34,7 @@ public class MStorStoreTest extends TestCase {
     /*
      * @see TestCase#setUp()
      */
-    protected void setUp() throws Exception {
+    protected final void setUp() throws Exception {
         super.setUp();
 
 //        URLName url = new URLName("mstor:c:/temp/mail/store");
@@ -48,7 +48,7 @@ public class MStorStoreTest extends TestCase {
     /*
      * Class under test for Folder getDefaultFolder()
      */
-    public void testGetDefaultFolder() throws MessagingException {
+    public final void testGetDefaultFolder() throws MessagingException {
         Folder folder = store.getDefaultFolder();
 
         assertNotNull(folder);
@@ -59,7 +59,7 @@ public class MStorStoreTest extends TestCase {
     /*
      * Class under test for Folder getFolder(String)
      */
-    public void testGetFolderString() throws MessagingException {
+    public final void testGetFolderString() throws MessagingException {
 //        Folder folder = store.getFolder("Inbox");
         Folder folder = store.getDefaultFolder().list()[0];
 
@@ -83,7 +83,7 @@ public class MStorStoreTest extends TestCase {
     /*
      * Class under test for Folder getFolder(URLName)
      */
-    public void testGetFolderURLName() throws MessagingException {
+    public final void testGetFolderURLName() throws MessagingException {
         Folder folder = store.getFolder(new URLName("Test"));
 
         assertNotNull(folder);

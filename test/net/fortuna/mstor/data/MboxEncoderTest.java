@@ -54,7 +54,7 @@ public class MboxEncoderTest extends TestCase {
     /**
      * @throws IOException
      */
-    public void testEncode() throws IOException {
+    public final void testEncode() throws IOException {
         log.info(new String(MboxEncoder.encode("This is a message \n\nFrom me".getBytes())));
     }
 }

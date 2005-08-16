@@ -34,7 +34,7 @@ public class MStorMessageTest extends TestCase {
     /*
      * @see TestCase#setUp()
      */
-    protected void setUp() throws Exception {
+    protected final void setUp() throws Exception {
         super.setUp();
         
 //        URLName url = new URLName("mstor:c:/temp/mail/Aardvark/store");
@@ -47,7 +47,7 @@ public class MStorMessageTest extends TestCase {
     /*
      * Class under test for Date getReceivedDate()
      */
-    public void testGetReceivedDate() throws MessagingException {
+    public final void testGetReceivedDate() throws MessagingException {
         Folder inbox = store.getDefaultFolder().getFolder("Inbox");
         inbox.open(Folder.READ_ONLY);
         
