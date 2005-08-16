@@ -10,6 +10,11 @@
  
  - Updated checkstyle configuration and clean up
  
+ - Added event broadcasting for opened, closed, created, deleted and renamed
+ folders
+ 
+ - Added event broadcasting for messages added or removed from a folder
+ 
  
 0.9.6:
 
