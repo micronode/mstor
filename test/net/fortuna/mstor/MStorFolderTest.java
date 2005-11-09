@@ -47,6 +47,7 @@ public class MStorFolderTest extends TestCase {
         // disable metadata..
         p.setProperty("mstor.meta.enabled", "false");
         p.setProperty("mstor.mbox.useNioMapping", "false");
+        p.setProperty("mstor.mbox.directBuffer", "false");
         store = new MStorStore(Session.getDefaultInstance(p), url);
         store.connect();
     }

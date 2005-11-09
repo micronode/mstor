@@ -119,6 +119,8 @@ public class MboxFile {
     private static final String FROM__DATE_PATTERN = "EEE MMM d HH:mm:ss yyyy";
 
     private static final int DEFAULT_BUFFER_SIZE = 1024;
+    
+    private static final boolean DIRECT_BUFFER = !"false".equals(System.getProperty("mstor.mbox.directBuffer"));
 
     // Charset and decoder for ISO-8859-15
     // private static Charset charset =
@@ -332,8 +334,13 @@ public class MboxFile {
             // read mbox file to determine the message positions..
             CharSequence cs = null;
 
-            // ByteBuffer buffer = readBytes(0, (int) bufferSize);
-            ByteBuffer buffer = ByteBuffer.allocateDirect(bufferSize);
+            ByteBuffer buffer = null;
+            if (DIRECT_BUFFER) {
+                buffer = ByteBuffer.allocateDirect(bufferSize);
+            }
+            else {
+                buffer = ByteBuffer.allocate(bufferSize);
+            }
             readBytes(0, buffer);
             buffer.flip();
 
@@ -445,7 +452,12 @@ public class MboxFile {
             if (useNioMapping) {
                 buffer = mapBytes(position, (int) size);
             } else {
-                buffer = ByteBuffer.allocateDirect((int) size);
+                if (DIRECT_BUFFER) {
+                    buffer = ByteBuffer.allocateDirect((int) size);
+                }
+                else {
+                    buffer = ByteBuffer.allocate((int) size);
+                }
                 readBytes(position, buffer);
                 buffer.flip();
             }
