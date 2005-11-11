@@ -120,7 +120,7 @@ public class MboxFile {
 
     private static final int DEFAULT_BUFFER_SIZE = 1024;
     
-    private static final boolean DIRECT_BUFFER = !"false".equals(System.getProperty("mstor.mbox.directBuffer"));
+    private static final boolean USE_DIRECT_BUFFERS = !"false".equals(System.getProperty("mstor.mbox.useDirectBuffers"));
 
     // Charset and decoder for ISO-8859-15
     // private static Charset charset =
@@ -335,7 +335,7 @@ public class MboxFile {
             CharSequence cs = null;
 
             ByteBuffer buffer = null;
-            if (DIRECT_BUFFER) {
+            if (USE_DIRECT_BUFFERS) {
                 buffer = ByteBuffer.allocateDirect(bufferSize);
             }
             else {
@@ -452,7 +452,7 @@ public class MboxFile {
             if (useNioMapping) {
                 buffer = mapBytes(position, (int) size);
             } else {
-                if (DIRECT_BUFFER) {
+                if (USE_DIRECT_BUFFERS) {
                     buffer = ByteBuffer.allocateDirect((int) size);
                 }
                 else {
