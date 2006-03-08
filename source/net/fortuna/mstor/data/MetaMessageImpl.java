@@ -50,6 +50,7 @@ import net.fortuna.mstor.util.MetaDateFormat;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jdom.Element;
+import org.jdom.IllegalNameException;
 
 /**
  * A JDOM-based implementation of a meta message.
@@ -302,9 +303,15 @@ public class MetaMessageImpl implements MetaMessage {
         headersElement.removeContent();
         for (; headers.hasMoreElements();) {
             Header header = (Header) headers.nextElement();
-            if (!header.getName().startsWith(MboxFile.FROM__PREFIX)) {
-                headersElement.addContent(new Element(header.getName())
-                        .setText(header.getValue()));
+            try {
+                if (!header.getName().startsWith(MboxFile.FROM__PREFIX)) {
+                    headersElement.addContent(new Element(header.getName())
+                            .setText(header.getValue()));
+                }
+            }
+            catch (IllegalNameException ine) {
+                log.warn("Invalid header (ignored): "
+                        + header.getName() + "=" + header.getValue());
             }
         }
     }
