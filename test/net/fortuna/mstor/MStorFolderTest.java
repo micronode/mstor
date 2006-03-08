@@ -8,12 +8,14 @@
 package net.fortuna.mstor;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Properties;
 
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.URLName;
 
@@ -33,12 +35,28 @@ public class MStorFolderTest extends TestCase {
 
     private MStorStore store;
 
+    /**
+     * Default constructor.
+     */
+    public MStorFolderTest() {
+
+        // clean up..
+        new File("c:/temp/mstor_test/Copy/Copy2").delete();
+        new File("c:/temp/mstor_test/Copy").delete();
+        new File("c:/temp/mstor_test/Rename2").delete();
+        new File("c:/temp/mstor_test/Test/Test2.sbd/Test3").delete();
+        new File("c:/temp/mstor_test/Test/Test2.sbd").delete();
+        new File("c:/temp/mstor_test/Test/Test2").delete();
+        new File("c:/temp/mstor_test/Test").delete();
+        new File("c:/temp/mstor_test/Inbox2").delete();
+    }
+    
     /*
      * @see TestCase#setUp()
      */
     protected final void setUp() throws Exception {
         super.setUp();
-
+        
         URLName url = new URLName("mstor:c:/temp/mstor_test");
         // URLName url = new
         // URLName("mstor:E:/development/workspace/mstor/etc/samples");
@@ -250,6 +268,26 @@ public class MStorFolderTest extends TestCase {
         assertEquals(messageCount + inbox.getMessageCount(), copy2
                 .getMessageCount());
     }
+    
+    /**
+     * Test appending messages to a closed folder.
+     */
+    public void testAppendToClosedFolder() throws MessagingException {
+        Folder copy2 = store.getDefaultFolder().getFolder("Copy").getFolder("Copy2");
+        copy2.open(Folder.READ_ONLY);
+        int messageCount = copy2.getMessageCount();
+        copy2.close(false);
+
+        Folder inbox = store.getDefaultFolder().getFolder("Inbox");
+        inbox.open(Folder.READ_ONLY);
+
+        Message[] messages = inbox.getMessages();
+        copy2.appendMessages(messages);
+
+        copy2.open(Folder.READ_ONLY);
+        assertEquals(messageCount + inbox.getMessageCount(),
+                copy2.getMessageCount());
+    }
 
     /*
      * Class under test for Message[] expunge()
@@ -284,5 +322,28 @@ public class MStorFolderTest extends TestCase {
         }
 
         assertEquals(5, copy.getMessageCount());
+    }
+    
+    /**
+     * Test parsing of multipart messages.
+     * @throws MessagingException
+     */
+    public void testParseMultipart() throws MessagingException, IOException {
+        Folder inbox = store.getDefaultFolder().getFolder("Inbox");
+        inbox.open(Folder.READ_ONLY);
+        
+        for (int i = 1; i <= inbox.getMessageCount(); i++) {
+            Message message = inbox.getMessage(i);
+            if (message.isMimeType("multipart/*")) {
+                log.info("Message " + i + " is multipart");
+                
+                Multipart parts = (Multipart) message.getContent();
+                log.info("Message part count " + i + ": " + parts.getCount());
+                
+                for (int j = 0; j < parts.getCount(); j++) {
+                    log.info("Message part type " + i + "(" + j + "): " + parts.getBodyPart(j).getContentType());
+                }
+            }
+        }
     }
 }
