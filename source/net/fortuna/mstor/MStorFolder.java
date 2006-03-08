@@ -398,9 +398,9 @@ public class MStorFolder extends Folder {
 
         if ((getType() & HOLDS_MESSAGES) > 0) {
             if (mode == READ_WRITE) {
-                mbox = new MboxFile(file, MboxFile.READ_WRITE);
+                openMbox(MboxFile.READ_WRITE);
             } else {
-                mbox = new MboxFile(file, MboxFile.READ_ONLY);
+                openMbox(MboxFile.READ_ONLY);
             }
         }
 
@@ -409,6 +409,14 @@ public class MStorFolder extends Folder {
         
         // notify listeners only if successfully opened..
         notifyConnectionListeners(ConnectionEvent.OPENED);
+    }
+    
+    /**
+     * Create a new reference to mbox file.
+     * @param mode
+     */
+    private void openMbox(String mode) {
+        mbox = new MboxFile(file, mode);
     }
 
     /*
@@ -427,11 +435,19 @@ public class MStorFolder extends Folder {
         open = false;
 
         try {
-            mbox.close();
-            mbox = null;
+            closeMbox();
         } catch (IOException ioe) {
             throw new MessagingException("Error ocurred closing mbox file", ioe);
         }
+    }
+    
+    /**
+     * Close and clear mbox file reference.
+     * @throws IOException
+     */
+    private void closeMbox() throws IOException {
+        mbox.close();
+        mbox = null;
     }
 
     /*
@@ -532,6 +548,12 @@ public class MStorFolder extends Folder {
         Date received = new Date();
         ByteArrayOutputStream out = new ByteArrayOutputStream(DEFAULT_BUFFER_SIZE);
 
+        // Messages may be appended to a closed folder. So if the folder is closed,
+        // create a temporary reference to the mbox file to append messages..
+        if (mbox == null) {
+            openMbox(MboxFile.READ_WRITE);
+        }
+        
         for (int i = 0; i < messages.length; i++) {
             try {
                 out.reset();
@@ -564,6 +586,16 @@ public class MStorFolder extends Folder {
                 getMeta().save();
             } catch (IOException ioe) {
                 log.error("Error ocurred saving metadata", ioe);
+            }
+        }
+        
+        // if mbox is not really open, ensure it is closed again..
+        if (mbox != null && !isOpen()) {
+            try {
+                closeMbox();
+            }
+            catch (IOException ioe) {
+                throw new MessagingException("Error appending messages", ioe);
             }
         }
         
