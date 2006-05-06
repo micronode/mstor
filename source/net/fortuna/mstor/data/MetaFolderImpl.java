@@ -36,8 +36,6 @@
 package net.fortuna.mstor.data;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -46,31 +44,25 @@ import javax.mail.Message;
 
 import net.fortuna.mstor.MetaFolder;
 import net.fortuna.mstor.MetaMessage;
+import net.fortuna.mstor.data.xml.DocumentBinding;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.input.SAXBuilder;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
+import org.jdom.Namespace;
 
 
 /**
  * A JDOM-based implementation of a meta folder.
  * @author benfortuna
  */
-public class MetaFolderImpl implements MetaFolder {
-
+public class MetaFolderImpl extends DocumentBinding implements MetaFolder {
+    
     private static final String ELEMENT_FOLDER = "folder";
 
     private static final String ATTRIBUTE_FOLDER_NAME = "name";
 
     private static Log log = LogFactory.getLog(MetaFolderImpl.class);
-
-    private File file;
-
-    private Document document;
 
     public static final String FILE_EXTENSION = ".emf";
 
@@ -79,37 +71,21 @@ public class MetaFolderImpl implements MetaFolder {
      * @param file the meta folder file
      */
     public MetaFolderImpl(final File file) {
-        this.file = file;
+        super(file);
     }
 
     /**
-     * Returns the JDOM document associated with this
-     * meta folder.
-     * @return a JDOM document
-     * @throws JDOMException thrown if the specified file
-     * is not a valid XML document
-     * @throws IOException thrown if an error occurs reading
-     * the specified file
+     * Constructs a new meta folder instance with the specified namespace.
+     * @param file the meta folder file
+     * @param namespace the namespace for the metadata
      */
-    private Document getDocument() {
-        if (document == null) {
-            try {
-                /*
-                if (!file.exists()) {
-                    file.createNewFile();
-                }
-                */
-
-                SAXBuilder builder = new SAXBuilder();
-                document = builder.build(file);
-            }
-            catch (Exception e) {
-                // create an empty document if unable to read
-                // from filesystem..
-                document = new Document(new Element(ELEMENT_FOLDER));
-            }
-        }
-        return document;
+    public MetaFolderImpl(final File file, final Namespace namespace) {
+        super(file, namespace);
+    }
+    
+    @Override
+    protected String getRootElementName() {
+        return ELEMENT_FOLDER;
     }
 
     /* (non-Javadoc)
@@ -134,11 +110,14 @@ public class MetaFolderImpl implements MetaFolder {
 //            String messageId = ((MimeMessage) message).getMessageID();
             int messageNumber = message.getMessageNumber();
 
-            for (Iterator i = getDocument().getRootElement().getChildren(MetaMessageImpl.ELEMENT_MESSAGE).iterator(); i.hasNext();) {
+            for (Iterator i = getDocument().getRootElement().getChildren(
+                    MetaMessageImpl.ELEMENT_MESSAGE, namespace).iterator();
+                    i.hasNext();) {
+                
                 Element messageElement = (Element) i.next();
                 try {
                     if (Integer.parseInt(messageElement.getAttributeValue(MetaMessageImpl.ATTRIBUTE_MESSAGE_NUMBER)) == messageNumber) {
-                        return new MetaMessageImpl(messageElement, this);
+                        return new MetaMessageImpl(messageElement, this, namespace);
                     }
                 }
                 catch (Exception e) {
@@ -148,7 +127,7 @@ public class MetaFolderImpl implements MetaFolder {
                 }
             }
 
-            MetaMessageImpl mm = new MetaMessageImpl(messageNumber, this);
+            MetaMessageImpl mm = new MetaMessageImpl(messageNumber, this, namespace);
             mm.setFlags(message.getFlags());
             mm.setHeaders(message.getAllHeaders());
             // only add the metadata if message is associated with folder..
@@ -175,12 +154,15 @@ public class MetaFolderImpl implements MetaFolder {
      * @see net.fortuna.mstor.data.MetaFolder#removeMessage(java.lang.String)
      */
     public final MetaMessage removeMessage(final int messageNumber) {
-        for (Iterator i = getDocument().getRootElement().getChildren(MetaMessageImpl.ELEMENT_MESSAGE).iterator(); i.hasNext();) {
+        for (Iterator i = getDocument().getRootElement().getChildren(
+                MetaMessageImpl.ELEMENT_MESSAGE, namespace).iterator();
+                i.hasNext();) {
+            
             Element messageElement = (Element) i.next();
             if (Integer.parseInt(messageElement.getAttributeValue(MetaMessageImpl.ATTRIBUTE_MESSAGE_NUMBER)) == messageNumber) {
                 getDocument().getRootElement().removeContent(messageElement);
                 updateMessageNumbers(messageNumber, -1);
-                return new MetaMessageImpl(messageElement, this);
+                return new MetaMessageImpl(messageElement, this, namespace);
             }
         }
         return null;
@@ -199,7 +181,7 @@ public class MetaFolderImpl implements MetaFolder {
             for (int n = 0; n < messageNumbers.length; n++) {
                 if (messageNumbers[n] == messageNumber) {
                     getDocument().getRootElement().removeContent(messageElement);
-                    metas.add(new MetaMessageImpl(messageElement, this));
+                    metas.add(new MetaMessageImpl(messageElement, this, namespace));
                     delta--;
                     if (messageNumber < startIndex) {
                         startIndex = messageNumber;
@@ -219,21 +201,14 @@ public class MetaFolderImpl implements MetaFolder {
      * @param delta amount to adjust relevant message numbers by
      */
     private void updateMessageNumbers(final int startIndex, final int delta) {
-        for (Iterator i = getDocument().getRootElement().getChildren(MetaMessageImpl.ELEMENT_MESSAGE).iterator(); i.hasNext();) {
+        for (Iterator i = getDocument().getRootElement().getChildren(
+                MetaMessageImpl.ELEMENT_MESSAGE, namespace).iterator();
+                i.hasNext();) {
             Element messageElement = (Element) i.next();
             int messageNumber = Integer.parseInt(messageElement.getAttributeValue(MetaMessageImpl.ATTRIBUTE_MESSAGE_NUMBER));
             if (messageNumber >= startIndex) {
                 messageElement.setAttribute(MetaMessageImpl.ATTRIBUTE_MESSAGE_NUMBER, String.valueOf(messageNumber + delta));
             }
         }
-    }
-
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.data.MetaFolder#save()
-     */
-    public final void save() throws IOException {
-        XMLOutputter xmlOut = new XMLOutputter(Format.getCompactFormat());
-        xmlOut.getFormat().setIndent("  ");
-        xmlOut.output(document, new FileOutputStream(file));
     }
 }

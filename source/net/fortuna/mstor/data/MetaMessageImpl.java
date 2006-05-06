@@ -45,21 +45,25 @@ import javax.mail.internet.InternetHeaders;
 
 import net.fortuna.mstor.MetaFolder;
 import net.fortuna.mstor.MetaMessage;
+import net.fortuna.mstor.data.xml.ElementBinding;
 import net.fortuna.mstor.util.MetaDateFormat;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jdom.Element;
 import org.jdom.IllegalNameException;
+import org.jdom.Namespace;
 
 /**
  * A JDOM-based implementation of a meta message.
  * 
  * @author benfortuna
  */
-public class MetaMessageImpl implements MetaMessage {
+public class MetaMessageImpl extends ElementBinding implements MetaMessage {
 
     private static final long serialVersionUID = -3882112036857983804L;
+
+    private static final String SPACE_SUBSTITUTE = "__SPACE__";
 
     protected static final String ELEMENT_MESSAGE = "message";
 
@@ -79,10 +83,8 @@ public class MetaMessageImpl implements MetaMessage {
 
     private static Log log = LogFactory.getLog(MetaMessageImpl.class);
 
-    private Element element;
-
     private MetaFolder folder;
-
+    
     /**
      * Constructs a new meta message instance based on a new JDOM element with
      * the specified message id.
@@ -90,10 +92,12 @@ public class MetaMessageImpl implements MetaMessage {
      * @param messageId
      *            the message id of the new meta message
      */
-    public MetaMessageImpl(final int messageNumber, final MetaFolder folder) {
-        this(new Element(ELEMENT_MESSAGE).setAttribute(
-                ATTRIBUTE_MESSAGE_NUMBER, String.valueOf(messageNumber)),
-                folder);
+    public MetaMessageImpl(final int messageNumber, final MetaFolder folder,
+            final Namespace namespace) {
+        
+        this(new Element(ELEMENT_MESSAGE, namespace).setAttribute(
+                    ATTRIBUTE_MESSAGE_NUMBER, String.valueOf(messageNumber)),
+                    folder, namespace);
     }
 
     /**
@@ -103,41 +107,23 @@ public class MetaMessageImpl implements MetaMessage {
      * @param element
      *            a JDOM element for the meta message
      */
-    public MetaMessageImpl(final Element element, final MetaFolder folder) {
-        this.element = element;
+    public MetaMessageImpl(final Element element, final MetaFolder folder,
+            final Namespace namespace) {
+        
+        super(element, namespace);
         this.folder = folder;
     }
 
     /**
      * Returns the underlying JDOM element.
-     * 
      * @return a JDOM element
      */
     protected final Element getElement() {
         return element;
     }
 
-    /**
-     * Returns the specified child element of the element associated with this
-     * meta message. If the child does not exist it is created and added to the
-     * message element.
-     * 
-     * @param name
-     *            name of the child element
-     * @return a JDOM element
-     */
-    private Element getElement(final String name) {
-        Element child = element.getChild(name);
-        if (child == null) {
-            child = new Element(name);
-            element.addContent(child);
-        }
-        return child;
-    }
-
     /*
      * (non-Javadoc)
-     * 
      * @see net.fortuna.mstor.MetaMessage#getMessageNumber()
      */
     public final int getMessageNumber() {
@@ -230,7 +216,7 @@ public class MetaMessageImpl implements MetaMessage {
                 flags.add(Flags.Flag.USER);
             } else {
                 // user flag..
-                flags.add(flag.getName());
+                flags.add(flag.getName().replaceAll(SPACE_SUBSTITUTE, " "));
             }
         }
         return flags;
@@ -262,7 +248,7 @@ public class MetaMessageImpl implements MetaMessage {
         for (int i = 0; i < flags.getUserFlags().length; i++) {
             // XML node names cannot have spaces, so for now as
             // a workaround replace spaces with underscore..
-            String flag = flags.getUserFlags()[i].replaceAll(" ", "_");
+            String flag = flags.getUserFlags()[i].replaceAll(" ", SPACE_SUBSTITUTE);
             flagsElement.addContent(new Element(flag));
         }
     }
