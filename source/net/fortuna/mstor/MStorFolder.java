@@ -716,7 +716,7 @@ public class MStorFolder extends Folder {
      */
     private void assertExists() throws MessagingException {
         if (!exists()) {
-            throw new FolderNotFoundException(this);
+            throw new FolderNotFoundException(this, "File [" + file + " does not exist.");
         }
     }
 }
