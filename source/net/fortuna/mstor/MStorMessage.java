@@ -71,12 +71,15 @@ public class MStorMessage extends MimeMessage implements Serializable {
     private InputStream in;
 
     private boolean loaded;
+    
+    private Tags tags;
 
     /**
      * @param arg0
      */
     public MStorMessage(final Session session) {
         super(session);
+        tags = new Tags(flags);
     }
 
     /**
@@ -86,9 +89,10 @@ public class MStorMessage extends MimeMessage implements Serializable {
      */
     public MStorMessage(final Session session, final InputStream in)
             throws MessagingException {
+        
         super(session);
-
         this.in = in;
+        tags = new Tags(flags);
     }
 
     /**
@@ -97,6 +101,7 @@ public class MStorMessage extends MimeMessage implements Serializable {
      */
     public MStorMessage(final MimeMessage m) throws MessagingException {
         super(m);
+        tags = new Tags(flags);
     }
 
     /**
@@ -105,6 +110,7 @@ public class MStorMessage extends MimeMessage implements Serializable {
      */
     public MStorMessage(final Folder folder, final int msgnum) {
         super(folder, msgnum);
+        tags = new Tags(flags);
     }
 
     /**
@@ -115,9 +121,10 @@ public class MStorMessage extends MimeMessage implements Serializable {
      */
     public MStorMessage(final Folder folder, final InputStream in, final int msgnum)
             throws MessagingException {
+        
         super(folder, msgnum);
-
         this.in = in;
+        tags = new Tags(flags);
     }
 
     /**
@@ -129,14 +136,9 @@ public class MStorMessage extends MimeMessage implements Serializable {
      */
     public MStorMessage(final Folder folder, final InternetHeaders headers, final byte[] content,
             final int msgnum) throws MessagingException {
+        
         super(folder, headers, content, msgnum);
-    }
-
-    /**
-     * @return Returns the meta.
-     */
-    private MetaMessage getMeta() {
-        return meta;
+        tags = new Tags(flags);
     }
 
     /**
@@ -177,7 +179,7 @@ public class MStorMessage extends MimeMessage implements Serializable {
      * @see javax.mail.internet.MimePart#getAllHeaderLines()
      */
     public final Enumeration getAllHeaderLines() throws MessagingException {
-        if (getMeta() != null) { return getMeta().getHeaders()
+        if (meta != null) { return meta.getHeaders()
                 .getAllHeaderLines(); }
         checkParse();
         return super.getAllHeaderLines();
@@ -189,7 +191,7 @@ public class MStorMessage extends MimeMessage implements Serializable {
      * @see javax.mail.Part#getAllHeaders()
      */
     public final Enumeration getAllHeaders() throws MessagingException {
-        if (getMeta() != null) { return getMeta().getHeaders().getAllHeaders(); }
+        if (meta != null) { return meta.getHeaders().getAllHeaders(); }
         checkParse();
         return super.getAllHeaders();
     }
@@ -201,7 +203,7 @@ public class MStorMessage extends MimeMessage implements Serializable {
      *      java.lang.String)
      */
     public final String getHeader(final String arg0, final String arg1) throws MessagingException {
-        if (getMeta() != null) { return getMeta().getHeaders().getHeader(arg0,
+        if (meta != null) { return meta.getHeaders().getHeader(arg0,
                 arg1); }
         checkParse();
         return super.getHeader(arg0, arg1);
@@ -213,7 +215,7 @@ public class MStorMessage extends MimeMessage implements Serializable {
      * @see javax.mail.Part#getHeader(java.lang.String)
      */
     public final String[] getHeader(final String arg0) throws MessagingException {
-        if (getMeta() != null) { return getMeta().getHeaders().getHeader(arg0); }
+        if (meta != null) { return meta.getHeaders().getHeader(arg0); }
         checkParse();
         return super.getHeader(arg0);
     }
@@ -225,7 +227,7 @@ public class MStorMessage extends MimeMessage implements Serializable {
      */
     public final Enumeration getMatchingHeaderLines(final String[] arg0)
             throws MessagingException {
-        if (getMeta() != null) { return getMeta().getHeaders()
+        if (meta != null) { return meta.getHeaders()
                 .getMatchingHeaderLines(arg0); }
         checkParse();
         return super.getMatchingHeaderLines(arg0);
@@ -238,7 +240,7 @@ public class MStorMessage extends MimeMessage implements Serializable {
      */
     public final Enumeration getMatchingHeaders(final String[] arg0)
             throws MessagingException {
-        if (getMeta() != null) { return getMeta().getHeaders()
+        if (meta != null) { return meta.getHeaders()
                 .getMatchingHeaders(arg0); }
         checkParse();
         return super.getMatchingHeaders(arg0);
@@ -251,7 +253,7 @@ public class MStorMessage extends MimeMessage implements Serializable {
      */
     public final Enumeration getNonMatchingHeaderLines(final String[] arg0)
             throws MessagingException {
-        if (getMeta() != null) { return getMeta().getHeaders()
+        if (meta != null) { return meta.getHeaders()
                 .getNonMatchingHeaderLines(arg0); }
         checkParse();
         return super.getNonMatchingHeaderLines(arg0);
@@ -264,7 +266,7 @@ public class MStorMessage extends MimeMessage implements Serializable {
      */
     public final Enumeration getNonMatchingHeaders(final String[] arg0)
             throws MessagingException {
-        if (getMeta() != null) { return getMeta().getHeaders()
+        if (meta != null) { return meta.getHeaders()
                 .getNonMatchingHeaders(arg0); }
         checkParse();
         return super.getNonMatchingHeaders(arg0);
@@ -286,8 +288,8 @@ public class MStorMessage extends MimeMessage implements Serializable {
      * @see javax.mail.Message#setExpunged(boolean)
      */
     protected final void setExpunged(final boolean expunged) {
-        if (getMeta() != null) {
-            getMeta().setExpunged(expunged);
+        if (meta != null) {
+            meta.setExpunged(expunged);
             /*
              * try { getMeta().getFolder().save(); } catch (IOException ioe) {
              * log.warn("Error saving metadata [" + getMeta().getMessageId() +
@@ -303,7 +305,7 @@ public class MStorMessage extends MimeMessage implements Serializable {
      * @see javax.mail.internet.MimeMessage#getReceivedDate()
      */
     public final Date getReceivedDate() throws MessagingException {
-        if (getMeta() != null) { return getMeta().getReceived(); }
+        if (meta != null) { return meta.getReceived(); }
         return super.getReceivedDate();
     }
 
@@ -316,8 +318,8 @@ public class MStorMessage extends MimeMessage implements Serializable {
             throws MessagingException {
         super.setFlags(flags, set);
         // copy updated flags from mime message implementation..
-        if (getMeta() != null) {
-            getMeta().setFlags(flags);
+        if (meta != null) {
+            meta.setFlags(flags);
             /*
              * try { getMeta().getFolder().save(); } catch (IOException ioe) {
              * log.warn("Error saving metadata [" + getMeta().getMessageId() +
@@ -338,8 +340,8 @@ public class MStorMessage extends MimeMessage implements Serializable {
     public final void setFlag(final Flag flag, final boolean set) throws MessagingException {
         super.setFlag(flag, set);
         // copy updated flags from mime message implementation..
-        if (getMeta() != null) {
-            getMeta().setFlags(flags);
+        if (meta != null) {
+            meta.setFlags(flags);
             /*
              * try { getMeta().getFolder().save(); } catch (IOException ioe) {
              * log.warn("Error saving metadata [" + getMeta().getMessageId() +
@@ -352,37 +354,79 @@ public class MStorMessage extends MimeMessage implements Serializable {
         }
     }
 
+    /* (non-Javadoc)
+     * @see javax.mail.Part#setHeader(java.lang.String, java.lang.String)
+     */
     public final void setHeader(final String s, final String s1) throws MessagingException {
         // looks like we need to load the message before setting headers..
         checkParse();
         super.setHeader(s, s1);
-        if (getMeta() != null) {
+        if (meta != null) {
             // update metadata..
-            getMeta().setHeaders(headers);
+            meta.setHeaders(headers);
         }
     }
 
+    /* (non-Javadoc)
+     * @see javax.mail.Part#addHeader(java.lang.String, java.lang.String)
+     */
     public final void addHeader(final String s, final String s1) throws MessagingException {
         super.addHeader(s, s1);
-        if (getMeta() != null) {
+        if (meta != null) {
             // update metadata..
-            getMeta().setHeaders(headers);
+            meta.setHeaders(headers);
         }
     }
 
+    /* (non-Javadoc)
+     * @see javax.mail.Part#removeHeader(java.lang.String)
+     */
     public final void removeHeader(final String s) throws MessagingException {
         super.removeHeader(s);
-        if (getMeta() != null) {
+        if (meta != null) {
             // update metadata..
-            getMeta().setHeaders(headers);
+            meta.setHeaders(headers);
         }
     }
 
+    /* (non-Javadoc)
+     * @see javax.mail.internet.MimePart#addHeaderLine(java.lang.String)
+     */
     public final void addHeaderLine(final String s) throws MessagingException {
         super.addHeaderLine(s);
-        if (getMeta() != null) {
+        if (meta != null) {
             // update metadata..
-            getMeta().setHeaders(headers);
+            meta.setHeaders(headers);
+        }
+    }
+    
+    /**
+     * @param tag
+     */
+    public final void addTag(final String tag) throws MessagingException {
+//        Flags flags = new Flags();
+//        Tags tags = getTags();
+        tags.add(tag);
+//        setFlags(flags, true);
+        if (meta != null) {
+            meta.setFlags(getFlags());
+            saveChanges();
+        }
+    }
+    
+    /**
+     * @param tag
+     * @throws MessagingException
+     */
+    public final void removeTag(final String tag) throws MessagingException {
+//        Flags flags = new Flags();
+//        Tags tags = getTags();
+        tags.remove(tag);
+//        tags.add(tag);
+//        setFlags(flags, false);
+        if (meta != null) {
+            meta.setFlags(getFlags());
+            saveChanges();
         }
     }
 
@@ -392,12 +436,12 @@ public class MStorMessage extends MimeMessage implements Serializable {
      */
     public final void saveChanges() throws MessagingException {
         super.saveChanges();
-        if (getMeta() != null) {
+        if (meta != null) {
             try {
-                getMeta().getFolder().save();
+                meta.getFolder().save();
             }
             catch (IOException ioe) {
-                log.warn("Error saving metadata [" + getMeta().getMessageNumber()
+                log.warn("Error saving metadata [" + meta.getMessageNumber()
                         + "]", ioe);
             }
         }
@@ -409,8 +453,17 @@ public class MStorMessage extends MimeMessage implements Serializable {
      */
     protected final void updateHeaders() throws MessagingException {
         super.updateHeaders();
-        if (getMeta() != null) {
-            getMeta().setHeaders(headers);
+        if (meta != null) {
+            meta.setHeaders(headers);
         }
+    }
+
+    /**
+     * Returns tags associated with this message. Note that any changes made
+     * to the returned instance will not affect this message.
+     * @return Returns the tags.
+     */
+    public final Tags getTags() throws MessagingException {
+        return new Tags(getFlags());
     }
 }
