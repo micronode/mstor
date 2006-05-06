@@ -16,29 +16,33 @@ import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
-import javax.mail.Session;
 import javax.mail.URLName;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import junit.framework.TestCase;
 
 /**
  * Test case for MStorFolder.
  * 
  * @author benfortuna
  */
-public class MStorFolderTest extends TestCase {
+public class MStorFolderTest extends MStorTest {
 
     private static Log log = LogFactory.getLog(MStorFolderTest.class);
 
-    private MStorStore store;
-
+    private static Properties p = new Properties();
+    static {
+        // disable metadata..
+        p.setProperty("mstor.meta.enabled", "false");
+        p.setProperty("mstor.mbox.useNioMapping", "false");
+        p.setProperty("mstor.mbox.directBuffer", "false");
+    }
+    
     /**
      * Default constructor.
      */
     public MStorFolderTest() {
+        super(new URLName("mstor:c:/temp/mstor_test"), p);
 
         // clean up..
         new File("c:/temp/mstor_test/Copy/Copy2").delete();
@@ -49,37 +53,6 @@ public class MStorFolderTest extends TestCase {
         new File("c:/temp/mstor_test/Test/Test2").delete();
         new File("c:/temp/mstor_test/Test").delete();
         new File("c:/temp/mstor_test/Inbox2").delete();
-    }
-    
-    /*
-     * @see TestCase#setUp()
-     */
-    protected final void setUp() throws Exception {
-        super.setUp();
-        
-        URLName url = new URLName("mstor:c:/temp/mstor_test");
-        // URLName url = new
-        // URLName("mstor:E:/development/workspace/mstor/etc/samples");
-
-        Properties p = new Properties();
-        // disable metadata..
-        p.setProperty("mstor.meta.enabled", "false");
-        p.setProperty("mstor.mbox.useNioMapping", "false");
-        p.setProperty("mstor.mbox.directBuffer", "false");
-        store = new MStorStore(Session.getDefaultInstance(p), url);
-        store.connect();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see junit.framework.TestCase#tearDown()
-     */
-    protected final void tearDown() throws Exception {
-        super.tearDown();
-        if (store.isConnected()) {
-            store.close();
-        }
     }
 
     public final void testExists() throws MessagingException {

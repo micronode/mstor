@@ -7,15 +7,10 @@
  */
 package net.fortuna.mstor;
 
-import java.util.Properties;
-
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Session;
 import javax.mail.URLName;
-
-import junit.framework.TestCase;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,24 +20,17 @@ import org.apache.commons.logging.LogFactory;
  * Type description.
  * @author benfortuna
  */
-public class MStorStoreTest extends TestCase {
+public class MStorStoreTest extends MStorTest {
 
     private static Log log = LogFactory.getLog(MStorStoreTest.class);
 
-    private MStorStore store;
-
-    /*
-     * @see TestCase#setUp()
+    /**
+     * Default constructor.
      */
-    protected final void setUp() throws Exception {
-        super.setUp();
-
-//        URLName url = new URLName("mstor:c:/temp/mail/store");
-//        URLName url = new URLName("mstor:c:/temp/mail/Fastmail/archive2");
-        URLName url = new URLName("mstor:f:/development/workspace/mstor/etc/samples");
-
-        store = new MStorStore(Session.getDefaultInstance(new Properties()), url);
-        store.connect();
+    public MStorStoreTest() {
+//      URLName url = new URLName("mstor:c:/temp/mail/store");
+//      URLName url = new URLName("mstor:c:/temp/mail/Fastmail/archive2");
+        super(new URLName("mstor:f:/development/workspace/mstor/etc/samples"));
     }
 
     /*
