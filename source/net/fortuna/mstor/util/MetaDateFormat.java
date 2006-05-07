@@ -35,53 +35,23 @@
  */
 package net.fortuna.mstor.util;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 /**
  * Defines a date format used in metadata.
  * @author benfortuna
  */
-public final class MetaDateFormat {
+public class MetaDateFormat extends SimpleDateFormat {
 
-    private static final String DATE_FORMAT = "EEE MMM d HH:mm:ss yyyy";
-
-    private static MetaDateFormat instance = new MetaDateFormat();
-
-    private DateFormat format;
+    private static final long serialVersionUID = -6406144946371256668L;
+    
+    private static final String PATTERN = "EEE MMM d HH:mm:ss yyyy";
 
     /**
-     * Constructor made private to enforce singleton.
+     * Default constructor.
      */
-    private MetaDateFormat() {
-        format = new SimpleDateFormat(DATE_FORMAT, Locale.US);
-    }
-
-    /**
-     * @return Returns the instance.
-     */
-    public static MetaDateFormat getInstance() {
-        return instance;
-    }
-
-    /**
-     * @param date a date to format
-     * @return a string representation of the specified date
-     */
-    public String format(final Date date) {
-        return format.format(date);
-    }
-
-    /**
-     * @param string a string representation of a date
-     * @return a date parsed from the specified string representation
-     * @throws java.text.ParseException thrown when the specified string
-     * is not a valid representation of a date
-     */
-    public Date parse(final String string) throws ParseException {
-        return format.parse(string);
+    public MetaDateFormat() {
+        super(PATTERN, Locale.US);
     }
 }

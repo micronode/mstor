@@ -35,6 +35,7 @@
  */
 package net.fortuna.mstor.data;
 
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -80,6 +81,8 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
     private static final String ELEMENT_REPLIED = "replied";
 
     private static final String ELEMENT_FORWARDED = "forwarded";
+    
+    private static final DateFormat MESSAGE_DATE_FORMAT = new MetaDateFormat();
 
     private static Log log = LogFactory.getLog(MetaMessageImpl.class);
 
@@ -138,7 +141,9 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
     public final Date getReceived() {
         String received = getElement(ELEMENT_RECEIVED).getText();
         try {
-            return MetaDateFormat.getInstance().parse(received);
+            synchronized (MESSAGE_DATE_FORMAT) {
+                return MESSAGE_DATE_FORMAT.parse(received);
+            }
         } catch (Exception e) {
             log.info("Invalid received date [" + received + "]", e);
         }
@@ -147,13 +152,17 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
 
     public final void setReceived(final Date date) {
         Element received = getElement(ELEMENT_RECEIVED);
-        received.setText(MetaDateFormat.getInstance().format(date));
+        synchronized (MESSAGE_DATE_FORMAT) {
+            received.setText(MESSAGE_DATE_FORMAT.format(date));
+        }
     }
 
     public final Date getForwarded() {
         String forwarded = getElement(ELEMENT_FORWARDED).getText();
         try {
-            return MetaDateFormat.getInstance().parse(forwarded);
+            synchronized (MESSAGE_DATE_FORMAT) {
+                return MESSAGE_DATE_FORMAT.parse(forwarded);
+            }
         } catch (Exception e) {
             log.info("Invalid forwarded date [" + forwarded + "]", e);
         }
@@ -162,13 +171,17 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
 
     public final void setForwarded(final Date date) {
         Element forwarded = getElement(ELEMENT_FORWARDED);
-        forwarded.setText(MetaDateFormat.getInstance().format(date));
+        synchronized (MESSAGE_DATE_FORMAT) {
+            forwarded.setText(MESSAGE_DATE_FORMAT.format(date));
+        }
     }
 
     public final Date getReplied() {
         String replied = getElement(ELEMENT_REPLIED).getText();
         try {
-            return MetaDateFormat.getInstance().parse(replied);
+            synchronized (MESSAGE_DATE_FORMAT) {
+                return MESSAGE_DATE_FORMAT.parse(replied);
+            }
         } catch (Exception e) {
             log.info("Invalid replied date [" + replied + "]", e);
         }
@@ -177,7 +190,9 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
 
     public final void setReplied(final Date date) {
         Element replied = getElement(ELEMENT_REPLIED);
-        replied.setText(MetaDateFormat.getInstance().format(date));
+        synchronized (MESSAGE_DATE_FORMAT) {
+            replied.setText(MESSAGE_DATE_FORMAT.format(date));
+        }
     }
 
     public final boolean isExpunged() {
