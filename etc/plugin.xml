@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<plugin name="%pluginName" id="net.fortuna.mstor" version="0.9" provider-name="%providerName">
-	<runtime>
-		<library name="lib/mstor.jar">
-			<export name="*"/>
-		</library>
-	</runtime>
-</plugin>
