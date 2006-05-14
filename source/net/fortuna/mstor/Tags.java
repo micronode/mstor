@@ -55,6 +55,13 @@ public class Tags implements Set<String>, Serializable {
     private Flags flags;
     
     /**
+     * Default constructor.
+     */
+    public Tags() {
+        this(new Flags());
+    }
+    
+    /**
      * @param flags
      */
     public Tags(Flags flags) {
