@@ -38,6 +38,7 @@ package net.fortuna.mstor;
 import java.util.Iterator;
 
 import javax.mail.Folder;
+import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.URLName;
 
@@ -70,9 +71,9 @@ public class TagTest extends MStorTest {
         }
         
         for (int i = 1; i <= folder.getMessageCount(); i++) {
-            MStorMessage message = (MStorMessage) folder.getMessage(i);
+            Message message = folder.getMessage(i);
             LOG.info("Message [" + i + "]: " + message.getSubject());
-            for (Iterator it = message.getTags().iterator(); it.hasNext();) {
+            for (Iterator it = Tags.getTags(message).iterator(); it.hasNext();) {
                 LOG.info("Tag: " + it.next());
             }
         }
@@ -87,9 +88,9 @@ public class TagTest extends MStorTest {
         
         String tag = "Test 1";
         
-        MStorMessage message = (MStorMessage) inbox.getMessage(1);
-        message.addTag(tag);
-        assertTrue(message.getTags().contains(tag));
+        Message message = inbox.getMessage(1);
+        Tags.addTag(tag, message);
+        assertTrue(Tags.getTags(message).contains(tag));
         
         logMessages(inbox);
     }
@@ -103,10 +104,10 @@ public class TagTest extends MStorTest {
         
         String tag = "Test 1";
         
-        MStorMessage message = (MStorMessage) inbox.getMessage(1);
-        assertTrue(message.getTags().contains(tag));
-        message.removeTag(tag);
-        assertFalse(message.getTags().contains(tag));
+        Message message = inbox.getMessage(1);
+        assertTrue(Tags.getTags(message).contains(tag));
+        Tags.removeTag(tag, message);
+        assertFalse(Tags.getTags(message).contains(tag));
         
         logMessages(inbox);
     }
