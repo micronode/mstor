@@ -74,7 +74,7 @@ public abstract class MStorTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
-    protected final void setUp() throws Exception {
+    protected void setUp() throws Exception {
         super.setUp();
         if (sessionProps != null) {
             session = Session.getDefaultInstance(sessionProps);
@@ -90,7 +90,7 @@ public abstract class MStorTest extends TestCase {
      * (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
-    protected final void tearDown() throws Exception {
+    protected void tearDown() throws Exception {
         super.tearDown();
         if (store != null && store.isConnected()) {
             store.close();
