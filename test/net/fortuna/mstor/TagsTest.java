@@ -47,6 +47,10 @@ import org.apache.commons.logging.LogFactory;
 
 import junit.framework.TestCase;
 
+/**
+ * Unit tests for {@link net.fortuna.mstor.Tags}.
+ * @author Ben Fortuna
+ */
 public class TagsTest extends TestCase {
 
     private static final Log LOG = LogFactory.getLog(TagsTest.class);
@@ -55,7 +59,9 @@ public class TagsTest extends TestCase {
     
     private Tags tags;
     
-    @Override
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#setUp()
+     */
     protected void setUp() throws Exception {
         super.setUp();
         flags = new Flags();
@@ -114,7 +120,7 @@ public class TagsTest extends TestCase {
      * Test method for 'net.fortuna.mstor.Tags.toArray(T[]) <T>'
      */
     public void testToArrayTArray() {
-        String[] array = tags.toArray(new String[tags.size()]);
+        String[] array = (String[]) tags.toArray(new String[tags.size()]);
         assertEquals(array.length, tags.size());
     }
 
@@ -140,7 +146,7 @@ public class TagsTest extends TestCase {
      * Test method for 'net.fortuna.mstor.Tags.containsAll(Collection<?>)'
      */
     public void testContainsAll() {
-        Set<String> set = new HashSet<String>();
+        Set set = new HashSet();
         set.add("Friends");
         set.add("Family");
         assertTrue(tags.containsAll(set));
@@ -150,7 +156,7 @@ public class TagsTest extends TestCase {
      * Test method for 'net.fortuna.mstor.Tags.addAll(Collection<? extends String>)'
      */
     public void testAddAll() {
-        Set<String> set = new HashSet<String>();
+        Set set = new HashSet();
         set.add("TestTag 1");
         set.add("TestTag 2");
         set.add("TestTag 3");
@@ -162,7 +168,7 @@ public class TagsTest extends TestCase {
      * Test method for 'net.fortuna.mstor.Tags.retainAll(Collection<?>)'
      */
     public void testRetainAll() {
-        Set<String> set = new HashSet<String>();
+        Set set = new HashSet();
         set.add("Family");
         set.add("Friends");
         tags.retainAll(set);
@@ -175,12 +181,12 @@ public class TagsTest extends TestCase {
      * Test method for 'net.fortuna.mstor.Tags.removeAll(Collection<?>)'
      */
     public void testRemoveAll() {
-        Set<String> set = new HashSet<String>();
+        Set set = new HashSet();
         set.add("Family");
         set.add("Friends");
         tags.removeAll(set);
-        for (Iterator<String> i = set.iterator(); i.hasNext();) {
-            String tag = i.next();
+        for (Iterator i = set.iterator(); i.hasNext();) {
+            String tag = (String) i.next();
             assertFalse(tags.contains(tag));
             assertFalse(Arrays.asList(flags.getUserFlags()).contains(Tags.TAG_PREFIX + tag));
         }

@@ -83,8 +83,10 @@ public class MetaFolderImpl extends DocumentBinding implements MetaFolder {
         super(file, namespace);
     }
     
-    @Override
-    protected String getRootElementName() {
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.data.xml.DocumentBinding#getRootElementName()
+     */
+    protected final String getRootElementName() {
         return ELEMENT_FOLDER;
     }
 

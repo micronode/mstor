@@ -42,11 +42,13 @@ import java.util.Iterator;
 import java.util.Set;
 
 import javax.mail.Flags;
+import javax.mail.Message;
+import javax.mail.MessagingException;
 
 /**
  * @author Ben Fortuna
  */
-public class Tags implements Set<String>, Serializable {
+public class Tags implements Set, Serializable {
 
     private static final long serialVersionUID = -4185780688194955112L;
 
@@ -64,14 +66,14 @@ public class Tags implements Set<String>, Serializable {
     /**
      * @param flags
      */
-    public Tags(Flags flags) {
+    public Tags(final Flags flags) {
         this.flags = flags;
     }
     
     /* (non-Javadoc)
      * @see java.util.Set#size()
      */
-    public int size() {
+    public final int size() {
         int tagCount = 0;
         String[] userFlags = flags.getUserFlags();
         for (int i = 0; i < userFlags.length; i++) {
@@ -85,14 +87,14 @@ public class Tags implements Set<String>, Serializable {
     /* (non-Javadoc)
      * @see java.util.Set#isEmpty()
      */
-    public boolean isEmpty() {
+    public final boolean isEmpty() {
         return size() == 0;
     }
 
     /* (non-Javadoc)
      * @see java.util.Set#contains(java.lang.Object)
      */
-    public boolean contains(Object arg0) {
+    public final boolean contains(final Object arg0) {
         if (arg0 instanceof String) {
             String tag = TAG_PREFIX + arg0;
             String[] userFlags = flags.getUserFlags();
@@ -108,8 +110,8 @@ public class Tags implements Set<String>, Serializable {
     /**
      * @return
      */
-    private Set<String> getTagSet() {
-        Set<String> tags = new HashSet<String>(); 
+    private Set getTagSet() {
+        Set tags = new HashSet(); 
         String[] userFlags = flags.getUserFlags();
         for (int i = 0; i < userFlags.length; i++) {
             if (userFlags[i].startsWith(TAG_PREFIX)) {
@@ -122,28 +124,28 @@ public class Tags implements Set<String>, Serializable {
     /* (non-Javadoc)
      * @see java.util.Set#iterator()
      */
-    public Iterator<String> iterator() {
+    public final Iterator iterator() {
         return getTagSet().iterator();
     }
 
     /* (non-Javadoc)
      * @see java.util.Set#toArray()
      */
-    public Object[] toArray() {
+    public final Object[] toArray() {
         return getTagSet().toArray();
     }
 
     /* (non-Javadoc)
      * @see java.util.Set#toArray(T[])
      */
-    public <T> T[] toArray(T[] arg0) {
+    public final Object[] toArray(final Object[] arg0) {
         return getTagSet().toArray(arg0);
     }
 
     /* (non-Javadoc)
      * @see java.util.Set#add(E)
      */
-    public boolean add(String arg0) {
+    public final boolean add(final Object arg0) {
         String tag = TAG_PREFIX + arg0;
         if (!flags.contains(tag)) {
             flags.add(tag);
@@ -155,7 +157,7 @@ public class Tags implements Set<String>, Serializable {
     /* (non-Javadoc)
      * @see java.util.Set#remove(java.lang.Object)
      */
-    public boolean remove(Object arg0) {
+    public final boolean remove(final Object arg0) {
         if (arg0 instanceof String) {
             flags.remove(TAG_PREFIX + (String) arg0);
             return true;
@@ -166,7 +168,7 @@ public class Tags implements Set<String>, Serializable {
     /* (non-Javadoc)
      * @see java.util.Set#containsAll(java.util.Collection)
      */
-    public boolean containsAll(Collection<?> arg0) {
+    public final boolean containsAll(final Collection arg0) {
         for (Iterator i = arg0.iterator(); i.hasNext();) {
             if (!contains(i.next())) {
                 return false;
@@ -178,9 +180,9 @@ public class Tags implements Set<String>, Serializable {
     /* (non-Javadoc)
      * @see java.util.Set#addAll(java.util.Collection)
      */
-    public boolean addAll(Collection<? extends String> arg0) {
-        for (Iterator<? extends String> i = arg0.iterator(); i.hasNext();) {
-            if (!add(i.next())) {
+    public final boolean addAll(final Collection arg0) {
+        for (Iterator i = arg0.iterator(); i.hasNext();) {
+            if (!add((String) i.next())) {
                 return false;
             }
         }
@@ -190,9 +192,9 @@ public class Tags implements Set<String>, Serializable {
     /* (non-Javadoc)
      * @see java.util.Set#retainAll(java.util.Collection)
      */
-    public boolean retainAll(Collection<?> arg0) {
-        for (Iterator<String> i = iterator(); i.hasNext();) {
-            String tag = i.next();
+    public final boolean retainAll(final Collection arg0) {
+        for (Iterator i = iterator(); i.hasNext();) {
+            String tag = (String) i.next();
             if (!arg0.contains(tag)) {
                 if (!remove(tag)) {
                     return false;
@@ -205,7 +207,7 @@ public class Tags implements Set<String>, Serializable {
     /* (non-Javadoc)
      * @see java.util.Set#removeAll(java.util.Collection)
      */
-    public boolean removeAll(Collection<?> arg0) {
+    public final boolean removeAll(final Collection arg0) {
         for (Iterator i = arg0.iterator(); i.hasNext();) {
             if (!remove(i.next())) {
                 return false;
@@ -217,9 +219,63 @@ public class Tags implements Set<String>, Serializable {
     /* (non-Javadoc)
      * @see java.util.Set#clear()
      */
-    public void clear() {
+    public final void clear() {
         for (Iterator i = iterator(); i.hasNext();) {
             remove(i.next());
         }
+    }
+    
+    /**
+     * Adds the specified tag to a message.
+     * @param tag
+     * @param message
+     * @throws MessagingException when unable to tag the given message
+     * @throws UnsupportedOperationException if the given message does not
+     * support tags
+     */
+    public static void addTag(final String tag, final Message message)
+        throws MessagingException {
+        
+        if (message instanceof MStorMessage) {
+            ((MStorMessage) message).addTag(tag);
+            return;
+        }
+        throw new UnsupportedOperationException("Message is not taggable");
+    }
+    
+    /**
+     * Remove the specified tag from a message.
+     * @param tag
+     * @param message
+     * @throws MessagingException when unable to remove the tag from the given
+     * message
+     * @throws UnsupportedOperationException if the given message does not
+     * support tags
+     */
+    public static void removeTag(final String tag, final Message message)
+        throws MessagingException {
+        
+        if (message instanceof MStorMessage) {
+            ((MStorMessage) message).removeTag(tag);
+            return;
+        }
+        throw new UnsupportedOperationException("Message is not taggable");
+    }
+    
+    /**
+     * Returns the tags associated with the specified message.
+     * @param message
+     * @return
+     * @throws MessagingException when unable to retrieve the tags for the given
+     * message
+     * @throws UnsupportedOperationException if the given message does not
+     * support tags
+     */
+    public static Tags getTags(final Message message) throws MessagingException {
+        
+        if (message instanceof MStorMessage) {
+            return ((MStorMessage) message).getTags();
+        }
+        throw new UnsupportedOperationException("Message is not taggable");
     }
 }
