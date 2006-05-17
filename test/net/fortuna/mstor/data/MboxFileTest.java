@@ -16,9 +16,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Type description.
- * 
- * @author benfortuna
+ * Unit tests for {@link net.fortuna.mstor.data.MboxFile}.
+ * @author Ben Fortuna
  */
 public class MboxFileTest extends TestCase {
 
@@ -32,16 +31,14 @@ public class MboxFileTest extends TestCase {
     protected final void setUp() throws Exception {
         super.setUp();
 
-        // File f = new File("d:/Mail/Eudora/In.mbx");
-        // File f = new File("c:/temp/mail/store/Inbox");
-        // File f = new
-        // File("f:/development/workspace/mstor/etc/samples/samples.mbx");
-        // File f = new File("c:/temp/mstor_test/samples.mbx");
-        File f = new File("c:/temp/mstor_test/Inbox");
+        File f = new File("etc/samples/MboxFile/Inbox");
 
         mbox = new MboxFile(f, MboxFile.READ_WRITE);
     }
 
+    /**
+     * @throws IOException
+     */
     public final void testGetMessageCount() throws IOException {
         assertTrue(mbox.getMessageCount() >= 0);
 
@@ -50,6 +47,9 @@ public class MboxFileTest extends TestCase {
         mbox.close();
     }
 
+    /**
+     * @throws IOException
+     */
     public final void testGetMessage() throws IOException {
         for (int i = 0; i < mbox.getMessageCount(); i++) {
             // for (int i=0; i<3; i++) {

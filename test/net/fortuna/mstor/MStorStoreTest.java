@@ -28,9 +28,7 @@ public class MStorStoreTest extends MStorTest {
      * Default constructor.
      */
     public MStorStoreTest() {
-//      URLName url = new URLName("mstor:c:/temp/mail/store");
-//      URLName url = new URLName("mstor:c:/temp/mail/Fastmail/archive2");
-        super(new URLName("mstor:f:/development/workspace/mstor/etc/samples"));
+        super(new URLName("mstor:etc/samples/Store"));
     }
 
     /*

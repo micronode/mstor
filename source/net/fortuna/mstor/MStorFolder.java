@@ -415,7 +415,7 @@ public class MStorFolder extends Folder {
      * Create a new reference to mbox file.
      * @param mode
      */
-    private void openMbox(String mode) {
+    private void openMbox(final String mode) {
         mbox = new MboxFile(file, mode);
     }
 
