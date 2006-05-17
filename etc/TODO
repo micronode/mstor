@@ -12,7 +12,5 @@
 
  - Work on memory-management features including
  caching and smart loading of message content
-
- - Add support for categories (similar to labels in Gmail)
  
  - Implement updating of message headers in the mbox file.

@@ -2,6 +2,19 @@
  mstor - Changes
 =================
 
+0.9.8:
+
+ - Added option for disabling java.nio direct buffers
+ 
+ - Added support for user flags containing spaces
+
+ - Added Tags support for messages (user flags)
+ 
+ - Added search term persistence
+ 
+ - Various bug fixes
+ 
+ 
 0.9.7:
 
  - Fixed bug where message count not updated after appending message to MboxFile
