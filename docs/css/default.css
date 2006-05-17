@@ -1,0 +1,59 @@
+body {
+	background-color: grey;
+	font-family: tahoma, verdana, sans-serif;
+	font-size: 10pt;
+}
+
+a {
+	text-decoration: none;
+	color: black;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+h1 {
+	font-size: 36pt;
+}
+
+img {
+	border: 0;
+}
+
+table, h1 {
+	margin: 40px;
+	/* float: left; */
+}
+
+table.page {
+	margin: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	/* background-color: white; */
+	background-color: #FEFEFE;
+	/* width: 90%; */
+	width: 700px;
+	/* float: right; */
+	border: 1px solid black;
+}
+
+thead {
+	font-size: 18pt;
+	font-weight: bold;
+}
+
+th {
+	text-align: left;
+	vertical-align: top;
+}
+
+.title {
+	font-size: 36pt;
+}
+
+#footer {
+	text-align: center;
+	margin: 10px auto 10px auto;
+	font-size: xx-small;
+}

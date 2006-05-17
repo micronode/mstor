@@ -1,0 +1,130 @@
+=================
+ mstor - Changes
+=================
+
+0.9.7:
+
+ - Fixed bug where message count not updated after appending message to MboxFile
+ 
+ - Added assertions to MStorFolder
+ 
+ - Updated checkstyle configuration and clean up
+ 
+ - Added event broadcasting for opened, closed, created, deleted and renamed
+ folders
+ 
+ - Added event broadcasting for messages added or removed from a folder
+ 
+ 
+0.9.6:
+
+ - Fixed bug introduced in 0.9.5 causing message reads from incorrect postion
+ in mbox file.
+ 
+ - Fixed date lines (message headers, metadata) to US-specific locale
+ 
+ - Removed invalid tag from maven project descriptor
+ 
+ - Now throws FolderNotFoundException when opening a folder that doesn't exist
+ 
+ - Fixed appendMessages() retrieval of metadata
+ 
+ 
+0.9.5:
+
+ - Provided system properties to configure the use of java.nio mapping and caching
+ (see README for details).
+ 
+ - Folders automatically closed when underlying store is closed.
+ 
+ - Fixed unit tests to correctly release resources (i.e. close the mbox file)
+ 
+ - File encoding defaults to "ISO-8859-1" again (may be overridden with system
+ property).
+ 
+ - Restored compatibility with Java 1.4.
+ 
+
+0.9.4:
+
+ - Reimplemented aspects of MboxFile to reduce the amount of encoding/decoding
+ performed. Now decoding is only used to determine message positions and check
+ for existing "From_" lines. Message data is now returned in raw byte format.
+ Encoding is now only used for adding "From_" lines to appended messages, with
+ message data written in raw bytes.
+ 
+ - Added system property "mstor.mbox.encoding" to specify a non-default file
+ encoding.
+ 
+ - Removed functionality to strip "From " escaping when returning messages. It
+ seems that this cannot be performed reliably (various references on the Web)
+ and until confirmed otherwise I thought it best to disable this feature.
+ 
+ - Improved memory performance in MstorFolder.appendMessages(): messages passed
+ to this method are now garbage collected on the fly to allow for very large
+ messages to be copied without running out of heap space.
+
+
+0.9.3:
+
+ - Added validation of mbox files to MStorFolder.list()
+ 
+ - Support for headers in metadata. This has some implications:
+ 
+ 	* metadata is only created for existing mailboxes if its
+ 	contents are changed (i.e. headers, flags, etc.)
+ 	
+ 	* if metadata exists, headers are read from metadata in an
+ 	attempt to delay loading of the entire message
+ 	
+ 	* all headers are currently save which means the metadata
+ 	file can get quite large. Will review this at a later date
+ 	
+ - metadata reworked to use message number as identifier as opposed
+ to message id. This means that:
+ 
+    * the message content no longer requires loading to get the
+    message id and obtain the metadata (sort of defeated the purpose
+    previously..)
+ 
+    * non-MIME messages can now save metadata (MIME messages don't
+    have a message id)
+    
+    * when messages are expunged other messages' metadata must have their
+    message numbers updated to stay in synch with the folder
+ 
+ - Added error handling to MboxFile to "fall back" on using a random access
+ file where java.nio fails. This seems to occur on Windows 98 consistently.
+ 
+
+0.9.2_01:
+
+ - Recompiled with JDK 1.4.2 for compatibility with pre-1.5 JVM
+
+
+0.9.2:
+
+ - Added patches to MboxFile.purge() and MstorFolder.expunge()
+ to work on Unix/Linux - provided by Paul Legato
+ 
+ - Added fix to mask/unmask patterns in message content that
+ match the "From_" line pattern - provided by Michael G. Kaiser
+ 
+ - From_ line now specifies date message is appended to the
+ mbox file (rather than "1 Jan 1970")
+ 
+ - Added support for folders that hold both messages and subfolders
+ 
+ 
+0.9.1:
+
+ - Improved meta-data implementation
+ 
+ 
+0.9:
+
+ - Initial Release
+ 
+ - Reading from/appending to mbox files
+ 
+ - Basic message caching

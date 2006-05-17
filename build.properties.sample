@@ -1,0 +1,11 @@
+j2se.apiUrl=http://java.sun.com/j2se/1.4/docs/api/
+
+javamail.home=C:/libs/javamail-1.3.2
+javamail.apiUrl=http://java.sun.com/products/javamail/javadocs/
+
+jaf.home=C:/libs/jaf-1.0.2
+
+jdom.apiUrl=http://www.jdom.org/docs/apidocs/
+
+jakarta-commons-logging.apiUrl=http://jakarta.apache.org/commons/logging/api/
+

@@ -1,0 +1,1 @@
+protocol=mstor; type=store; class=net.fortuna.mstor.MStorStore; vendor=Ben Fortuna;
