@@ -3,7 +3,7 @@
 <project name="mstor" basedir="." default="package">
 
 	<!-- Project details -->
-	<property name="project.version" value="0.9.7"/>
+	<property name="project.version" value="0.9.8"/>
 	
 	<!-- Project paths -->
 	<property name="source.dir" location="source"/>
@@ -28,7 +28,8 @@
     <property name="jdom.apiUrl" value="http://www.jdom.org/docs/apidocs/"/>
     <property name="jakarta-commons-logging.apiUrl" value="http://jakarta.apache.org/commons/logging/api/"/>
 	
-	<property name="project.classpath" value="lib/commons-logging.jar;lib/jdom.jar;${javamail.home}/mail.jar;${output.dir}"/>
+	<property name="project.classpath"
+		 value="lib/commons-logging.jar;lib/jdom.jar;lib/xstream.jar;${javamail.home}/mail.jar;${output.dir}"/>
 	
 	<!-- Targets -->
 	<target name="clean-compile">
