@@ -5,7 +5,9 @@
 	<classpathentry kind="lib" path="lib/commons-logging.jar"/>
 	<classpathentry sourcepath="ECLIPSE_HOME/plugins/org.eclipse.jdt.source_3.0.0/src/org.junit_3.8.1/junitsrc.zip" kind="var" path="JUNIT_HOME/junit.jar"/>
 	<classpathentry kind="src" path="test"/>
-	<classpathentry kind="var" path="JAVAMAIL_LIB"/>
 	<classpathentry kind="lib" path="lib/jdom.jar"/>
+	<classpathentry kind="var" path="ACTIVATION_LIB"/>
+	<classpathentry kind="var" path="JAVAMAIL_LIB"/>
+	<classpathentry kind="lib" path="lib/xstream.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
