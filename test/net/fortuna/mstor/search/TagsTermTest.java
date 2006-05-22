@@ -43,9 +43,9 @@ import javax.mail.search.AddressStringTerm;
 import javax.mail.search.FromStringTerm;
 import javax.mail.search.OrTerm;
 
-import net.fortuna.mstor.MStorMessage;
 import net.fortuna.mstor.MStorTest;
-import net.fortuna.mstor.Tags;
+import net.fortuna.mstor.tag.Taggable;
+import net.fortuna.mstor.tag.Tags;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -81,7 +81,7 @@ public class TagsTermTest extends MStorTest {
         inbox = store.getDefaultFolder().getFolder("Inbox");
         inbox.open(Folder.READ_WRITE);
         
-        MStorMessage message = (MStorMessage) inbox.getMessage(2);
+        Taggable message = (Taggable) inbox.getMessage(2);
         message.addTag(tag);
     }
     
@@ -91,7 +91,7 @@ public class TagsTermTest extends MStorTest {
     protected void tearDown() throws Exception {
         super.tearDown();
         
-        MStorMessage message = (MStorMessage) inbox.getMessage(2);
+        Taggable message = (Taggable) inbox.getMessage(2);
         message.removeTag(tag);
     }
     
@@ -99,7 +99,7 @@ public class TagsTermTest extends MStorTest {
      * A unit test that tags a message and uses a search term to identify it.
      */
     public final void testTagMessage() throws MessagingException {
-        MStorMessage message = (MStorMessage) inbox.getMessage(2);
+        Taggable message = (Taggable) inbox.getMessage(2);
         assertTrue(message.getTags().contains(tag));
         
         Tags searchTags = new Tags();

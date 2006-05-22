@@ -1,9 +1,9 @@
 /*
  * $Id$
  *
- * Created on 14/05/2006
+ * Created on 23/05/2006
  *
- * Copyright (c) 2005, Ben Fortuna
+ * Copyright (c) 2006, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,39 +33,31 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.mstor;
+package net.fortuna.mstor.tag;
 
-import net.fortuna.mstor.data.MboxEncoderTest;
-import net.fortuna.mstor.data.MboxFileTest;
-import net.fortuna.mstor.search.TagsTermTest;
-import net.fortuna.mstor.tag.TagTest;
-import net.fortuna.mstor.tag.TagsTest;
-import junit.framework.TestSuite;
+import javax.mail.MessagingException;
 
 /**
- * A suite of all unit tests.
+ * Implementors support tagging.
  * @author Ben Fortuna
  */
-public class AllTests extends TestSuite {
+public interface Taggable {
 
     /**
-     * @return a suit of unit tests.
+     * Add the specified tag to the associated tags.
+     * @param tag
      */
-    public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
-        
-        // javamail..
-        suite.addTestSuite(MStorStoreTest.class);
-        
-        // mbox..
-        suite.addTestSuite(MboxEncoderTest.class);
-        suite.addTestSuite(MboxFileTest.class);
-        
-        // tags..
-        suite.addTestSuite(TagsTest.class);
-        suite.addTestSuite(TagTest.class);
-        suite.addTestSuite(TagsTermTest.class);
-        
-        return suite;
-    }
+    void addTag(String tag) throws MessagingException;
+    
+    /**
+     * Remove the specified tag from the associated tags.
+     * @param tag
+     */
+    void removeTag(String tag) throws MessagingException;
+    
+    /**
+     * Returns all associated tags.
+     * @return
+     */
+    Tags getTags() throws MessagingException;
 }

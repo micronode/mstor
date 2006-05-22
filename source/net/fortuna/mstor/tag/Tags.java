@@ -33,7 +33,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.mstor;
+package net.fortuna.mstor.tag;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -236,8 +236,8 @@ public class Tags implements Set, Serializable {
     public static void addTag(final String tag, final Message message)
         throws MessagingException {
         
-        if (message instanceof MStorMessage) {
-            ((MStorMessage) message).addTag(tag);
+        if (message instanceof Taggable) {
+            ((Taggable) message).addTag(tag);
             return;
         }
         throw new UnsupportedOperationException("Message is not taggable");
@@ -255,8 +255,8 @@ public class Tags implements Set, Serializable {
     public static void removeTag(final String tag, final Message message)
         throws MessagingException {
         
-        if (message instanceof MStorMessage) {
-            ((MStorMessage) message).removeTag(tag);
+        if (message instanceof Taggable) {
+            ((Taggable) message).removeTag(tag);
             return;
         }
         throw new UnsupportedOperationException("Message is not taggable");
@@ -273,8 +273,8 @@ public class Tags implements Set, Serializable {
      */
     public static Tags getTags(final Message message) throws MessagingException {
         
-        if (message instanceof MStorMessage) {
-            return ((MStorMessage) message).getTags();
+        if (message instanceof Taggable) {
+            return ((Taggable) message).getTags();
         }
         throw new UnsupportedOperationException("Message is not taggable");
     }

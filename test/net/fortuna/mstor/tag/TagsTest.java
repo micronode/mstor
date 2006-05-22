@@ -33,7 +33,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.mstor;
+package net.fortuna.mstor.tag;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -42,13 +42,15 @@ import java.util.Set;
 
 import javax.mail.Flags;
 
+import net.fortuna.mstor.tag.Tags;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import junit.framework.TestCase;
 
 /**
- * Unit tests for {@link net.fortuna.mstor.Tags}.
+ * Unit tests for {@link net.fortuna.mstor.tag.Tags}.
  * @author Ben Fortuna
  */
 public class TagsTest extends TestCase {

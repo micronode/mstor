@@ -43,7 +43,7 @@ import javax.mail.search.FromStringTerm;
 import javax.mail.search.OrTerm;
 
 import junit.framework.TestCase;
-import net.fortuna.mstor.Tags;
+import net.fortuna.mstor.tag.Tags;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

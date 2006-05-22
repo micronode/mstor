@@ -39,11 +39,11 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.search.SearchTerm;
 
+import net.fortuna.mstor.tag.Taggable;
+import net.fortuna.mstor.tag.Tags;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import net.fortuna.mstor.MStorMessage;
-import net.fortuna.mstor.Tags;
 
 /**
  * A Search Term that matches all messages with a given set of tags.
@@ -78,7 +78,7 @@ public class TagsTerm extends SearchTerm {
      */
     public final boolean match(final Message m) {
         try {
-            MStorMessage message = (MStorMessage) m;
+            Taggable message = (Taggable) m;
             return message.getTags().containsAll(tags);
         }
         catch (ClassCastException cce) {

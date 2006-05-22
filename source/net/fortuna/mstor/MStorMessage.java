@@ -49,6 +49,9 @@ import javax.mail.Flags.Flag;
 import javax.mail.internet.InternetHeaders;
 import javax.mail.internet.MimeMessage;
 
+import net.fortuna.mstor.tag.Taggable;
+import net.fortuna.mstor.tag.Tags;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -57,7 +60,7 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @author benfortuna
  */
-public class MStorMessage extends MimeMessage implements Serializable {
+public class MStorMessage extends MimeMessage implements Serializable, Taggable {
 
     private static final long serialVersionUID = 6413532435324648022L;
     

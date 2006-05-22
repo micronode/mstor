@@ -33,7 +33,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.mstor;
+package net.fortuna.mstor.tag;
 
 import java.util.Iterator;
 
@@ -41,6 +41,9 @@ import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.URLName;
+
+import net.fortuna.mstor.MStorTest;
+import net.fortuna.mstor.tag.Tags;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
