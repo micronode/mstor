@@ -131,7 +131,7 @@ public class MboxFile {
     private static Charset charset = Charset.forName(System.getProperty(
             "mstor.mbox.encoding", "ISO-8859-1"));
 
-    private static Log log = LogFactory.getLog(MboxFile.class);
+    private Log log = LogFactory.getLog(MboxFile.class);
 
     /**
      * @author Ben Fortuna
@@ -720,13 +720,18 @@ public class MboxFile {
 
             return Pattern.compile(INITIAL_FROM__PATTERN, Pattern.DOTALL)
                     .matcher(line).matches();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
+            Log log = LogFactory.getLog(MboxFile.class);
             log.info("Not a valid mbox file [" + file + "]", e);
-        } finally {
+        }
+        finally {
             if (reader != null) {
                 try {
                     reader.close();
-                } catch (IOException ioe) {
+                }
+                catch (IOException ioe) {
+                    Log log = LogFactory.getLog(MboxFile.class);
                     log.info("Error closing stream [" + file + "]", ioe);
                 }
             }

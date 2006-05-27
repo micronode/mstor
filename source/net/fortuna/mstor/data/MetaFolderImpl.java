@@ -62,7 +62,7 @@ public class MetaFolderImpl extends DocumentBinding implements MetaFolder {
 
     private static final String ATTRIBUTE_FOLDER_NAME = "name";
 
-    private static Log log = LogFactory.getLog(MetaFolderImpl.class);
+    private Log log = LogFactory.getLog(MetaFolderImpl.class);
 
     public static final String FILE_EXTENSION = ".emf";
 

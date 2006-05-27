@@ -64,7 +64,7 @@ public class MStorMessage extends MimeMessage implements Serializable, Taggable 
 
     private static final long serialVersionUID = 6413532435324648022L;
     
-    private static Log log = LogFactory.getLog(MStorMessage.class);
+    private Log log = LogFactory.getLog(MStorMessage.class);
 
     /**
      * Additional metadata not support by MimeMessage.

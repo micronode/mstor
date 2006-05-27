@@ -71,7 +71,7 @@ public class MStorFolder extends Folder {
     
     private static final int DEFAULT_BUFFER_SIZE = 1024;
 
-    private static Log log = LogFactory.getLog(MStorFolder.class);
+    private Log log = LogFactory.getLog(MStorFolder.class);
 
     /**
      * Indicates whether this folder holds messages or other folders.
@@ -231,8 +231,8 @@ public class MStorFolder extends Folder {
         for (int i = 0; files != null && i < files.length; i++) {
             if (!files[i].getName().endsWith(MetaFolderImpl.FILE_EXTENSION)
                     && !files[i].getName().endsWith(DIR_EXTENSION)
-                    && (files[i].isDirectory() || files[i].length() == 0 || MboxFile
-                            .isValid(files[i]))) {
+                    && (files[i].isDirectory() || files[i].length() == 0
+                            || MboxFile.isValid(files[i]))) {
                 // && ((type & Folder.HOLDS_MESSAGES) == 0
                 // || !files[i].isDirectory())) {
                 folders.add(new MStorFolder(mStore, files[i]));

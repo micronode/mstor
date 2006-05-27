@@ -84,7 +84,7 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
     
     private static final DateFormat MESSAGE_DATE_FORMAT = new MetaDateFormat();
 
-    private static Log log = LogFactory.getLog(MetaMessageImpl.class);
+    private Log log = LogFactory.getLog(MetaMessageImpl.class);
 
     private MetaFolder folder;
     

@@ -51,7 +51,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class TagsTerm extends SearchTerm {
 
-    private static final Log LOG = LogFactory.getLog(TagsTerm.class);
+    private Log log = LogFactory.getLog(TagsTerm.class);
 
     private static final long serialVersionUID = 7893903141033644620L;
 
@@ -82,10 +82,10 @@ public class TagsTerm extends SearchTerm {
             return message.getTags().containsAll(tags);
         }
         catch (ClassCastException cce) {
-            LOG.error("Invalid message type", cce);
+            log.error("Invalid message type", cce);
         }
         catch (MessagingException me) {
-            LOG.error("Exception occured", me);
+            log.error("Exception occured", me);
         }
         return false;
     }
