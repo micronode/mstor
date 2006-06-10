@@ -69,6 +69,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.fortuna.mstor.util.Cache;
+import net.fortuna.mstor.util.CapabilityHints;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -119,8 +120,6 @@ public class MboxFile {
     private static final String FROM__DATE_PATTERN = "EEE MMM d HH:mm:ss yyyy";
 
     private static final int DEFAULT_BUFFER_SIZE = 1024;
-    
-    private static final boolean USE_DIRECT_BUFFERS = !"false".equals(System.getProperty("mstor.mbox.useDirectBuffers"));
 
     // Charset and decoder for ISO-8859-15
     // private static Charset charset =
@@ -135,9 +134,9 @@ public class MboxFile {
 
     /**
      * @author Ben Fortuna
-     * 
      */
     private class BufferInputStream extends InputStream {
+        
         private ByteBuffer buffer;
 
         /**
@@ -192,14 +191,6 @@ public class MboxFile {
     private File file;
 
     private String mode;
-
-    // by default, don't use nio mapping..
-    private boolean useNioMapping = "true".equals(System
-            .getProperty("mstor.mbox.useNioMapping"));
-
-    // by default, cache message buffers..
-    private boolean cacheBuffers = !("false".equals(System
-            .getProperty("mstor.mbox.cacheBuffers")));
 
     private RandomAccessFile raf;
 
@@ -261,56 +252,46 @@ public class MboxFile {
     }
 
     /**
-     * Reads a sequence of bytes using a java nio channel. If the java nio
-     * approach fails, resort to random access file.
-     * 
+     * Reads from the mbox file using the most appropriate buffer strategy
+     * available. The buffer is also flipped (for reading) prior to returning.
      * @param position
-     *            the position in the file to read from
      * @param size
-     *            the number of bytes to read
-     * @return a byte buffer containing the bytes read
-     * @throws IOException
+     * @return a ByteBuffer containing up to <em>size</em> bytes starting at
+     * the specified position in the file.
      */
-    private ByteBuffer readBytes(final long position, final ByteBuffer buffer)
-            throws IOException {
+    private ByteBuffer read(final long position, final int size)
+        throws IOException {
+        
+        ByteBuffer buffer = null;
         try {
-            // throw new IOException("Test error handling..");
-            getChannel().position(position);
-            getChannel().read(buffer);
-        } catch (IOException ioe) {
-            log.warn("Error reading bytes using nio", ioe);
-            getRaf().seek(position);
-            byte[] buf = new byte[buffer.capacity()];
-            getRaf().read(buf);
-            buffer.put(buf);
+            if (CapabilityHints.KEY_MBOX_BUFFER_STRATEGY.equals(
+                    CapabilityHints.VALUE_MBOX_BUFFER_STRATEGY_MAPPED)) {
+                
+                buffer = getChannel().map(
+                        FileChannel.MapMode.READ_ONLY, position, size);
+            }
+            else {
+                if (CapabilityHints.KEY_MBOX_BUFFER_STRATEGY.equals(
+                        CapabilityHints.VALUE_MBOX_BUFFER_STRATEGY_DIRECT)) {
+                    
+                    buffer = ByteBuffer.allocateDirect((int) size);
+                }
+                else {
+                    buffer = ByteBuffer.allocate((int) size);
+                }
+                getChannel().position(position);
+                getChannel().read(buffer);
+            }
         }
-        return buffer;
-    }
-
-    /**
-     * Maps a sequence of bytes using java nio. If the java nio approach fails,
-     * resort to random access file to "simulate" the mapping.
-     * 
-     * @param position
-     *            the position in the file to read from
-     * @param size
-     *            the number of bytes to read
-     * @return a byte buffer containing the bytes read
-     * @throws IOException
-     */
-    private ByteBuffer mapBytes(final long position, final int size)
-            throws IOException {
-        try {
-            // throw new IOException("Test error handling");
-            return getChannel().map(FileChannel.MapMode.READ_ONLY, position,
-                    size);
-        } catch (IOException ioe) {
+        catch (IOException ioe) {
             log.warn("Error reading bytes using nio", ioe);
             getRaf().seek(position);
             byte[] buf = new byte[size];
             getRaf().read(buf);
-            return ByteBuffer.wrap(buf);
+            buffer = ByteBuffer.wrap(buf);
         }
+        buffer.flip();
+        return buffer;
     }
 
     /**
@@ -334,15 +315,7 @@ public class MboxFile {
             // read mbox file to determine the message positions..
             CharSequence cs = null;
 
-            ByteBuffer buffer = null;
-            if (USE_DIRECT_BUFFERS) {
-                buffer = ByteBuffer.allocateDirect(bufferSize);
-            }
-            else {
-                buffer = ByteBuffer.allocate(bufferSize);
-            }
-            readBytes(0, buffer);
-            buffer.flip();
+            ByteBuffer buffer = read(0, bufferSize);
 
             cs = decoder.decode(buffer);
 
@@ -379,7 +352,8 @@ public class MboxFile {
                 // if (offset + cb.limit() >= getChannel().size()) {
                 if (offset + bufferSize >= getChannel().size()) {
                     break;
-                } else {
+                }
+                else {
                     // preserve the end of the buffer as it may contain
                     // part of a From_ pattern..
                     // offset += cb.limit() - FROM__PATTERN.length();
@@ -389,9 +363,9 @@ public class MboxFile {
                             DEFAULT_BUFFER_SIZE);
 
                     // buffer = readBytes(offset, (int) bufferSize);
-                    buffer.clear();
-                    readBytes(offset, buffer);
-                    buffer.flip();
+//                    buffer.clear();
+                    buffer = read(offset, bufferSize);
+//                    buffer.flip();
                     cs = decoder.decode(buffer);
                 }
             }
@@ -448,23 +422,17 @@ public class MboxFile {
             } else {
                 size = getChannel().size() - getMessagePositions()[index];
             }
-
-            if (useNioMapping) {
-                buffer = mapBytes(position, (int) size);
-            } else {
-                if (USE_DIRECT_BUFFERS) {
-                    buffer = ByteBuffer.allocateDirect((int) size);
-                }
-                else {
-                    buffer = ByteBuffer.allocate((int) size);
-                }
-                readBytes(position, buffer);
-                buffer.flip();
-            }
-            if (cacheBuffers) {
+            buffer = read(position, (int) size);
+            if (CapabilityHints.KEY_MBOX_CACHE_BUFFERS.equals(
+                    CapabilityHints.VALUE_MBOX_CACHE_BUFFERS_ENABLED)) {
+                
                 // add buffer to cache..
                 getMessageCache().put(new Integer(index), buffer);
             }
+        }
+        else {
+            // rewind for a re-read of buffer data..
+            buffer.rewind();
         }
         return new BufferInputStream(buffer);
     }
