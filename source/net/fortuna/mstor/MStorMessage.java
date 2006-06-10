@@ -444,8 +444,8 @@ public class MStorMessage extends MimeMessage implements Serializable, Taggable 
                 meta.getFolder().save();
             }
             catch (IOException ioe) {
-                log.warn("Error saving metadata [" + meta.getMessageNumber()
-                        + "]", ioe);
+                throw new MessagingException("Error updating message metadata ["
+                        + meta.getMessageNumber() + "]", ioe);
             }
         }
     }
