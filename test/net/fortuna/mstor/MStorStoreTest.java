@@ -63,7 +63,7 @@ public class MStorStoreTest extends MStorTest {
 
         assertNotNull(message);
 
-        log.info("Messages count [" + folder.getMessages().length + "]");
+        log.info("Messages count [" + folder.getMessageCount() + "]");
     }
 
     /*
