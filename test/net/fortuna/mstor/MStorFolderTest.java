@@ -18,6 +18,8 @@ import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.URLName;
 
+import net.fortuna.mstor.util.CapabilityHints;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -33,9 +35,13 @@ public class MStorFolderTest extends MStorTest {
     private static Properties p = new Properties();
     static {
         // disable metadata..
-        p.setProperty("mstor.meta.enabled", "false");
-        p.setProperty("mstor.mbox.useNioMapping", "false");
-        p.setProperty("mstor.mbox.directBuffer", "false");
+        p.setProperty(CapabilityHints.KEY_METADATA,
+                CapabilityHints.VALUE_METADATA_DEFAULT);
+        
+        CapabilityHints.setHint(CapabilityHints.KEY_MBOX_BUFFER_STRATEGY,
+                CapabilityHints.VALUE_MBOX_BUFFER_STRATEGY_DIRECT);
+        CapabilityHints.setHint(CapabilityHints.KEY_MBOX_CACHE_BUFFERS,
+                CapabilityHints.VALUE_MBOX_CACHE_BUFFERS_DISABLED);
     }
     
     /**
@@ -203,8 +209,9 @@ public class MStorFolderTest extends MStorTest {
         try {
             inbox.getMessage(1);
             fail("Should throw IllegalStateException");
-        } catch (IllegalStateException ise) {
-            log.info("Error ocurred", ise);
+        }
+        catch (IllegalStateException ise) {
+            log.info("Error caught", ise);
         }
 
         inbox.open(Folder.READ_ONLY);
@@ -212,8 +219,9 @@ public class MStorFolderTest extends MStorTest {
         try {
             inbox.getMessage(0);
             fail("Should throw IndexOutOfBoundsException");
-        } catch (IndexOutOfBoundsException iobe) {
-            log.info("Error ocurred", iobe);
+        }
+        catch (IndexOutOfBoundsException iobe) {
+            log.info("Error caught", iobe);
         }
 
         assertNotNull(inbox.getMessage(1));
@@ -235,11 +243,10 @@ public class MStorFolderTest extends MStorTest {
         Folder inbox = store.getDefaultFolder().getFolder("Inbox");
         inbox.open(Folder.READ_ONLY);
 
-        Message[] messages = inbox.getMessages();
+        Message[] messages = inbox.getMessages(1, 10);
         copy2.appendMessages(messages);
 
-        assertEquals(messageCount + inbox.getMessageCount(), copy2
-                .getMessageCount());
+        assertEquals(messageCount + 10, copy2.getMessageCount());
     }
     
     /**
@@ -254,12 +261,11 @@ public class MStorFolderTest extends MStorTest {
         Folder inbox = store.getDefaultFolder().getFolder("Inbox");
         inbox.open(Folder.READ_ONLY);
 
-        Message[] messages = inbox.getMessages();
+        Message[] messages = inbox.getMessages(1, 10);
         copy2.appendMessages(messages);
 
         copy2.open(Folder.READ_ONLY);
-        assertEquals(messageCount + inbox.getMessageCount(),
-                copy2.getMessageCount());
+        assertEquals(messageCount + 10, copy2.getMessageCount());
     }
 
     /*
