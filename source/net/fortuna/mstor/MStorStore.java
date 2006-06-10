@@ -43,6 +43,8 @@ import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.URLName;
 
+import net.fortuna.mstor.util.CapabilityHints;
+
 /**
  * Implementation of a javamail store for the mstor provider.
  * Metadata is enabled by default, however it may be disabled by specifying
@@ -67,7 +69,11 @@ public class MStorStore extends Store {
         super(session, url);
         
         // enable metadata by default..
-        metaEnabled = !("false".equals(session.getProperty("mstor.meta.enabled")));
+        String metadataStrategy = 
+            session.getProperties().getProperty(CapabilityHints.KEY_METADATA,
+                    CapabilityHints.getHint(CapabilityHints.KEY_METADATA));
+        
+        metaEnabled = !CapabilityHints.VALUE_METADATA_DISABLED.equals(metadataStrategy);
     }
 
     /* (non-Javadoc)
@@ -117,11 +123,5 @@ public class MStorStore extends Store {
      */
     public final boolean isMetaEnabled() {
         return metaEnabled;
-    }
-    /**
-     * @param metaEnabled The metaEnabled to set.
-     */
-    public final void setMetaEnabled(final boolean metaEnabled) {
-        this.metaEnabled = metaEnabled;
     }
 }
