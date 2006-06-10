@@ -177,9 +177,13 @@ public class MetaFolderImpl extends DocumentBinding implements MetaFolder {
         List metas = new ArrayList();
         int delta = 0;
         int startIndex = Integer.MAX_VALUE;
-        for (Iterator i = getDocument().getRootElement().getChildren(MetaMessageImpl.ELEMENT_MESSAGE).iterator(); i.hasNext();) {
+        for (Iterator i = getDocument().getRootElement().getChildren(
+                MetaMessageImpl.ELEMENT_MESSAGE, namespace).iterator(); i.hasNext();) {
+            
             Element messageElement = (Element) i.next();
-            int messageNumber = Integer.parseInt(messageElement.getAttributeValue(MetaMessageImpl.ATTRIBUTE_MESSAGE_NUMBER));
+            int messageNumber = Integer.parseInt(
+                    messageElement.getAttributeValue(MetaMessageImpl.ATTRIBUTE_MESSAGE_NUMBER));
+            
             for (int n = 0; n < messageNumbers.length; n++) {
                 if (messageNumbers[n] == messageNumber) {
                     getDocument().getRootElement().removeContent(messageElement);
