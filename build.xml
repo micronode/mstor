@@ -35,7 +35,7 @@
 	<target name="clean-compile">
 		<mkdir dir="${output.dir}"/>
 		<delete>
-			<fileset dir="${output.dir}" />
+			<fileset dir="${output.dir}" includes="**/*.class,**/log4j.properties"/>
 		</delete>
 	</target>
 	
