@@ -619,36 +619,44 @@ public class MStorFolder extends Folder {
 
         int count = getDeletedMessageCount();
 
-        Message[] messages = getMessages();
-
         List deletedList = new ArrayList();
 
-        for (int i = 0; i < messages.length && deletedList.size() < count; i++) {
-            if (messages[i].isSet(Flags.Flag.DELETED)) {
-                deletedList.add(messages[i]);
+        for (int i = 1; i <= getMessageCount() && deletedList.size() < count; i++) {
+            Message message = getMessage(i);
+            if (message.isSet(Flags.Flag.DELETED)) {
+                deletedList.add(message);
             }
         }
 
         MStorMessage[] deleted = (MStorMessage[]) deletedList
                 .toArray(new MStorMessage[deletedList.size()]);
 
-        int[] indices = new int[deleted.length];
+        int[] mboxIndices = new int[deleted.length];
+        int[] metaIndices = new int[deleted.length];
 
         for (int i = 0; i < deleted.length; i++) {
             // have to subtract one, because the raw storage array is 0-based,
             // but
             // the message numbers are 1-based
-            indices[i] = deleted[i].getMessageNumber() - 1;
+            mboxIndices[i] = deleted[i].getMessageNumber() - 1;
+            metaIndices[i] = deleted[i].getMessageNumber();
         }
 
         try {
-            mbox.purge(indices);
-        } catch (IOException ioe) {
+            mbox.purge(mboxIndices);
+        }
+        catch (IOException ioe) {
             throw new MessagingException("Error purging mbox file", ioe);
         }
 
         if (mStore.isMetaEnabled()) {
-            getMeta().removeMessages(indices);
+            try {
+                getMeta().removeMessages(metaIndices);
+                getMeta().save();
+            }
+            catch (IOException ioe) {
+                throw new MessagingException("Error updating metadata", ioe);
+            }
         }
 
         for (int i = 0; i < deleted.length; i++) {
@@ -680,7 +688,6 @@ public class MStorFolder extends Folder {
             meta = new MetaFolderImpl(new File(getFullName()
                     + MetaFolderImpl.FILE_EXTENSION));
         }
-
         return meta;
     }
 
