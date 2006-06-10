@@ -36,9 +36,11 @@
 package net.fortuna.mstor.data;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.Locale;
 
 import javax.mail.Flags;
 import javax.mail.Header;
@@ -47,7 +49,6 @@ import javax.mail.internet.InternetHeaders;
 import net.fortuna.mstor.MetaFolder;
 import net.fortuna.mstor.MetaMessage;
 import net.fortuna.mstor.data.xml.ElementBinding;
-import net.fortuna.mstor.util.MetaDateFormat;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -82,7 +83,10 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
 
     private static final String ELEMENT_FORWARDED = "forwarded";
     
-    private static final DateFormat MESSAGE_DATE_FORMAT = new MetaDateFormat();
+    private static final String META_DATE_PATTERN = "EEE MMM d HH:mm:ss yyyy";
+    
+    private static final DateFormat MESSAGE_DATE_FORMAT = new SimpleDateFormat(
+            META_DATE_PATTERN, Locale.US);
 
     private Log log = LogFactory.getLog(MetaMessageImpl.class);
 
