@@ -57,6 +57,7 @@ import javax.mail.event.FolderEvent;
 import net.fortuna.mstor.data.MboxFile;
 import net.fortuna.mstor.data.MetaFolderImpl;
 import net.fortuna.mstor.util.Cache;
+import net.fortuna.mstor.util.CapabilityHints;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -557,6 +558,14 @@ public class MStorFolder extends Folder {
         for (int i = 0; i < messages.length; i++) {
             try {
                 out.reset();
+
+                if (CapabilityHints.VALUE_MOZILLA_COMPATIBILITY_ENABLED.equals(
+                        CapabilityHints.getHint(CapabilityHints.KEY_MOZILLA_COMPATIBILITY))) {
+                    
+                    messages[i].setHeader("X-Mozilla-Status", "0000");
+                    messages[i].setHeader("X-Mozilla-Status-2", "00000000");
+                }
+                
                 messages[i].writeTo(out);
                 mbox.appendMessage(out.toByteArray());
 

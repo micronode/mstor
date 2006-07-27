@@ -117,6 +117,22 @@ public final class CapabilityHints {
     public static final String VALUE_METADATA_DEFAULT = "default";
 
     
+    /**
+     * A capability hint to enable mozilla mbox compatibility.
+     */
+    public static final String KEY_MOZILLA_COMPATIBILITY = "mstor.mozillaCompatibility";
+
+    /**
+     * A value used to enabled mozilla mbox compatibility.
+     */
+    public static final String VALUE_MOZILLA_COMPATIBILITY_ENABLED = "enbled";
+
+    /**
+     * A value used to disable mozilla mbox compatibility.
+     */
+    public static final String VALUE_MOZILLA_COMPATIBILITY_DISABLED = "enbled";
+    
+    
     private static final Properties HINTS = new Properties(System.getProperties());
     
     /**
