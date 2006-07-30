@@ -2,6 +2,28 @@
  mstor - Changes
 =================
 
+0.9.9:
+
+ - Refactored tags into seperate package
+ 
+ - Added CapabilityHints to centralise flags used to control mstor capabilities
+ 
+ - Cleaned up MboxFile buffer usage
+ 
+ - Added some improvements in memory usage for large files
+ 
+ - Fixed bug with metadata message removal
+ 
+ - Removed redundant MetaDateFormat
+ 
+ - Fixed package build target to include META-INF/javamail.providers in JAR
+ 
+ - Updated commons logging to 1.1
+ 
+ - Added capability hint for additional mozilla (thunderbird, seamonkey)
+ compatibility
+ 
+
 0.9.8:
 
  - Added option for disabling java.nio direct buffers
