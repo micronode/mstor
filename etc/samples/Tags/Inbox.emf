@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mstor:folder xmlns:mstor="http://modularity.net.au/mstor">
+  <mstor:message messageNumber="1">
+    <mstor:flags />
+    <mstor:headers>
+      <X-Mozilla-Status>a000</X-Mozilla-Status>
+      <Message-ID>&lt;3932167.1154233860312.JavaMail.Ben@homebase&gt;</Message-ID>
+      <Date>Mon, 02 Jun 1997 12:00:00 -0800</Date>
+      <From>Mark Lyon Testing &lt;marklyon@gmail.com&gt;</From>
+      <Reply-To>marklyon@gmail.com</Reply-To>
+      <Organization>Mark Lyon's Gmail Loader</Organization>
+      <X-Mailer>Mozilla 4.05 (Win95; I)</X-Mailer>
+      <MIME-Version>1.0</MIME-Version>
+      <To>GML User</To>
+      <Subject>Test Message 1</Subject>
+      <X-Priority>3 (Normal)</X-Priority>
+      <Content-Type>multipart/related; boundary="----------2E29447026B50"</Content-Type>
+    </mstor:headers>
+    <mstor:expunged />
+  </mstor:message>
+  <mstor:message messageNumber="2">
+    <mstor:flags>
+      <tag_Test__SPACE__1 />
+    </mstor:flags>
+    <mstor:headers>
+      <X-Mozilla-Status>c000</X-Mozilla-Status>
+      <Message-ID>&lt;28705408.1147594221187.JavaMail.Ben@homebase&gt;</Message-ID>
+      <Date>Mon, 02 Jun 1997 13:00:00 -0800</Date>
+      <From>Airius Partner &lt;info@netscape.com&gt;</From>
+      <Reply-To>info@netscape.com</Reply-To>
+      <X-Mozilla-Draft-Info>internal/draft; vcard=0; receipt=0; uuencode=0; html=0</X-Mozilla-Draft-Info>
+      <X-Mailer>Mozilla 4.05 (Win95; I)</X-Mailer>
+      <MIME-Version>1.0</MIME-Version>
+      <To>Netscape Messenger User</To>
+      <Subject>Airius Memorandum</Subject>
+      <X-Priority>3 (Normal)</X-Priority>
+      <Content-Type>multipart/related; boundary="------------3D11F2F98F1BE0120D838457"</Content-Type>
+    </mstor:headers>
+    <mstor:expunged />
+  </mstor:message>
+</mstor:folder>
+
