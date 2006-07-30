@@ -4,6 +4,8 @@
 
 0.9.9:
 
+ - Replaced missing javamail.providers file in JAR
+ 
  - Refactored tags into seperate package
  
  - Added CapabilityHints to centralise flags used to control mstor capabilities
