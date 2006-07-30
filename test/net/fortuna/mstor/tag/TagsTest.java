@@ -105,7 +105,7 @@ public class TagsTest extends TestCase {
     public void testIterator() {
         Iterator i = tags.iterator();
         assertTrue(i.hasNext());
-        for (;i.hasNext();) {
+        for (; i.hasNext();) {
             LOG.info("Tag: " + i.next());
         }
     }

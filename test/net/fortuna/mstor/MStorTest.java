@@ -94,6 +94,7 @@ public abstract class MStorTest extends TestCase {
         super.tearDown();
         if (store != null && store.isConnected()) {
             store.close();
+            store = null;
         }
     }
 }
