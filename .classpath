@@ -7,7 +7,7 @@
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="lib" path="lib/jdom.jar"/>
 	<classpathentry kind="var" path="ACTIVATION_LIB"/>
-	<classpathentry kind="var" path="JAVAMAIL_LIB"/>
+	<classpathentry sourcepath="/JAVAMAIL_SRC" kind="var" path="JAVAMAIL_LIB"/>
 	<classpathentry kind="lib" path="lib/xstream.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
