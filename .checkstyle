@@ -3,7 +3,7 @@
     <local-check-config name="Default Checks" location="etc/checkstyle.xml" type="project" description="">
         <additional-data name="protect-config-file" value="false"/>
     </local-check-config>
-    <fileset name="Java Source" enabled="true" check-config-name="Default Checks" local="true">
+    <fileset name="Java Source" enabled="true" check-config-name="Default Checks" local="false">
         <file-match-pattern match-pattern=".java$" include-pattern="true"/>
     </fileset>
 </fileset-config>
