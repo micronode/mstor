@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="source"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/commons-logging.jar"/>
-	<classpathentry sourcepath="ECLIPSE_HOME/plugins/org.eclipse.jdt.source_3.0.0/src/org.junit_3.8.1/junitsrc.zip" kind="var" path="JUNIT_HOME/junit.jar"/>
-	<classpathentry kind="src" path="test"/>
-	<classpathentry kind="lib" path="lib/jdom.jar"/>
-	<classpathentry kind="var" path="ACTIVATION_LIB"/>
-	<classpathentry sourcepath="/JAVAMAIL_SRC" kind="var" path="JAVAMAIL_LIB"/>
-	<classpathentry kind="lib" path="lib/xstream.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry path="source" kind="src"/>
+	<classpathentry path="org.eclipse.jdt.launching.JRE_CONTAINER" kind="con"/>
+	<classpathentry path="test" kind="src"/>
+	<classpathentry path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER" kind="con"/>
+	<classpathentry path="bin" kind="output"/>
 </classpath>
