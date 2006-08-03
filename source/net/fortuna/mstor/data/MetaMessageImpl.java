@@ -306,7 +306,7 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
     public final void setHeaders(final Enumeration headers) {
         Element headersElement = getElement(ELEMENT_HEADERS);
         headersElement.removeContent();
-        for (; headers.hasMoreElements();) {
+        while (headers.hasMoreElements()) {
             Header header = (Header) headers.nextElement();
             try {
                 if (!header.getName().startsWith(MboxFile.FROM__PREFIX)) {

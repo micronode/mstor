@@ -110,24 +110,11 @@ public class MStorFolder extends Folder {
     private MStorStore mStore;
 
     /**
-     * Constructs a new mstor folder with metadata enabled.
-     * 
+     * Constructs a new mstor folder instance.
      * @param store
      * @param file
      */
     public MStorFolder(final MStorStore store, final File file) {
-        this(store, file, true);
-    }
-
-    /**
-     * Constructs a new mstor folder instance.
-     * 
-     * @param store
-     * @param file
-     * @param metaEnabled
-     */
-    public MStorFolder(final MStorStore store, final File file,
-            final boolean metaEnabled) {
         super(store);
         this.mStore = store;
         this.file = file;

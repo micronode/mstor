@@ -195,10 +195,8 @@ public class Tags implements Set, Serializable {
     public final boolean retainAll(final Collection arg0) {
         for (Iterator i = iterator(); i.hasNext();) {
             String tag = (String) i.next();
-            if (!arg0.contains(tag)) {
-                if (!remove(tag)) {
-                    return false;
-                }
+            if (!arg0.contains(tag) && !remove(tag)) {
+                return false;
             }
         }
         return true;
