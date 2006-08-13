@@ -16,12 +16,6 @@
     <system>SourceForge.net</system>
     <url>http://sourceforge.net/tracker/?group_id=114229</url>
   </issueManagement>
-  <distributionManagement>
-    <site>
-      <id>mstor-site</id>
-      <url>scp://modularity.net.au/home/.parker/modularity/modularity.net.au/mstor</url>
-    </site>
-  </distributionManagement>
   <licenses>
     <license>
       <name>mstor License</name>
@@ -70,6 +64,15 @@
             <exclude>**/MStorMessageTest.java</exclude>
             <exclude>**/SearchTermsTest.java</exclude>
           </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <descriptors>
+          	<descriptor>etc/bin-assembly.xml</descriptor>
+          	<descriptor>etc/src-assembly.xml</descriptor>
+          </descriptors>
         </configuration>
       </plugin>
     </plugins>
