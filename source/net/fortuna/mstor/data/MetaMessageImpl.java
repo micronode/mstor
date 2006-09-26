@@ -142,18 +142,25 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
         }
     }
 
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.MetaMessage#getReceived()
+     */
     public final Date getReceived() {
         String received = getElement(ELEMENT_RECEIVED).getText();
         try {
             synchronized (MESSAGE_DATE_FORMAT) {
                 return MESSAGE_DATE_FORMAT.parse(received);
             }
-        } catch (Exception e) {
-            log.info("Invalid received date [" + received + "]", e);
+        }
+        catch (Exception e) {
+            log.warn("Invalid received date [" + received + "]");
         }
         return null;
     }
 
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.MetaMessage#setReceived(java.util.Date)
+     */
     public final void setReceived(final Date date) {
         Element received = getElement(ELEMENT_RECEIVED);
         synchronized (MESSAGE_DATE_FORMAT) {
@@ -161,18 +168,25 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
         }
     }
 
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.MetaMessage#getForwarded()
+     */
     public final Date getForwarded() {
         String forwarded = getElement(ELEMENT_FORWARDED).getText();
         try {
             synchronized (MESSAGE_DATE_FORMAT) {
                 return MESSAGE_DATE_FORMAT.parse(forwarded);
             }
-        } catch (Exception e) {
-            log.info("Invalid forwarded date [" + forwarded + "]", e);
+        }
+        catch (Exception e) {
+            log.warn("Invalid forwarded date [" + forwarded + "]");
         }
         return null;
     }
 
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.MetaMessage#setForwarded(java.util.Date)
+     */
     public final void setForwarded(final Date date) {
         Element forwarded = getElement(ELEMENT_FORWARDED);
         synchronized (MESSAGE_DATE_FORMAT) {
@@ -180,18 +194,25 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
         }
     }
 
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.MetaMessage#getReplied()
+     */
     public final Date getReplied() {
         String replied = getElement(ELEMENT_REPLIED).getText();
         try {
             synchronized (MESSAGE_DATE_FORMAT) {
                 return MESSAGE_DATE_FORMAT.parse(replied);
             }
-        } catch (Exception e) {
-            log.info("Invalid replied date [" + replied + "]", e);
+        }
+        catch (Exception e) {
+            log.warn("Invalid replied date [" + replied + "]");
         }
         return null;
     }
 
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.MetaMessage#setReplied(java.util.Date)
+     */
     public final void setReplied(final Date date) {
         Element replied = getElement(ELEMENT_REPLIED);
         synchronized (MESSAGE_DATE_FORMAT) {
@@ -199,21 +220,31 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
         }
     }
 
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.MetaMessage#isExpunged()
+     */
     public final boolean isExpunged() {
         Element expunged = getElement(ELEMENT_EXPUNGED);
         try {
             return Boolean.valueOf(expunged.getText()).booleanValue();
-        } catch (Exception e) {
-            log.info("Invalid expunged value [" + expunged.getText() + "]", e);
+        }
+        catch (Exception e) {
+            log.warn("Invalid expunged value [" + expunged.getText() + "]");
         }
         return false;
     }
 
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.MetaMessage#setExpunged(boolean)
+     */
     public final void setExpunged(final boolean flag) {
         Element expunged = getElement(ELEMENT_EXPUNGED);
         expunged.setText(String.valueOf(flag));
     }
 
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.MetaMessage#getFlags()
+     */
     public final Flags getFlags() {
         Flags flags = new Flags();
         for (Iterator i = getElement(ELEMENT_FLAGS).getChildren().iterator(); i
@@ -241,6 +272,9 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
         return flags;
     }
 
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.MetaMessage#setFlags(javax.mail.Flags)
+     */
     public final void setFlags(final Flags flags) {
         Element flagsElement = getElement(ELEMENT_FLAGS);
         flagsElement.removeContent();
