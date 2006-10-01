@@ -35,6 +35,8 @@
  */
 package net.fortuna.mstor;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Properties;
 
 import javax.mail.Session;
@@ -42,13 +44,17 @@ import javax.mail.URLName;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.io.FileUtils;
+
 /**
  * Abstract base class for MStor unit tests. Provides setup of a mail store.
  * @author Ben Fortuna
  */
-public abstract class MStorTest extends TestCase {
+public abstract class AbstractMStorTest extends TestCase {
 
-    private URLName storeUrl;
+    private File sourceDir;
+
+    private File testDir;
     
     private Properties sessionProps;
     
@@ -57,17 +63,19 @@ public abstract class MStorTest extends TestCase {
     protected MStorStore store;
     
     /**
-     * @param url
+     * @param source
+     * @throws IOException
      */
-    public MStorTest(final URLName url) {
-        this(url, null);
+    public AbstractMStorTest(File source) throws IOException {
+        this(source, null);
     }
     
     /**
-     * @param url
+     * @param source
+     * @throws IOException
      */
-    public MStorTest(final URLName url, final Properties props) {
-        this.storeUrl = url;
+    public AbstractMStorTest(File source, Properties props) throws IOException {
+        this.sourceDir = source;
         this.sessionProps = props;
     }
     
@@ -82,6 +90,8 @@ public abstract class MStorTest extends TestCase {
         else {
             session = Session.getDefaultInstance(new Properties());
         }
+        testDir = createTestHierarchy(sourceDir);
+        URLName storeUrl = new URLName("mstor:" + testDir.getPath());
         store = new MStorStore(session, storeUrl);
         store.connect();
     }
@@ -96,5 +106,19 @@ public abstract class MStorTest extends TestCase {
             store.close();
             store = null;
         }
+        FileUtils.deleteDirectory(testDir);
+    }
+    
+    /**
+     * 
+     * @param url
+     * @return
+     */
+    private File createTestHierarchy(File source) throws IOException {
+        File testDir = new File(System.getProperty("java.io.tmpdir"),
+                "mstor_test" + File.separator + getName()
+                + File.separator + source.getName());
+        FileUtils.copyDirectory(source, testDir);
+        return testDir;
     }
 }
