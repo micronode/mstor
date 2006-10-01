@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?><project>
   <parent>
-    <groupId>net.modularity</groupId>
     <artifactId>modularity-parent</artifactId>
+    <groupId>net.modularity</groupId>
     <version>1.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.fortuna</groupId>
   <artifactId>mstor</artifactId>
   <name>mstor</name>
-  <url>http://mstor.sourceforge.net</url>
-  <inceptionYear>2004</inceptionYear>
   <version>0.9.10-SNAPSHOT</version>
   <description>A JavaMail local store provider based on the mbox email storage format</description>
+  <url>http://mstor.sourceforge.net</url>
   <issueManagement>
     <system>SourceForge.net</system>
     <url>http://sourceforge.net/tracker/?group_id=114229</url>
   </issueManagement>
+  <inceptionYear>2004</inceptionYear>
   <licenses>
     <license>
       <name>mstor License</name>
@@ -58,11 +58,7 @@
         <configuration>
           <excludes>
             <exclude>**/AllTests.java</exclude>
-            <exclude>**/MStorTest.java</exclude>
-            <exclude>**/MStorStoreTest.java</exclude>
-            <exclude>**/MStorFolderTest.java</exclude>
-            <exclude>**/MStorMessageTest.java</exclude>
-            <exclude>**/SearchTermsTest.java</exclude>
+            <exclude>**/AbstractMStorTest.java</exclude>
           </excludes>
         </configuration>
       </plugin>
@@ -70,8 +66,8 @@
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
           <descriptors>
-          	<descriptor>etc/bin-assembly.xml</descriptor>
-          	<descriptor>etc/src-assembly.xml</descriptor>
+            <descriptor>etc/bin-assembly.xml</descriptor>
+            <descriptor>etc/src-assembly.xml</descriptor>
           </descriptors>
         </configuration>
       </plugin>
@@ -82,12 +78,6 @@
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
       <version>1.1</version>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.2</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>jdom</groupId>
@@ -103,6 +93,18 @@
       <groupId>javax.mail</groupId>
       <artifactId>mail</artifactId>
       <version>1.3.2</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>1.2</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>
