@@ -71,6 +71,8 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
 
     protected static final String ATTRIBUTE_MESSAGE_NUMBER = "messageNumber";
 
+    protected static final String ATTRIBUTE_UID = "uid";
+
     private static final String ELEMENT_FLAGS = "flags";
 
     private static final String ELEMENT_HEADERS = "headers";
@@ -362,5 +364,19 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
      */
     public final MetaFolder getFolder() {
         return folder;
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.MetaMessage#getUid()
+     */
+    public long getUid() {
+        return Long.parseLong(element.getAttributeValue(ATTRIBUTE_UID));
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.MetaMessage#setUid(long)
+     */
+    public void setUid(long uid) {
+        element.setAttribute(ATTRIBUTE_UID, String.valueOf(uid));
     }
 }

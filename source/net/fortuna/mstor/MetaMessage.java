@@ -132,4 +132,16 @@ public interface MetaMessage extends Serializable {
      * @return a meta folder
      */
     MetaFolder getFolder();
+    
+    /**
+     * Returns the UID associated with the message.
+     * @return a long representation of a UID, or -1 if no UID is assigned
+     */
+    long getUid();
+    
+    /**
+     * Sets the UID associated with the message.
+     * @param uid
+     */
+    void setUid(long uid);
 }

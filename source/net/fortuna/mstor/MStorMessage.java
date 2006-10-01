@@ -24,7 +24,8 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -57,8 +58,7 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Implementation of a message for the mstor javamail provider.
- * 
- * @author benfortuna
+ * @author Ben Fortuna
  */
 public class MStorMessage extends MimeMessage implements Serializable, Taggable {
 
@@ -148,7 +148,7 @@ public class MStorMessage extends MimeMessage implements Serializable, Taggable 
      * @param meta
      *            The meta to set.
      */
-    public final void setMeta(final MetaMessage meta) {
+    protected final void setMeta(final MetaMessage meta) {
         this.meta = meta;
         // update message from metadata..
         if (meta != null) {
@@ -468,5 +468,16 @@ public class MStorMessage extends MimeMessage implements Serializable, Taggable 
      */
     public final Tags getTags() throws MessagingException {
         return new Tags(getFlags());
+    }
+    
+    /**
+     * Returns the UID associated with the message.
+     * @return a long representation of a UID, or -1 if no UID is assigned
+     */
+    protected final long getUid() {
+        if (meta != null) {
+            return meta.getUid();
+        }
+        return -1;
     }
 }

@@ -36,12 +36,14 @@
 package net.fortuna.mstor.data;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.mail.Message;
 
+import net.fortuna.mstor.MStorMessage;
 import net.fortuna.mstor.MetaFolder;
 import net.fortuna.mstor.MetaMessage;
 import net.fortuna.mstor.data.xml.DocumentBinding;
@@ -61,6 +63,8 @@ public class MetaFolderImpl extends DocumentBinding implements MetaFolder {
     private static final String ELEMENT_FOLDER = "folder";
 
     private static final String ATTRIBUTE_FOLDER_NAME = "name";
+    
+    private static final String ELEMENT_LAST_UID = "last-uid";
 
     private Log log = LogFactory.getLog(MetaFolderImpl.class);
 
@@ -216,5 +220,47 @@ public class MetaFolderImpl extends DocumentBinding implements MetaFolder {
                 messageElement.setAttribute(MetaMessageImpl.ATTRIBUTE_MESSAGE_NUMBER, String.valueOf(messageNumber + delta));
             }
         }
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.MetaFolder#allocateUid(net.fortuna.mstor.MetaMessage)
+     */
+    public final long allocateUid(MetaMessage message) throws IOException {
+        long uid = getLastUid() + 1;
+        message.setUid(uid);
+        setLastUid(uid);
+        return uid;
+    }
+
+    /**
+     * Returns the element storing the last allocated message UID.
+     * @return
+     */
+    private Element getLastUidElement() {
+        Element lastUidElement = getDocument().getRootElement().getChild(
+                ELEMENT_LAST_UID, namespace);
+        if (lastUidElement == null) {
+            lastUidElement = new Element(ELEMENT_LAST_UID, namespace);
+            lastUidElement.setText("0");
+            getDocument().getRootElement().addContent(lastUidElement);
+        }
+        return lastUidElement;
+    }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.MetaFolder#getLastUid()
+     */
+    public final long getLastUid() {
+        Element lastUidElement = getLastUidElement();
+        return Long.parseLong(lastUidElement.getText());
+    }
+    
+    /**
+     * @param uid
+     */
+    private void setLastUid(long uid) throws IOException {
+        Element lastUidElement = getLastUidElement();
+        lastUidElement.setText(String.valueOf(uid));
+        save();
     }
 }

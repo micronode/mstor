@@ -50,6 +50,7 @@ import javax.mail.Folder;
 import javax.mail.FolderNotFoundException;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.UIDFolder;
 import javax.mail.event.ConnectionEvent;
 import javax.mail.event.ConnectionListener;
 import javax.mail.event.FolderEvent;
@@ -66,7 +67,7 @@ import org.apache.commons.logging.LogFactory;
  * A folder implementation for the mstor javamail provider.
  * @author Ben Fortuna
  */
-public class MStorFolder extends Folder {
+public class MStorFolder extends Folder implements UIDFolder {
 
     private static final String DIR_EXTENSION = ".sbd";
     
@@ -123,37 +124,25 @@ public class MStorFolder extends Folder {
         } else {
             type = HOLDS_FOLDERS | HOLDS_MESSAGES;
         }
+        
         // automatically close (release resources) when the
         // store is closed..
         store.addConnectionListener(new ConnectionListener() {
-            /*
-             * (non-Javadoc)
-             * 
-             * @see javax.mail.event.ConnectionListener#closed(javax.mail.event.ConnectionEvent)
-             */
+
             public final void closed(final ConnectionEvent e) {
                 try {
                     if (isOpen()) {
                         close(false);
                     }
-                } catch (MessagingException me) {
+                }
+                catch (MessagingException me) {
                     log.error("Error closing folder [" + this + "]", me);
                 }
             }
 
-            /*
-             * (non-Javadoc)
-             * 
-             * @see javax.mail.event.ConnectionListener#disconnected(javax.mail.event.ConnectionEvent)
-             */
             public final void disconnected(final ConnectionEvent e) {
             }
 
-            /*
-             * (non-Javadoc)
-             * 
-             * @see javax.mail.event.ConnectionListener#opened(javax.mail.event.ConnectionEvent)
-             */
             public final void opened(final ConnectionEvent e) {
             }
         });
@@ -387,7 +376,8 @@ public class MStorFolder extends Folder {
         if ((getType() & HOLDS_MESSAGES) > 0) {
             if (mode == READ_WRITE) {
                 openMbox(MboxFile.READ_WRITE);
-            } else {
+            }
+            else {
                 openMbox(MboxFile.READ_ONLY);
             }
         }
@@ -424,11 +414,12 @@ public class MStorFolder extends Folder {
 
         try {
             closeMbox();
-        } catch (IOException ioe) {
+        }
+        catch (IOException ioe) {
             throw new MessagingException("Error ocurred closing mbox file", ioe);
         }
     }
-    
+
     /**
      * Close and clear mbox file reference.
      * @throws IOException
@@ -440,7 +431,7 @@ public class MStorFolder extends Folder {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.mail.Folder#isOpen()
      */
     public final boolean isOpen() {
@@ -449,7 +440,7 @@ public class MStorFolder extends Folder {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.mail.Folder#getPermanentFlags()
      */
     public final Flags getPermanentFlags() {
@@ -459,7 +450,7 @@ public class MStorFolder extends Folder {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.mail.Folder#getMessageCount()
      */
     public final int getMessageCount() throws MessagingException {
@@ -482,7 +473,7 @@ public class MStorFolder extends Folder {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.mail.Folder#getMessage(int)
      */
     public final Message getMessage(final int index) throws MessagingException {
@@ -524,11 +515,6 @@ public class MStorFolder extends Folder {
      * with large messages. You should ensure the messages specified in this
      * array are referenced elsewhere if you want to retain them.
      */
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.mail.Folder#appendMessages(javax.mail.Message[])
-     */
     public final void appendMessages(final Message[] messages)
             throws MessagingException {
         assertExists();
@@ -558,11 +544,12 @@ public class MStorFolder extends Folder {
 
                 // create metadata..
                 if (mStore.isMetaEnabled()) {
-                    MetaMessage meta = getMeta().getMessage(messages[i]);
-                    if (meta != null) {
-                        meta.setReceived(received);
-                        meta.setFlags(messages[i].getFlags());
-                        meta.setHeaders(messages[i].getAllHeaders());
+                    MetaMessage messageMeta = getMeta().getMessage(messages[i]);
+                    if (messageMeta != null) {
+                        messageMeta.setReceived(received);
+                        messageMeta.setFlags(messages[i].getFlags());
+                        messageMeta.setHeaders(messages[i].getAllHeaders());
+                        getMeta().allocateUid(messageMeta);
                     }
                 }
 
@@ -721,5 +708,64 @@ public class MStorFolder extends Folder {
         if (!exists()) {
             throw new FolderNotFoundException(this, "File [" + file + " does not exist.");
         }
+    }
+
+    /* (non-Javadoc)
+     * @see javax.mail.UIDFolder#getMessageByUID(long)
+     */
+    public Message getMessageByUID(long uid) throws MessagingException {
+        for (int i = 1; i <= getMessageCount(); i++) {
+            MStorMessage message = (MStorMessage) getMessage(i);
+            if (message.getUid() == uid) {
+                return message;
+            }
+        }
+        throw new MessagingException(
+                "Message with UID [" + uid + "] does not exist");
+    }
+
+    /* (non-Javadoc)
+     * @see javax.mail.UIDFolder#getMessagesByUID(long, long)
+     */
+    public Message[] getMessagesByUID(long start, long end) throws MessagingException {
+        long lastUid = end;
+        if (end == LASTUID) {
+            lastUid = meta.getLastUid();
+        }
+        List messages = new ArrayList();
+        for (long uid = start; uid <= lastUid; uid++) {
+            messages.add(getMessageByUID(uid)); 
+        }
+        return (Message[]) messages.toArray(new Message[messages.size()]);
+    }
+
+    /* (non-Javadoc)
+     * @see javax.mail.UIDFolder#getMessagesByUID(long[])
+     */
+    public Message[] getMessagesByUID(long[] uids) throws MessagingException {
+        List messages = new ArrayList();
+        for (int i = 0; i < uids.length; i++) {
+            messages.add(getMessageByUID(uids[i])); 
+        }
+        return (Message[]) messages.toArray(new Message[messages.size()]);
+    }
+
+    /* (non-Javadoc)
+     * @see javax.mail.UIDFolder#getUID(javax.mail.Message)
+     */
+    public long getUID(Message message) throws MessagingException {
+        if (!(message instanceof MStorMessage)) {
+            throw new MessagingException("Incompatible message type");
+        }
+        return ((MStorMessage) message).getUid();
+    }
+
+    /* (non-Javadoc)
+     * @see javax.mail.UIDFolder#getUIDValidity()
+     */
+    public long getUIDValidity() throws MessagingException {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException(
+                "Need to figure out what is the purpose of this method..");
     }
 }

@@ -90,4 +90,16 @@ public interface MetaFolder {
      * Saves the meta data to the filesystem.
      */
     void save() throws IOException;
+    
+    /**
+     * Retrieves the last allocated message UID for the folder.
+     * @return
+     */
+    long getLastUid();
+    
+    /**
+     * Allocates a new message UID for the folder.
+     * @return
+     */
+    long allocateUid(MetaMessage message) throws IOException;
 }
