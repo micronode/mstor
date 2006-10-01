@@ -56,6 +56,7 @@ public class AllTests extends TestSuite {
         
         // javamail..
         suite.addTestSuite(MStorStoreTest.class);
+        suite.addTestSuite(MStorFolderTest.class);
         
         // mbox..
         suite.addTestSuite(MboxEncoderTest.class);
