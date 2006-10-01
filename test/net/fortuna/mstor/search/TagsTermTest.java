@@ -35,15 +35,17 @@
  */
 package net.fortuna.mstor.search;
 
+import java.io.File;
+import java.io.IOException;
+
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.URLName;
 import javax.mail.search.AddressStringTerm;
 import javax.mail.search.FromStringTerm;
 import javax.mail.search.OrTerm;
 
-import net.fortuna.mstor.MStorTest;
+import net.fortuna.mstor.AbstractMStorTest;
 import net.fortuna.mstor.tag.Taggable;
 import net.fortuna.mstor.tag.Tags;
 
@@ -57,7 +59,7 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
  * Unit tests for {@link net.fortuna.mstor.search.TagsTerm}.
  * @author Ben Fortuna
  */
-public class TagsTermTest extends MStorTest {
+public class TagsTermTest extends AbstractMStorTest {
     
     private static final Log LOG = LogFactory.getLog(TagsTermTest.class);
     
@@ -68,8 +70,8 @@ public class TagsTermTest extends MStorTest {
     /**
      * Default constructor.
      */
-    public TagsTermTest() {
-        super(new URLName("mstor:etc/samples/TagsTerm"));
+    public TagsTermTest() throws IOException {
+        super(new File("etc/samples/TagsTerm"));
     }
     
     /* (non-Javadoc)
@@ -89,10 +91,12 @@ public class TagsTermTest extends MStorTest {
      * @see junit.framework.TestCase#tearDown()
      */
     protected void tearDown() throws Exception {
+        inbox.close(false);
+
         super.tearDown();
         
-        Taggable message = (Taggable) inbox.getMessage(2);
-        message.removeTag(tag);
+//        Taggable message = (Taggable) inbox.getMessage(2);
+//        message.removeTag(tag);
     }
     
     /**

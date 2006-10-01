@@ -35,15 +35,15 @@
  */
 package net.fortuna.mstor.tag;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.URLName;
 
-import net.fortuna.mstor.MStorTest;
-import net.fortuna.mstor.tag.Tags;
+import net.fortuna.mstor.AbstractMStorTest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -52,15 +52,15 @@ import org.apache.commons.logging.LogFactory;
  * Unit tests for Tag support.
  * @author Ben Fortuna
  */
-public class TagTest extends MStorTest {
+public class TagTest extends AbstractMStorTest {
     
     private static final Log LOG = LogFactory.getLog(TagTest.class);
     
     /**
      * Default constructor.
      */
-    public TagTest() {
-        super(new URLName("mstor:etc/samples/Tags"));
+    public TagTest() throws IOException {
+        super(new File("etc/samples/Tags"));
     }
     
     /**
@@ -96,6 +96,8 @@ public class TagTest extends MStorTest {
         assertTrue(Tags.getTags(message).contains(tag));
         
         logMessages(inbox);
+        
+        inbox.close(false);
     }
     
     /**
@@ -108,10 +110,13 @@ public class TagTest extends MStorTest {
         String tag = "Test 1";
         
         Message message = inbox.getMessage(1);
+        Tags.addTag(tag, message);
         assertTrue(Tags.getTags(message).contains(tag));
         Tags.removeTag(tag, message);
         assertFalse(Tags.getTags(message).contains(tag));
         
         logMessages(inbox);
+        
+        inbox.close(false);
     }
 }

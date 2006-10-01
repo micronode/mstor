@@ -7,11 +7,13 @@
  */
 package net.fortuna.mstor;
 
+import java.io.File;
+import java.io.IOException;
+
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.URLName;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -20,16 +22,16 @@ import org.apache.commons.logging.LogFactory;
  * A test case for MStorMessage.
  * @author benfortuna
  */
-public class MStorMessageTest extends MStorTest {
+public class MStorMessageTest extends AbstractMStorTest {
 
     private static Log log = LogFactory.getLog(MStorFolderTest.class);
 
     /**
      * Default constructor.
      */
-    public MStorMessageTest() {
+    public MStorMessageTest() throws IOException {
 //      URLName url = new URLName("mstor:c:/temp/mail/Aardvark/store");
-        super(new URLName("mstor:c:/temp/mstor_test"));
+        super(new File("etc/samples/Store"));
     }
 
     /*
@@ -46,6 +48,8 @@ public class MStorMessageTest extends MStorTest {
             
             log.info("Message [" + i + "] received date [" + message.getReceivedDate() + "]");
         }
+        
+        inbox.close(false);
     }
 
     /**
@@ -70,6 +74,7 @@ public class MStorMessageTest extends MStorTest {
             message.setFlag(Flags.Flag.USER, true);
             message.setFlags(flags, true);
         }
+        inbox.close(false);
     }
     
     /**
@@ -87,5 +92,6 @@ public class MStorMessageTest extends MStorTest {
             log.info("System Flags [" + message.getFlags().getSystemFlags().length + "]");
             log.info("User Flags [" + message.getFlags().getUserFlags().length + "]");
         }
+        inbox.close(false);
     }
 }

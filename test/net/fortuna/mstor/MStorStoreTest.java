@@ -7,6 +7,9 @@
  */
 package net.fortuna.mstor;
 
+import java.io.File;
+import java.io.IOException;
+
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -20,15 +23,15 @@ import org.apache.commons.logging.LogFactory;
  * Type description.
  * @author benfortuna
  */
-public class MStorStoreTest extends MStorTest {
+public class MStorStoreTest extends AbstractMStorTest {
 
     private static Log log = LogFactory.getLog(MStorStoreTest.class);
 
     /**
      * Default constructor.
      */
-    public MStorStoreTest() {
-        super(new URLName("mstor:etc/samples/Store"));
+    public MStorStoreTest() throws IOException {
+        super(new File("etc/samples/Store"));
     }
 
     /*
@@ -46,8 +49,7 @@ public class MStorStoreTest extends MStorTest {
      * Class under test for Folder getFolder(String)
      */
     public final void testGetFolderString() throws MessagingException {
-//        Folder folder = store.getFolder("Inbox");
-        Folder folder = store.getDefaultFolder().list()[0];
+        Folder folder = store.getFolder("Inbox");
 
         assertNotNull(folder);
 
@@ -64,6 +66,8 @@ public class MStorStoreTest extends MStorTest {
         assertNotNull(message);
 
         log.info("Messages count [" + folder.getMessageCount() + "]");
+        
+        folder.close(false);
     }
 
     /*
