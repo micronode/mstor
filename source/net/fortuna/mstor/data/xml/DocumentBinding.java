@@ -104,9 +104,10 @@ public abstract class DocumentBinding extends XmlBinding {
      * @see net.fortuna.mstor.data.MetaFolder#save()
      */
     public final void save() throws IOException {
-//        XMLOutputter xmlOut = new XMLOutputter(Format.getCompactFormat());
         XMLOutputter xmlOut = new XMLOutputter(Format.getPrettyFormat());
         xmlOut.getFormat().setIndent("  ");
-        xmlOut.output(document, new FileOutputStream(file));
+        FileOutputStream fout = new FileOutputStream(file);
+        xmlOut.output(document, fout);
+        fout.close();
     }
 }
