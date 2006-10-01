@@ -107,7 +107,11 @@ public abstract class DocumentBinding extends XmlBinding {
         XMLOutputter xmlOut = new XMLOutputter(Format.getPrettyFormat());
         xmlOut.getFormat().setIndent("  ");
         FileOutputStream fout = new FileOutputStream(file);
-        xmlOut.output(document, fout);
-        fout.close();
+        try {
+            xmlOut.output(document, fout);
+        }
+        finally {
+            fout.close();
+        }
     }
 }
