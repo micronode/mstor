@@ -6,4 +6,5 @@
     <fileset name="Java Source" enabled="true" check-config-name="Default Checks" local="false">
         <file-match-pattern match-pattern=".java$" include-pattern="true"/>
     </fileset>
+    <filter name="NonSrcDirs" enabled="true"/>
 </fileset-config>
