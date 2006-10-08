@@ -92,9 +92,12 @@ public class UIDFolderTest extends AbstractMStorTest {
      * Tests support for UIDFolder.
      * @throws MessagingException
      */
-//    public void testGetUIDValidity() throws MessagingException {
-//        assertTrue(folder.getUIDValidity() > 0);
-//    }
+    public void testGetUIDValidity() throws MessagingException {
+        long uidValidity = folder.getUIDValidity();
+
+        assertTrue(uidValidity > 0);
+        assertEquals(uidValidity, folder.getUIDValidity());
+    }
 
     /**
      * Tests support for UIDFolder.

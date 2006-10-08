@@ -102,4 +102,11 @@ public interface MetaFolder {
      * @return
      */
     long allocateUid(MetaMessage message) throws IOException;
+    
+    /**
+     * Returns the UID validity associated with the metadata. If no UID validity
+     * exist a new value is initialised.
+     * @return a long representation of the UID validity
+     */
+    long getUidValidity() throws IOException;
 }

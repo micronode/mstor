@@ -730,7 +730,7 @@ public class MStorFolder extends Folder implements UIDFolder {
     public Message[] getMessagesByUID(long start, long end) throws MessagingException {
         long lastUid = end;
         if (end == LASTUID) {
-            lastUid = meta.getLastUid();
+            lastUid = getMeta().getLastUid();
         }
         List messages = new ArrayList();
         for (long uid = start; uid <= lastUid; uid++) {
@@ -764,8 +764,15 @@ public class MStorFolder extends Folder implements UIDFolder {
      * @see javax.mail.UIDFolder#getUIDValidity()
      */
     public long getUIDValidity() throws MessagingException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException(
-                "Need to figure out what is the purpose of this method..");
+        if (getMeta() != null) {
+            try {
+                return getMeta().getUidValidity();
+            }
+            catch (IOException ioe) {
+                throw new MessagingException(
+                        "An error occurred retrieving UID validity", ioe);
+            }
+        }
+        return -1l;
     }
 }

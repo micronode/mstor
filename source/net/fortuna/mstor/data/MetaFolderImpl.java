@@ -40,10 +40,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import javax.mail.Message;
 
-import net.fortuna.mstor.MStorMessage;
 import net.fortuna.mstor.MetaFolder;
 import net.fortuna.mstor.MetaMessage;
 import net.fortuna.mstor.data.xml.DocumentBinding;
@@ -65,11 +65,15 @@ public class MetaFolderImpl extends DocumentBinding implements MetaFolder {
     private static final String ATTRIBUTE_FOLDER_NAME = "name";
     
     private static final String ELEMENT_LAST_UID = "last-uid";
+    
+    private static final String ELEMENT_UID_VALIDITY = "uid-validity";
 
     private Log log = LogFactory.getLog(MetaFolderImpl.class);
 
     public static final String FILE_EXTENSION = ".emf";
 
+    private static final Random UID_VALIDITY_GENERATOR = new Random();
+    
     /**
      * Constructs a new meta folder instance.
      * @param file the meta folder file
@@ -262,5 +266,21 @@ public class MetaFolderImpl extends DocumentBinding implements MetaFolder {
         Element lastUidElement = getLastUidElement();
         lastUidElement.setText(String.valueOf(uid));
         save();
+    }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.MetaFolder#getUidValidity()
+     */
+    public final long getUidValidity() throws IOException {
+        Element uidValidityElement = getDocument().getRootElement().getChild(
+                ELEMENT_UID_VALIDITY, namespace);
+        if (uidValidityElement == null) {
+            uidValidityElement = new Element(ELEMENT_UID_VALIDITY, namespace);
+            uidValidityElement.setText(
+                    String.valueOf(UID_VALIDITY_GENERATOR.nextInt(Integer.MAX_VALUE)));
+            getDocument().getRootElement().addContent(uidValidityElement);
+            save();
+        }
+        return Long.parseLong(uidValidityElement.getText());
     }
 }
