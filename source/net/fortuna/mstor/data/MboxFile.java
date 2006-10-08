@@ -540,11 +540,13 @@ public class MboxFile {
             }
 
             // if not first message add required newlines..
+            /*
             if (channel.size() > 0) {
                 channel.write(encoder.encode(CharBuffer.wrap("\r\n\r\n")), channel
                         .size());
                 // encoder.encode(CharBuffer.wrap("\n\n"), buffer, false);
             }
+            */
             channel.write(encoder.encode(CharBuffer.wrap(FROM__PREFIX + "- "
                     + from_DateFormat.format(new Date()) + "\r\n")), channel
                     .size());
