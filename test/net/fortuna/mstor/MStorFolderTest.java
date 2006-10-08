@@ -9,6 +9,9 @@ package net.fortuna.mstor;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 import javax.mail.Flags;
@@ -20,6 +23,7 @@ import javax.mail.URLName;
 
 import net.fortuna.mstor.util.CapabilityHints;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -245,7 +249,9 @@ public class MStorFolderTest extends AbstractMStorTest {
     /*
      * Class under test for void appendMessages(Message[])
      */
-    public final void testAppendMessagesMessageArray() throws MessagingException {
+    public final void testAppendMessagesMessageArray()
+        throws MessagingException, IOException {
+        
         Folder copy = store.getDefaultFolder().getFolder("Copy");
         copy.create(Folder.HOLDS_FOLDERS);
 
@@ -264,6 +270,16 @@ public class MStorFolderTest extends AbstractMStorTest {
         assertEquals(messageCount + INITIAL_MESSAGE_COUNT,
                 copy2.getMessageCount());
 
+        copy2.close(false);
+        copy2.open(Folder.READ_ONLY);
+
+        messages = inbox.getMessages(2, INITIAL_MESSAGE_COUNT);
+        for (int i = 1; i < messages.length; i++) {
+            Message m = copy2.getMessage(
+                    copy2.getMessageCount() - (messages.length - 1 - i));
+            assertEquals(IOUtils.toString(messages[i].getInputStream()),
+                    IOUtils.toString(m.getInputStream()));
+        }
         inbox.close(false);
         copy2.close(false);
     }
