@@ -728,6 +728,11 @@ public class MStorFolder extends Folder implements UIDFolder {
      * @see javax.mail.UIDFolder#getMessagesByUID(long, long)
      */
     public Message[] getMessagesByUID(long start, long end) throws MessagingException {
+        
+        if (!mStore.isMetaEnabled()) {
+            throw new MessagingException("Metadata must be enabled for UIDFolder support");
+        }
+        
         long lastUid = end;
         if (end == LASTUID) {
             lastUid = getMeta().getLastUid();
@@ -764,15 +769,17 @@ public class MStorFolder extends Folder implements UIDFolder {
      * @see javax.mail.UIDFolder#getUIDValidity()
      */
     public long getUIDValidity() throws MessagingException {
-        if (getMeta() != null) {
-            try {
-                return getMeta().getUidValidity();
-            }
-            catch (IOException ioe) {
-                throw new MessagingException(
-                        "An error occurred retrieving UID validity", ioe);
-            }
+        
+        if (!mStore.isMetaEnabled()) {
+            throw new MessagingException("Metadata must be enabled for UIDFolder support");
         }
-        return -1l;
+        
+        try {
+            return getMeta().getUidValidity();
+        }
+        catch (IOException ioe) {
+            throw new MessagingException(
+                    "An error occurred retrieving UID validity", ioe);
+        }
     }
 }
