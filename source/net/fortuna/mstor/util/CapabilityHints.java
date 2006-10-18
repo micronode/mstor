@@ -125,12 +125,12 @@ public final class CapabilityHints {
     /**
      * A value used to enabled mozilla mbox compatibility.
      */
-    public static final String VALUE_MOZILLA_COMPATIBILITY_ENABLED = "enbled";
+    public static final String VALUE_MOZILLA_COMPATIBILITY_ENABLED = "enabled";
 
     /**
      * A value used to disable mozilla mbox compatibility.
      */
-    public static final String VALUE_MOZILLA_COMPATIBILITY_DISABLED = "enbled";
+    public static final String VALUE_MOZILLA_COMPATIBILITY_DISABLED = "disabled";
     
     
     private static final Properties HINTS = new Properties(System.getProperties());
