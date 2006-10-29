@@ -1,0 +1,91 @@
+From c-users-return-37-apmail-xerces-c-users-archive=xerces.apache.org@xerces.apache.org Mon Jun 06 12:55:14 2005
+Return-Path: <c-users-return-37-apmail-xerces-c-users-archive=xerces.apache.org@xerces.apache.org>
+Delivered-To: apmail-xerces-c-users-archive@www.apache.org
+Received: (qmail 16571 invoked from network); 6 Jun 2005 12:55:14 -0000
+Received: from hermes.apache.org (HELO mail.apache.org) (209.237.227.199)
+  by minotaur.apache.org with SMTP; 6 Jun 2005 12:55:14 -0000
+Received: (qmail 74829 invoked by uid 500); 6 Jun 2005 12:55:14 -0000
+Delivered-To: apmail-xerces-c-users-archive@xerces.apache.org
+Received: (qmail 74809 invoked by uid 500); 6 Jun 2005 12:55:13 -0000
+Mailing-List: contact c-users-help@xerces.apache.org; run by ezmlm
+Precedence: bulk
+List-Help: <mailto:c-users-help@xerces.apache.org>
+List-Unsubscribe: <mailto:c-users-unsubscribe@xerces.apache.org>
+List-Post: <mailto:c-users@xerces.apache.org>
+List-Id: <c-users.xerces.apache.org>
+Reply-To: c-users@xerces.apache.org
+Delivered-To: mailing list c-users@xerces.apache.org
+Received: (qmail 74794 invoked by uid 99); 6 Jun 2005 12:55:13 -0000
+X-ASF-Spam-Status: No, hits=0.1 required=10.0
+	tests=FORGED_RCVD_HELO
+X-Spam-Check-By: apache.org
+Received-SPF: neutral (hermes.apache.org: local policy)
+Received: from a80-127-148-66.adsl.xs4all.nl (HELO mail.tbwb.nl) (80.127.148.66)
+  by apache.org (qpsmtpd/0.28) with ESMTP; Mon, 06 Jun 2005 05:55:10 -0700
+Received: from adsl.tbwb.nl (localhost [127.0.0.1])
+	by mail.tbwb.nl (Postfix) with SMTP id 2B4537E703
+	for <c-users@xerces.apache.org>; Mon,  6 Jun 2005 14:54:59 +0200 (CEST)
+Received: from mail.tbwb.nl ([127.0.0.1])
+	by adsl.tbwb.nl ([@])
+	with SMTP (gateway) id A07EB426584; Mon, 06 Jun 2005 14:54:59 +0200
+Received: from frodo.tbwb.nl (frodo.tbwb.nl [192.168.0.10])
+	by mail.tbwb.nl (Postfix) with ESMTP id 207AB7E703
+	for <c-users@xerces.apache.org>; Mon,  6 Jun 2005 14:54:59 +0200 (CEST)
+Received: from [192.168.0.143] (unknown [192.168.0.143])
+	by frodo.tbwb.nl (Postfix) with ESMTP id 4242914180
+	for <c-users@xerces.apache.org>; Mon,  6 Jun 2005 14:54:58 +0200 (CEST)
+Message-ID: <42A447A2.4000908@tbwb.nl>
+Date: Mon, 06 Jun 2005 14:54:58 +0200
+From: Bart Friederichs <bf@tbwb.nl>
+User-Agent: Mozilla Thunderbird 1.0.2 (X11/20050317)
+X-Accept-Language: en-us, en
+MIME-Version: 1.0
+To: c-users@xerces.apache.org
+Subject: Unable to set an external schema
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiVirus: Checked by Vexira version:1.55.009; VDBversion:8.751; VDBdate:Sun
+ Jun  5 15:38:58 2005 CEST
+X-Virus-Checked: Checked
+X-Spam-Rating: minotaur.apache.org 1.6.2 0/1000/N
+
+
+Hi all,
+
+I want to validate an XML file to a schema, but the XML file doesn't 
+have a reference to that schema. I want to use the setProperty function 
+of the DOMBuilder to set an external schema, without namespaces, but 
+this doesn't seem to work.
+
+Here is the (head of the) XML file I want to validate:
+<JobqueueXML>
+        <MessageNumber>2483920</MessageNumber>
+...
+
+This is the (head of the) XMLSchema:
+<xs:schema
+        attributeFormDefault="unqualified"
+        elementFormDefault="qualified" 
+xmlns:xs="http://www.w3.org/2001/XMLSchema">                                                                                                                            
+
+  <xs:element name="JobqueueXML">
+...
+
+The Schema definition is correct and when I reference the Schema in the 
+XML file, it gets validated, but the files I get (I do not produce them 
+myself) do not have the reference in it, so I want to set it this way:
+    parser->setProperty (XMLUni::
+                 fgXercesSchemaExternalNoNameSpaceSchemaLocation,
+                 "job.xsd");
+
+Where 'job.xsd' is the Schema file. 'parser' is a DOMBuilder object, as 
+defined in the DOMCount sample program (I used that as reference). 
+However, this does not work. There is no validation at all, even if I 
+change the name into something unresolvable (e.g. a non-existing file) 
+it gives no error.
+
+Could someone give me some help on how to fix this?
+
+TIA
+Bart Friederichs
+

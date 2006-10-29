@@ -1,0 +1,237 @@
+From mcleod2@lycos.de  Thu Feb 15 16:11:17 2001
+Return-Path: <mcleod2@lycos.de>
+Mailing-List: contact xalan-dev-help@xml.apache.org; run by ezmlm
+Delivered-To: mailing list xalan-dev@xml.apache.org
+Received: (qmail 1975 invoked from network); 15 Feb 2001 16:11:17 -0000
+Received: from fmmx01.unimessage.net (212.6.90.137)
+  by h31.sny.collab.net with SMTP; 15 Feb 2001 16:11:17 -0000
+Received: from lycosmail.unimessage.net (lycosmail.unimessage.net [10.10.1.70])
+	by fmmx01.unimessage.net (8.9.3/8.9.3/Debian 8.9.3-21) with ESMTP id RAA06620
+	for <xalan-dev@xml.apache.org>; Thu, 15 Feb 2001 17:11:15 +0100
+From: mcleod2@lycos.de
+Received: from BriansKiste (pD900CD69.dip.t-dialin.net [217.0.205.105])
+	by lycosmail.unimessage.net (Postfix) with SMTP id 439AA18B
+	for <xalan-dev@xml.apache.org>; Thu, 15 Feb 2001 17:11:17 +0100 (MET)
+Date: Thu, 15 Feb 2001 17:20:02 +0100
+To: xalan-dev@xml.apache.org
+Subject: Major problems with the node() function
+X-Mailer: Opera 5.02 build 856a
+X-Priority: 3 (Normal)
+Mime-Version: 1.0
+Content-Type: multipart/mixed;; boundary="_OPERAB__-YKQeHEQPcI9fn3DaQmwl/z"
+Message-Id: <20010215161117.439AA18B@lycosmail.unimessage.net>
+X-Spam-Rating: h31.sny.collab.net 1.6.2 0/1000/N
+
+--_OPERAB__-YKQeHEQPcI9fn3DaQmwl/z
+Content-Type: text/plain; charset="iso-8859-1";
+Content-Transfer-Encoding: Quoted-Printable
+
+Hey,
+
+I am working on project, where we automatically generate an XSLT instance.
+But ervery time I want to transform a specific XML Instace with the generated
+XSLT instance I get the following error message on the commans line:
+
+>xalan example\xmlbsp.xml example\xslbsp2.xsl example\first.xml
+=3D=3D=3D=3D=3D=3D=3D=3D=3D Parsing file:R:/Diplom/Source/ixx/example/xslbsp2.xsl =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+Parse of file:R:/Diplom/Source/ixx/example/xslbsp2.xsl took 930 milliseconds
+=3D=3D=3D=3D=3D=3D=3D=3D=3D Parsing example\xmlbsp.xml =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+Parse of example\xmlbsp.xml took 220 milliseconds
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+Transforming...
+Error! null
+Xalan: was not successful.
+XSLProcessor: done
+
+There is always a null pointer exception that is caught from xalan, but there is no
+for an exception.
+
+I am using Xalan 1.1 because Xalan 2 told me at the command line that SAX does 
+not support Namespace ?!?!
+
+So I hope someone could help out of this mess.
+
+The two files are attached, so you could use them to find the problem. If Xalan 1.1 is not
+supported any longer please verify the files with Xalan 2 and give me a hint on how to use it.
+
+best regards Brian H=FCttner
+
+--_OPERAB__-YKQeHEQPcI9fn3DaQmwl/z
+Content-Disposition: attachment;
+	filename="xslbsp2.xsl"
+Content-Type: application/octet-stream;
+	name="xslbsp2.xsl"
+Content-Transfer-Encoding: Base64
+
+PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8eHNsOnN0eWxlc2hlZXQgdmVyc2lv
+bj0iMS4wIgogIHhtbG5zOnhzbD0iaHR0cDovL3d3dy53My5vcmcvMTk5OS9Y
+U0wvVHJhbnNmb3JtIgogIHhtbG5zOml4eD0iSVhYVVJJIgogIHhtbG5zOmx4
+c2x0PSJodHRwOi8veG1sLmFwYWNoZS5vcmcveHNsdCIKICB4bWxuczpzY3Ix
+PSJzY3IxVVJJIgogIGV4dGVuc2lvbi1lbGVtZW50LXByZWZpeGVzPSJzY3Ix
+IgogIGV4Y2x1ZGUtcmVzdWx0LXByZWZpeGVzPSJzY3IxIgo+Cgo8IS0tIFNr
+cmlwdGUgLS0+Cgo8bHhzbHQ6Y29tcG9uZW50IHByZWZpeD0ic2NyMSIgZnVu
+Y3Rpb25zPSJnZXRXRGF5Ij4KPGx4c2x0OnNjcmlwdCBsYW5nPSJqYXZhc2Ny
+aXB0Ij4KZnVuY3Rpb24gZ2V0V0RheShkYXR1bSkNCnsNCiAgdmFyIHdkYXkg
+PSBuZXcgQXJyYXkoIlNvbm50YWciLCANCiAgICAgICAgICAgICAgICAgICAg
+ICAgIk1vbnRhZyIsIA0KICAgICAgICAgICAgICAgICAgICAgICAiRGllbnN0
+YWciLCANCiAgICAgICAgICAgICAgICAgICAgICAgIk1pdHR3b2NoIiwgDQog
+ICAgICAgICAgICAgICAgICAgICAgICJEb25uZXJzdGFnIiwgDQogICAgICAg
+ICAgICAgICAgICAgICAgICJGcmVpdGFnIiwgDQogICAgICAgICAgICAgICAg
+ICAgICAgICJTYW1zdGFnIik7DQogIHZhciBkID0gbmV3IERhdGUoKTsNCiAg
+ZHMgPSBuZXcgU3RyaW5nKGRhdHVtKTsNCiAgdGFnID0gbmV3IFN0cmluZyhk
+cy5zdWJzdHJpbmcoMCwgZHMuaW5kZXhPZigiLiIpKSk7DQogIG1vbmF0ID0g
+bmV3IFN0cmluZyhkcy5zdWJzdHJpbmcoZHMuaW5kZXhPZigiLiIpKzEsDQog
+IGRzLmluZGV4T2YoIi4iLCBkcy5pbmRleE9mKCIuIikrMSkpKTsNCiAgamFo
+ciA9ICBuZXcgU3RyaW5nKGRzLnN1YnN0cmluZyhkcy5pbmRleE9mKCIuIiwg
+DQogIGRzLmluZGV4T2YoIi4iKSsxKSsxLGRzLmxlbmd0aCkpOw0KICBkLnNl
+dERhdGUodGFnKTsNCiAgZC5zZXRNb250aChldmFsKG1vbmF0LTEpKTsNCiAg
+ZC5zZXRZZWFyKGphaHIpOw0KICBpZiAoKGQuZ2V0RGF5KCkgJmx0OyAwKSB8
+fCAoZC5nZXREYXkoKSAmZ3Q7IDYpKSANCiAgICByZXR1cm4gInVuZGVmaW5l
+ZCI7DQogIHJldHVybiB3ZGF5W2QuZ2V0RGF5KCldOw0KfQ0KCjwvbHhzbHQ6
+c2NyaXB0Pgo8L2x4c2x0OmNvbXBvbmVudD4KCjwhLS0gR2VuZXJpZXJ0ZSBY
+U0xULUFud2Vpc3VuZ2VuIC0tPgoKPHhzbDp0ZW1wbGF0ZSBtYXRjaD0iLyI+
+Cjx4c2w6YXBwbHktdGVtcGxhdGVzIHNlbGVjdD0iKnxAKnxjb21tZW50KCl8
+cHJvY2Vzc2luZy1pbnN0cnVjdGlvbigpfHRleHQoKSIvPgo8L3hzbDp0ZW1w
+bGF0ZT4KCjx4c2w6dGVtcGxhdGUgbWF0Y2g9Ii9jaGlsZDo6VGVybWluZS9j
+aGlsZDo6bm9kZSgpWzJdIj4KPFRlcm1pbj4KPHhzbDphdHRyaWJ1dGUgbmFt
+ZT0id3RhZyI+Cjx4c2w6dmFsdWUtb2Ygc2VsZWN0PSJzY3IxOmdldFdEYXko
+c3RyaW5nKEBkYXR1bSkpIi8+CjwveHNsOmF0dHJpYnV0ZT4KCjx4c2w6YXBw
+bHktdGVtcGxhdGVzIHNlbGVjdD0iL2NoaWxkOjpUZXJtaW5lL2NoaWxkOjpu
+b2RlKClbMl0vYXR0cmlidXRlOjoqWzJdIiAvPgo8eHNsOmFwcGx5LXRlbXBs
+YXRlcyBzZWxlY3Q9Ii9jaGlsZDo6VGVybWluZS9jaGlsZDo6bm9kZSgpWzJd
+L2F0dHJpYnV0ZTo6KlsxXSIgLz4KPHhzbDphcHBseS10ZW1wbGF0ZXMgc2Vs
+ZWN0PSIvY2hpbGQ6OlRlcm1pbmUvY2hpbGQ6Om5vZGUoKVsyXS9jaGlsZDo6
+bm9kZSgpWzFdIiAvPgo8eHNsOmFwcGx5LXRlbXBsYXRlcyBzZWxlY3Q9Ii9j
+aGlsZDo6VGVybWluZS9jaGlsZDo6bm9kZSgpWzJdL2NoaWxkOjpub2RlKClb
+Ml0iIC8+Cjx4c2w6YXBwbHktdGVtcGxhdGVzIHNlbGVjdD0iL2NoaWxkOjpU
+ZXJtaW5lL2NoaWxkOjpub2RlKClbMl0vY2hpbGQ6Om5vZGUoKVszXSIgLz4K
+PHhzbDphcHBseS10ZW1wbGF0ZXMgc2VsZWN0PSIvY2hpbGQ6OlRlcm1pbmUv
+Y2hpbGQ6Om5vZGUoKVsyXS9jaGlsZDo6bm9kZSgpWzRdIiAvPgo8eHNsOmFw
+cGx5LXRlbXBsYXRlcyBzZWxlY3Q9Ii9jaGlsZDo6VGVybWluZS9jaGlsZDo6
+bm9kZSgpWzJdL2NoaWxkOjpub2RlKClbNV0iIC8+CjwvVGVybWluPgo8L3hz
+bDp0ZW1wbGF0ZT4KCjx4c2w6dGVtcGxhdGUgbWF0Y2g9Ii9jaGlsZDo6VGVy
+bWluZS9jaGlsZDo6bm9kZSgpWzJdL2NoaWxkOjpub2RlKClbMl0iPgo8R3J1
+cHBlPgo8eHNsOmFwcGx5LXRlbXBsYXRlcyBzZWxlY3Q9Ii9jaGlsZDo6VGVy
+bWluZS9jaGlsZDo6bm9kZSgpWzJdL2NoaWxkOjpub2RlKClbMl0vY2hpbGQ6
+Om5vZGUoKVsxXSIgLz4KPHhzbDphcHBseS10ZW1wbGF0ZXMgc2VsZWN0PSIv
+Y2hpbGQ6OlRlcm1pbmUvY2hpbGQ6Om5vZGUoKVsyXS9jaGlsZDo6bm9kZSgp
+WzJdL2NoaWxkOjpub2RlKClbMl0iIC8+Cjx4c2w6YXBwbHktdGVtcGxhdGVz
+IHNlbGVjdD0iL2NoaWxkOjpUZXJtaW5lL2NoaWxkOjpub2RlKClbMl0vY2hp
+bGQ6Om5vZGUoKVsyXS9jaGlsZDo6bm9kZSgpWzNdIiAvPgo8eHNsOmFwcGx5
+LXRlbXBsYXRlcyBzZWxlY3Q9Ii9jaGlsZDo6VGVybWluZS9jaGlsZDo6bm9k
+ZSgpWzJdL2NoaWxkOjpub2RlKClbMl0vY2hpbGQ6Om5vZGUoKVs0XSIgLz4K
+PHhzbDphcHBseS10ZW1wbGF0ZXMgc2VsZWN0PSIvY2hpbGQ6OlRlcm1pbmUv
+Y2hpbGQ6Om5vZGUoKVsyXS9jaGlsZDo6bm9kZSgpWzJdL2NoaWxkOjpub2Rl
+KClbNV0iIC8+CjwvR3J1cHBlPgo8L3hzbDp0ZW1wbGF0ZT4KCjx4c2w6dGVt
+cGxhdGUgbWF0Y2g9Ii9jaGlsZDo6VGVybWluZS9jaGlsZDo6bm9kZSgpWzJd
+L2NoaWxkOjpub2RlKClbMl0vY2hpbGQ6Om5vZGUoKVsyXSI+CjxQZXJzb24+
+Cjx4c2w6YXBwbHktdGVtcGxhdGVzIHNlbGVjdD0iL2NoaWxkOjpUZXJtaW5l
+L2NoaWxkOjpub2RlKClbMl0vY2hpbGQ6Om5vZGUoKVsyXS9jaGlsZDo6bm9k
+ZSgpWzJdL2NoaWxkOjpub2RlKClbMV0iIC8+CjwvUGVyc29uPgo8L3hzbDp0
+ZW1wbGF0ZT4KCjx4c2w6dGVtcGxhdGUgbWF0Y2g9Ii9jaGlsZDo6VGVybWlu
+ZS9jaGlsZDo6bm9kZSgpWzJdL2NoaWxkOjpub2RlKClbMl0vY2hpbGQ6Om5v
+ZGUoKVs0XSI+CjxQZXJzb24+Cjx4c2w6YXBwbHktdGVtcGxhdGVzIHNlbGVj
+dD0iL2NoaWxkOjpUZXJtaW5lL2NoaWxkOjpub2RlKClbMl0vY2hpbGQ6Om5v
+ZGUoKVsyXS9jaGlsZDo6bm9kZSgpWzRdL2NoaWxkOjpub2RlKClbMV0iIC8+
+CjwvUGVyc29uPgo8L3hzbDp0ZW1wbGF0ZT4KCjx4c2w6dGVtcGxhdGUgbWF0
+Y2g9Ii9jaGlsZDo6VGVybWluZS9jaGlsZDo6bm9kZSgpWzJdL2NoaWxkOjpu
+b2RlKClbNF0iPgo8QmVtZXJrdW5nPgo8eHNsOmFwcGx5LXRlbXBsYXRlcyBz
+ZWxlY3Q9Ii9jaGlsZDo6VGVybWluZS9jaGlsZDo6bm9kZSgpWzJdL2NoaWxk
+Ojpub2RlKClbNF0vY2hpbGQ6Om5vZGUoKVsxXSIgLz4KPC9CZW1lcmt1bmc+
+CjwveHNsOnRlbXBsYXRlPgoKPHhzbDp0ZW1wbGF0ZSBtYXRjaD0iL2NoaWxk
+OjpUZXJtaW5lL2NoaWxkOjpub2RlKClbNF0iPgo8VGVybWluPgo8eHNsOmF0
+dHJpYnV0ZSBuYW1lPSJ3dGFnIj4KPHhzbDp2YWx1ZS1vZiBzZWxlY3Q9InNj
+cjE6Z2V0V0RheShzdHJpbmcoQGRhdHVtKSkiLz4KPC94c2w6YXR0cmlidXRl
+PgoKPHhzbDphcHBseS10ZW1wbGF0ZXMgc2VsZWN0PSIvY2hpbGQ6OlRlcm1p
+bmUvY2hpbGQ6Om5vZGUoKVs0XS9hdHRyaWJ1dGU6OipbMl0iIC8+Cjx4c2w6
+YXBwbHktdGVtcGxhdGVzIHNlbGVjdD0iL2NoaWxkOjpUZXJtaW5lL2NoaWxk
+Ojpub2RlKClbNF0vYXR0cmlidXRlOjoqWzFdIiAvPgo8eHNsOmFwcGx5LXRl
+bXBsYXRlcyBzZWxlY3Q9Ii9jaGlsZDo6VGVybWluZS9jaGlsZDo6bm9kZSgp
+WzRdL2NoaWxkOjpub2RlKClbMV0iIC8+Cjx4c2w6YXBwbHktdGVtcGxhdGVz
+IHNlbGVjdD0iL2NoaWxkOjpUZXJtaW5lL2NoaWxkOjpub2RlKClbNF0vY2hp
+bGQ6Om5vZGUoKVsyXSIgLz4KPHhzbDphcHBseS10ZW1wbGF0ZXMgc2VsZWN0
+PSIvY2hpbGQ6OlRlcm1pbmUvY2hpbGQ6Om5vZGUoKVs0XS9jaGlsZDo6bm9k
+ZSgpWzNdIiAvPgo8eHNsOmFwcGx5LXRlbXBsYXRlcyBzZWxlY3Q9Ii9jaGls
+ZDo6VGVybWluZS9jaGlsZDo6bm9kZSgpWzRdL2NoaWxkOjpub2RlKClbNF0i
+IC8+Cjx4c2w6YXBwbHktdGVtcGxhdGVzIHNlbGVjdD0iL2NoaWxkOjpUZXJt
+aW5lL2NoaWxkOjpub2RlKClbNF0vY2hpbGQ6Om5vZGUoKVs1XSIgLz4KPC9U
+ZXJtaW4+CjwveHNsOnRlbXBsYXRlPgoKPHhzbDp0ZW1wbGF0ZSBtYXRjaD0i
+L2NoaWxkOjpUZXJtaW5lL2NoaWxkOjpub2RlKClbNF0vY2hpbGQ6Om5vZGUo
+KVsyXSI+CjxQZXJzb24+Cjx4c2w6YXBwbHktdGVtcGxhdGVzIHNlbGVjdD0i
+L2NoaWxkOjpUZXJtaW5lL2NoaWxkOjpub2RlKClbNF0vY2hpbGQ6Om5vZGUo
+KVsyXS9jaGlsZDo6bm9kZSgpWzFdIiAvPgo8eHNsOmFwcGx5LXRlbXBsYXRl
+cyBzZWxlY3Q9Ii9jaGlsZDo6VGVybWluZS9jaGlsZDo6bm9kZSgpWzRdL2No
+aWxkOjpub2RlKClbMl0vY2hpbGQ6Om5vZGUoKVsyXSIgLz4KPHhzbDphcHBs
+eS10ZW1wbGF0ZXMgc2VsZWN0PSIvY2hpbGQ6OlRlcm1pbmUvY2hpbGQ6Om5v
+ZGUoKVs0XS9jaGlsZDo6bm9kZSgpWzJdL2NoaWxkOjpub2RlKClbM10iIC8+
+CjwvUGVyc29uPgo8L3hzbDp0ZW1wbGF0ZT4KCjx4c2w6dGVtcGxhdGUgbWF0
+Y2g9Ii9jaGlsZDo6VGVybWluZS9jaGlsZDo6bm9kZSgpWzRdL2NoaWxkOjpu
+b2RlKClbMl0vY2hpbGQ6Om5vZGUoKVsyXSI+CjxmcmF1Pgo8eHNsOmFwcGx5
+LXRlbXBsYXRlcyBzZWxlY3Q9Ii9jaGlsZDo6VGVybWluZS9jaGlsZDo6bm9k
+ZSgpWzRdL2NoaWxkOjpub2RlKClbMl0vY2hpbGQ6Om5vZGUoKVsyXS9jaGls
+ZDo6bm9kZSgpWzFdIiAvPgo8L2ZyYXU+CjwveHNsOnRlbXBsYXRlPgoKPHhz
+bDp0ZW1wbGF0ZSBtYXRjaD0iL2NoaWxkOjpUZXJtaW5lL2NoaWxkOjpub2Rl
+KClbNF0vY2hpbGQ6Om5vZGUoKVs0XSI+CjxCZW1lcmt1bmc+Cjx4c2w6YXBw
+bHktdGVtcGxhdGVzIHNlbGVjdD0iL2NoaWxkOjpUZXJtaW5lL2NoaWxkOjpu
+b2RlKClbNF0vY2hpbGQ6Om5vZGUoKVs0XS9jaGlsZDo6bm9kZSgpWzFdIiAv
+Pgo8L0JlbWVya3VuZz4KPC94c2w6dGVtcGxhdGU+CgoKPCEtLSBCZW51dHpl
+ci1SZWdlbG4gLS0+Cgo8IS0tIERlZmF1bHQtUmVnZWxuIC0tPgogIDx4c2w6
+dGVtcGxhdGUgbWF0Y2g9Iip8QCp8Y29tbWVudCgpfHByb2Nlc3NpbmctaW5z
+dHJ1Y3Rpb24oKXx0ZXh0KCkiPgogICAgPHhzbDpjb3B5PgogICAgICA8eHNs
+OmFwcGx5LXRlbXBsYXRlcyBzZWxlY3Q9Iip8QCp8Y29tbWVudCgpfHByb2Nl
+c3NpbmctaW5zdHJ1Y3Rpb24oKXx0ZXh0KCkiLz4KICAgIDwveHNsOmNvcHk+
+CiAgPC94c2w6dGVtcGxhdGU+CjwveHNsOnN0eWxlc2hlZXQ+
+--_OPERAB__-YKQeHEQPcI9fn3DaQmwl/z
+Content-Disposition: attachment;
+	filename="xmlbsp.xml"
+Content-Type: text/xml;
+	name="xmlbsp.xml"
+
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<?xml-stylesheet href="xslbsp.xsl" type="text/xml" ?>
+
+<!DOCTYPE Termine [
+  <!ENTITY  frau      "Julia Mustermann">
+  <!ELEMENT Termine   (Termin+) >
+  <!ELEMENT Termin    ((Gruppe | Person), Bemerkung)>
+  <!ATTLIST Termin
+    status    CDATA         "temp"
+    datum     CDATA         #REQUIRED
+    uhrzeit   CDATA         #IMPLIED >
+  <!ELEMENT Gruppe    (Person+) >
+  <!ELEMENT Person    (#PCDATA) >
+  <!ELEMENT Bemerkung (#PCDATA) >
+]>
+
+
+<!-- Prolog ist hier beendet. -->
+<!-- Jetzt beginnt das Dokument-Element. -->
+
+<Termine>
+  <Termin status="final" datum="30.09.2000">
+    <Gruppe>
+      <Person>
+        Carsten Bormann
+      </Person>
+      <Person>
+        Olaf Bergmann
+      </Person>
+    </Gruppe>
+    <Bemerkung>
+      Besprechung der Diplomarbeit.
+    </Bemerkung>
+  </Termin>
+  <Termin datum="19.08.2000" uhrzeit="1800">
+    <Person>
+      &frau; mit Kindern
+    </Person>
+    <Bemerkung>
+      ESSEN GEHEN.
+    </Bemerkung>
+  </Termin>
+</Termine>
+
+--_OPERAB__-YKQeHEQPcI9fn3DaQmwl/z--
+
+-------
+
