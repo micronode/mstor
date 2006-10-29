@@ -53,6 +53,7 @@ import net.fortuna.mstor.data.xml.ElementBinding;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jdom.Element;
+import org.jdom.IllegalDataException;
 import org.jdom.IllegalNameException;
 import org.jdom.Namespace;
 
@@ -351,6 +352,10 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
                 }
             }
             catch (IllegalNameException ine) {
+                log.warn("Invalid header (ignored): "
+                        + header.getName() + "=" + header.getValue());
+            }
+            catch (IllegalDataException ide) {
                 log.warn("Invalid header (ignored): "
                         + header.getName() + "=" + header.getValue());
             }
