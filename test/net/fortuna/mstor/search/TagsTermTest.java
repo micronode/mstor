@@ -45,7 +45,11 @@ import javax.mail.search.AddressStringTerm;
 import javax.mail.search.FromStringTerm;
 import javax.mail.search.OrTerm;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
 import net.fortuna.mstor.AbstractMStorTest;
+import net.fortuna.mstor.MStorMessageTest;
 import net.fortuna.mstor.tag.Taggable;
 import net.fortuna.mstor.tag.Tags;
 
@@ -57,132 +61,149 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 
 /**
  * Unit tests for {@link net.fortuna.mstor.search.TagsTerm}.
+ * 
  * @author Ben Fortuna
  */
 public class TagsTermTest extends AbstractMStorTest {
-    
+
     private static final Log LOG = LogFactory.getLog(TagsTermTest.class);
-    
+
     private String tag = "Test 1";
-    
+
     private Folder inbox;
+
+    private String testFolder;
 
     /**
      * Default constructor.
      */
-    public TagsTermTest() throws IOException {
-        super(new File("etc/samples/TagsTerm"));
+    public TagsTermTest(String method, File testFile) throws IOException {
+        // super(new File("etc/samples/TagsTerm"));
+        super(method, testFile);
+        testFolder = testFile.getName();
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see junit.framework.TestCase#setUp()
      */
     protected void setUp() throws Exception {
         super.setUp();
-        
-        inbox = store.getDefaultFolder().getFolder("Inbox");
+
+        inbox = store.getDefaultFolder().getFolder(testFolder);
         inbox.open(Folder.READ_WRITE);
-        
-        Taggable message = (Taggable) inbox.getMessage(2);
+
+        Taggable message = (Taggable) inbox.getMessage(1);
         message.addTag(tag);
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see junit.framework.TestCase#tearDown()
      */
     protected void tearDown() throws Exception {
         inbox.close(false);
 
         super.tearDown();
-        
-//        Taggable message = (Taggable) inbox.getMessage(2);
-//        message.removeTag(tag);
+
+        // Taggable message = (Taggable) inbox.getMessage(2);
+        // message.removeTag(tag);
     }
-    
+
     /**
      * A unit test that tags a message and uses a search term to identify it.
      */
     public final void testTagMessage() throws MessagingException {
-        Taggable message = (Taggable) inbox.getMessage(2);
+        Taggable message = (Taggable) inbox.getMessage(1);
         assertTrue(message.getTags().contains(tag));
-        
+
         Tags searchTags = new Tags();
         searchTags.add(tag);
         TagsTerm term = new TagsTerm(searchTags);
-        
+
         Message[] messages = inbox.search(term);
         assertEquals(1, messages.length);
-        assertEquals(2, messages[0].getMessageNumber());
+        assertEquals(1, messages[0].getMessageNumber());
     }
-    
+
     /**
      * Test castor marshalling.
      */
     /*
-    public final void testPersistTagTerm() throws IOException, MappingException,
-        ValidationException, MarshalException {
-        
-        Tags tags = new Tags();
-        tags.add(tag);
-        
-        Mapping mapping = new Mapping();
-        // 1. Load the mapping information from the file
-        mapping.loadMapping("source/net/fortuna/mstor/data/xml/mapping.xml");
+     * public final void testPersistTagTerm() throws IOException,
+     * MappingException, ValidationException, MarshalException {
+     * 
+     * Tags tags = new Tags(); tags.add(tag);
+     * 
+     * Mapping mapping = new Mapping(); // 1. Load the mapping information from
+     * the file
+     * mapping.loadMapping("source/net/fortuna/mstor/data/xml/mapping.xml");
+     *  /* // 2. Unmarshal the data Unmarshaller unmar = new
+     * Unmarshaller(mapping); MyOrder order = (MyOrder)unmar.unmarshal(new
+     * InputSource(new FileReader("order.xml")));
+     *  // 3. Do some processing on the data float total =
+     * order.getTotalPrice(); System.out.println("Order total price = " +
+     * total); order.setTotal(total);
+     * 
+     *  // 4. marshal the data with the total price back and print the XML in
+     * the console Marshaller marshaller = new Marshaller(new
+     * OutputStreamWriter(System.out)); marshaller.setMapping(mapping);
+     * marshaller.marshal(tags); }
+     */
 
-        /*
-        // 2. Unmarshal the data
-        Unmarshaller unmar = new Unmarshaller(mapping);
-        MyOrder order = (MyOrder)unmar.unmarshal(new InputSource(new FileReader("order.xml")));
-    
-        // 3. Do some processing on the data
-        float total = order.getTotalPrice();
-        System.out.println("Order total price = " + total);
-        order.setTotal(total);
-        *
-
-        // 4. marshal the data with the total price back and print the XML in the console
-        Marshaller marshaller = new Marshaller(new OutputStreamWriter(System.out));
-        marshaller.setMapping(mapping);
-        marshaller.marshal(tags);
-    }
-    */
-    
     /*
-    public void testXmlEncodeTagTerm() {
-        Tags tags = new Tags();
-        tags.add(tag);
-        
-        TagsTerm term = new TagsTerm(tags);
-        
-        XMLEncoder encoder = new XMLEncoder(System.out);
-        encoder.writeObject(term);
-    }
-    */
-    
+     * public void testXmlEncodeTagTerm() { Tags tags = new Tags();
+     * tags.add(tag);
+     * 
+     * TagsTerm term = new TagsTerm(tags);
+     * 
+     * XMLEncoder encoder = new XMLEncoder(System.out);
+     * encoder.writeObject(term); }
+     */
+
     /**
      * @throws MessagingException
      */
     public void testXStreamTagTerm() throws MessagingException {
         Tags tags = new Tags();
         tags.add(tag);
-        
+
         TagsTerm term = new TagsTerm(tags);
         AddressStringTerm aterm = new FromStringTerm("fortuna@mstor.com");
         OrTerm orterm = new OrTerm(term, aterm);
 
         XStream xstream = new XStream(new DomDriver());
         String xml = xstream.toXML(orterm);
-        
+
         LOG.info(xml);
-        
+
         OrTerm decoded = (OrTerm) xstream.fromXML(xml);
-        
-//        assertEquals(orterm.getTerms(), decoded.getTerms());
+
+        // assertEquals(orterm.getTerms(), decoded.getTerms());
         Message[] messages = inbox.search(decoded);
         assertEquals(1, messages.length);
-        assertEquals(2, messages[0].getMessageNumber());
-        
+        assertEquals(1, messages[0].getMessageNumber());
+
         TagsTerm decodedTags = (TagsTerm) decoded.getTerms()[0];
         assertTrue(decodedTags.getTags().contains(tag));
+    }
+
+    /**
+     * @return
+     * @throws IOException
+     */
+    public static Test suite() throws IOException {
+        TestSuite suite = new TestSuite();
+
+        File[] samples = getSamples();
+        for (int i = 0; i < samples.length; i++) {
+            LOG.info("Sample [" + samples[i] + "]");
+
+            suite.addTest(new TagsTermTest("testTagMessage", samples[i]));
+            suite.addTest(new TagsTermTest("testXStreamTagTerm", samples[i]));
+        }
+        return suite;
     }
 }

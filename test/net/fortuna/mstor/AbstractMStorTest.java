@@ -24,7 +24,8 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER
+ * OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -36,6 +37,7 @@
 package net.fortuna.mstor;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -45,6 +47,8 @@ import javax.mail.URLName;
 import junit.framework.TestCase;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.DirectoryFileFilter;
+import org.apache.commons.io.filefilter.NotFileFilter;
 
 /**
  * Abstract base class for MStor unit tests. Provides setup of a mail store.
@@ -52,45 +56,47 @@ import org.apache.commons.io.FileUtils;
  */
 public abstract class AbstractMStorTest extends TestCase {
 
-    private File sourceDir;
+    private File source;
 
     private File testDir;
-    
+
     private Properties sessionProps;
-    
+
     private Session session;
-    
+
     protected MStorStore store;
-    
+
     /**
      * @param source
      * @throws IOException
      */
-    public AbstractMStorTest(File source) throws IOException {
-        this(source, null);
+    public AbstractMStorTest(String method, File source) throws IOException {
+        this(method, source, null);
     }
-    
+
     /**
      * @param source
      * @throws IOException
      */
-    public AbstractMStorTest(File source, Properties props) throws IOException {
-        this.sourceDir = source;
+    public AbstractMStorTest(String method, File source, Properties props) throws IOException {
+        super(method);
+        this.source = source;
         this.sessionProps = props;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     *
      * @see junit.framework.TestCase#setUp()
      */
     protected void setUp() throws Exception {
         super.setUp();
         if (sessionProps != null) {
             session = Session.getDefaultInstance(sessionProps);
-        }
-        else {
+        } else {
             session = Session.getDefaultInstance(new Properties());
         }
-        testDir = createTestHierarchy(sourceDir);
+        testDir = createTestHierarchy(source);
         URLName storeUrl = new URLName("mstor:" + testDir.getPath());
         store = new MStorStore(session, storeUrl);
         store.connect();
@@ -98,6 +104,7 @@ public abstract class AbstractMStorTest extends TestCase {
 
     /*
      * (non-Javadoc)
+     *
      * @see junit.framework.TestCase#tearDown()
      */
     protected void tearDown() throws Exception {
@@ -108,17 +115,36 @@ public abstract class AbstractMStorTest extends TestCase {
         }
         FileUtils.deleteDirectory(testDir);
     }
-    
+
     /**
-     * 
      * @param url
      * @return
      */
     private File createTestHierarchy(File source) throws IOException {
         File testDir = new File(System.getProperty("java.io.tmpdir"),
-                "mstor_test" + File.separator + getName()
-                + File.separator + source.getName());
-        FileUtils.copyDirectory(source, testDir);
+                "mstor_test" + File.separator + getName());
+        
+        if (source.isDirectory()) {
+            FileUtils.copyDirectory(source, testDir);
+        }
+        else {
+            FileUtils.copyFileToDirectory(source, testDir);
+        }
         return testDir;
+    }
+    
+    /**
+     * @return
+     */
+    protected static File[] getSamples() {
+        return new File("etc/samples").listFiles(
+                (FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
+    }
+
+    /**
+     * Overridden to return the current mbox file under test.
+     */
+    public final String getName() {
+        return super.getName() + " [" + source.getName() + "]";
     }
 }

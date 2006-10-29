@@ -45,14 +45,21 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.UIDFolder;
 
-import net.fortuna.mstor.util.CapabilityHints;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
+import net.fortuna.mstor.util.CapabilityHints;
 
 /**
  * Unit tests applicable to UIDFolder support for mstor.
  * @author Ben Fortuna
  */
 public class UIDFolderTest extends AbstractMStorTest {
+
+    private static final Log LOG = LogFactory.getLog(UIDFolderTest.class);
 
     private static Properties p = new Properties();
     static {
@@ -63,23 +70,31 @@ public class UIDFolderTest extends AbstractMStorTest {
 
     private UIDFolder folder;
 
+    private String testFolder;
+
     /**
      * Default constructor.
      */
-    public UIDFolderTest() throws IOException {
-        super(new File("etc/samples/UIDFolder"), p);
+    public UIDFolderTest(String method, File testFile) throws IOException {
+        // super(new File("etc/samples/UIDFolder"), p);
+        super(method, testFile, p);
+        testFolder = testFile.getName();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.AbstractMStorTest#setUp()
      */
     protected void setUp() throws Exception {
         super.setUp();
-        folder = (UIDFolder) store.getDefaultFolder().getFolder("Inbox");
+        folder = (UIDFolder) store.getDefaultFolder().getFolder(testFolder);
         ((Folder) folder).open(Folder.READ_ONLY);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.AbstractMStorTest#tearDown()
      */
     protected void tearDown() throws Exception {
@@ -90,6 +105,7 @@ public class UIDFolderTest extends AbstractMStorTest {
 
     /**
      * Tests support for UIDFolder.
+     * 
      * @throws MessagingException
      */
     public void testGetUIDValidity() throws MessagingException {
@@ -101,52 +117,78 @@ public class UIDFolderTest extends AbstractMStorTest {
 
     /**
      * Tests support for UIDFolder.
+     * 
      * @throws MessagingException
      */
     public void testGetMessageByUID() throws MessagingException {
-        MStorMessage message = (MStorMessage) folder.getMessageByUID(2);
-        assertEquals(2, message.getUid());
+        MStorMessage message = (MStorMessage) folder.getMessageByUID(1);
+        assertEquals(1, message.getUid());
     }
 
     /**
      * Tests support for UIDFolder.
+     * 
      * @throws MessagingException
      */
     public void testGetMessagesByUIDlonglong() throws MessagingException {
-        Message[] messages = folder.getMessagesByUID(2, 3);
+        Message[] messages = folder.getMessagesByUID(1, 1);
 
-        assertEquals(2, messages.length);
-        assertEquals(2, ((MStorMessage) messages[0]).getUid());
-        assertEquals(3, ((MStorMessage) messages[1]).getUid());
+        assertEquals(1, messages.length);
+        assertEquals(1, ((MStorMessage) messages[0]).getUid());
+//        assertEquals(3, ((MStorMessage) messages[1]).getUid());
 
-        messages = folder.getMessagesByUID(2, UIDFolder.LASTUID);
+        messages = folder.getMessagesByUID(1, UIDFolder.LASTUID);
 
-        assertEquals(3, messages.length);
-        assertEquals(2, ((MStorMessage) messages[0]).getUid());
-        assertEquals(3, ((MStorMessage) messages[1]).getUid());
-        assertEquals(4, ((MStorMessage) messages[2]).getUid());
+        assertEquals(1, messages.length);
+        assertEquals(1, ((MStorMessage) messages[0]).getUid());
+//        assertEquals(3, ((MStorMessage) messages[1]).getUid());
+//        assertEquals(4, ((MStorMessage) messages[2]).getUid());
     }
 
     /**
      * Tests support for UIDFolder.
+     * 
      * @throws MessagingException
      */
     public void testGetMessagesByUIDArray() throws MessagingException {
-        long[] uids = new long[] { 2, 3 };
+        long[] uids = new long[] {1 };
         Message[] messages = folder.getMessagesByUID(uids);
 
-        assertEquals(2, messages.length);
-        assertEquals(2, ((MStorMessage) messages[0]).getUid());
-        assertEquals(3, ((MStorMessage) messages[1]).getUid());
+        assertEquals(1, messages.length);
+        assertEquals(1, ((MStorMessage) messages[0]).getUid());
+//        assertEquals(3, ((MStorMessage) messages[1]).getUid());
     }
 
     /**
      * Tests support for UIDFolder.
+     * 
      * @throws MessagingException
      */
     public void testGetUID() throws MessagingException {
-        long uid = folder.getUID(((Folder) folder).getMessage(1)); 
+        long uid = folder.getUID(((Folder) folder).getMessage(1));
 
         assertEquals(1, uid);
+    }
+
+    /**
+     * @return
+     * @throws IOException
+     */
+    public static Test suite() throws IOException {
+        TestSuite suite = new TestSuite();
+
+        File[] samples = getSamples();
+        for (int i = 0; i < samples.length; i++) {
+            LOG.info("Sample [" + samples[i] + "]");
+
+            suite.addTest(new UIDFolderTest("testGetUIDValidity", samples[i]));
+            suite.addTest(new UIDFolderTest("testGetMessageByUID", samples[i]));
+            suite.addTest(new UIDFolderTest("testGetMessagesByUIDlonglong",
+                    samples[i]));
+            suite.addTest(new UIDFolderTest("testGetMessagesByUIDArray",
+                    samples[i]));
+            suite.addTest(new UIDFolderTest("testGetUID", samples[i]));
+        }
+        return suite;
     }
 }

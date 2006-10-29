@@ -21,6 +21,9 @@ import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.URLName;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
 import net.fortuna.mstor.util.CapabilityHints;
 
 import org.apache.commons.io.IOUtils;
@@ -34,7 +37,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class MStorFolderTest extends AbstractMStorTest {
 
-    private static final int INITIAL_MESSAGE_COUNT = 4;
+//    private static final int INITIAL_MESSAGE_COUNT = 1;
     
     private static Log log = LogFactory.getLog(MStorFolderTest.class);
 
@@ -49,12 +52,16 @@ public class MStorFolderTest extends AbstractMStorTest {
         CapabilityHints.setHint(CapabilityHints.KEY_MBOX_CACHE_BUFFERS,
                 CapabilityHints.VALUE_MBOX_CACHE_BUFFERS_DISABLED);
     }
+
+    private String testFolder;
     
     /**
      * Default constructor.
      */
-    public MStorFolderTest() throws IOException {
-        super(new File("etc/samples/Store"), p);
+    public MStorFolderTest(String method, File testFile) throws IOException {
+//        super(new File("etc/samples/Store"), p);
+        super(method, testFile, p);
+        testFolder = testFile.getName();
 
         // clean up..
         /*
@@ -69,21 +76,34 @@ public class MStorFolderTest extends AbstractMStorTest {
         */
     }
 
+    /**
+     * @throws MessagingException
+     */
     public final void testExists() throws MessagingException {
         assertTrue(store.getDefaultFolder().exists());
     }
 
+    /**
+     * @throws MessagingException
+     */
     public final void testGetSeparator() throws MessagingException {
         assertEquals(store.getDefaultFolder().getSeparator(),
                 File.separatorChar);
     }
 
+    /**
+     * @throws MessagingException
+     */
     public final void testGetType() throws MessagingException {
         assertEquals(store.getDefaultFolder().getType(), Folder.HOLDS_FOLDERS);
 
-        assertTrue((store.getDefaultFolder().getFolder(MStorStore.INBOX).getType() & Folder.HOLDS_MESSAGES) > 0);
+        assertTrue((store.getDefaultFolder().getFolder(testFolder).getType()
+                & Folder.HOLDS_MESSAGES) > 0);
     }
 
+    /**
+     * @throws MessagingException
+     */
     public final void testCreate() throws MessagingException {
         Folder test = store.getDefaultFolder().getFolder("Test");
         test.create(Folder.HOLDS_FOLDERS);
@@ -95,9 +115,15 @@ public class MStorFolderTest extends AbstractMStorTest {
         test3.create(Folder.HOLDS_MESSAGES);
     }
 
+    /**
+     * 
+     */
     public void testHasNewMessages() {
     }
 
+    /**
+     * @throws MessagingException
+     */
     public final void testDelete() throws MessagingException {
         Folder test = store.getDefaultFolder().getFolder("TestDelete");
         test.create(Folder.HOLDS_FOLDERS);
@@ -108,13 +134,19 @@ public class MStorFolderTest extends AbstractMStorTest {
         test.delete(true);
     }
 
+    /**
+     * @throws MessagingException
+     */
     public final void testOpen() throws MessagingException {
-        Folder inbox = store.getDefaultFolder().getFolder(MStorStore.INBOX);
+        Folder inbox = store.getDefaultFolder().getFolder(testFolder);
         inbox.open(Folder.READ_ONLY);
     }
 
+    /**
+     * @throws MessagingException
+     */
     public final void testClose() throws MessagingException {
-        Folder inbox = store.getDefaultFolder().getFolder(MStorStore.INBOX);
+        Folder inbox = store.getDefaultFolder().getFolder(testFolder);
         inbox.open(Folder.READ_ONLY);
         inbox.close(false);
 
@@ -126,26 +158,33 @@ public class MStorFolderTest extends AbstractMStorTest {
         }
     }
 
+    /**
+     * @throws MessagingException
+     */
     public final void testCloseExpunge() throws MessagingException {
-        Folder inbox = store.getDefaultFolder().getFolder(MStorStore.INBOX);
+        Folder inbox = store.getDefaultFolder().getFolder(testFolder);
         inbox.open(Folder.READ_WRITE);
         Message message = inbox.getMessage(1);
         message.setFlag(Flags.Flag.DELETED, true);
         inbox.close(true);
     }
 
+    /**
+     * @throws MessagingException
+     */
     public final void testIsOpen() throws MessagingException {
-        Folder inbox = store.getDefaultFolder().getFolder(MStorStore.INBOX);
+        Folder inbox = store.getDefaultFolder().getFolder(testFolder);
         inbox.open(Folder.READ_ONLY);
 
         assertTrue(inbox.isOpen());
     }
 
     public final void testGetMessageCount() throws MessagingException {
-        Folder inbox = store.getDefaultFolder().getFolder(MStorStore.INBOX);
+        Folder inbox = store.getDefaultFolder().getFolder(testFolder);
         inbox.open(Folder.READ_ONLY);
 
-        assertEquals(INITIAL_MESSAGE_COUNT, inbox.getMessageCount());
+//        assertEquals(INITIAL_MESSAGE_COUNT, inbox.getMessageCount());
+        assertTrue(inbox.getMessageCount() > 0);
         inbox.close(false);
     }
 
@@ -156,8 +195,8 @@ public class MStorFolderTest extends AbstractMStorTest {
      * Class under test for String getName()
      */
     public final void testGetName() throws MessagingException {
-        assertEquals(store.getDefaultFolder().getFolder(MStorStore.INBOX).getName(),
-                MStorStore.INBOX);
+        assertEquals(store.getDefaultFolder().getFolder(testFolder).getName(),
+                testFolder);
     }
 
     /*
@@ -170,7 +209,7 @@ public class MStorFolderTest extends AbstractMStorTest {
      * Class under test for Folder getParent()
      */
     public final void testGetParent() throws MessagingException {
-        assertEquals(store.getDefaultFolder().getFolder(MStorStore.INBOX).getParent()
+        assertEquals(store.getDefaultFolder().getFolder(testFolder).getParent()
                 .getFullName(), store.getDefaultFolder().getFullName());
     }
 
@@ -189,7 +228,7 @@ public class MStorFolderTest extends AbstractMStorTest {
      * Class under test for Folder getFolder(String)
      */
     public final void testGetFolderString() throws MessagingException {
-        assertNotNull(store.getDefaultFolder().getFolder(MStorStore.INBOX));
+        assertNotNull(store.getDefaultFolder().getFolder(testFolder));
     }
 
     /*
@@ -213,7 +252,7 @@ public class MStorFolderTest extends AbstractMStorTest {
      * Class under test for Message getMessage(int)
      */
     public final void testGetMessageint() throws MessagingException {
-        Folder inbox = store.getDefaultFolder().getFolder(MStorStore.INBOX);
+        Folder inbox = store.getDefaultFolder().getFolder(testFolder);
 
         try {
             inbox.getMessage(1);
@@ -234,7 +273,7 @@ public class MStorFolderTest extends AbstractMStorTest {
         }
 
         try {
-            inbox.getMessage(INITIAL_MESSAGE_COUNT + 1);
+            inbox.getMessage(inbox.getMessageCount() + 1);
             fail("Should throw IndexOutOfBoundsException");
         }
         catch (IndexOutOfBoundsException iobe) {
@@ -261,19 +300,19 @@ public class MStorFolderTest extends AbstractMStorTest {
 
         int messageCount = copy2.getMessageCount();
 
-        Folder inbox = store.getDefaultFolder().getFolder(MStorStore.INBOX);
+        Folder inbox = store.getDefaultFolder().getFolder(testFolder);
         inbox.open(Folder.READ_ONLY);
 
-        Message[] messages = inbox.getMessages(1, INITIAL_MESSAGE_COUNT);
+        Message[] messages = inbox.getMessages(1, inbox.getMessageCount());
         copy2.appendMessages(messages);
 
-        assertEquals(messageCount + INITIAL_MESSAGE_COUNT,
+        assertEquals(messageCount + inbox.getMessageCount(),
                 copy2.getMessageCount());
 
         copy2.close(false);
         copy2.open(Folder.READ_ONLY);
 
-        messages = inbox.getMessages(2, INITIAL_MESSAGE_COUNT);
+        messages = inbox.getMessages(1, inbox.getMessageCount());
         for (int i = 1; i < messages.length; i++) {
             Message m = copy2.getMessage(
                     copy2.getMessageCount() - (messages.length - 1 - i));
@@ -294,14 +333,14 @@ public class MStorFolderTest extends AbstractMStorTest {
         int messageCount = copy.getMessageCount();
         copy.close(false);
 
-        Folder inbox = store.getDefaultFolder().getFolder(MStorStore.INBOX);
+        Folder inbox = store.getDefaultFolder().getFolder(testFolder);
         inbox.open(Folder.READ_ONLY);
 
-        Message[] messages = inbox.getMessages(1, INITIAL_MESSAGE_COUNT);
+        Message[] messages = inbox.getMessages(1, inbox.getMessageCount());
         copy.appendMessages(messages);
 
         copy.open(Folder.READ_ONLY);
-        assertEquals(messageCount + INITIAL_MESSAGE_COUNT,
+        assertEquals(messageCount + inbox.getMessageCount(),
                 copy.getMessageCount());
 
         inbox.close(false);
@@ -312,7 +351,7 @@ public class MStorFolderTest extends AbstractMStorTest {
      * Class under test for Message[] expunge()
      */
     public final void testExpunge() throws MessagingException {
-        Folder inbox = store.getDefaultFolder().getFolder(MStorStore.INBOX);
+        Folder inbox = store.getDefaultFolder().getFolder(testFolder);
         inbox.open(Folder.READ_WRITE);
 
         Message message = inbox.getMessage(1);
@@ -324,7 +363,7 @@ public class MStorFolderTest extends AbstractMStorTest {
     }
 
     public final void testCopyMessages() throws MessagingException {
-        Folder inbox = store.getDefaultFolder().getFolder(MStorStore.INBOX);
+        Folder inbox = store.getDefaultFolder().getFolder(testFolder);
         inbox.open(Folder.READ_ONLY);
 
         Folder copy = store.getDefaultFolder().getFolder("Inbox2");
@@ -333,14 +372,14 @@ public class MStorFolderTest extends AbstractMStorTest {
         }
         copy.open(Folder.READ_WRITE);
 
-        for (int i = 1; i <= INITIAL_MESSAGE_COUNT; i++) {
+        for (int i = 1; i <= inbox.getMessageCount(); i++) {
             Message message = inbox.getMessage(i);
 
             log.info("Message subject: [" + message.getSubject() + "]");
             inbox.copyMessages(new Message[] {message}, copy);
         }
 
-        assertEquals(INITIAL_MESSAGE_COUNT, copy.getMessageCount());
+        assertEquals(inbox.getMessageCount(), copy.getMessageCount());
         
         inbox.close(false);
         copy.close(false);
@@ -351,7 +390,7 @@ public class MStorFolderTest extends AbstractMStorTest {
      * @throws MessagingException
      */
     public void testParseMultipart() throws MessagingException, IOException {
-        Folder inbox = store.getDefaultFolder().getFolder(MStorStore.INBOX);
+        Folder inbox = store.getDefaultFolder().getFolder(testFolder);
         inbox.open(Folder.READ_ONLY);
         
         for (int i = 1; i <= inbox.getMessageCount(); i++) {
@@ -369,5 +408,41 @@ public class MStorFolderTest extends AbstractMStorTest {
         }
 
         inbox.close(false);
+    }
+
+    /**
+     * @return
+     * @throws IOException
+     */
+    public static Test suite() throws IOException {
+        TestSuite suite = new TestSuite();
+
+        File[] samples = getSamples();
+        for (int i = 0; i < samples.length; i++) {
+            log.info("Sample [" + samples[i] + "]");
+
+            suite.addTest(new MStorFolderTest("testExists", samples[i]));
+            suite.addTest(new MStorFolderTest("testGetSeparator", samples[i]));
+            suite.addTest(new MStorFolderTest("testGetType", samples[i]));
+            suite.addTest(new MStorFolderTest("testCreate", samples[i]));
+            suite.addTest(new MStorFolderTest("testDelete", samples[i]));
+            suite.addTest(new MStorFolderTest("testOpen", samples[i]));
+            suite.addTest(new MStorFolderTest("testClose", samples[i]));
+            suite.addTest(new MStorFolderTest("testCloseExpunge", samples[i]));
+            suite.addTest(new MStorFolderTest("testIsOpen", samples[i]));
+            suite.addTest(new MStorFolderTest("testGetMessageCount", samples[i]));
+            suite.addTest(new MStorFolderTest("testGetName", samples[i]));
+            suite.addTest(new MStorFolderTest("testGetParent", samples[i]));
+            suite.addTest(new MStorFolderTest("testListString", samples[i]));
+            suite.addTest(new MStorFolderTest("testGetFolderString", samples[i]));
+            suite.addTest(new MStorFolderTest("testRenameToFolder", samples[i]));
+            suite.addTest(new MStorFolderTest("testGetMessageint", samples[i]));
+            suite.addTest(new MStorFolderTest("testAppendMessagesMessageArray", samples[i]));
+            suite.addTest(new MStorFolderTest("testAppendToClosedFolder", samples[i]));
+            suite.addTest(new MStorFolderTest("testExpunge", samples[i]));
+            suite.addTest(new MStorFolderTest("testCopyMessages", samples[i]));
+            suite.addTest(new MStorFolderTest("testParseMultipart", samples[i]));
+        }
+        return suite;
     }
 }

@@ -43,6 +43,8 @@ import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
 import net.fortuna.mstor.AbstractMStorTest;
 
 import org.apache.commons.logging.Log;
@@ -50,21 +52,27 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Unit tests for Tag support.
+ * 
  * @author Ben Fortuna
  */
 public class TagTest extends AbstractMStorTest {
-    
+
     private static final Log LOG = LogFactory.getLog(TagTest.class);
-    
+
+    private String testFolder;
+
     /**
      * Default constructor.
      */
-    public TagTest() throws IOException {
-        super(new File("etc/samples/Tags"));
+    public TagTest(String method, File testFile) throws IOException {
+        // super(new File("etc/samples/Tags"));
+        super(method, testFile);
+        testFolder = testFile.getName();
     }
-    
+
     /**
      * Logs a summary of all messages in the specified folder.
+     * 
      * @param folder
      * @throws MessagingException
      */
@@ -72,7 +80,7 @@ public class TagTest extends AbstractMStorTest {
         if (!folder.isOpen()) {
             folder.open(Folder.READ_ONLY);
         }
-        
+
         for (int i = 1; i <= folder.getMessageCount(); i++) {
             Message message = folder.getMessage(i);
             LOG.info("Message [" + i + "]: " + message.getSubject());
@@ -81,42 +89,59 @@ public class TagTest extends AbstractMStorTest {
             }
         }
     }
-    
+
     /**
      * A unit test that tags a message.
      */
     public void testTagMessage() throws MessagingException {
-        Folder inbox = store.getDefaultFolder().getFolder("Inbox");
+        Folder inbox = store.getDefaultFolder().getFolder(testFolder);
         inbox.open(Folder.READ_WRITE);
-        
+
         String tag = "Test 1";
-        
+
         Message message = inbox.getMessage(1);
         Tags.addTag(tag, message);
         assertTrue(Tags.getTags(message).contains(tag));
-        
+
         logMessages(inbox);
-        
+
         inbox.close(false);
     }
-    
+
     /**
      * A unit test that untags a message.
      */
     public void testUntagMessage() throws MessagingException {
-        Folder inbox = store.getDefaultFolder().getFolder("Inbox");
+        Folder inbox = store.getDefaultFolder().getFolder(testFolder);
         inbox.open(Folder.READ_WRITE);
-        
+
         String tag = "Test 1";
-        
+
         Message message = inbox.getMessage(1);
         Tags.addTag(tag, message);
         assertTrue(Tags.getTags(message).contains(tag));
         Tags.removeTag(tag, message);
         assertFalse(Tags.getTags(message).contains(tag));
-        
+
         logMessages(inbox);
-        
+
         inbox.close(false);
+    }
+
+    /**
+     * @return
+     * @throws IOException
+     */
+    public static Test suite() throws IOException {
+        TestSuite suite = new TestSuite();
+
+        File[] samples = getSamples();
+        for (int i = 0; i < samples.length; i++) {
+            LOG.info("Sample [" + samples[i] + "]");
+
+            suite.addTest(new TagTest("testTagMessage", samples[i]));
+            suite.addTest(new TagTest("testUntagMessage", samples[i]));
+        }
+        return suite;
     }
 }

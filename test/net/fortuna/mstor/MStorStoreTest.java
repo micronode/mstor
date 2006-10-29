@@ -15,6 +15,9 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.URLName;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -27,11 +30,15 @@ public class MStorStoreTest extends AbstractMStorTest {
 
     private static Log log = LogFactory.getLog(MStorStoreTest.class);
 
+    private String testFolder;
+    
     /**
      * Default constructor.
      */
-    public MStorStoreTest() throws IOException {
-        super(new File("etc/samples/Store"));
+    public MStorStoreTest(String method, File testFile) throws IOException {
+//        super(new File("etc/samples/Store"));
+        super(method, testFile);
+        testFolder = testFile.getName();
     }
 
     /*
@@ -49,7 +56,7 @@ public class MStorStoreTest extends AbstractMStorTest {
      * Class under test for Folder getFolder(String)
      */
     public final void testGetFolderString() throws MessagingException {
-        Folder folder = store.getFolder("Inbox");
+        Folder folder = store.getFolder(testFolder);
 
         assertNotNull(folder);
 
@@ -81,4 +88,24 @@ public class MStorStoreTest extends AbstractMStorTest {
         log.info("Folder [" + folder.getName() + "]");
     }
 
+    /**
+     * @return
+     * @throws IOException
+     */
+    public static Test suite() throws IOException {
+        TestSuite suite = new TestSuite();
+        
+        File[] samples = getSamples();
+        for (int i = 0; i < samples.length; i++) {
+            log.info("Sample [" + samples[i] + "]");
+            
+            suite.addTest(new MStorStoreTest(
+                    "testGetDefaultFolder", samples[i]));
+            suite.addTest(new MStorStoreTest(
+                    "testGetFolderString", samples[i]));
+            suite.addTest(new MStorStoreTest(
+                    "testGetFolderURLName", samples[i]));
+        }
+        return suite;
+    }
 }

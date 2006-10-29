@@ -8,6 +8,7 @@
 package net.fortuna.mstor.data;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 
 import junit.framework.Test;
@@ -15,6 +16,9 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import net.fortuna.mstor.util.CapabilityHints;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.DirectoryFileFilter;
+import org.apache.commons.io.filefilter.NotFileFilter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -26,42 +30,63 @@ public class MboxFileTest extends TestCase {
 
     private static Log log = LogFactory.getLog(MboxFileTest.class);
 
+    private String filename;
+
+    private File testFile;
+
     private MboxFile mbox;
 
     /**
      * @param method
      */
-    public MboxFileTest(String method) {
+    public MboxFileTest(String method, String filename) {
         super(method);
+        this.filename = filename;
     }
-    
+
     /**
      * @param bufferStrategy
      * @param cacheStrategy
      */
-    public MboxFileTest(String method, String bufferStrategy, String cacheStrategy) {
+    public MboxFileTest(String method, String filename, String bufferStrategy,
+            String cacheStrategy) {
         super(method);
+        this.filename = filename;
         CapabilityHints.setHint(CapabilityHints.KEY_MBOX_BUFFER_STRATEGY,
                 bufferStrategy);
         CapabilityHints.setHint(CapabilityHints.KEY_MBOX_CACHE_BUFFERS,
                 cacheStrategy);
     }
-    
+
     /*
      * @see TestCase#setUp()
      */
     protected final void setUp() throws Exception {
         super.setUp();
-        File f = new File("etc/samples/MboxFile/Inbox");
-        mbox = new MboxFile(f, MboxFile.READ_WRITE);
+        // File f = new File("etc/samples/MboxFile/Inbox");
+        testFile = createTestHierarchy(new File(filename));
+        mbox = new MboxFile(testFile, MboxFile.READ_WRITE);
     }
-    
-    /* (non-Javadoc)
+
+    /**
+     * @param url
+     * @return
+     */
+    private File createTestHierarchy(File source) throws IOException {
+        File testDir = new File(System.getProperty("java.io.tmpdir"),
+                "mstor_test" + File.separator + super.getName());
+        FileUtils.copyFileToDirectory(source, testDir);
+        return new File(testDir, source.getName());
+    }
+
+    /*
+     * (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
     protected void tearDown() throws Exception {
         super.tearDown();
         mbox.close();
+        testFile.delete();
     }
 
     /**
@@ -90,11 +115,10 @@ public class MboxFileTest extends TestCase {
 
     /**
      * Removes the second message from the mbox file.
-     * 
      * @throws IOException
      */
     public final void testPurge() throws IOException {
-        mbox.purge(new int[] {1});
+        mbox.purge(new int[] { 1 });
     }
 
     /*
@@ -117,23 +141,48 @@ public class MboxFileTest extends TestCase {
      * System.currentTimeMillis()); // remove any existing temporary files.. if
      * (tempFile.exists()) { tempFile.delete(); } f.renameTo(tempFile); }
      */
-    
+
+    /**
+     * Overridden to return the current mbox file under test.
+     */
+    public final String getName() {
+        return super.getName() + " [" + filename + "]";
+    }
+
+    /**
+     * @return
+     */
     public static Test suite() {
+
         TestSuite suite = new TestSuite();
-        suite.addTest(new MboxFileTest("testGetMessage",
-                CapabilityHints.VALUE_MBOX_BUFFER_STRATEGY_DEFAULT,
-                CapabilityHints.VALUE_MBOX_CACHE_BUFFERS_DISABLED));
-        suite.addTest(new MboxFileTest("testGetMessage",
-                CapabilityHints.VALUE_MBOX_BUFFER_STRATEGY_DIRECT,
-                CapabilityHints.VALUE_MBOX_CACHE_BUFFERS_DISABLED));
-        suite.addTest(new MboxFileTest("testGetMessage",
-                CapabilityHints.VALUE_MBOX_BUFFER_STRATEGY_MAPPED,
-                CapabilityHints.VALUE_MBOX_CACHE_BUFFERS_DISABLED));
-        suite.addTest(new MboxFileTest("testGetMessage",
-                CapabilityHints.VALUE_MBOX_BUFFER_STRATEGY_DEFAULT,
-                CapabilityHints.VALUE_MBOX_CACHE_BUFFERS_ENABLED));
-        suite.addTest(new MboxFileTest("testGetMessageCount"));
-        suite.addTest(new MboxFileTest("testPurge"));
+
+        File[] testFiles = new File("etc/samples")
+                .listFiles((FileFilter) new NotFileFilter(
+                        DirectoryFileFilter.INSTANCE));
+        for (int i = 0; i < testFiles.length; i++) {
+            log.info("Sample [" + testFiles[i] + "]");
+            suite.addTest(new MboxFileTest("testGetMessage", testFiles[i]
+                    .getPath(),
+                    CapabilityHints.VALUE_MBOX_BUFFER_STRATEGY_DEFAULT,
+                    CapabilityHints.VALUE_MBOX_CACHE_BUFFERS_DISABLED));
+            suite.addTest(new MboxFileTest("testGetMessage", testFiles[i]
+                    .getPath(),
+                    CapabilityHints.VALUE_MBOX_BUFFER_STRATEGY_DIRECT,
+                    CapabilityHints.VALUE_MBOX_CACHE_BUFFERS_DISABLED));
+            suite.addTest(new MboxFileTest("testGetMessage", testFiles[i]
+                    .getPath(),
+                    CapabilityHints.VALUE_MBOX_BUFFER_STRATEGY_MAPPED,
+                    CapabilityHints.VALUE_MBOX_CACHE_BUFFERS_DISABLED));
+            suite.addTest(new MboxFileTest("testGetMessage", testFiles[i]
+                    .getPath(),
+                    CapabilityHints.VALUE_MBOX_BUFFER_STRATEGY_DEFAULT,
+                    CapabilityHints.VALUE_MBOX_CACHE_BUFFERS_ENABLED));
+            suite.addTest(new MboxFileTest("testGetMessageCount", testFiles[i]
+                    .getPath()));
+            suite
+                    .addTest(new MboxFileTest("testPurge", testFiles[i]
+                            .getPath()));
+        }
         return suite;
     }
 }

@@ -35,6 +35,8 @@
  */
 package net.fortuna.mstor;
 
+import java.io.IOException;
+
 import net.fortuna.mstor.data.MboxEncoderTest;
 import net.fortuna.mstor.data.MboxFileTest;
 import net.fortuna.mstor.search.TagsTermTest;
@@ -44,6 +46,7 @@ import junit.framework.TestSuite;
 
 /**
  * A suite of all unit tests.
+ * 
  * @author Ben Fortuna
  */
 public class AllTests extends TestSuite {
@@ -51,22 +54,22 @@ public class AllTests extends TestSuite {
     /**
      * @return a suit of unit tests.
      */
-    public static TestSuite suite() {
+    public static TestSuite suite() throws IOException {
         TestSuite suite = new TestSuite();
-        
+
         // javamail..
-        suite.addTestSuite(MStorStoreTest.class);
-        suite.addTestSuite(MStorFolderTest.class);
-        
+        suite.addTest(MStorStoreTest.suite());
+        suite.addTest(MStorFolderTest.suite());
+
         // mbox..
         suite.addTestSuite(MboxEncoderTest.class);
-        suite.addTestSuite(MboxFileTest.class);
-        
+        suite.addTest(MboxFileTest.suite());
+
         // tags..
         suite.addTestSuite(TagsTest.class);
-        suite.addTestSuite(TagTest.class);
-        suite.addTestSuite(TagsTermTest.class);
-        
+        suite.addTest(TagTest.suite());
+        suite.addTest(TagsTermTest.suite());
+
         return suite;
     }
 }
