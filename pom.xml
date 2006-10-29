@@ -19,7 +19,7 @@
   <licenses>
     <license>
       <name>mstor License</name>
-      <url>http://mstor.cvs.sourceforge.net/*checkout*/mstor/mstor/LICENSE</url>
+      <url>LICENSE</url>
     </license>
   </licenses>
   <scm>
@@ -107,4 +107,26 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <reporting>
+    <plugins>
+      <plugin>
+        <artifactId>maven-site-plugin</artifactId>
+        <configuration>
+          <siteDirectory>etc/site</siteDirectory>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <configuration>
+          <configLocation>etc/checkstyle.xml</configLocation>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-clover-plugin</artifactId>
+        <configuration>
+          <licenseLocation>etc/clover.license</licenseLocation>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
 </project>
