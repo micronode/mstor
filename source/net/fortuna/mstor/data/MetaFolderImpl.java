@@ -144,6 +144,8 @@ public class MetaFolderImpl extends DocumentBinding implements MetaFolder {
             if (messageNumber > 0) {
                 getDocument().getRootElement().addContent(mm.getElement());
             }
+            // allocation a new UID for the message..
+            allocateUid(mm);
             return mm;
         }
         catch (Exception e) {
