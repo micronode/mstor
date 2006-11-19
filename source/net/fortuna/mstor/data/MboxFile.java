@@ -274,10 +274,10 @@ public class MboxFile {
                 if (CapabilityHints.KEY_MBOX_BUFFER_STRATEGY.equals(
                         CapabilityHints.VALUE_MBOX_BUFFER_STRATEGY_DIRECT)) {
                     
-                    buffer = ByteBuffer.allocateDirect((int) size);
+                    buffer = ByteBuffer.allocateDirect(size);
                 }
                 else {
-                    buffer = ByteBuffer.allocate((int) size);
+                    buffer = ByteBuffer.allocate(size);
                 }
                 getChannel().position(position);
                 getChannel().read(buffer);

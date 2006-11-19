@@ -182,7 +182,7 @@ public class Tags implements Set, Serializable {
      */
     public final boolean addAll(final Collection arg0) {
         for (Iterator i = arg0.iterator(); i.hasNext();) {
-            if (!add((String) i.next())) {
+            if (!add(i.next())) {
                 return false;
             }
         }
