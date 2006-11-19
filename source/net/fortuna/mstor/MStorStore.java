@@ -1,6 +1,6 @@
 /*
  * $Id$
- * 
+ *
  * Created: [7/07/2004]
  *
  * Copyright (c) 2004, Ben Fortuna
@@ -46,12 +46,13 @@ import javax.mail.URLName;
 import net.fortuna.mstor.util.CapabilityHints;
 
 /**
- * Implementation of a javamail store for the mstor provider.
- * Metadata is enabled by default, however it may be disabled by specifying
- * the following session property:
+ * Implementation of a javamail store for the mstor provider. Metadata is enabled by default,
+ * however it may be disabled by specifying the following session property:
+ * 
  * <pre>
- *      mstor.meta.enabled=false
+ * mstor.meta.enabled = false
  * </pre>
+ * 
  * @author Ben Fortuna
  */
 public class MStorStore extends Store {
@@ -59,38 +60,44 @@ public class MStorStore extends Store {
     public static final String INBOX = "Inbox";
 
     private boolean metaEnabled;
-    
+
     /**
      * Constructor.
+     * 
      * @param session
      * @param url
      */
     public MStorStore(final Session session, final URLName url) {
         super(session, url);
-        
+
         // enable metadata by default..
-        String metadataStrategy = 
-            session.getProperties().getProperty(CapabilityHints.KEY_METADATA,
-                    CapabilityHints.getHint(CapabilityHints.KEY_METADATA));
-        
-        metaEnabled = !CapabilityHints.VALUE_METADATA_DISABLED.equals(metadataStrategy);
+        String metadataStrategy = session.getProperties().getProperty(
+                CapabilityHints.KEY_METADATA,
+                CapabilityHints.getHint(CapabilityHints.KEY_METADATA));
+
+        metaEnabled = !CapabilityHints.VALUE_METADATA_DISABLED
+                .equals(metadataStrategy);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Store#getDefaultFolder()
      */
     public final Folder getDefaultFolder() throws MessagingException {
         return getFolder("");
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Store#getFolder(java.lang.String)
      */
     public final Folder getFolder(final String name) throws MessagingException {
         if (!isConnected()) {
             throw new IllegalStateException("Store not connected");
         }
-        
+
         File file = new File(name);
 
         // if path is not absolute use root of store to construct file..
@@ -101,23 +108,29 @@ public class MStorStore extends Store {
         return new MStorFolder(this, file);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.Store#getFolder(javax.mail.URLName)
      */
     public final Folder getFolder(final URLName url) throws MessagingException {
         return getFolder(url.getFile());
     }
 
-    /* (non-Javadoc)
-     * @see javax.mail.Service#protocolConnect(java.lang.String, int, java.lang.String, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see javax.mail.Service#protocolConnect(java.lang.String, int, java.lang.String,
+     *      java.lang.String)
      */
     /**
      * Override the superclass method to bypass authentication.
      */
-    protected final boolean protocolConnect(final String arg0, final int arg1, final String arg2,
-            final String arg3) throws MessagingException {
+    protected final boolean protocolConnect(final String arg0, final int arg1,
+            final String arg2, final String arg3) throws MessagingException {
         return true;
     }
+
     /**
      * @return Returns the metaEnabled.
      */

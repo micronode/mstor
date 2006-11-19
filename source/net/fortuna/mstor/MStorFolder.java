@@ -65,12 +65,13 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * A folder implementation for the mstor javamail provider.
+ * 
  * @author Ben Fortuna
  */
 public class MStorFolder extends Folder implements UIDFolder {
 
     private static final String DIR_EXTENSION = ".sbd";
-    
+
     private static final int DEFAULT_BUFFER_SIZE = 1024;
 
     private Log log = LogFactory.getLog(MStorFolder.class);
@@ -91,15 +92,13 @@ public class MStorFolder extends Folder implements UIDFolder {
     private File file;
 
     /**
-     * An mbox file where the folder holds messages. This variable is not
-     * applicable (and therefore not initialised) for folders that hold other
-     * folders.
+     * An mbox file where the folder holds messages. This variable is not applicable (and therefore
+     * not initialised) for folders that hold other folders.
      */
     private MboxFile mbox;
 
     /**
-     * Additional metadata for an mstor folder that is not provided by the
-     * standard mbox format.
+     * Additional metadata for an mstor folder that is not provided by the standard mbox format.
      */
     private MetaFolder meta;
 
@@ -112,6 +111,7 @@ public class MStorFolder extends Folder implements UIDFolder {
 
     /**
      * Constructs a new mstor folder instance.
+     * 
      * @param store
      * @param file
      */
@@ -121,10 +121,11 @@ public class MStorFolder extends Folder implements UIDFolder {
         this.file = file;
         if (file.isDirectory()) {
             type = HOLDS_FOLDERS;
-        } else {
+        }
+        else {
             type = HOLDS_FOLDERS | HOLDS_MESSAGES;
         }
-        
+
         // automatically close (release resources) when the
         // store is closed..
         store.addConnectionListener(new ConnectionListener() {
@@ -200,7 +201,8 @@ public class MStorFolder extends Folder implements UIDFolder {
 
         if (file.isDirectory()) {
             files = file.listFiles();
-        } else {
+        }
+        else {
             files = new File(file.getAbsolutePath() + DIR_EXTENSION)
                     .listFiles();
         }
@@ -221,7 +223,7 @@ public class MStorFolder extends Folder implements UIDFolder {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.mail.Folder#getSeparator()
      */
     public final char getSeparator() throws MessagingException {
@@ -231,7 +233,7 @@ public class MStorFolder extends Folder implements UIDFolder {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.mail.Folder#getType()
      */
     public final int getType() throws MessagingException {
@@ -241,7 +243,7 @@ public class MStorFolder extends Folder implements UIDFolder {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.mail.Folder#create(int)
      */
     public final boolean create(final int type) throws MessagingException {
@@ -261,14 +263,17 @@ public class MStorFolder extends Folder implements UIDFolder {
             try {
                 file.getParentFile().mkdirs();
                 created = file.createNewFile();
-            } catch (IOException ioe) {
+            }
+            catch (IOException ioe) {
                 throw new MessagingException("Unable to create folder [" + file
                         + "]", ioe);
             }
-        } else if ((type & HOLDS_FOLDERS) > 0) {
+        }
+        else if ((type & HOLDS_FOLDERS) > 0) {
             this.type = type;
             created = file.mkdirs();
-        } else {
+        }
+        else {
             throw new MessagingException("Invalid folder type");
         }
         if (created) {
@@ -279,7 +284,7 @@ public class MStorFolder extends Folder implements UIDFolder {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.mail.Folder#hasNewMessages()
      */
     public final boolean hasNewMessages() throws MessagingException {
@@ -289,7 +294,7 @@ public class MStorFolder extends Folder implements UIDFolder {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.mail.Folder#getFolder(java.lang.String)
      */
     public final Folder getFolder(final String name) throws MessagingException {
@@ -306,7 +311,8 @@ public class MStorFolder extends Folder implements UIDFolder {
         // for sub-folders..
         else if ((getType() & HOLDS_MESSAGES) == 0) {
             file = new File(this.file, name);
-        } else {
+        }
+        else {
             file = new File(this.file.getAbsolutePath() + DIR_EXTENSION, name);
         }
 
@@ -317,10 +323,11 @@ public class MStorFolder extends Folder implements UIDFolder {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.mail.Folder#delete(boolean)
      */
-    public final boolean delete(final boolean recurse) throws MessagingException {
+    public final boolean delete(final boolean recurse)
+            throws MessagingException {
         assertClosed();
 
         if ((getType() & HOLDS_FOLDERS) > 0) {
@@ -330,7 +337,8 @@ public class MStorFolder extends Folder implements UIDFolder {
                 for (int i = 0; i < subfolders.length; i++) {
                     subfolders[i].delete(recurse);
                 }
-            } else if (list().length > 0) {
+            }
+            else if (list().length > 0) {
                 // cannot delete if has subfolders..
                 return false;
             }
@@ -350,14 +358,16 @@ public class MStorFolder extends Folder implements UIDFolder {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.mail.Folder#renameTo(javax.mail.Folder)
      */
-    public final boolean renameTo(final Folder folder) throws MessagingException {
+    public final boolean renameTo(final Folder folder)
+            throws MessagingException {
         assertExists();
         assertClosed();
 
-        boolean renamed = file.renameTo(new File(file.getParent(), folder.getName()));
+        boolean renamed = file.renameTo(new File(file.getParent(), folder
+                .getName()));
         if (renamed) {
             notifyFolderRenamedListeners(folder);
         }
@@ -366,7 +376,7 @@ public class MStorFolder extends Folder implements UIDFolder {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.mail.Folder#open(int)
      */
     public final void open(final int mode) throws MessagingException {
@@ -384,13 +394,14 @@ public class MStorFolder extends Folder implements UIDFolder {
 
         this.mode = mode;
         open = true;
-        
+
         // notify listeners only if successfully opened..
         notifyConnectionListeners(ConnectionEvent.OPENED);
     }
-    
+
     /**
      * Create a new reference to mbox file.
+     *
      * @param mode
      */
     private void openMbox(final String mode) {
@@ -399,7 +410,7 @@ public class MStorFolder extends Folder implements UIDFolder {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.mail.Folder#close(boolean)
      */
     public final void close(final boolean expunge) throws MessagingException {
@@ -422,6 +433,7 @@ public class MStorFolder extends Folder implements UIDFolder {
 
     /**
      * Close and clear mbox file reference.
+     *
      * @throws IOException
      */
     private void closeMbox() throws IOException {
@@ -461,10 +473,12 @@ public class MStorFolder extends Folder implements UIDFolder {
 
         if (!isOpen()) {
             return -1;
-        } else {
+        }
+        else {
             try {
                 return mbox.getMessageCount();
-            } catch (IOException ioe) {
+            }
+            catch (IOException ioe) {
                 throw new MessagingException(
                         "Error ocurred reading message count", ioe);
             }
@@ -500,7 +514,8 @@ public class MStorFolder extends Folder implements UIDFolder {
                     message.setMeta(getMeta().getMessage(message));
                 }
                 getMessageCache().put(String.valueOf(index), message);
-            } catch (IOException ioe) {
+            }
+            catch (IOException ioe) {
                 throw new MessagingException("Error ocurred reading message ["
                         + index + "]", ioe);
             }
@@ -510,35 +525,36 @@ public class MStorFolder extends Folder implements UIDFolder {
     }
 
     /**
-     * Appends the specified messages to this folder. NOTE: The specified
-     * message array is destroyed upon processing to alleviate memory concerns
-     * with large messages. You should ensure the messages specified in this
-     * array are referenced elsewhere if you want to retain them.
+     * Appends the specified messages to this folder. NOTE: The specified message array is destroyed
+     * upon processing to alleviate memory concerns with large messages. You should ensure the
+     * messages specified in this array are referenced elsewhere if you want to retain them.
      */
     public final void appendMessages(final Message[] messages)
             throws MessagingException {
         assertExists();
 
         Date received = new Date();
-        ByteArrayOutputStream out = new ByteArrayOutputStream(DEFAULT_BUFFER_SIZE);
+        ByteArrayOutputStream out = new ByteArrayOutputStream(
+                DEFAULT_BUFFER_SIZE);
 
         // Messages may be appended to a closed folder. So if the folder is closed,
         // create a temporary reference to the mbox file to append messages..
         if (mbox == null) {
             openMbox(MboxFile.READ_WRITE);
         }
-        
+
         for (int i = 0; i < messages.length; i++) {
             try {
                 out.reset();
 
-                if (CapabilityHints.VALUE_MOZILLA_COMPATIBILITY_ENABLED.equals(
-                        CapabilityHints.getHint(CapabilityHints.KEY_MOZILLA_COMPATIBILITY))) {
-                    
+                if (CapabilityHints.VALUE_MOZILLA_COMPATIBILITY_ENABLED
+                        .equals(CapabilityHints
+                                .getHint(CapabilityHints.KEY_MOZILLA_COMPATIBILITY))) {
+
                     messages[i].setHeader("X-Mozilla-Status", "0000");
                     messages[i].setHeader("X-Mozilla-Status-2", "00000000");
                 }
-                
+
                 messages[i].writeTo(out);
                 mbox.appendMessage(out.toByteArray());
 
@@ -556,7 +572,8 @@ public class MStorFolder extends Folder implements UIDFolder {
                 // prune messages as we go to allow for garbage
                 // collection..
                 messages[i] = null;
-            } catch (IOException ioe) {
+            }
+            catch (IOException ioe) {
                 log.debug("Error appending message [" + i + "]", ioe);
                 throw new MessagingException("Error appending message [" + i
                         + "]", ioe);
@@ -567,11 +584,12 @@ public class MStorFolder extends Folder implements UIDFolder {
         if (mStore.isMetaEnabled()) {
             try {
                 getMeta().save();
-            } catch (IOException ioe) {
+            }
+            catch (IOException ioe) {
                 log.error("Error ocurred saving metadata", ioe);
             }
         }
-        
+
         // if mbox is not really open, ensure it is closed again..
         if (mbox != null && !isOpen()) {
             try {
@@ -581,14 +599,14 @@ public class MStorFolder extends Folder implements UIDFolder {
                 throw new MessagingException("Error appending messages", ioe);
             }
         }
-        
+
         // notify listeners..
         notifyMessageAddedListeners(messages);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.mail.Folder#expunge()
      */
     public final Message[] expunge() throws MessagingException {
@@ -645,7 +663,7 @@ public class MStorFolder extends Folder implements UIDFolder {
         for (int i = 0; i < deleted.length; i++) {
             deleted[i].setExpunged(true);
         }
-        
+
         // notify listeners..
         notifyMessageRemovedListeners(true, deleted);
 
@@ -676,9 +694,8 @@ public class MStorFolder extends Folder implements UIDFolder {
 
     /**
      * Check if this folder is open.
-     * 
-     * @throws IllegalStateException
-     *             thrown if the folder is not open
+     *
+     * @throws IllegalStateException thrown if the folder is not open
      */
     private void assertOpen() {
         if (!isOpen()) {
@@ -688,9 +705,8 @@ public class MStorFolder extends Folder implements UIDFolder {
 
     /**
      * Check if this folder is closed.
-     * 
-     * @throws IllegalStateException
-     *             thrown if the folder is not closed
+     *
+     * @throws IllegalStateException thrown if the folder is not closed
      */
     private void assertClosed() {
         if (isOpen()) {
@@ -700,17 +716,20 @@ public class MStorFolder extends Folder implements UIDFolder {
 
     /**
      * Asserts that this folder exists.
-     * 
+     *
      * @throws FolderNotFoundException
      * @throws MessagingException
      */
     private void assertExists() throws MessagingException {
         if (!exists()) {
-            throw new FolderNotFoundException(this, "File [" + file + " does not exist.");
+            throw new FolderNotFoundException(this, "File [" + file
+                    + " does not exist.");
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.mail.UIDFolder#getMessageByUID(long)
      */
     public Message getMessageByUID(long uid) throws MessagingException {
@@ -720,42 +739,50 @@ public class MStorFolder extends Folder implements UIDFolder {
                 return message;
             }
         }
-        throw new MessagingException(
-                "Message with UID [" + uid + "] does not exist");
+        throw new MessagingException("Message with UID [" + uid
+                + "] does not exist");
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.mail.UIDFolder#getMessagesByUID(long, long)
      */
-    public Message[] getMessagesByUID(long start, long end) throws MessagingException {
-        
+    public Message[] getMessagesByUID(long start, long end)
+            throws MessagingException {
+
         if (!mStore.isMetaEnabled()) {
-            throw new MessagingException("Metadata must be enabled for UIDFolder support");
+            throw new MessagingException(
+                    "Metadata must be enabled for UIDFolder support");
         }
-        
+
         long lastUid = end;
         if (end == LASTUID) {
             lastUid = getMeta().getLastUid();
         }
         List messages = new ArrayList();
         for (long uid = start; uid <= lastUid; uid++) {
-            messages.add(getMessageByUID(uid)); 
+            messages.add(getMessageByUID(uid));
         }
         return (Message[]) messages.toArray(new Message[messages.size()]);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.mail.UIDFolder#getMessagesByUID(long[])
      */
     public Message[] getMessagesByUID(long[] uids) throws MessagingException {
         List messages = new ArrayList();
         for (int i = 0; i < uids.length; i++) {
-            messages.add(getMessageByUID(uids[i])); 
+            messages.add(getMessageByUID(uids[i]));
         }
         return (Message[]) messages.toArray(new Message[messages.size()]);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.mail.UIDFolder#getUID(javax.mail.Message)
      */
     public long getUID(Message message) throws MessagingException {
@@ -765,15 +792,18 @@ public class MStorFolder extends Folder implements UIDFolder {
         return ((MStorMessage) message).getUid();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.mail.UIDFolder#getUIDValidity()
      */
     public long getUIDValidity() throws MessagingException {
-        
+
         if (!mStore.isMetaEnabled()) {
-            throw new MessagingException("Metadata must be enabled for UIDFolder support");
+            throw new MessagingException(
+                    "Metadata must be enabled for UIDFolder support");
         }
-        
+
         try {
             return getMeta().getUidValidity();
         }

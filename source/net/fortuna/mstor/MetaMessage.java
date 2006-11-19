@@ -24,7 +24,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -44,6 +44,7 @@ import javax.mail.internet.InternetHeaders;
 
 /**
  * Implements additional metadata not supported by a MimeMessage.
+ *
  * @author benfortuna
  */
 public interface MetaMessage extends Serializable {
@@ -64,12 +65,16 @@ public interface MetaMessage extends Serializable {
     InternetHeaders getHeaders();
 
     /**
-     * Saves headers to metadata. Implementations may choose
-     * to only save a subset of the specified headers.
+     * Saves headers to metadata. Implementations may choose to only save a subset of the specified
+     * headers.
+     *
      * @param headers headers to save to metadata
      */
     void setHeaders(InternetHeaders headers);
-    
+
+    /**
+     * @param headers
+     */
     void setHeaders(Enumeration headers);
 
     /**
@@ -93,17 +98,16 @@ public interface MetaMessage extends Serializable {
     void setForwarded(Date forwarded);
 
     /**
-     * @return Returns the messageId.
-     *
-    String getMessageId();
-    */
-    
+     * @return Returns the messageId. String getMessageId();
+     */
+
     /**
-     * Returns the 1-based number of the message the metadata is associated with. If a
-     * message number is not set it is assumed the message does not belong to a folder
-     * and thus has a message number of zero (0).
-     * @return the message number associated with this metadata, or zero if no message
-     * number is identified
+     * Returns the 1-based number of the message the metadata is associated with. If a message
+     * number is not set it is assumed the message does not belong to a folder and thus has a
+     * message number of zero (0).
+     *
+     * @return the message number associated with this metadata, or zero if no message number is
+     *         identified
      */
     int getMessageNumber();
 
@@ -129,18 +133,21 @@ public interface MetaMessage extends Serializable {
 
     /**
      * Returns the meta folder this message belongs to.
+     *
      * @return a meta folder
      */
     MetaFolder getFolder();
-    
+
     /**
      * Returns the UID associated with the message.
+     *
      * @return a long representation of a UID, or -1 if no UID is assigned
      */
     long getUid();
-    
+
     /**
      * Sets the UID associated with the message.
+     *
      * @param uid
      */
     void setUid(long uid);

@@ -58,12 +58,13 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Implementation of a message for the mstor javamail provider.
+ *
  * @author Ben Fortuna
  */
 public class MStorMessage extends MimeMessage implements Serializable, Taggable {
 
     private static final long serialVersionUID = 6413532435324648022L;
-    
+
     private Log log = LogFactory.getLog(MStorMessage.class);
 
     /**
@@ -74,7 +75,7 @@ public class MStorMessage extends MimeMessage implements Serializable, Taggable 
     private InputStream in;
 
     private boolean loaded;
-    
+
     private Tags tags;
 
     /**
@@ -92,7 +93,7 @@ public class MStorMessage extends MimeMessage implements Serializable, Taggable 
      */
     public MStorMessage(final Session session, final InputStream in)
             throws MessagingException {
-        
+
         super(session);
         this.in = in;
         tags = new Tags(flags);
@@ -122,9 +123,9 @@ public class MStorMessage extends MimeMessage implements Serializable, Taggable 
      * @param arg2
      * @throws javax.mail.MessagingException
      */
-    public MStorMessage(final Folder folder, final InputStream in, final int msgnum)
-            throws MessagingException {
-        
+    public MStorMessage(final Folder folder, final InputStream in,
+            final int msgnum) throws MessagingException {
+
         super(folder, msgnum);
         this.in = in;
         tags = new Tags(flags);
@@ -137,16 +138,15 @@ public class MStorMessage extends MimeMessage implements Serializable, Taggable 
      * @param arg3
      * @throws javax.mail.MessagingException
      */
-    public MStorMessage(final Folder folder, final InternetHeaders headers, final byte[] content,
-            final int msgnum) throws MessagingException {
-        
+    public MStorMessage(final Folder folder, final InternetHeaders headers,
+            final byte[] content, final int msgnum) throws MessagingException {
+
         super(folder, headers, content, msgnum);
         tags = new Tags(flags);
     }
 
     /**
-     * @param meta
-     *            The meta to set.
+     * @param meta The meta to set.
      */
     protected final void setMeta(final MetaMessage meta) {
         this.meta = meta;
@@ -164,9 +164,8 @@ public class MStorMessage extends MimeMessage implements Serializable, Taggable 
     }
 
     /**
-     * Checks if the input stream has been parsed, and if not the parse is
-     * performed.
-     * 
+     * Checks if the input stream has been parsed, and if not the parse is performed.
+     *
      * @throws MessagingException
      */
     private void checkParse() throws MessagingException {
@@ -178,106 +177,117 @@ public class MStorMessage extends MimeMessage implements Serializable, Taggable 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.mail.internet.MimePart#getAllHeaderLines()
      */
     public final Enumeration getAllHeaderLines() throws MessagingException {
-        if (meta != null) { return meta.getHeaders()
-                .getAllHeaderLines(); }
+        if (meta != null) {
+            return meta.getHeaders().getAllHeaderLines();
+        }
         checkParse();
         return super.getAllHeaderLines();
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.mail.Part#getAllHeaders()
      */
     public final Enumeration getAllHeaders() throws MessagingException {
-        if (meta != null) { return meta.getHeaders().getAllHeaders(); }
+        if (meta != null) {
+            return meta.getHeaders().getAllHeaders();
+        }
         checkParse();
         return super.getAllHeaders();
     }
 
     /*
      * (non-Javadoc)
-     * 
-     * @see javax.mail.internet.MimePart#getHeader(java.lang.String,
-     *      java.lang.String)
+     *
+     * @see javax.mail.internet.MimePart#getHeader(java.lang.String, java.lang.String)
      */
-    public final String getHeader(final String arg0, final String arg1) throws MessagingException {
-        if (meta != null) { return meta.getHeaders().getHeader(arg0,
-                arg1); }
+    public final String getHeader(final String arg0, final String arg1)
+            throws MessagingException {
+        if (meta != null) {
+            return meta.getHeaders().getHeader(arg0, arg1);
+        }
         checkParse();
         return super.getHeader(arg0, arg1);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.mail.Part#getHeader(java.lang.String)
      */
-    public final String[] getHeader(final String arg0) throws MessagingException {
-        if (meta != null) { return meta.getHeaders().getHeader(arg0); }
+    public final String[] getHeader(final String arg0)
+            throws MessagingException {
+        if (meta != null) {
+            return meta.getHeaders().getHeader(arg0);
+        }
         checkParse();
         return super.getHeader(arg0);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.mail.internet.MimePart#getMatchingHeaderLines(java.lang.String[])
      */
     public final Enumeration getMatchingHeaderLines(final String[] arg0)
             throws MessagingException {
-        if (meta != null) { return meta.getHeaders()
-                .getMatchingHeaderLines(arg0); }
+        if (meta != null) {
+            return meta.getHeaders().getMatchingHeaderLines(arg0);
+        }
         checkParse();
         return super.getMatchingHeaderLines(arg0);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.mail.Part#getMatchingHeaders(java.lang.String[])
      */
     public final Enumeration getMatchingHeaders(final String[] arg0)
             throws MessagingException {
-        if (meta != null) { return meta.getHeaders()
-                .getMatchingHeaders(arg0); }
+        if (meta != null) {
+            return meta.getHeaders().getMatchingHeaders(arg0);
+        }
         checkParse();
         return super.getMatchingHeaders(arg0);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.mail.internet.MimePart#getNonMatchingHeaderLines(java.lang.String[])
      */
     public final Enumeration getNonMatchingHeaderLines(final String[] arg0)
             throws MessagingException {
-        if (meta != null) { return meta.getHeaders()
-                .getNonMatchingHeaderLines(arg0); }
+        if (meta != null) {
+            return meta.getHeaders().getNonMatchingHeaderLines(arg0);
+        }
         checkParse();
         return super.getNonMatchingHeaderLines(arg0);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.mail.Part#getNonMatchingHeaders(java.lang.String[])
      */
     public final Enumeration getNonMatchingHeaders(final String[] arg0)
             throws MessagingException {
-        if (meta != null) { return meta.getHeaders()
-                .getNonMatchingHeaders(arg0); }
+        if (meta != null) {
+            return meta.getHeaders().getNonMatchingHeaders(arg0);
+        }
         checkParse();
         return super.getNonMatchingHeaders(arg0);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.mail.internet.MimeMessage#getContentStream()
      */
     protected final InputStream getContentStream() throws MessagingException {
@@ -287,16 +297,15 @@ public class MStorMessage extends MimeMessage implements Serializable, Taggable 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.mail.Message#setExpunged(boolean)
      */
     protected final void setExpunged(final boolean expunged) {
         if (meta != null) {
             meta.setExpunged(expunged);
             /*
-             * try { getMeta().getFolder().save(); } catch (IOException ioe) {
-             * log.warn("Error saving metadata [" + getMeta().getMessageId() +
-             * "]", ioe); }
+             * try { getMeta().getFolder().save(); } catch (IOException ioe) { log.warn("Error
+             * saving metadata [" + getMeta().getMessageId() + "]", ioe); }
              */
         }
         super.setExpunged(expunged);
@@ -304,17 +313,19 @@ public class MStorMessage extends MimeMessage implements Serializable, Taggable 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.mail.internet.MimeMessage#getReceivedDate()
      */
     public final Date getReceivedDate() throws MessagingException {
-        if (meta != null) { return meta.getReceived(); }
+        if (meta != null) {
+            return meta.getReceived();
+        }
         return super.getReceivedDate();
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.mail.internet.MimeMessage#setFlags(javax.mail.Flags, boolean)
      */
     public final synchronized void setFlags(final Flags flags, final boolean set)
@@ -324,9 +335,8 @@ public class MStorMessage extends MimeMessage implements Serializable, Taggable 
         if (meta != null) {
             meta.setFlags(flags);
             /*
-             * try { getMeta().getFolder().save(); } catch (IOException ioe) {
-             * log.warn("Error saving metadata [" + getMeta().getMessageId() +
-             * "]", ioe); }
+             * try { getMeta().getFolder().save(); } catch (IOException ioe) { log.warn("Error
+             * saving metadata [" + getMeta().getMessageId() + "]", ioe); }
              */
             // we must call explicility even if superclass also calls as
             // superclass will make
@@ -337,18 +347,18 @@ public class MStorMessage extends MimeMessage implements Serializable, Taggable 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see javax.mail.Message#setFlag(javax.mail.Flags.Flag, boolean)
      */
-    public final void setFlag(final Flag flag, final boolean set) throws MessagingException {
+    public final void setFlag(final Flag flag, final boolean set)
+            throws MessagingException {
         super.setFlag(flag, set);
         // copy updated flags from mime message implementation..
         if (meta != null) {
             meta.setFlags(flags);
             /*
-             * try { getMeta().getFolder().save(); } catch (IOException ioe) {
-             * log.warn("Error saving metadata [" + getMeta().getMessageId() +
-             * "]", ioe); }
+             * try { getMeta().getFolder().save(); } catch (IOException ioe) { log.warn("Error
+             * saving metadata [" + getMeta().getMessageId() + "]", ioe); }
              */
             // we must call explicility even if superclass also calls as
             // superclass will make
@@ -357,10 +367,13 @@ public class MStorMessage extends MimeMessage implements Serializable, Taggable 
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.mail.Part#setHeader(java.lang.String, java.lang.String)
      */
-    public final void setHeader(final String s, final String s1) throws MessagingException {
+    public final void setHeader(final String s, final String s1)
+            throws MessagingException {
         // looks like we need to load the message before setting headers..
         checkParse();
         super.setHeader(s, s1);
@@ -370,10 +383,13 @@ public class MStorMessage extends MimeMessage implements Serializable, Taggable 
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.mail.Part#addHeader(java.lang.String, java.lang.String)
      */
-    public final void addHeader(final String s, final String s1) throws MessagingException {
+    public final void addHeader(final String s, final String s1)
+            throws MessagingException {
         super.addHeader(s, s1);
         if (meta != null) {
             // update metadata..
@@ -381,7 +397,9 @@ public class MStorMessage extends MimeMessage implements Serializable, Taggable 
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.mail.Part#removeHeader(java.lang.String)
      */
     public final void removeHeader(final String s) throws MessagingException {
@@ -392,7 +410,9 @@ public class MStorMessage extends MimeMessage implements Serializable, Taggable 
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see javax.mail.internet.MimePart#addHeaderLine(java.lang.String)
      */
     public final void addHeaderLine(final String s) throws MessagingException {
@@ -402,31 +422,15 @@ public class MStorMessage extends MimeMessage implements Serializable, Taggable 
             meta.setHeaders(headers);
         }
     }
-    
+
     /**
      * @param tag
      */
     public final void addTag(final String tag) throws MessagingException {
-//        Flags flags = new Flags();
-//        Tags tags = getTags();
+        // Flags flags = new Flags();
+        // Tags tags = getTags();
         tags.add(tag);
-//        setFlags(flags, true);
-        if (meta != null) {
-            meta.setFlags(getFlags());
-            saveChanges();
-        }
-    }
-    
-    /**
-     * @param tag
-     * @throws MessagingException
-     */
-    public final void removeTag(final String tag) throws MessagingException {
-//        Flags flags = new Flags();
-//        Tags tags = getTags();
-        tags.remove(tag);
-//        tags.add(tag);
-//        setFlags(flags, false);
+        // setFlags(flags, true);
         if (meta != null) {
             meta.setFlags(getFlags());
             saveChanges();
@@ -434,8 +438,23 @@ public class MStorMessage extends MimeMessage implements Serializable, Taggable 
     }
 
     /**
-     * Attempts to save metadata after calling <code>saveChanges</code> in the
-     * superclass.
+     * @param tag
+     * @throws MessagingException
+     */
+    public final void removeTag(final String tag) throws MessagingException {
+        // Flags flags = new Flags();
+        // Tags tags = getTags();
+        tags.remove(tag);
+        // tags.add(tag);
+        // setFlags(flags, false);
+        if (meta != null) {
+            meta.setFlags(getFlags());
+            saveChanges();
+        }
+    }
+
+    /**
+     * Attempts to save metadata after calling <code>saveChanges</code> in the superclass.
      */
     public final void saveChanges() throws MessagingException {
         super.saveChanges();
@@ -444,15 +463,15 @@ public class MStorMessage extends MimeMessage implements Serializable, Taggable 
                 meta.getFolder().save();
             }
             catch (IOException ioe) {
-                throw new MessagingException("Error updating message metadata ["
-                        + meta.getMessageNumber() + "]", ioe);
+                throw new MessagingException(
+                        "Error updating message metadata ["
+                                + meta.getMessageNumber() + "]", ioe);
             }
         }
     }
 
     /**
-     * Attempts to update headers in metadata after updating headers in
-     * superclass.
+     * Attempts to update headers in metadata after updating headers in superclass.
      */
     protected final void updateHeaders() throws MessagingException {
         super.updateHeaders();
@@ -462,16 +481,18 @@ public class MStorMessage extends MimeMessage implements Serializable, Taggable 
     }
 
     /**
-     * Returns tags associated with this message. Note that any changes made
-     * to the returned instance will not affect this message.
+     * Returns tags associated with this message. Note that any changes made to the returned
+     * instance will not affect this message.
+     *
      * @return Returns the tags.
      */
     public final Tags getTags() throws MessagingException {
         return new Tags(getFlags());
     }
-    
+
     /**
      * Returns the UID associated with the message.
+     *
      * @return a long representation of a UID, or -1 if no UID is assigned
      */
     protected final long getUid() {
