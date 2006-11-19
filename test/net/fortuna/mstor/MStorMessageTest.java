@@ -9,9 +9,11 @@ package net.fortuna.mstor;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Enumeration;
 
 import javax.mail.Flags;
 import javax.mail.Folder;
+import javax.mail.Header;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 
@@ -104,6 +106,24 @@ public class MStorMessageTest extends AbstractMStorTest {
         }
         inbox.close(false);
     }
+    
+    /**
+     * @throws MessagingException
+     */
+    public void testGetAllHeaders() throws MessagingException {
+        Folder folder = store.getDefaultFolder().getFolder(testFolder);
+        folder.open(Folder.READ_ONLY);
+        
+        for (int i = 1; i < folder.getMessageCount(); i++) {
+            Message message = folder.getMessage(i);
+            for (Enumeration e = message.getAllHeaders(); e.hasMoreElements();) {
+                Header header = (Header) e.nextElement();
+                assertFalse("From_ line returned as header",
+                        header.getName().startsWith("From "));
+            }
+        }
+        folder.close(false);
+    }
 
     /**
      * @return
@@ -120,6 +140,7 @@ public class MStorMessageTest extends AbstractMStorTest {
                     samples[i]));
             suite.addTest(new MStorMessageTest("testSetFlag", samples[i]));
             suite.addTest(new MStorMessageTest("testGetFlags", samples[i]));
+            suite.addTest(new MStorMessageTest("testGetAllHeaders", samples[i]));
         }
         return suite;
     }
