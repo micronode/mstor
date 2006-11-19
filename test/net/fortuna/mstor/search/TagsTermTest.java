@@ -49,7 +49,6 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import net.fortuna.mstor.AbstractMStorTest;
-import net.fortuna.mstor.MStorMessageTest;
 import net.fortuna.mstor.tag.Taggable;
 import net.fortuna.mstor.tag.Tags;
 

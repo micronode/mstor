@@ -9,9 +9,6 @@ package net.fortuna.mstor;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Properties;
 
 import javax.mail.Flags;
@@ -19,8 +16,6 @@ import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
-import javax.mail.URLName;
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
