@@ -24,7 +24,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -52,16 +52,16 @@ import org.jdom.output.XMLOutputter;
 public abstract class DocumentBinding extends XmlBinding {
 
     private File file;
-    
+
     private Document document;
-    
+
     /**
      * @param file
      */
     public DocumentBinding(final File file) {
         this.file = file;
     }
-    
+
     /**
      * @param file
      * @param namespace
@@ -72,13 +72,11 @@ public abstract class DocumentBinding extends XmlBinding {
     }
 
     /**
-     * Returns the JDOM document associated with this
-     * meta folder.
+     * Returns the JDOM document associated with this meta folder.
+     * 
      * @return a JDOM document
-     * @throws JDOMException thrown if the specified file
-     * is not a valid XML document
-     * @throws IOException thrown if an error occurs reading
-     * the specified file
+     * @throws JDOMException thrown if the specified file is not a valid XML document
+     * @throws IOException thrown if an error occurs reading the specified file
      */
     protected final Document getDocument() {
         if (document == null) {
@@ -89,18 +87,21 @@ public abstract class DocumentBinding extends XmlBinding {
             catch (Exception e) {
                 // create an empty document if unable to read
                 // from filesystem..
-                document = new Document(new Element(getRootElementName(), namespace));
+                document = new Document(new Element(getRootElementName(),
+                        namespace));
             }
         }
         return document;
     }
-    
+
     /**
      * @return
      */
-    protected abstract String getRootElementName(); 
+    protected abstract String getRootElementName();
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.data.MetaFolder#save()
      */
     public final void save() throws IOException {

@@ -24,7 +24,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -47,6 +47,7 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * A Search Term that matches all messages with a given set of tags.
+ * 
  * @author Ben Fortuna
  */
 public class TagsTerm extends SearchTerm {
@@ -56,24 +57,26 @@ public class TagsTerm extends SearchTerm {
     private static final long serialVersionUID = 7893903141033644620L;
 
     private Tags tags;
-    
+
     /**
      * Default constructor.
      */
     public TagsTerm() {
         this(new Tags());
     }
-    
+
     /**
-     * Creates a new term that matches messages that contain all the
-     * specified tags.
+     * Creates a new term that matches messages that contain all the specified tags.
+     * 
      * @param tags
      */
     public TagsTerm(final Tags tags) {
         this.tags = tags;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see javax.mail.search.SearchTerm#match(javax.mail.Message)
      */
     public final boolean match(final Message m) {

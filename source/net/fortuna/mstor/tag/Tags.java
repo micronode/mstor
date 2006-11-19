@@ -24,7 +24,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -53,24 +53,26 @@ public class Tags implements Set, Serializable {
     private static final long serialVersionUID = -4185780688194955112L;
 
     protected static final String TAG_PREFIX = "tag_";
-    
+
     private Flags flags;
-    
+
     /**
      * Default constructor.
      */
     public Tags() {
         this(new Flags());
     }
-    
+
     /**
      * @param flags
      */
     public Tags(final Flags flags) {
         this.flags = flags;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.util.Set#size()
      */
     public final int size() {
@@ -84,14 +86,18 @@ public class Tags implements Set, Serializable {
         return tagCount;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.util.Set#isEmpty()
      */
     public final boolean isEmpty() {
         return size() == 0;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.util.Set#contains(java.lang.Object)
      */
     public final boolean contains(final Object arg0) {
@@ -111,7 +117,7 @@ public class Tags implements Set, Serializable {
      * @return
      */
     private Set getTagSet() {
-        Set tags = new HashSet(); 
+        Set tags = new HashSet();
         String[] userFlags = flags.getUserFlags();
         for (int i = 0; i < userFlags.length; i++) {
             if (userFlags[i].startsWith(TAG_PREFIX)) {
@@ -120,29 +126,37 @@ public class Tags implements Set, Serializable {
         }
         return tags;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.util.Set#iterator()
      */
     public final Iterator iterator() {
         return getTagSet().iterator();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.util.Set#toArray()
      */
     public final Object[] toArray() {
         return getTagSet().toArray();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.util.Set#toArray(T[])
      */
     public final Object[] toArray(final Object[] arg0) {
         return getTagSet().toArray(arg0);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.util.Set#add(E)
      */
     public final boolean add(final Object arg0) {
@@ -154,7 +168,9 @@ public class Tags implements Set, Serializable {
         return false;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.util.Set#remove(java.lang.Object)
      */
     public final boolean remove(final Object arg0) {
@@ -165,7 +181,9 @@ public class Tags implements Set, Serializable {
         return false;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.util.Set#containsAll(java.util.Collection)
      */
     public final boolean containsAll(final Collection arg0) {
@@ -177,7 +195,9 @@ public class Tags implements Set, Serializable {
         return true;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.util.Set#addAll(java.util.Collection)
      */
     public final boolean addAll(final Collection arg0) {
@@ -189,7 +209,9 @@ public class Tags implements Set, Serializable {
         return true;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.util.Set#retainAll(java.util.Collection)
      */
     public final boolean retainAll(final Collection arg0) {
@@ -202,7 +224,9 @@ public class Tags implements Set, Serializable {
         return true;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.util.Set#removeAll(java.util.Collection)
      */
     public final boolean removeAll(final Collection arg0) {
@@ -214,7 +238,9 @@ public class Tags implements Set, Serializable {
         return true;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.util.Set#clear()
      */
     public final void clear() {
@@ -222,55 +248,53 @@ public class Tags implements Set, Serializable {
             remove(i.next());
         }
     }
-    
+
     /**
      * Adds the specified tag to a message.
+     * 
      * @param tag
      * @param message
      * @throws MessagingException when unable to tag the given message
-     * @throws UnsupportedOperationException if the given message does not
-     * support tags
+     * @throws UnsupportedOperationException if the given message does not support tags
      */
     public static void addTag(final String tag, final Message message)
-        throws MessagingException {
-        
+            throws MessagingException {
+
         if (message instanceof Taggable) {
             ((Taggable) message).addTag(tag);
             return;
         }
         throw new UnsupportedOperationException("Message is not taggable");
     }
-    
+
     /**
      * Remove the specified tag from a message.
+     * 
      * @param tag
      * @param message
-     * @throws MessagingException when unable to remove the tag from the given
-     * message
-     * @throws UnsupportedOperationException if the given message does not
-     * support tags
+     * @throws MessagingException when unable to remove the tag from the given message
+     * @throws UnsupportedOperationException if the given message does not support tags
      */
     public static void removeTag(final String tag, final Message message)
-        throws MessagingException {
-        
+            throws MessagingException {
+
         if (message instanceof Taggable) {
             ((Taggable) message).removeTag(tag);
             return;
         }
         throw new UnsupportedOperationException("Message is not taggable");
     }
-    
+
     /**
      * Returns the tags associated with the specified message.
+     * 
      * @param message
      * @return
-     * @throws MessagingException when unable to retrieve the tags for the given
-     * message
-     * @throws UnsupportedOperationException if the given message does not
-     * support tags
+     * @throws MessagingException when unable to retrieve the tags for the given message
+     * @throws UnsupportedOperationException if the given message does not support tags
      */
     public static Tags getTags(final Message message) throws MessagingException {
-        
+
         if (message instanceof Taggable) {
             return ((Taggable) message).getTags();
         }

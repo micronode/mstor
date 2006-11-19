@@ -24,7 +24,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -42,8 +42,9 @@ import org.jdom.Namespace;
  */
 public abstract class XmlBinding {
 
-//    private static final Namespace DEFAULT_NAMESPACE = Namespace.NO_NAMESPACE;
-    private static final Namespace DEFAULT_NAMESPACE = Namespace.getNamespace("mstor", "http://modularity.net.au/mstor");
+    // private static final Namespace DEFAULT_NAMESPACE = Namespace.NO_NAMESPACE;
+    private static final Namespace DEFAULT_NAMESPACE = Namespace.getNamespace(
+            "mstor", "http://modularity.net.au/mstor");
 
     protected Namespace namespace;
 
@@ -53,7 +54,7 @@ public abstract class XmlBinding {
     public XmlBinding() {
         this(DEFAULT_NAMESPACE);
     }
-    
+
     /**
      * @param namespace
      */

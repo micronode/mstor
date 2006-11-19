@@ -24,7 +24,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -53,19 +53,19 @@ import org.apache.commons.logging.LogFactory;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-
 /**
  * A JDOM-based implementation of a meta folder.
+ * 
  * @author benfortuna
  */
 public class MetaFolderImpl extends DocumentBinding implements MetaFolder {
-    
+
     private static final String ELEMENT_FOLDER = "folder";
 
     private static final String ATTRIBUTE_FOLDER_NAME = "name";
-    
+
     private static final String ELEMENT_LAST_UID = "last-uid";
-    
+
     private static final String ELEMENT_UID_VALIDITY = "uid-validity";
 
     private Log log = LogFactory.getLog(MetaFolderImpl.class);
@@ -73,9 +73,10 @@ public class MetaFolderImpl extends DocumentBinding implements MetaFolder {
     public static final String FILE_EXTENSION = ".emf";
 
     private static final Random UID_VALIDITY_GENERATOR = new Random();
-    
+
     /**
      * Constructs a new meta folder instance.
+     * 
      * @param file the meta folder file
      */
     public MetaFolderImpl(final File file) {
@@ -84,50 +85,64 @@ public class MetaFolderImpl extends DocumentBinding implements MetaFolder {
 
     /**
      * Constructs a new meta folder instance with the specified namespace.
+     * 
      * @param file the meta folder file
      * @param namespace the namespace for the metadata
      */
     public MetaFolderImpl(final File file, final Namespace namespace) {
         super(file, namespace);
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.data.xml.DocumentBinding#getRootElementName()
      */
     protected final String getRootElementName() {
         return ELEMENT_FOLDER;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.data.MetaFolder#getName()
      */
     public final String getName() {
-        return getDocument().getRootElement().getAttributeValue(ATTRIBUTE_FOLDER_NAME);
+        return getDocument().getRootElement().getAttributeValue(
+                ATTRIBUTE_FOLDER_NAME);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.data.MetaFolder#setName(java.lang.String)
      */
     public final void setName(final String name) {
-        getDocument().getRootElement().setAttribute(ATTRIBUTE_FOLDER_NAME, name);
+        getDocument().getRootElement()
+                .setAttribute(ATTRIBUTE_FOLDER_NAME, name);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.data.MetaFolder#getMessage(javax.mail.Message)
      */
     public final MetaMessage getMessage(final Message message) {
         try {
-//            String messageId = ((MimeMessage) message).getMessageID();
+            // String messageId = ((MimeMessage) message).getMessageID();
             int messageNumber = message.getMessageNumber();
 
             for (Iterator i = getDocument().getRootElement().getChildren(
-                    MetaMessageImpl.ELEMENT_MESSAGE, namespace).iterator();
-                    i.hasNext();) {
-                
+                    MetaMessageImpl.ELEMENT_MESSAGE, namespace).iterator(); i
+                    .hasNext();) {
+
                 Element messageElement = (Element) i.next();
                 try {
-                    if (Integer.parseInt(messageElement.getAttributeValue(MetaMessageImpl.ATTRIBUTE_MESSAGE_NUMBER)) == messageNumber) {
-                        return new MetaMessageImpl(messageElement, this, namespace);
+                    if (Integer
+                            .parseInt(messageElement
+                                    .getAttributeValue(MetaMessageImpl.ATTRIBUTE_MESSAGE_NUMBER)) == messageNumber) {
+                        return new MetaMessageImpl(messageElement, this,
+                                namespace);
                     }
                 }
                 catch (Exception e) {
@@ -137,7 +152,8 @@ public class MetaFolderImpl extends DocumentBinding implements MetaFolder {
                 }
             }
 
-            MetaMessageImpl mm = new MetaMessageImpl(messageNumber, this, namespace);
+            MetaMessageImpl mm = new MetaMessageImpl(messageNumber, this,
+                    namespace);
             mm.setFlags(message.getFlags());
             mm.setHeaders(message.getAllHeaders());
             // only add the metadata if message is associated with folder..
@@ -155,23 +171,30 @@ public class MetaFolderImpl extends DocumentBinding implements MetaFolder {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.data.MetaFolder#addMessage(net.fortuna.mstor.data.MetaMessage)
      */
     public final void addMessage(final MetaMessage message) {
-        getDocument().getRootElement().addContent(((MetaMessageImpl) message).getElement());
+        getDocument().getRootElement().addContent(
+                ((MetaMessageImpl) message).getElement());
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.data.MetaFolder#removeMessage(java.lang.String)
      */
     public final MetaMessage removeMessage(final int messageNumber) {
         for (Iterator i = getDocument().getRootElement().getChildren(
-                MetaMessageImpl.ELEMENT_MESSAGE, namespace).iterator();
-                i.hasNext();) {
-            
+                MetaMessageImpl.ELEMENT_MESSAGE, namespace).iterator(); i
+                .hasNext();) {
+
             Element messageElement = (Element) i.next();
-            if (Integer.parseInt(messageElement.getAttributeValue(MetaMessageImpl.ATTRIBUTE_MESSAGE_NUMBER)) == messageNumber) {
+            if (Integer
+                    .parseInt(messageElement
+                            .getAttributeValue(MetaMessageImpl.ATTRIBUTE_MESSAGE_NUMBER)) == messageNumber) {
                 getDocument().getRootElement().removeContent(messageElement);
                 updateMessageNumbers(messageNumber, -1);
                 return new MetaMessageImpl(messageElement, this, namespace);
@@ -180,7 +203,9 @@ public class MetaFolderImpl extends DocumentBinding implements MetaFolder {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.MetaFolder#removeMessages(int[])
      */
     public final MetaMessage[] removeMessages(final int[] messageNumbers) {
@@ -188,16 +213,20 @@ public class MetaFolderImpl extends DocumentBinding implements MetaFolder {
         int delta = 0;
         int startIndex = Integer.MAX_VALUE;
         for (Iterator i = getDocument().getRootElement().getChildren(
-                MetaMessageImpl.ELEMENT_MESSAGE, namespace).iterator(); i.hasNext();) {
-            
+                MetaMessageImpl.ELEMENT_MESSAGE, namespace).iterator(); i
+                .hasNext();) {
+
             Element messageElement = (Element) i.next();
-            int messageNumber = Integer.parseInt(
-                    messageElement.getAttributeValue(MetaMessageImpl.ATTRIBUTE_MESSAGE_NUMBER));
-            
+            int messageNumber = Integer
+                    .parseInt(messageElement
+                            .getAttributeValue(MetaMessageImpl.ATTRIBUTE_MESSAGE_NUMBER));
+
             for (int n = 0; n < messageNumbers.length; n++) {
                 if (messageNumbers[n] == messageNumber) {
-                    getDocument().getRootElement().removeContent(messageElement);
-                    metas.add(new MetaMessageImpl(messageElement, this, namespace));
+                    getDocument().getRootElement()
+                            .removeContent(messageElement);
+                    metas.add(new MetaMessageImpl(messageElement, this,
+                            namespace));
                     delta--;
                     if (messageNumber < startIndex) {
                         startIndex = messageNumber;
@@ -211,24 +240,31 @@ public class MetaFolderImpl extends DocumentBinding implements MetaFolder {
     }
 
     /**
-     * Updates all message numbers according to the specified arguments.
-     * Used when message metadata is removed from the list.
+     * Updates all message numbers according to the specified arguments. Used when message metadata
+     * is removed from the list.
+     * 
      * @param startIndex anything greater than (or equal to) the start index is affected
      * @param delta amount to adjust relevant message numbers by
      */
     private void updateMessageNumbers(final int startIndex, final int delta) {
         for (Iterator i = getDocument().getRootElement().getChildren(
-                MetaMessageImpl.ELEMENT_MESSAGE, namespace).iterator();
-                i.hasNext();) {
+                MetaMessageImpl.ELEMENT_MESSAGE, namespace).iterator(); i
+                .hasNext();) {
             Element messageElement = (Element) i.next();
-            int messageNumber = Integer.parseInt(messageElement.getAttributeValue(MetaMessageImpl.ATTRIBUTE_MESSAGE_NUMBER));
+            int messageNumber = Integer
+                    .parseInt(messageElement
+                            .getAttributeValue(MetaMessageImpl.ATTRIBUTE_MESSAGE_NUMBER));
             if (messageNumber >= startIndex) {
-                messageElement.setAttribute(MetaMessageImpl.ATTRIBUTE_MESSAGE_NUMBER, String.valueOf(messageNumber + delta));
+                messageElement.setAttribute(
+                        MetaMessageImpl.ATTRIBUTE_MESSAGE_NUMBER, String
+                                .valueOf(messageNumber + delta));
             }
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.MetaFolder#allocateUid(net.fortuna.mstor.MetaMessage)
      */
     public final long allocateUid(MetaMessage message) throws IOException {
@@ -240,6 +276,7 @@ public class MetaFolderImpl extends DocumentBinding implements MetaFolder {
 
     /**
      * Returns the element storing the last allocated message UID.
+     * 
      * @return
      */
     private Element getLastUidElement() {
@@ -252,15 +289,17 @@ public class MetaFolderImpl extends DocumentBinding implements MetaFolder {
         }
         return lastUidElement;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.MetaFolder#getLastUid()
      */
     public final long getLastUid() {
         Element lastUidElement = getLastUidElement();
         return Long.parseLong(lastUidElement.getText());
     }
-    
+
     /**
      * @param uid
      */
@@ -269,8 +308,10 @@ public class MetaFolderImpl extends DocumentBinding implements MetaFolder {
         lastUidElement.setText(String.valueOf(uid));
         save();
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.MetaFolder#getUidValidity()
      */
     public final long getUidValidity() throws IOException {
@@ -278,8 +319,8 @@ public class MetaFolderImpl extends DocumentBinding implements MetaFolder {
                 ELEMENT_UID_VALIDITY, namespace);
         if (uidValidityElement == null) {
             uidValidityElement = new Element(ELEMENT_UID_VALIDITY, namespace);
-            uidValidityElement.setText(
-                    String.valueOf(UID_VALIDITY_GENERATOR.nextInt(Integer.MAX_VALUE)));
+            uidValidityElement.setText(String.valueOf(UID_VALIDITY_GENERATOR
+                    .nextInt(Integer.MAX_VALUE)));
             getDocument().getRootElement().addContent(uidValidityElement);
             save();
         }

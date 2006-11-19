@@ -24,7 +24,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -42,7 +42,7 @@ import org.jdom.Namespace;
  * @author Ben Fortuna
  */
 public abstract class ElementBinding extends XmlBinding {
-    
+
     protected Element element;
 
     /**
@@ -62,9 +62,9 @@ public abstract class ElementBinding extends XmlBinding {
     }
 
     /**
-     * Returns the specified child element of the element associated with this
-     * meta message. If the child does not exist it is created and added to the
-     * message element.
+     * Returns the specified child element of the element associated with this meta message. If the
+     * child does not exist it is created and added to the message element.
+     * 
      * @param name name of the child element
      * @return a JDOM element
      */

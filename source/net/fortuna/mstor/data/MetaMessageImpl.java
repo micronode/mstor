@@ -24,7 +24,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -59,7 +59,7 @@ import org.jdom.Namespace;
 
 /**
  * A JDOM-based implementation of a meta message.
- * 
+ *
  * @author benfortuna
  */
 public class MetaMessageImpl extends ElementBinding implements MetaMessage {
@@ -85,47 +85,45 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
     private static final String ELEMENT_REPLIED = "replied";
 
     private static final String ELEMENT_FORWARDED = "forwarded";
-    
+
     private static final String META_DATE_PATTERN = "EEE MMM d HH:mm:ss yyyy";
-    
+
     private static final DateFormat MESSAGE_DATE_FORMAT = new SimpleDateFormat(
             META_DATE_PATTERN, Locale.US);
 
     private Log log = LogFactory.getLog(MetaMessageImpl.class);
 
     private MetaFolder folder;
-    
+
     /**
-     * Constructs a new meta message instance based on a new JDOM element with
-     * the specified message id.
-     * 
-     * @param messageId
-     *            the message id of the new meta message
+     * Constructs a new meta message instance based on a new JDOM element with the specified message
+     * id.
+     *
+     * @param messageId the message id of the new meta message
      */
     public MetaMessageImpl(final int messageNumber, final MetaFolder folder,
             final Namespace namespace) {
-        
+
         this(new Element(ELEMENT_MESSAGE, namespace).setAttribute(
-                    ATTRIBUTE_MESSAGE_NUMBER, String.valueOf(messageNumber)),
-                    folder, namespace);
+                ATTRIBUTE_MESSAGE_NUMBER, String.valueOf(messageNumber)),
+                folder, namespace);
     }
 
     /**
-     * Constructs a new meta message instance based on the specified JDOM
-     * element.
-     * 
-     * @param element
-     *            a JDOM element for the meta message
+     * Constructs a new meta message instance based on the specified JDOM element.
+     *
+     * @param element a JDOM element for the meta message
      */
     public MetaMessageImpl(final Element element, final MetaFolder folder,
             final Namespace namespace) {
-        
+
         super(element, namespace);
         this.folder = folder;
     }
 
     /**
      * Returns the underlying JDOM element.
+     * 
      * @return a JDOM element
      */
     protected final Element getElement() {
@@ -134,18 +132,22 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
 
     /*
      * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.MetaMessage#getMessageNumber()
      */
     public final int getMessageNumber() {
         try {
             return Integer.parseInt(element
                     .getAttributeValue(ATTRIBUTE_MESSAGE_NUMBER));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             return 0;
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.MetaMessage#getReceived()
      */
     public final Date getReceived() {
@@ -161,7 +163,9 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.MetaMessage#setReceived(java.util.Date)
      */
     public final void setReceived(final Date date) {
@@ -171,7 +175,9 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.MetaMessage#getForwarded()
      */
     public final Date getForwarded() {
@@ -187,7 +193,9 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.MetaMessage#setForwarded(java.util.Date)
      */
     public final void setForwarded(final Date date) {
@@ -197,7 +205,9 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.MetaMessage#getReplied()
      */
     public final Date getReplied() {
@@ -213,7 +223,9 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.MetaMessage#setReplied(java.util.Date)
      */
     public final void setReplied(final Date date) {
@@ -223,7 +235,9 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.MetaMessage#isExpunged()
      */
     public final boolean isExpunged() {
@@ -237,7 +251,9 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
         return false;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.MetaMessage#setExpunged(boolean)
      */
     public final void setExpunged(final boolean flag) {
@@ -245,7 +261,9 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
         expunged.setText(String.valueOf(flag));
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.MetaMessage#getFlags()
      */
     public final Flags getFlags() {
@@ -255,19 +273,26 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
             Element flag = (Element) i.next();
             if ("answered".equals(flag.getName())) {
                 flags.add(Flags.Flag.ANSWERED);
-            } else if ("deleted".equals(flag.getName())) {
+            }
+            else if ("deleted".equals(flag.getName())) {
                 flags.add(Flags.Flag.DELETED);
-            } else if ("draft".equals(flag.getName())) {
+            }
+            else if ("draft".equals(flag.getName())) {
                 flags.add(Flags.Flag.DRAFT);
-            } else if ("flagged".equals(flag.getName())) {
+            }
+            else if ("flagged".equals(flag.getName())) {
                 flags.add(Flags.Flag.FLAGGED);
-            } else if ("recent".equals(flag.getName())) {
+            }
+            else if ("recent".equals(flag.getName())) {
                 flags.add(Flags.Flag.RECENT);
-            } else if ("seen".equals(flag.getName())) {
+            }
+            else if ("seen".equals(flag.getName())) {
                 flags.add(Flags.Flag.SEEN);
-            } else if ("user".equals(flag.getName())) {
+            }
+            else if ("user".equals(flag.getName())) {
                 flags.add(Flags.Flag.USER);
-            } else {
+            }
+            else {
                 // user flag..
                 flags.add(flag.getName().replaceAll(SPACE_SUBSTITUTE, " "));
             }
@@ -275,7 +300,9 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
         return flags;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.MetaMessage#setFlags(javax.mail.Flags)
      */
     public final void setFlags(final Flags flags) {
@@ -285,17 +312,23 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
             Element flag = null;
             if (Flags.Flag.ANSWERED.equals(flags.getSystemFlags()[i])) {
                 flag = new Element("answered");
-            } else if (Flags.Flag.DELETED.equals(flags.getSystemFlags()[i])) {
+            }
+            else if (Flags.Flag.DELETED.equals(flags.getSystemFlags()[i])) {
                 flag = new Element("deleted");
-            } else if (Flags.Flag.DRAFT.equals(flags.getSystemFlags()[i])) {
+            }
+            else if (Flags.Flag.DRAFT.equals(flags.getSystemFlags()[i])) {
                 flag = new Element("draft");
-            } else if (Flags.Flag.FLAGGED.equals(flags.getSystemFlags()[i])) {
+            }
+            else if (Flags.Flag.FLAGGED.equals(flags.getSystemFlags()[i])) {
                 flag = new Element("flagged");
-            } else if (Flags.Flag.RECENT.equals(flags.getSystemFlags()[i])) {
+            }
+            else if (Flags.Flag.RECENT.equals(flags.getSystemFlags()[i])) {
                 flag = new Element("recent");
-            } else if (Flags.Flag.SEEN.equals(flags.getSystemFlags()[i])) {
+            }
+            else if (Flags.Flag.SEEN.equals(flags.getSystemFlags()[i])) {
                 flag = new Element("seen");
-            } else if (Flags.Flag.USER.equals(flags.getSystemFlags()[i])) {
+            }
+            else if (Flags.Flag.USER.equals(flags.getSystemFlags()[i])) {
                 flag = new Element("user");
             }
             flagsElement.addContent(flag);
@@ -304,7 +337,8 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
         for (int i = 0; i < flags.getUserFlags().length; i++) {
             // XML node names cannot have spaces, so for now as
             // a workaround replace spaces with underscore..
-            String flag = flags.getUserFlags()[i].replaceAll(" ", SPACE_SUBSTITUTE);
+            String flag = flags.getUserFlags()[i].replaceAll(" ",
+                    SPACE_SUBSTITUTE);
             flagsElement.addContent(new Element(flag));
         }
     }
@@ -328,7 +362,7 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see net.fortuna.mstor.MetaMessage#setHeaders(javax.mail.internet.InternetHeaders)
      */
     public final void setHeaders(final InternetHeaders headers) {
@@ -337,7 +371,7 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see net.fortuna.mstor.MetaMessage#setHeaders(java.util.Enumeration)
      */
     public final void setHeaders(final Enumeration headers) {
@@ -352,33 +386,37 @@ public class MetaMessageImpl extends ElementBinding implements MetaMessage {
                 }
             }
             catch (IllegalNameException ine) {
-                log.warn("Invalid header (ignored): "
-                        + header.getName() + "=" + header.getValue());
+                log.warn("Invalid header (ignored): " + header.getName() + "="
+                        + header.getValue());
             }
             catch (IllegalDataException ide) {
-                log.warn("Invalid header (ignored): "
-                        + header.getName() + "=" + header.getValue());
+                log.warn("Invalid header (ignored): " + header.getName() + "="
+                        + header.getValue());
             }
         }
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see net.fortuna.mstor.MetaMessage#getFolder()
      */
     public final MetaFolder getFolder() {
         return folder;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.MetaMessage#getUid()
      */
     public long getUid() {
         return Long.parseLong(element.getAttributeValue(ATTRIBUTE_UID));
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.mstor.MetaMessage#setUid(long)
      */
     public void setUid(long uid) {

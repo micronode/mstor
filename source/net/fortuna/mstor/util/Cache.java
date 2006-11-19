@@ -1,6 +1,6 @@
 /*
  * $Id$
- * 
+ *
  * Created: [8/07/2004]
  *
  * Copyright (c) 2004, Ben Fortuna
@@ -24,7 +24,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -41,6 +41,7 @@ import java.util.Map.Entry;
 
 /**
  * Implements a very rudimentary cache.
+ * 
  * @author benfortuna
  */
 public class Cache extends LinkedHashMap {
@@ -58,7 +59,8 @@ public class Cache extends LinkedHashMap {
      */
     public Cache() {
         try {
-            this.maxEntries = Integer.parseInt(System.getProperty(MAX_ENTRIES_PROPERTY));
+            this.maxEntries = Integer.parseInt(System
+                    .getProperty(MAX_ENTRIES_PROPERTY));
         }
         catch (Exception e) {
             this.maxEntries = DEFAULT_MAX_ENTRIES;
@@ -67,6 +69,7 @@ public class Cache extends LinkedHashMap {
 
     /**
      * Constructor.
+     * 
      * @param maxEntries
      */
     public Cache(final int maxEntries) {
@@ -75,6 +78,7 @@ public class Cache extends LinkedHashMap {
 
     /**
      * Constructor.
+     * 
      * @param initialCapacity
      * @param maxEntries
      */
@@ -85,29 +89,34 @@ public class Cache extends LinkedHashMap {
 
     /**
      * Constructor.
+     * 
      * @param initialCapacity
      * @param loadFactor
      * @param maxEntries
      */
-    public Cache(final int initialCapacity, final float loadFactor, final int maxEntries) {
+    public Cache(final int initialCapacity, final float loadFactor,
+            final int maxEntries) {
         super(initialCapacity, loadFactor);
         this.maxEntries = maxEntries;
     }
 
     /**
      * Constructor.
+     * 
      * @param initialCapacity
      * @param loadFactor
      * @param accessOrder
      * @param maxEntries
      */
-    public Cache(final int initialCapacity, final float loadFactor, final boolean accessOrder, final int maxEntries) {
+    public Cache(final int initialCapacity, final float loadFactor,
+            final boolean accessOrder, final int maxEntries) {
         super(initialCapacity, loadFactor, accessOrder);
         this.maxEntries = maxEntries;
     }
 
     /**
      * Constructor.
+     * 
      * @param m
      * @param maxEntries
      */
@@ -116,7 +125,9 @@ public class Cache extends LinkedHashMap {
         this.maxEntries = maxEntries;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.util.LinkedHashMap#removeEldestEntry(java.util.Map.Entry)
      */
     protected final boolean removeEldestEntry(final Entry entry) {
