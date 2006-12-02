@@ -132,6 +132,20 @@ public class MStorStore extends Store {
     }
 
     /**
+     * Close all open folders to release resources.
+     * @see javax.mail.Service#close()
+     */
+    public synchronized void close() throws MessagingException {
+        Folder[] folders = getDefaultFolder().list();
+        for (int i = 0; i < folders.length; i++) {
+            if (folders[i].isOpen()) {
+                folders[i].close(false);
+            }
+        }
+        super.close();
+    }
+    
+    /**
      * @return Returns the metaEnabled.
      */
     public final boolean isMetaEnabled() {

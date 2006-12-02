@@ -128,6 +128,9 @@ public class MStorFolder extends Folder implements UIDFolder {
 
         // automatically close (release resources) when the
         // store is closed..
+        // XXX: This will not work as connection events are queued and not
+        // guaranteed for delivery prior to completion of store.close()..
+        /*
         store.addConnectionListener(new ConnectionListener() {
 
             public final void closed(final ConnectionEvent e) {
@@ -147,6 +150,7 @@ public class MStorFolder extends Folder implements UIDFolder {
             public final void opened(final ConnectionEvent e) {
             }
         });
+        */
     }
 
     /*
