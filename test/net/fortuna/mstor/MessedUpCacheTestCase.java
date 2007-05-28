@@ -20,16 +20,20 @@ import junit.framework.TestCase;
 public class MessedUpCacheTestCase extends TestCase {
     
     private static Random random;
+    
     private Store store;
 
     public void setUp() throws MessagingException, MalformedURLException {
+
+        File testDir = new File(System.getProperty("java.io.tmpdir"),
+                "mstor_test" + File.separator + getName());
         
-        new File("tmp/INBOX").delete();
-        new File("tmp/INBOX.emf").delete();
+        new File(testDir, "INBOX").delete();
+        new File(testDir, "INBOX.emf").delete();
         
         Properties mailSessionProps  = new Properties();
         Session mailSession = Session.getDefaultInstance(mailSessionProps);
-        String destination="mstor://"+(new File("tmp").toURL());
+        String destination="mstor://"+(testDir.toURL());
         store=mailSession.getStore(new URLName(destination));
         store.connect();
     }
