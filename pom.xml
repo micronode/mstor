@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>modularity-parent</artifactId>
 		<groupId>net.modularity</groupId>
-		<version>1.0</version>
+		<version>1.0.1-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.fortuna</groupId>
@@ -11,7 +11,8 @@
 	<name>mstor</name>
 	<version>0.9.10-SNAPSHOT</version>
 	<description>
-		A JavaMail local store provider based on the mbox email storage format
+		A JavaMail local store provider based on the mbox email storage
+		format
 	</description>
 	<url>http://mstor.sourceforge.net</url>
 	<issueManagement>
@@ -29,7 +30,9 @@
 		<connection>
 			scm:cvs:pserver:anonymous:@mstor.cvs.sourceforge.net:/cvsroot/mstor:mstor
 		</connection>
-		<developerConnection>scm:cvs:ext:fortuna@mstor.cvs.sourceforge.net:/cvsroot/mstor:mstor</developerConnection>
+		<developerConnection>
+			scm:cvs:ext:fortuna@mstor.cvs.sourceforge.net:/cvsroot/mstor:mstor
+		</developerConnection>
 		<url>http://mstor.cvs.sourceforge.net/mstor</url>
 	</scm>
 	<build>
@@ -76,6 +79,15 @@
 						<descriptor>etc/src-assembly.xml</descriptor>
 					</descriptors>
 				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>attached</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
@@ -142,6 +154,10 @@
 					<minSeverity>info</minSeverity>
 					<comparisonVersion>0.9.9</comparisonVersion>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</reporting>
