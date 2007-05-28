@@ -52,7 +52,6 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.UIDFolder;
 import javax.mail.event.ConnectionEvent;
-import javax.mail.event.ConnectionListener;
 import javax.mail.event.FolderEvent;
 
 import net.fortuna.mstor.data.MboxFile;
@@ -670,6 +669,9 @@ public class MStorFolder extends Folder implements UIDFolder {
 
         // notify listeners..
         notifyMessageRemovedListeners(true, deleted);
+        
+        // reset cache..
+        messageCache = null;
 
         return deleted;
     }
