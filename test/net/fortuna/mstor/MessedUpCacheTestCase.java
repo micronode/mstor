@@ -19,18 +19,20 @@ import junit.framework.TestCase;
 
 public class MessedUpCacheTestCase extends TestCase {
     
+    private File testDir;
+    
     private static Random random;
     
     private Store store;
 
+    /**
+     * @throws MessagingException
+     * @throws MalformedURLException
+     */
     public void setUp() throws MessagingException, MalformedURLException {
-
-        File testDir = new File(System.getProperty("java.io.tmpdir"),
+        testDir = new File(System.getProperty("java.io.tmpdir"),
                 "mstor_test" + File.separator + getName());
-        
-        new File(testDir, "INBOX").delete();
-        new File(testDir, "INBOX.emf").delete();
-        
+
         Properties mailSessionProps  = new Properties();
         Session mailSession = Session.getDefaultInstance(mailSessionProps);
         String destination="mstor://"+(testDir.toURL());
@@ -38,6 +40,19 @@ public class MessedUpCacheTestCase extends TestCase {
         store.connect();
     }
     
+    /**
+     * @throws Exception
+     */
+    protected void tearDown() throws Exception {
+        new File(testDir, "INBOX").delete();
+        new File(testDir, "INBOX.emf").delete();
+        super.tearDown();
+    }
+    
+    /**
+     * @return
+     * @throws MessagingException
+     */
     public static MimeMessage generateMessage() throws MessagingException {
         MimeMessage mm = new MimeMessage((Session) null);
         int r = getRandom().nextInt() % 100000;
@@ -54,6 +69,9 @@ public class MessedUpCacheTestCase extends TestCase {
         return mm;
     }
     
+    /**
+     * @return
+     */
     protected static synchronized Random getRandom() {
         if (random == null) {
             random = new Random();
@@ -62,6 +80,9 @@ public class MessedUpCacheTestCase extends TestCase {
 
     }
     
+    /**
+     * @throws MessagingException
+     */
     public void testMessedUpCache() throws MessagingException {
         Folder inbox=store.getFolder("INBOX");
         inbox.create(Folder.HOLDS_MESSAGES);
@@ -79,5 +100,4 @@ public class MessedUpCacheTestCase extends TestCase {
         assertEquals(2, inbox.getMessageCount());
         inbox.close(true);
     }
-
 }
