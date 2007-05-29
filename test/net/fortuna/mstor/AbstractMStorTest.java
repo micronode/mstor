@@ -41,6 +41,8 @@ import java.io.FileFilter;
 import java.io.IOException;
 import java.util.Properties;
 
+import javax.mail.Folder;
+import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.URLName;
 
@@ -52,6 +54,7 @@ import org.apache.commons.io.filefilter.NotFileFilter;
 
 /**
  * Abstract base class for MStor unit tests. Provides setup of a mail store.
+ * 
  * @author Ben Fortuna
  */
 public abstract class AbstractMStorTest extends TestCase {
@@ -66,6 +69,8 @@ public abstract class AbstractMStorTest extends TestCase {
 
     protected MStorStore store;
 
+    private String testFolderName;
+
     /**
      * @param source
      * @throws IOException
@@ -78,22 +83,25 @@ public abstract class AbstractMStorTest extends TestCase {
      * @param source
      * @throws IOException
      */
-    public AbstractMStorTest(String method, File source, Properties props) throws IOException {
+    public AbstractMStorTest(String method, File source, Properties props)
+            throws IOException {
         super(method);
         this.source = source;
         this.sessionProps = props;
+        this.testFolderName = source.getName();
     }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see junit.framework.TestCase#setUp()
      */
     protected void setUp() throws Exception {
         super.setUp();
         if (sessionProps != null) {
             session = Session.getDefaultInstance(sessionProps);
-        } else {
+        }
+        else {
             session = Session.getDefaultInstance(new Properties());
         }
         testDir = createTestHierarchy(source);
@@ -104,16 +112,40 @@ public abstract class AbstractMStorTest extends TestCase {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see junit.framework.TestCase#tearDown()
      */
     protected void tearDown() throws Exception {
-        super.tearDown();
+        /*
+        Folder[] folders = store.getDefaultFolder().list();
+        for (int i = 0; i < folders.length; i++) {
+            if (folders[i].isOpen()) {
+                folders[i].close(false);
+            }
+        }
+        */
         if (store != null && store.isConnected()) {
             store.close();
             store = null;
         }
         FileUtils.deleteDirectory(testDir);
+        super.tearDown();
+    }
+
+    /**
+     * @return
+     */
+    protected File getTestFile() {
+        return source;
+    }
+
+    /**
+     * @return
+     */
+    protected Folder getTestFolder(int mode) throws MessagingException {
+        Folder folder = store.getFolder(testFolderName);
+        folder.open(mode);
+        return folder;
     }
 
     /**
@@ -123,7 +155,7 @@ public abstract class AbstractMStorTest extends TestCase {
     private File createTestHierarchy(File source) throws IOException {
         File testDir = new File(System.getProperty("java.io.tmpdir"),
                 "mstor_test" + File.separator + getName());
-        
+
         if (source.isDirectory()) {
             FileUtils.copyDirectory(source, testDir);
         }
@@ -132,13 +164,14 @@ public abstract class AbstractMStorTest extends TestCase {
         }
         return testDir;
     }
-    
+
     /**
      * @return
      */
     protected static File[] getSamples() {
-        return new File("etc/samples").listFiles(
-                (FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
+        return new File("etc/samples")
+                .listFiles((FileFilter) new NotFileFilter(
+                        DirectoryFileFilter.INSTANCE));
     }
 
     /**
