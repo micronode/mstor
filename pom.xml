@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<artifactId>modularity-parent</artifactId>
 		<groupId>net.modularity</groupId>
@@ -9,7 +9,7 @@
 	<groupId>net.fortuna</groupId>
 	<artifactId>mstor</artifactId>
 	<name>mstor</name>
-	<version>0.9.10-SNAPSHOT</version>
+	<version>0.9.10</version>
 	<description>
 		A JavaMail local store provider based on the mbox email storage
 		format
@@ -34,7 +34,8 @@
 			scm:cvs:ext:fortuna@mstor.cvs.sourceforge.net:/cvsroot/mstor:mstor
 		</developerConnection>
 		<url>http://mstor.cvs.sourceforge.net/mstor</url>
-	</scm>
+	  <tag>mstor-0_9_10</tag>
+  </scm>
 	<build>
 		<sourceDirectory>source</sourceDirectory>
 		<testSourceDirectory>test</testSourceDirectory>
