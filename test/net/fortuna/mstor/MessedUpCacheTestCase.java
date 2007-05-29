@@ -15,6 +15,8 @@ import javax.mail.URLName;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.commons.io.FileUtils;
+
 import junit.framework.TestCase;
 
 public class MessedUpCacheTestCase extends TestCase {
@@ -35,8 +37,9 @@ public class MessedUpCacheTestCase extends TestCase {
 
         Properties mailSessionProps  = new Properties();
         Session mailSession = Session.getDefaultInstance(mailSessionProps);
-        String destination="mstor://"+(testDir.toURL());
-        store=mailSession.getStore(new URLName(destination));
+        URLName storeUrl = new URLName("mstor:" + testDir.getPath());
+//        String destination="mstor://"+(testDir.toURL());
+        store = mailSession.getStore(storeUrl);
         store.connect();
     }
     
@@ -46,6 +49,7 @@ public class MessedUpCacheTestCase extends TestCase {
     protected void tearDown() throws Exception {
         new File(testDir, "INBOX").delete();
         new File(testDir, "INBOX.emf").delete();
+        FileUtils.deleteDirectory(testDir);
         super.tearDown();
     }
     
