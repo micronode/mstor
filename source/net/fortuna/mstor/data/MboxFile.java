@@ -353,7 +353,7 @@ public class MboxFile {
                     // preserve the end of the buffer as it may contain
                     // part of a From_ pattern..
                     // offset += cb.limit() - FROM__PATTERN.length();
-                    offset += bufferSize - FROM__PATTERN.length();
+                    offset += bufferSize - FROM__PATTERN.length() + 1;
 
                     bufferSize = (int) Math.min(getChannel().size() - offset,
                             DEFAULT_BUFFER_SIZE);
