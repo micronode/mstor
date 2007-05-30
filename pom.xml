@@ -78,7 +78,7 @@
 				<executions>
 					<execution>
 						<id>make-assembly</id>
-						<phase>deploy</phase>
+						<phase>site-deploy</phase>
 						<goals>
 							<goal>attached</goal>
 						</goals>
