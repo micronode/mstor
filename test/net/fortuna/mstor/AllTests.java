@@ -60,6 +60,7 @@ public class AllTests extends TestSuite {
         // javamail..
         suite.addTest(MStorStoreTest.suite());
         suite.addTest(MStorFolderTest.suite());
+        suite.addTest(UIDFolderTest.suite());
 
         // mbox..
         suite.addTestSuite(MboxEncoderTest.class);
