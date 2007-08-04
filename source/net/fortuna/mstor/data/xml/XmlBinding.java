@@ -61,4 +61,11 @@ public abstract class XmlBinding {
     public XmlBinding(final Namespace namespace) {
         this.namespace = namespace;
     }
+
+    /**
+     * @return the namespace
+     */
+    public final Namespace getNamespace() {
+        return namespace;
+    }
 }

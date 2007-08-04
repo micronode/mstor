@@ -49,26 +49,30 @@ import org.jdom.output.XMLOutputter;
 /**
  * @author Ben Fortuna
  */
-public abstract class DocumentBinding extends XmlBinding {
+public class DocumentBinding extends XmlBinding {
 
     private File file;
 
     private Document document;
+    
+    private String rootElementName;
 
     /**
      * @param file
      */
-    public DocumentBinding(final File file) {
+    public DocumentBinding(final File file, String rootElementName) {
         this.file = file;
+        this.rootElementName = rootElementName;
     }
 
     /**
      * @param file
      * @param namespace
      */
-    public DocumentBinding(final File file, final Namespace namespace) {
+    public DocumentBinding(final File file, final Namespace namespace, String rootElementName) {
         super(namespace);
         this.file = file;
+        this.rootElementName = rootElementName;
     }
 
     /**
@@ -78,7 +82,7 @@ public abstract class DocumentBinding extends XmlBinding {
      * @throws JDOMException thrown if the specified file is not a valid XML document
      * @throws IOException thrown if an error occurs reading the specified file
      */
-    protected final Document getDocument() {
+    public final Document getDocument() {
         if (document == null) {
             try {
                 SAXBuilder builder = new SAXBuilder();
@@ -87,17 +91,12 @@ public abstract class DocumentBinding extends XmlBinding {
             catch (Exception e) {
                 // create an empty document if unable to read
                 // from filesystem..
-                document = new Document(new Element(getRootElementName(),
+                document = new Document(new Element(rootElementName,
                         namespace));
             }
         }
         return document;
     }
-
-    /**
-     * @return
-     */
-    protected abstract String getRootElementName();
 
     /*
      * (non-Javadoc)

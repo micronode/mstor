@@ -41,7 +41,7 @@ import org.jdom.Namespace;
 /**
  * @author Ben Fortuna
  */
-public abstract class ElementBinding extends XmlBinding {
+public class ElementBinding extends XmlBinding {
 
     protected Element element;
 
@@ -68,12 +68,19 @@ public abstract class ElementBinding extends XmlBinding {
      * @param name name of the child element
      * @return a JDOM element
      */
-    protected final Element getElement(final String name) {
+    public final Element getElement(final String name) {
         Element child = element.getChild(name, namespace);
         if (child == null) {
             child = new Element(name, namespace);
             element.addContent(child);
         }
         return child;
+    }
+
+    /**
+     * @return the element
+     */
+    public final Element getElement() {
+        return element;
     }
 }
