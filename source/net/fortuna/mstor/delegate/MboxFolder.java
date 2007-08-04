@@ -294,17 +294,6 @@ public class MboxFolder extends AbstractFolderDelegate {
                 messages[i].writeTo(out);
                 mbox.appendMessage(out.toByteArray());
 
-                // create metadata..
-//                if (mStore.isMetaEnabled()) {
-//                    MessageDelegate messageMeta = getMeta().getMessage(messages[i]);
-//                    if (messageMeta != null) {
-//                        messageMeta.setReceived(received);
-//                        messageMeta.setFlags(messages[i].getFlags());
-//                        messageMeta.setHeaders(messages[i].getAllHeaders());
-//                        getMeta().allocateUid(messageMeta);
-//                    }
-//                }
-
                 // prune messages as we go to allow for garbage
                 // collection..
                 messages[i] = null;
@@ -313,16 +302,6 @@ public class MboxFolder extends AbstractFolderDelegate {
                 throw new MessagingException("Error appending message [" + i + "]", e);
             }
         }
-
-        // save metadata..
-//        if (mStore.isMetaEnabled()) {
-//            try {
-//                getMeta().save();
-//            }
-//            catch (Exception e) {
-//                log.error("Error ocurred saving metadata", e);
-//            }
-//        }
 
         // if mbox is not really open, ensure it is closed again..
         if (mbox != null && folderClosed) {

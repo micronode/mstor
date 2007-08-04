@@ -164,11 +164,6 @@ public interface FolderDelegate {
      * @throws MessagingException
      */
     void expunge(Message[] deleted) throws MessagingException;
-    
-    /**
-     * @param name The name to set.
-     */
-//    void setName(String name);
 
     /**
      * Returns message delegate corresponding to the specified message id. If no delegate exists a
@@ -178,34 +173,6 @@ public interface FolderDelegate {
      * @return
      */
     MessageDelegate getMessage(int messageNumber) throws DelegateException;
-
-    /**
-     * Adds the specified message delegate.
-     * 
-     * @param message
-     */
-//    void addMessage(MessageDelegate message) throws Exception;
-
-    /**
-     * Removes the message delegate corresponding to the specified message number.
-     * 
-     * @param messageNumber the number of the message delegate to remove
-     * @return the removed message delegate
-     */
-//    MessageDelegate removeMessage(int messageNumber) throws Exception;
-
-    /**
-     * Removes the message delegate corresponding to the specified message numbers.
-     * 
-     * @param messageNumbers an array of numbers of the message delegate to remove
-     * @return an array of the removed message delegates
-     */
-//    MessageDelegate[] removeMessages(int[] messageNumber) throws Exception;
-
-    /**
-     * Persist unsaved changes.
-     */
-//    void save();
 
     /**
      * Retrieves the last allocated message UID for the folder.

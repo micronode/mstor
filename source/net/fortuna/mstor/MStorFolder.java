@@ -61,32 +61,10 @@ import net.fortuna.mstor.util.Cache;
  */
 public class MStorFolder extends Folder implements UIDFolder {
 
-//    private static final String DIR_EXTENSION = ".sbd";
-
-//    private static final int DEFAULT_BUFFER_SIZE = 1024;
-
-//    private Log log = LogFactory.getLog(MStorFolder.class);
-
-    /**
-     * Indicates whether this folder holds messages or other folders.
-     */
-//    private int type;
-
     /**
      * Indicates whether this folder is open.
      */
     private boolean open;
-
-    /**
-     * The file this folder is associated with.
-     */
-//    private File file;
-
-    /**
-     * An mbox file where the folder holds messages. This variable is not applicable (and therefore
-     * not initialised) for folders that hold other folders.
-     */
-//    private MboxFile mbox;
 
     /**
      * A delegate supporting additional functions not inherently supported by {@link Folder}.
@@ -109,15 +87,6 @@ public class MStorFolder extends Folder implements UIDFolder {
     public MStorFolder(final MStorStore store, final FolderDelegate delegate) {
         super(store);
         this.mStore = store;
-        /*
-        this.file = file;
-        if (file.isDirectory()) {
-            type = HOLDS_FOLDERS;
-        }
-        else {
-            type = HOLDS_FOLDERS | HOLDS_MESSAGES;
-        }
-        */
         this.delegate = delegate;
 
         // automatically close (release resources) when the
@@ -433,75 +402,6 @@ public class MStorFolder extends Folder implements UIDFolder {
         assertExists();
 
         delegate.appendMessages(messages);
-        
-        /*
-        Date received = new Date();
-        ByteArrayOutputStream out = new ByteArrayOutputStream(
-                DEFAULT_BUFFER_SIZE);
-
-        // Messages may be appended to a closed folder. So if the folder is closed,
-        // create a temporary reference to the mbox file to append messages..
-        if (mbox == null) {
-            openMbox(MboxFile.READ_WRITE);
-        }
-
-        for (int i = 0; i < messages.length; i++) {
-            try {
-                out.reset();
-
-                if (CapabilityHints.VALUE_MOZILLA_COMPATIBILITY_ENABLED
-                        .equals(CapabilityHints
-                                .getHint(CapabilityHints.KEY_MOZILLA_COMPATIBILITY))) {
-
-                    messages[i].setHeader("X-Mozilla-Status", "0000");
-                    messages[i].setHeader("X-Mozilla-Status-2", "00000000");
-                }
-
-                messages[i].writeTo(out);
-                mbox.appendMessage(out.toByteArray());
-
-                // create metadata..
-                if (mStore.isMetaEnabled()) {
-                    MessageDelegate messageMeta = getMeta().getMessage(messages[i]);
-                    if (messageMeta != null) {
-                        messageMeta.setReceived(received);
-                        messageMeta.setFlags(messages[i].getFlags());
-                        messageMeta.setHeaders(messages[i].getAllHeaders());
-                        getMeta().allocateUid(messageMeta);
-                    }
-                }
-
-                // prune messages as we go to allow for garbage
-                // collection..
-                messages[i] = null;
-            }
-            catch (Exception e) {
-                log.debug("Error appending message [" + i + "]", e);
-                throw new MessagingException("Error appending message [" + i
-                        + "]", e);
-            }
-        }
-
-        // save metadata..
-        if (mStore.isMetaEnabled()) {
-            try {
-                getMeta().save();
-            }
-            catch (Exception e) {
-                log.error("Error ocurred saving metadata", e);
-            }
-        }
-
-        // if mbox is not really open, ensure it is closed again..
-        if (mbox != null && !isOpen()) {
-            try {
-                closeMbox();
-            }
-            catch (IOException ioe) {
-                throw new MessagingException("Error appending messages", ioe);
-            }
-        }
-        */
 
         // notify listeners..
         notifyMessageAddedListeners(messages);
@@ -534,36 +434,6 @@ public class MStorFolder extends Folder implements UIDFolder {
                 .toArray(new MStorMessage[deletedList.size()]);
 
         delegate.expunge(deleted);
-        
-        /*
-        int[] mboxIndices = new int[deleted.length];
-        int[] metaIndices = new int[deleted.length];
-
-        for (int i = 0; i < deleted.length; i++) {
-            // have to subtract one, because the raw storage array is 0-based,
-            // but
-            // the message numbers are 1-based
-            mboxIndices[i] = deleted[i].getMessageNumber() - 1;
-            metaIndices[i] = deleted[i].getMessageNumber();
-        }
-
-        try {
-            mbox.purge(mboxIndices);
-        }
-        catch (IOException ioe) {
-            throw new MessagingException("Error purging mbox file", ioe);
-        }
-
-        if (mStore.isMetaEnabled()) {
-            try {
-                getMeta().removeMessages(metaIndices);
-                getMeta().save();
-            }
-            catch (Exception e) {
-                throw new MessagingException("Error updating metadata", e);
-            }
-        }
-        */
 
         for (int i = 0; i < deleted.length; i++) {
             deleted[i].setExpunged(true);
@@ -587,18 +457,6 @@ public class MStorFolder extends Folder implements UIDFolder {
         }
         return messageCache;
     }
-
-    /**
-     * @return Returns the metadata for this folder.
-     */
-    /*
-    protected final FolderDelegate getMeta() {
-        if (delegate == null) {
-            delegate = mStore.getMeta(getName(), getFullName());
-        }
-        return delegate;
-    }
-    */
 
     /**
      * Check if this folder is open.
@@ -659,13 +517,6 @@ public class MStorFolder extends Folder implements UIDFolder {
     public Message[] getMessagesByUID(long start, long end)
             throws MessagingException {
 
-        /*
-        if (!mStore.isMetaEnabled()) {
-            throw new MessagingException(
-                    "Metadata must be enabled for UIDFolder support");
-        }
-        */
-
         long lastUid = end;
         if (end == LASTUID) {
             try {
@@ -713,13 +564,6 @@ public class MStorFolder extends Folder implements UIDFolder {
      * @see javax.mail.UIDFolder#getUIDValidity()
      */
     public long getUIDValidity() throws MessagingException {
-
-        /*
-        if (!mStore.isMetaEnabled()) {
-            throw new MessagingException(
-                    "Metadata must be enabled for UIDFolder support");
-        }
-        */
 
         try {
             return delegate.getUidValidity();

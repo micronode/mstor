@@ -99,11 +99,6 @@ public interface MessageDelegate {
     void setForwarded(Date forwarded);
 
     /**
-     * @return Returns the messageId. 
-     */
-//    String getMessageId();
-
-    /**
      * Returns the 1-based number of the message the delegate is associated with. If a message
      * number is not set it is assumed the message does not belong to a folder and thus has a
      * message number of zero (0).
@@ -132,13 +127,6 @@ public interface MessageDelegate {
      * @param replied The replied to set.
      */
     void setReplied(Date replied);
-
-    /**
-     * Returns the delegate folder this message belongs to.
-     *
-     * @return a folder delegate
-     */
-//    MetaFolder getFolder() throws Exception;
 
     /**
      * Returns the UID associated with the message.

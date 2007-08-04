@@ -39,7 +39,6 @@ import javax.mail.Flags;
 import javax.mail.Flags.Flag;
 import javax.mail.internet.InternetHeaders;
 
-import net.fortuna.mstor.FolderDelegate;
 import net.fortuna.mstor.MessageDelegate;
 
 /**
@@ -47,24 +46,6 @@ import net.fortuna.mstor.MessageDelegate;
  *
  */
 public abstract class AbstractMessageDelegate implements MessageDelegate {
-
-    private FolderDelegate folder;
-
-    /**
-     * @param folder
-     */
-    public AbstractMessageDelegate(FolderDelegate folder) {
-        this.folder = folder;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see net.fortuna.mstor.MetaMessage#getFolder()
-     */
-    public final FolderDelegate getFolder() {
-        return folder;
-    }
 
     /**
      * @param flagName

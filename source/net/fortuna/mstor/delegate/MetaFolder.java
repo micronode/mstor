@@ -51,8 +51,6 @@ import net.fortuna.mstor.FolderDelegate;
 import net.fortuna.mstor.MessageDelegate;
 import net.fortuna.mstor.data.xml.DocumentBinding;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
@@ -65,13 +63,13 @@ public class MetaFolder extends AbstractFolderDelegate {
 
     private static final String ELEMENT_FOLDER = "folder";
 
-    private static final String ATTRIBUTE_FOLDER_NAME = "name";
+//    private static final String ATTRIBUTE_FOLDER_NAME = "name";
 
     private static final String ELEMENT_LAST_UID = "last-uid";
 
     private static final String ELEMENT_UID_VALIDITY = "uid-validity";
 
-    private Log log = LogFactory.getLog(MetaFolder.class);
+//    private Log log = LogFactory.getLog(MetaFolder.class);
 
     public static final String FILE_EXTENSION = ".emf";
 

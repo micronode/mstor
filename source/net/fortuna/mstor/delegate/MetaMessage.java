@@ -120,7 +120,7 @@ public class MetaMessage extends AbstractMessageDelegate {
     public MetaMessage(final Element element, final MetaFolder folder,
             final Namespace namespace) {
 
-        super(folder);
+//        super(folder);
         binding = new ElementBinding(element, namespace);
         this.metaFolder = folder;
     }

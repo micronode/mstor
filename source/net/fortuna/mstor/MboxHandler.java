@@ -143,44 +143,6 @@ public class MboxHandler implements ProtocolHandler {
     }
 
     /**
-     * @return Returns the metaEnabled.
-     */
-    /*
-    public final boolean isMetaEnabled() {
-        return metaEnabled;
-    }
-    */
-
-    /**
-     * @return Returns the metadata for this folder.
-     */
-    /*
-    protected final FolderDelegate getMeta(String folderName, String path) {
-        FolderDelegate delegate = null;
-        
-        if (CapabilityHints.VALUE_METADATA_STRATEGY_JCR.equals(
-                session.getProperty(CapabilityHints.KEY_METADATA_STRATEGY))) {
-            
-            try {
-                Node folderNode = getJcrSession().getRootNode().addNode(folderName);
-                delegate = new RepositoryMetaFolder(folderNode);
-            }
-            catch (RepositoryException re) {
-                log.error("Error initialising metadata", re);
-            }
-            catch (NamingException ne) {
-                log.error("Error initialising metadata", ne);
-            }
-        }
-        else {
-            delegate = new MetaFolder(new File(path + MetaFolder.FILE_EXTENSION));
-        }
-                    
-        return delegate;
-    }
-    */
-
-    /**
      * @return
      * @throws RepositoryException
      * @throws NamingException

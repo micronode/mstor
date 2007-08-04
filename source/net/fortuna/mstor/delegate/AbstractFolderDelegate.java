@@ -37,52 +37,14 @@ package net.fortuna.mstor.delegate;
 
 import java.io.IOException;
 
-import javax.mail.MessagingException;
-
 import net.fortuna.mstor.FolderDelegate;
 import net.fortuna.mstor.MessageDelegate;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * @author Ben
  *
  */
 public abstract class AbstractFolderDelegate implements FolderDelegate {
-
-    private Log log = LogFactory.getLog(AbstractFolderDelegate.class);
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.data.MetaFolder#getMessage(javax.mail.Message)
-     */
-    /*
-    public final MessageDelegate getMessage(final Message message) {
-        if (message != null) {
-            try {
-                // String messageId = ((MimeMessage) message).getMessageID();
-                int messageNumber = message.getMessageNumber();
-
-                MessageDelegate mm = getMessage(messageNumber);
-                if (mm != null) {
-                    return mm;
-                }
-                mm = createMessage(messageNumber);
-//                mm.setFlags(message.getFlags());
-//                mm.setHeaders(message.getAllHeaders());
-                // allocate a new UID for the message..
-                allocateUid(mm);
-                return mm;
-            }
-            catch (Exception e) {
-                log.warn("Error creating metadata - no metadata available", e);
-            }
-        }
-        return null;
-    }
-    */
 
     /* (non-Javadoc)
      * @see net.fortuna.mstor.MetaFolder#allocateUid(net.fortuna.mstor.MetaMessage)
@@ -92,12 +54,8 @@ public abstract class AbstractFolderDelegate implements FolderDelegate {
         
         long uid = getLastUid() + 1;
         message.setUid(uid);
-//        try {
-            setLastUid(uid);
-//        }
-//        catch (DelegateException de) {
-//            throw new MessagingException("Error in delegate", de);
-//        }
+        setLastUid(uid);
+
         return uid;
     }
     
@@ -106,12 +64,6 @@ public abstract class AbstractFolderDelegate implements FolderDelegate {
      * @throws IOException
      */
     protected abstract void setLastUid(long uid) throws UnsupportedOperationException, DelegateException;
-
-    /**
-     * @param messageNumber
-     * @return
-     */
-//    protected abstract MessageDelegate getMessage(int messageNumber) throws DelegateException;
 
     /**
      * @param messageNumber

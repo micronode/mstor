@@ -338,10 +338,6 @@ public class MStorMessage extends MimeMessage implements Serializable, Taggable 
             catch (Exception e) {
                 log.error("Error updating expunged flag", e);
             }
-            /*
-             * try { getMeta().getFolder().save(); } catch (IOException ioe) { log.warn("Error
-             * saving metadata [" + getMeta().getMessageId() + "]", ioe); }
-             */
         }
         super.setExpunged(expunged);
     }
