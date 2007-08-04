@@ -262,15 +262,15 @@ public class MboxFile {
 
         ByteBuffer buffer = null;
         try {
-            if (CapabilityHints.getHint(CapabilityHints.KEY_MBOX_BUFFER_STRATEGY)
-                    .equals(CapabilityHints.VALUE_MBOX_BUFFER_STRATEGY_MAPPED)) {
+            if (CapabilityHints.VALUE_MBOX_BUFFER_STRATEGY_MAPPED
+                    .equals(CapabilityHints.getHint(CapabilityHints.KEY_MBOX_BUFFER_STRATEGY))) {
 
                 buffer = getChannel().map(FileChannel.MapMode.READ_ONLY,
                         position, size);
             }
             else {
-                if (CapabilityHints.getHint(CapabilityHints.KEY_MBOX_BUFFER_STRATEGY)
-                        .equals(CapabilityHints.VALUE_MBOX_BUFFER_STRATEGY_DIRECT)) {
+                if (CapabilityHints.VALUE_MBOX_BUFFER_STRATEGY_DIRECT
+                        .equals(CapabilityHints.getHint(CapabilityHints.KEY_MBOX_BUFFER_STRATEGY))) {
 
                     buffer = ByteBuffer.allocateDirect(size);
                 }
@@ -419,8 +419,8 @@ public class MboxFile {
                 size = getChannel().size() - getMessagePositions()[index];
             }
             buffer = read(position, (int) size);
-            if (CapabilityHints.getHint(CapabilityHints.KEY_MBOX_CACHE_BUFFERS)
-                    .equals(CapabilityHints.VALUE_MBOX_CACHE_BUFFERS_ENABLED)) {
+            if (CapabilityHints.VALUE_MBOX_CACHE_BUFFERS_ENABLED
+                    .equals(CapabilityHints.getHint(CapabilityHints.KEY_MBOX_CACHE_BUFFERS))) {
 
                 // add buffer to cache..
                 getMessageCache().put(new Integer(index), buffer);
