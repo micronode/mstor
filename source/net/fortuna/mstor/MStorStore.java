@@ -35,18 +35,23 @@
  */
 package net.fortuna.mstor;
 
-import java.io.File;
-
 import javax.mail.Folder;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.URLName;
 
-import net.fortuna.mstor.util.CapabilityHints;
-
 /**
- * Implementation of a javamail store for the mstor provider. Metadata is enabled by default,
+ * Implementation of a javamail store for the mstor provider. An mbox-based store
+ * would be specified with a url name as follows:
+ * 
+ * <pre>mstor:/home/user/mail/</pre>
+ * 
+ * A JCR-based store, accessible via JNDI, would have the following url structure:
+ * 
+ * <pre>mstor:jcr://user:password@localhost:1099/mail</pre>
+ * 
+ * Metadata is enabled by default,
  * however it may be disabled by specifying the following session property:
  * 
  * <pre>
@@ -58,8 +63,8 @@ import net.fortuna.mstor.util.CapabilityHints;
 public class MStorStore extends Store {
 
     public static final String INBOX = "Inbox";
-
-    private boolean metaEnabled;
+    
+    private ProtocolHandler protocolHandler;
 
     /**
      * Constructor.
@@ -69,23 +74,16 @@ public class MStorStore extends Store {
      */
     public MStorStore(final Session session, final URLName url) {
         super(session, url);
-
-        // enable metadata by default..
-        String metadataStrategy = session.getProperties().getProperty(
-                CapabilityHints.KEY_METADATA,
-                CapabilityHints.getHint(CapabilityHints.KEY_METADATA));
-
-        metaEnabled = !CapabilityHints.VALUE_METADATA_DISABLED
-                .equals(metadataStrategy);
+        protocolHandler = new MboxHandler(url, this, session);
     }
-
+    
     /*
      * (non-Javadoc)
      * 
      * @see javax.mail.Store#getDefaultFolder()
      */
     public final Folder getDefaultFolder() throws MessagingException {
-        return getFolder("");
+        return protocolHandler.getFolder("");
     }
 
     /*
@@ -97,15 +95,7 @@ public class MStorStore extends Store {
         if (!isConnected()) {
             throw new IllegalStateException("Store not connected");
         }
-
-        File file = new File(name);
-
-        // if path is not absolute use root of store to construct file..
-        if (!file.isAbsolute()) {
-            file = new File(url.getFile(), name);
-        }
-
-        return new MStorFolder(this, file);
+        return protocolHandler.getFolder(name);
     }
 
     /*
@@ -114,7 +104,7 @@ public class MStorStore extends Store {
      * @see javax.mail.Store#getFolder(javax.mail.URLName)
      */
     public final Folder getFolder(final URLName url) throws MessagingException {
-        return getFolder(url.getFile());
+        return protocolHandler.getFolder(url);
     }
 
     /*
@@ -126,9 +116,10 @@ public class MStorStore extends Store {
     /**
      * Override the superclass method to bypass authentication.
      */
-    protected final boolean protocolConnect(final String arg0, final int arg1,
-            final String arg2, final String arg3) throws MessagingException {
-        return true;
+    protected final boolean protocolConnect(final String host, final int port,
+            final String user, final String password) throws MessagingException {
+        
+        return protocolHandler.connect(host, port, user, password);
     }
 
     /**
@@ -142,13 +133,7 @@ public class MStorStore extends Store {
                 folders[i].close(false);
             }
         }
+        protocolHandler.disconnect();
         super.close();
-    }
-    
-    /**
-     * @return Returns the metaEnabled.
-     */
-    public final boolean isMetaEnabled() {
-        return metaEnabled;
     }
 }
