@@ -36,57 +36,42 @@
 package net.fortuna.mstor;
 
 import java.io.File;
-import java.util.Hashtable;
 
-import javax.jcr.Credentials;
-import javax.jcr.Repository;
-import javax.jcr.RepositoryException;
-import javax.jcr.SimpleCredentials;
 import javax.mail.AuthenticationFailedException;
 import javax.mail.Folder;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.URLName;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 
 import net.fortuna.mstor.delegate.MboxFolder;
 import net.fortuna.mstor.delegate.MetaFolder;
 import net.fortuna.mstor.util.CapabilityHints;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
+ * An mbox-based store would be specified with a url name as follows:
+ * 
+ * <pre>mstor:/home/user/mail/</pre>
+ * 
+ * Metadata is enabled by default,
+ * however it may be disabled by specifying the following session property:
+ * 
+ * <pre>
+ * mstor.meta.enabled = false
+ * </pre>
+ * 
  * @author Ben
  *
  */
-public class MboxHandler implements ProtocolHandler {
-
-    private Log log = LogFactory.getLog(MboxHandler.class);
-    
-    private URLName url;
-    
-    private MStorStore store;
-    
-    private Session session;
+public class MboxHandler extends AbstractProtocolHandler {
     
     private boolean metaEnabled;
-    
-    private Context context;
-    
-    private Repository repository;
-    
-    private javax.jcr.Session jcrSession;
     
     /**
      * @param url
      */
     public MboxHandler(URLName url, MStorStore store, Session session) {
-        this.url = url;
-        this.store = store;
-        this.session = session;
+        super(url, store);
+//        this.session = session;
         
         // enable metadata by default..
         String metadataStrategy = session.getProperties().getProperty(
@@ -112,11 +97,15 @@ public class MboxHandler implements ProtocolHandler {
      */
     public void disconnect() throws MessagingException {
         // No cleanup required..
-        if (jcrSession != null) {
-            jcrSession.logout();
-        }
     }
 
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.ProtocolHandler#getDefaultFolder()
+     */
+    public Folder getDefaultFolder() throws MessagingException {
+        return getFolder("");
+    }
+    
     /* (non-Javadoc)
      * @see net.fortuna.mstor.ProtocolHandler#getFolder(java.lang.String)
      */
@@ -140,56 +129,5 @@ public class MboxHandler implements ProtocolHandler {
      */
     public Folder getFolder(URLName url) throws MessagingException {
         return getFolder(url.getFile());
-    }
-
-    /**
-     * @return
-     * @throws RepositoryException
-     * @throws NamingException
-     */
-    private javax.jcr.Session getJcrSession() throws RepositoryException, NamingException {
-        if (jcrSession == null) {
-            if (url.getUsername() != null) {
-                Credentials credentrials = new SimpleCredentials(url.getUsername(),
-                        (url.getPassword() != null) ? url.getPassword().toCharArray() : new char[0]);
-                jcrSession = getRepository().login(credentrials);
-            }
-            else {
-                jcrSession = getRepository().login();
-            }
-        }
-        return jcrSession;
-    }
-    
-    /**
-     * @return
-     * @throws NamingException
-     */
-    private Repository getRepository() throws NamingException, RepositoryException {
-        if (repository == null) {
-            Hashtable env = new Hashtable();
-            if (url.getHost() != null) {
-                if (url.getPort() > 0) {
-                    env.put(Context.PROVIDER_URL, url.getHost() + ':' + url.getPort());
-                }
-                else {
-                    env.put(Context.PROVIDER_URL, url.getHost());
-                }
-            }
-            else {
-                env.put(Context.PROVIDER_URL, "localhost");
-            }
-            context = new InitialContext(env);
-            String repoName = new File(url.getFile()).getName();
-//            try {
-                repository = (Repository) context.lookup(repoName);
-//            }
-//            catch (NamingException ne) {
-                // bind repository..
-//                RegistryHelper.registerRepository(context, repoName, "repository.xml", new File(url.getFile(), ".metadata").getAbsolutePath(), false);
-//            }
-//            repository = (Repository) context.lookup(repoName);
-        }
-        return repository;
     }
 }
