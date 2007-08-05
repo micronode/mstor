@@ -258,7 +258,8 @@ public class RepositoryFolder extends AbstractFolderDelegate {
             return messageNode.getProperty(NodeNames.CONTENT).getStream();
         }
         catch (RepositoryException re) {
-            throw new IOException("Error retrieving message stream", re);
+            log.error("Error retrieving message stream", re);
+            throw new IOException("Error retrieving message stream: " + re.getMessage());
         }
     }
     
