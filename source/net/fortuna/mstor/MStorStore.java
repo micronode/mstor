@@ -42,22 +42,7 @@ import javax.mail.Store;
 import javax.mail.URLName;
 
 /**
- * Implementation of a javamail store for the mstor provider. An mbox-based store
- * would be specified with a url name as follows:
- * 
- * <pre>mstor:/home/user/mail/</pre>
- * 
- * A JCR-based store, accessible via JNDI, would have the following url structure:
- * 
- * <pre>mstor:jcr://user:password@localhost:1099/mail</pre>
- * 
- * Metadata is enabled by default,
- * however it may be disabled by specifying the following session property:
- * 
- * <pre>
- * mstor.meta.enabled = false
- * </pre>
- * 
+ * Implementation of a javamail store for the mstor provider.
  * @author Ben Fortuna
  */
 public class MStorStore extends Store {
@@ -74,7 +59,8 @@ public class MStorStore extends Store {
      */
     public MStorStore(final Session session, final URLName url) {
         super(session, url);
-        protocolHandler = new MboxHandler(url, this, session);
+        protocolHandler = ProtocolHandlerFactory.getInstance().create(
+                url, this, session);
     }
     
     /*
@@ -83,7 +69,10 @@ public class MStorStore extends Store {
      * @see javax.mail.Store#getDefaultFolder()
      */
     public final Folder getDefaultFolder() throws MessagingException {
-        return protocolHandler.getFolder("");
+        if (!isConnected()) {
+            throw new IllegalStateException("Store not connected");
+        }
+        return protocolHandler.getDefaultFolder();
     }
 
     /*
@@ -104,6 +93,9 @@ public class MStorStore extends Store {
      * @see javax.mail.Store#getFolder(javax.mail.URLName)
      */
     public final Folder getFolder(final URLName url) throws MessagingException {
+        if (!isConnected()) {
+            throw new IllegalStateException("Store not connected");
+        }
         return protocolHandler.getFolder(url);
     }
 
