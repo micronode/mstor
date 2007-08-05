@@ -41,7 +41,7 @@ import javax.mail.MessagingException;
 import javax.mail.URLName;
 
 /**
- * Implementors provide protocol-specific support 
+ * Implementors provide protocol-specific storage support.
  * @author Ben
  *
  */

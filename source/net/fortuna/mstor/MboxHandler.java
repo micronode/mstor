@@ -48,6 +48,8 @@ import net.fortuna.mstor.delegate.MetaFolder;
 import net.fortuna.mstor.util.CapabilityHints;
 
 /**
+ * An mbox-based protocol handler.
+ * 
  * An mbox-based store would be specified with a url name as follows:
  * 
  * <pre>mstor:/home/user/mail/</pre>

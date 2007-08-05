@@ -47,11 +47,11 @@ import java.util.Arrays;
  */
 public final class MboxEncoder {
 
-    private static final byte[] FROM__PATTERN = { '\n', '\n', 'F', 'r', 'o',
-            'm', ' ' };
+    private static final byte[] FROM__PATTERN = {'\n', '\n', 'F', 'r', 'o',
+            'm', ' '};
 
-    private static final byte[] MASKED_FROM__PATTERN = { '\n', '\n', '>', 'F',
-            'r', 'o', 'm', ' ' };
+    private static final byte[] MASKED_FROM__PATTERN = {'\n', '\n', '>', 'F',
+            'r', 'o', 'm', ' '};
 
     /**
      * Constructor made private to prevent instantiation.
@@ -80,7 +80,7 @@ public final class MboxEncoder {
                 i += MASKED_FROM__PATTERN.length - 2;
             }
             else {
-                bout.write(new byte[] { bytes[i] });
+                bout.write(new byte[] {bytes[i]});
             }
         }
         bout.close();

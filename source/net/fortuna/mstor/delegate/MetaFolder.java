@@ -339,6 +339,7 @@ public class MetaFolder extends AbstractFolderDelegate {
      * 
      * @see net.fortuna.mstor.data.MetaFolder#removeMessage(java.lang.String)
      */
+    /*
     private final MessageDelegate removeMessage(final int messageNumber) {
         for (Iterator i = binding.getDocument().getRootElement().getChildren(
                 MetaMessage.ELEMENT_MESSAGE, binding.getNamespace()).iterator(); i
@@ -355,6 +356,7 @@ public class MetaFolder extends AbstractFolderDelegate {
         }
         return null;
     }
+    */
 
     /*
      * (non-Javadoc)

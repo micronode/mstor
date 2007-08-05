@@ -118,7 +118,7 @@ public class MboxFileTest extends TestCase {
      * @throws IOException
      */
     public final void testPurge() throws IOException {
-        mbox.purge(new int[] { 1 });
+        mbox.purge(new int[] {1});
     }
 
     /*

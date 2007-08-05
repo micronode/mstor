@@ -140,8 +140,8 @@ public class MboxFile {
         /**
          * @param buffer
          */
-        public BufferInputStream(final ByteBuffer buffer) {
-            this.buffer = buffer;
+        public BufferInputStream(final ByteBuffer b) {
+            this.buffer = b;
         }
 
         /*
@@ -404,6 +404,7 @@ public class MboxFile {
      */
     public final InputStream getMessageAsStream(final int index)
             throws IOException {
+        
         ByteBuffer buffer = (ByteBuffer) getMessageCache().get(
                 new Integer(index));
 

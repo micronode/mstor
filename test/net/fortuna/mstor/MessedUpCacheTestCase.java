@@ -64,8 +64,8 @@ public class MessedUpCacheTestCase extends TestCase {
         mm.setSubject("good news" + r);
         mm.setFrom(new InternetAddress("user" + r + "@localhost"));
         mm.setRecipients(Message.RecipientType.TO,
-                new InternetAddress[] { new InternetAddress("user" + r2
-                        + "@localhost") });
+                new InternetAddress[] {new InternetAddress("user" + r2
+                        + "@localhost")});
         String text = "Hello User" + r2
                 + "!\n\nhave a nice holiday.\r\n\r\ngreetings,\nUser" + r
                 + "\n";
@@ -88,10 +88,10 @@ public class MessedUpCacheTestCase extends TestCase {
      * @throws MessagingException
      */
     public void testMessedUpCache() throws MessagingException {
-        Folder inbox=store.getFolder("INBOX");
+        Folder inbox = store.getFolder("INBOX");
         inbox.create(Folder.HOLDS_MESSAGES);
         inbox.open(Folder.READ_WRITE);
-        inbox.appendMessages(new MimeMessage[] {generateMessage(),generateMessage(),generateMessage()});
+        inbox.appendMessages(new MimeMessage[] {generateMessage(), generateMessage(), generateMessage()});
         inbox.getMessage(1).setFlag(Flags.Flag.DELETED, true);
         assertEquals(3, inbox.getMessageCount());
         inbox.close(true);

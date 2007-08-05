@@ -56,6 +56,7 @@ import javax.naming.NamingException;
 import net.fortuna.mstor.delegate.RepositoryFolder;
 
 /**
+ * Java Content Repository (JCR)-based mail storage protocol handler.
  * 
  * A JCR-based store, accessible via JNDI, would have the following url structure:
  * 
