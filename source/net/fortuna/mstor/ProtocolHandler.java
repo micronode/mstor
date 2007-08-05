@@ -65,6 +65,12 @@ public interface ProtocolHandler {
     void disconnect() throws MessagingException;
     
     /**
+     * @return
+     * @throws MessagingException
+     */
+    Folder getDefaultFolder() throws MessagingException;
+    
+    /**
      * @param name
      * @return
      * @throws MessagingException
