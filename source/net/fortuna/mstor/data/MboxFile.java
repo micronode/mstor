@@ -570,8 +570,9 @@ public class MboxFile {
         // release system resources..
         close();
 
-        File tempFile = new File(file.getParent(), file.getName() + "."
-                + System.currentTimeMillis());
+        File tempFile = new File(System.getProperty("java.io.tmpdir"),
+                file.getName() + "." + System.currentTimeMillis());
+        
         if (!renameTo(file, tempFile)) {
             throw new IOException("Unable to rename existing file");
         }
