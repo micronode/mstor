@@ -548,8 +548,9 @@ public class MboxFile {
      */
     public final void purge(final int[] msgnums) throws IOException {
         // create a new mailbox file..
-        File newFile = new File(file.getParent(), file.getName()
-                + TEMP_FILE_EXTENSION);
+        // Create the new file in the temp directory which is always read/write
+        File newFile = new File(System.getProperty("java.io.tmpdir"),
+                file.getName() + TEMP_FILE_EXTENSION);
 
         FileOutputStream newOut = new FileOutputStream(newFile);
         FileChannel newChannel = newOut.getChannel();
@@ -570,6 +571,7 @@ public class MboxFile {
         // release system resources..
         close();
 
+        // Create the new file in the temp directory which is always read/write
         File tempFile = new File(System.getProperty("java.io.tmpdir"),
                 file.getName() + "." + System.currentTimeMillis());
         
