@@ -613,7 +613,13 @@ public class MboxFile {
                 }
                 in.close();
                 out.close();
-                success = source.delete();
+                
+                try {
+                    success = source.delete();
+                }
+                catch (Exception e) {
+                    log.warn("Error cleaning up", e);
+                }
             }
             catch (IOException ioe) {
                 log.error(
