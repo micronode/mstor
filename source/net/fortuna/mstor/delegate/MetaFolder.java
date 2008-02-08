@@ -114,10 +114,8 @@ public class MetaFolder extends AbstractFolderDelegate {
         return delegate.getType();
     }
     
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.data.MetaFolder#getName()
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.FolderDelegate#getName()
      */
     public final String getName() {
 //        return binding.getDocument().getRootElement().getAttributeValue(
@@ -276,10 +274,8 @@ public class MetaFolder extends AbstractFolderDelegate {
     }
     */
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.data.MetaFolder#getMessage(javax.mail.Message)
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.FolderDelegate#getMessage(int)
      */
     public final MessageDelegate getMessage(int messageNumber)
         throws DelegateException {
@@ -315,7 +311,7 @@ public class MetaFolder extends AbstractFolderDelegate {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.data.AbstractFolderDelegate#createMetaMessage(int)
      */
-    protected MessageDelegate createMessage(int messageNumber) {
+    protected final MessageDelegate createMessage(int messageNumber) {
         MessageDelegate delegate = new MetaMessage(messageNumber, this, binding.getNamespace());
         // only add the metadata if message is associated with folder..
         if (messageNumber > 0) {
@@ -324,12 +320,10 @@ public class MetaFolder extends AbstractFolderDelegate {
         return delegate;
     }
     
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.data.MetaFolder#addMessage(net.fortuna.mstor.data.MetaMessage)
+    /**
+     * @param message
      */
-    private final void addMessage(final MessageDelegate message) {
+    private void addMessage(final MessageDelegate message) {
         binding.getDocument().getRootElement().addContent(
                 ((MetaMessage) message).getElement());
     }
@@ -358,12 +352,11 @@ public class MetaFolder extends AbstractFolderDelegate {
     }
     */
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.MetaFolder#removeMessages(int[])
+    /**
+     * @param messages
+     * @return
      */
-    private final MessageDelegate[] removeMessages(Message[] messages) {
+    private MessageDelegate[] removeMessages(Message[] messages) {
         List metas = new ArrayList();
         int delta = 0;
         int startIndex = Integer.MAX_VALUE;
@@ -433,20 +426,16 @@ public class MetaFolder extends AbstractFolderDelegate {
         return lastUidElement;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.MetaFolder#getLastUid()
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.FolderDelegate#getLastUid()
      */
     public final long getLastUid() {
         Element lastUidElement = getLastUidElement();
         return Long.parseLong(lastUidElement.getText());
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.MetaFolder#getUidValidity()
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.FolderDelegate#getUidValidity()
      */
     public final long getUidValidity() throws UnsupportedOperationException,
         MessagingException {
@@ -470,24 +459,31 @@ public class MetaFolder extends AbstractFolderDelegate {
         return Long.parseLong(uidValidityElement.getText());
     }
 
-    /**
-     * @param uid
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.delegate.AbstractFolderDelegate#setLastUid(long)
      */
-    protected void setLastUid(long uid) throws DelegateException {
+    protected final void setLastUid(long uid) throws DelegateException {
         Element lastUidElement = getLastUidElement();
         lastUidElement.setText(String.valueOf(uid));
         save();
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.MetaFolder#save()
+    /**
+     * @throws DelegateException
      */
-    public void save() throws DelegateException {
+    public final void save() throws DelegateException {
         try {
             binding.save();
         }
         catch (IOException ioe) {
             throw new DelegateException("Error saving changes", ioe);
         }
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.FolderDelegate#getLastModified()
+     */
+    public long getLastModified() throws UnsupportedOperationException {
+        return delegate.getLastModified();
     }
 }

@@ -256,16 +256,15 @@ public class MboxFolder extends AbstractFolderDelegate {
         }
     }
     
-    /**
-     * @param index
-     * @return
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.FolderDelegate#getMessageAsStream(int)
      */
     public final InputStream getMessageAsStream(int index) throws IOException {
         return mbox.getMessageAsStream(index - 1);
     }
     
-    /**
-     * @param messages
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.FolderDelegate#appendMessages(javax.mail.Message[])
      */
     public final void appendMessages(Message[] messages) throws MessagingException {
         ByteArrayOutputStream out = new ByteArrayOutputStream(
@@ -351,9 +350,8 @@ public class MboxFolder extends AbstractFolderDelegate {
         return created;
     }
     
-    /**
-     * @param deleted
-     * @return
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.FolderDelegate#expunge(javax.mail.Message[])
      */
     public final void expunge(Message[] deleted) throws MessagingException {
         int[] mboxIndices = new int[deleted.length];
@@ -413,5 +411,12 @@ public class MboxFolder extends AbstractFolderDelegate {
     public long getUidValidity() throws UnsupportedOperationException {
         throw new UnsupportedOperationException(
                 "Mbox format does not support UID folders");
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.FolderDelegate#getLastModified()
+     */
+    public long getLastModified() throws UnsupportedOperationException {
+        return file.lastModified();
     }
 }

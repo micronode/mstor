@@ -197,4 +197,11 @@ public interface FolderDelegate {
      */
     long getUidValidity() throws UnsupportedOperationException,
         MessagingException;
+    
+    /**
+     * Returns the last modification timestamp of this folder.
+     * @return
+     * @throws UnsupportedOperationException
+     */
+    long getLastModified() throws UnsupportedOperationException;
 }

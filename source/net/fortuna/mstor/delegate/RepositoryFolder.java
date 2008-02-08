@@ -96,7 +96,7 @@ public class RepositoryFolder extends AbstractFolderDelegate {
     }
     
     /* (non-Javadoc)
-     * @see net.fortuna.mstor.MetaFolder#getName()
+     * @see net.fortuna.mstor.FolderDelegate#getName()
      */
     public String getName() {
         try {
@@ -342,7 +342,7 @@ public class RepositoryFolder extends AbstractFolderDelegate {
     }
     
     /* (non-Javadoc)
-     * @see net.fortuna.mstor.MetaFolder#getLastUid()
+     * @see net.fortuna.mstor.FolderDelegate#getLastUid()
      */
     public long getLastUid() {
         try {
@@ -361,7 +361,7 @@ public class RepositoryFolder extends AbstractFolderDelegate {
     }
 
     /* (non-Javadoc)
-     * @see net.fortuna.mstor.MetaFolder#getUidValidity()
+     * @see net.fortuna.mstor.FolderDelegate#getUidValidity()
      */
     public long getUidValidity() {
         try {
@@ -371,5 +371,12 @@ public class RepositoryFolder extends AbstractFolderDelegate {
             log.error("Error retreiving UID validity", re);
         }
         return -1;
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.FolderDelegate#getLastModified()
+     */
+    public long getLastModified() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
     }
 }
