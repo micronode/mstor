@@ -108,8 +108,10 @@ public class MboxFileTest extends TestCase {
 
             assertNotNull(buffer);
 
-            log.info("Message [" + i + "]\n=================\n"
-                    + new String(buffer));
+            if (log.isDebugEnabled()) {
+                log.debug("Message [" + i + "]\n=================\n"
+                        + new String(buffer));
+            }
         }
     }
 
@@ -155,7 +157,8 @@ public class MboxFileTest extends TestCase {
     public static Test suite() {
 
         TestSuite suite = new TestSuite();
-
+        
+//        suite.addTest(new MboxFileTest("testGetMessageCount", "/tmp/Inbox"));
         File[] testFiles = new File("etc/samples")
                 .listFiles((FileFilter) new NotFileFilter(
                         DirectoryFileFilter.INSTANCE));
