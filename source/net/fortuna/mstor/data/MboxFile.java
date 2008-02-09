@@ -52,6 +52,7 @@ import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
+import java.nio.InvalidMarkException;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
@@ -110,6 +111,8 @@ public class MboxFile {
      */
     private static final String FROM__PATTERN = "\n" + FROM__PREFIX;
 
+    private static final Pattern FROM__LINE_PATTERN = Pattern.compile("^" + FROM__PREFIX + ".*\\n", Pattern.UNIX_LINES);
+    
     /**
      * A pattern representing the masked format of all message content matching the "From_" line
      * pattern.
@@ -419,7 +422,17 @@ public class MboxFile {
             else {
                 size = getChannel().size() - getMessagePositions()[index];
             }
+            
             buffer = read(position, (int) size);
+            
+            // adjust position to exclude the From_ line..
+            Matcher matcher = FROM__LINE_PATTERN.matcher(decoder.decode(buffer));
+            if (matcher.find()) {
+                buffer.rewind();
+                buffer.position(buffer.position() + matcher.end());
+                buffer.mark();
+            }
+            
             if (CapabilityHints.VALUE_MBOX_CACHE_BUFFERS_ENABLED
                     .equals(CapabilityHints.getHint(CapabilityHints.KEY_MBOX_CACHE_BUFFERS))) {
 
@@ -427,8 +440,12 @@ public class MboxFile {
                 getMessageCache().put(new Integer(index), buffer);
             }
         }
-        else {
-            // rewind for a re-read of buffer data..
+        
+        // rewind for a re-read of buffer data..
+        try {
+            buffer.reset();
+        }
+        catch (InvalidMarkException ime) {
             buffer.rewind();
         }
         return new BufferInputStream(buffer);
