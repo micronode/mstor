@@ -52,7 +52,7 @@ public class ProtocolHandlerFactory {
      */
     public ProtocolHandler create(URLName url, MStorStore store, Session session) {
         if (url.getHost() != null) {
-            return new RepositoryHandler(url, store, session);
+            return new RepositoryHandler(url, store);
         }
         return new MboxHandler(url, store, session);
     }

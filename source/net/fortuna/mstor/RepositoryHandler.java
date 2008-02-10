@@ -47,7 +47,6 @@ import javax.jcr.Workspace;
 import javax.mail.AuthenticationFailedException;
 import javax.mail.Folder;
 import javax.mail.MessagingException;
-import javax.mail.Session;
 import javax.mail.URLName;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -71,6 +70,9 @@ public class RepositoryHandler extends AbstractProtocolHandler {
 
     public static final String NAMESPACE_URL = "http://mstor.sourceforge.net/mstor/1.0";
 
+    /**
+     * Constants defining node names.
+     */
     public static class NodeNames {
         
         // folder-specific nodes..
@@ -86,6 +88,9 @@ public class RepositoryHandler extends AbstractProtocolHandler {
         public static final String FLAG = NAMESPACE + ':' + "flag";
     }
 
+    /**
+     * Constants defining property names.
+     */
     public static class PropertyNames {
         
         public static final String NAME = NAMESPACE + ':' + "name";
@@ -123,7 +128,7 @@ public class RepositoryHandler extends AbstractProtocolHandler {
      * @param store
      * @param session
      */
-    public RepositoryHandler(URLName url, MStorStore store, Session session) {
+    public RepositoryHandler(URLName url, MStorStore store) {
         super(url, store);
     }
     
