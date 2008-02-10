@@ -251,6 +251,12 @@ public class MetaFolder extends AbstractFolderDelegate {
     public void expunge(Message[] deleted) throws MessagingException {
         delegate.expunge(deleted);
         removeMessages(deleted);
+        try {
+            save();
+        }
+        catch (DelegateException de) {
+            throw new MessagingException("Error saving changes", de);
+        }
     }
     
     /**
@@ -358,8 +364,7 @@ public class MetaFolder extends AbstractFolderDelegate {
      */
     private MessageDelegate[] removeMessages(Message[] messages) {
         List metas = new ArrayList();
-        int delta = 0;
-        int startIndex = Integer.MAX_VALUE;
+
         for (Iterator i = binding.getDocument().getRootElement().getChildren(
                 MetaMessage.ELEMENT_MESSAGE, binding.getNamespace()).iterator(); i
                 .hasNext();) {
@@ -371,20 +376,15 @@ public class MetaFolder extends AbstractFolderDelegate {
 
             for (int n = 0; n < messages.length; n++) {
                 if (messages[n].getMessageNumber() == messageNumber) {
-                    binding.getDocument().getRootElement()
-                            .removeContent(messageElement);
+                    i.remove();
                     metas.add(new MetaMessage(messageElement, this,
                             binding.getNamespace()));
-                    delta--;
-                    if (messageNumber < startIndex) {
-                        startIndex = messageNumber;
-                    }
+                    updateMessageNumbers(messageNumber, -1);
+                    break;
                 }
             }
-            updateMessageNumbers(startIndex, delta);
-            return (MetaMessage[]) metas.toArray(new MetaMessage[metas.size()]);
         }
-        return null;
+        return (MetaMessage[]) metas.toArray(new MetaMessage[metas.size()]);
     }
 
     /**
