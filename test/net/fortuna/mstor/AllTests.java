@@ -57,9 +57,13 @@ public class AllTests extends TestSuite {
     public static TestSuite suite() throws IOException {
         TestSuite suite = new TestSuite();
 
+        // handlers..
+        suite.addTestSuite(ProtocolHandlerFactoryTest.class);
+        
         // javamail..
         suite.addTest(MStorStoreTest.suite());
         suite.addTest(MStorFolderTest.suite());
+        suite.addTest(MStorMessageTest.suite());
         suite.addTest(UIDFolderTest.suite());
 
         // mbox..
