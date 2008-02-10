@@ -175,10 +175,8 @@ public class MStorMessage extends MimeMessage implements Serializable, Taggable 
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.mail.internet.MimePart#getAllHeaderLines()
+    /* (non-Javadoc)
+     * @see javax.mail.internet.MimeMessage#getAllHeaderLines()
      */
     public final Enumeration getAllHeaderLines() throws MessagingException {
         InternetHeaders headers = getHeaders();
@@ -189,10 +187,8 @@ public class MStorMessage extends MimeMessage implements Serializable, Taggable 
         return super.getAllHeaderLines();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.mail.Part#getAllHeaders()
+    /* (non-Javadoc)
+     * @see javax.mail.internet.MimeMessage#getAllHeaders()
      */
     public final Enumeration getAllHeaders() throws MessagingException {
         InternetHeaders headers = getHeaders();
@@ -203,100 +199,88 @@ public class MStorMessage extends MimeMessage implements Serializable, Taggable 
         return super.getAllHeaders();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.mail.internet.MimePart#getHeader(java.lang.String, java.lang.String)
+    /* (non-Javadoc)
+     * @see javax.mail.internet.MimeMessage#getHeader(java.lang.String, java.lang.String)
      */
-    public final String getHeader(final String arg0, final String arg1)
+    public final String getHeader(final String name, final String delimiter)
             throws MessagingException {
         
         InternetHeaders headers = getHeaders();
         if (headers != null) {
-            return headers.getHeader(arg0, arg1);
+            return headers.getHeader(name, delimiter);
         }
         checkParse();
-        return super.getHeader(arg0, arg1);
+        return super.getHeader(name, delimiter);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.mail.Part#getHeader(java.lang.String)
+    /* (non-Javadoc)
+     * @see javax.mail.internet.MimeMessage#getHeader(java.lang.String)
      */
-    public final String[] getHeader(final String arg0)
+    public final String[] getHeader(final String name)
             throws MessagingException {
         
         InternetHeaders headers = getHeaders();
         if (headers != null) {
-            return headers.getHeader(arg0);
+            return headers.getHeader(name);
         }
         checkParse();
-        return super.getHeader(arg0);
+        return super.getHeader(name);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.mail.internet.MimePart#getMatchingHeaderLines(java.lang.String[])
+    /* (non-Javadoc)
+     * @see javax.mail.internet.MimeMessage#getMatchingHeaderLines(java.lang.String[])
      */
-    public final Enumeration getMatchingHeaderLines(final String[] arg0)
+    public final Enumeration getMatchingHeaderLines(final String[] names)
             throws MessagingException {
         
         InternetHeaders headers = getHeaders();
         if (headers != null) {
-            return headers.getMatchingHeaderLines(arg0);
+            return headers.getMatchingHeaderLines(names);
         }
         checkParse();
-        return super.getMatchingHeaderLines(arg0);
+        return super.getMatchingHeaderLines(names);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.mail.Part#getMatchingHeaders(java.lang.String[])
+    /* (non-Javadoc)
+     * @see javax.mail.internet.MimeMessage#getMatchingHeaders(java.lang.String[])
      */
-    public final Enumeration getMatchingHeaders(final String[] arg0)
+    public final Enumeration getMatchingHeaders(final String[] names)
             throws MessagingException {
         
         InternetHeaders headers = getHeaders();
         if (headers != null) {
-            return headers.getMatchingHeaders(arg0);
+            return headers.getMatchingHeaders(names);
         }
         checkParse();
-        return super.getMatchingHeaders(arg0);
+        return super.getMatchingHeaders(names);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.mail.internet.MimePart#getNonMatchingHeaderLines(java.lang.String[])
+    /* (non-Javadoc)
+     * @see javax.mail.internet.MimeMessage#getNonMatchingHeaderLines(java.lang.String[])
      */
-    public final Enumeration getNonMatchingHeaderLines(final String[] arg0)
+    public final Enumeration getNonMatchingHeaderLines(final String[] names)
             throws MessagingException {
         
         InternetHeaders headers = getHeaders();
         if (headers != null) {
-            return headers.getNonMatchingHeaderLines(arg0);
+            return headers.getNonMatchingHeaderLines(names);
         }
         checkParse();
-        return super.getNonMatchingHeaderLines(arg0);
+        return super.getNonMatchingHeaderLines(names);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.mail.Part#getNonMatchingHeaders(java.lang.String[])
+    /* (non-Javadoc)
+     * @see javax.mail.internet.MimeMessage#getNonMatchingHeaders(java.lang.String[])
      */
-    public final Enumeration getNonMatchingHeaders(final String[] arg0)
+    public final Enumeration getNonMatchingHeaders(final String[] names)
             throws MessagingException {
         
         InternetHeaders headers = getHeaders();
         if (headers != null) {
-            return headers.getNonMatchingHeaders(arg0);
+            return headers.getNonMatchingHeaders(names);
         }
         checkParse();
-        return super.getNonMatchingHeaders(arg0);
+        return super.getNonMatchingHeaders(names);
     }
 
     /**
