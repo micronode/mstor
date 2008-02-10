@@ -359,7 +359,7 @@ public class MStorFolder extends Folder implements UIDFolder {
         assertOpen();
 
         if (index <= 0 || index > getMessageCount()) {
-            throw new IndexOutOfBoundsException("Message does not exist");
+            throw new IndexOutOfBoundsException("Message [" + index + "] does not exist");
         }
 
         if ((getType() & HOLDS_MESSAGES) == 0) {
