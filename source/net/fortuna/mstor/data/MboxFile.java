@@ -103,15 +103,20 @@ public class MboxFile {
     /**
      * A pattern representing the format of the "From_" line for the first message in an mbox file.
      */
-    private static final String INITIAL_FROM__PATTERN = FROM__PREFIX + ".*";
+    private static final Pattern INITIAL_FROM__PATTERN = Pattern.compile("^" + FROM__PREFIX + ".*",
+            Pattern.DOTALL);
 
     /**
      * A pattern representing the format of all "From_" lines except for the first message in an
      * mbox file.
      */
-    private static final String FROM__PATTERN = "\n" + FROM__PREFIX;
+    private static final Pattern FROM__PATTERN = Pattern.compile("\\n" + FROM__PREFIX);
 
-    private static final Pattern FROM__LINE_PATTERN = Pattern.compile("^" + FROM__PREFIX + ".*\\n", Pattern.UNIX_LINES);
+    /**
+     * Pattern used to match the From_ line within a message buffer.
+     */
+    private static final Pattern FROM__LINE_PATTERN = Pattern.compile("^" + FROM__PREFIX + ".*\\n",
+            Pattern.UNIX_LINES);
     
     /**
      * A pattern representing the masked format of all message content matching the "From_" line
@@ -120,7 +125,7 @@ public class MboxFile {
     // private static final String MASKED_FROM__PATTERN = "\n>" + FROM__PREFIX;
     private static final String FROM__DATE_PATTERN = "EEE MMM d HH:mm:ss yyyy";
 
-    private static final int DEFAULT_BUFFER_SIZE = 1024;
+    private static final int DEFAULT_BUFFER_SIZE = 8192;
 
     // Charset and decoder for ISO-8859-15
     // private static Charset charset =
@@ -322,27 +327,23 @@ public class MboxFile {
             log.debug("Buffer [" + cs + "]");
 
             // check that first message is correct..
-            if (Pattern.compile(INITIAL_FROM__PATTERN, Pattern.DOTALL).matcher(
-                    cs).matches()) {
+            if (INITIAL_FROM__PATTERN.matcher(cs).matches()) {
                 // debugging..
                 log.debug("Matched first message..");
 
                 posList.add(new Long(0));
             }
 
-            Pattern fromPattern = Pattern.compile(FROM__PATTERN);
-
             // indicates the offset of the current buffer..
             long offset = 0;
 
             for (;;) {
                 // Matcher matcher = fromPattern.matcher(buffer.asCharBuffer());
-                Matcher matcher = fromPattern.matcher(cs);
+                Matcher matcher = FROM__PATTERN.matcher(cs);
 
                 while (matcher.find()) {
                     // debugging..
-                    log.debug("Found match at [" + (offset + matcher.start())
-                            + "]");
+                    log.debug("Found match at [" + (offset + matcher.start()) + "]");
 
                     // add one (1) to position to account for newline..
                     posList.add(new Long(offset + matcher.start() + 1));
@@ -356,7 +357,7 @@ public class MboxFile {
                     // preserve the end of the buffer as it may contain
                     // part of a From_ pattern..
                     // offset += cb.limit() - FROM__PATTERN.length();
-                    offset += bufferSize - FROM__PATTERN.length() + 1;
+                    offset += bufferSize - FROM__PREFIX.length() - 2;
 
                     bufferSize = (int) Math.min(getChannel().size() - offset,
                             DEFAULT_BUFFER_SIZE);
@@ -692,8 +693,7 @@ public class MboxFile {
             // check that first message is correct..
             String line = reader.readLine();
 
-            return Pattern.compile(INITIAL_FROM__PATTERN, Pattern.DOTALL)
-                    .matcher(line).matches();
+            return INITIAL_FROM__PATTERN.matcher(line).matches();
         }
         catch (Exception e) {
             Log log = LogFactory.getLog(MboxFile.class);
