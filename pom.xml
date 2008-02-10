@@ -6,10 +6,10 @@
 	<parent>
 		<artifactId>modularity-parent</artifactId>
 		<groupId>net.modularity</groupId>
-		<version>1.0.2-SNAPSHOT</version>
+		<version>1.0.3-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>net.fortuna</groupId>
+	<groupId>net.fortuna.mstor</groupId>
 	<artifactId>mstor</artifactId>
 	<name>mstor</name>
 	<version>0.9.11-SNAPSHOT</version>
@@ -39,6 +39,17 @@
 		</developerConnection>
 		<url>http://mstor.cvs.sourceforge.net/mstor/mstor</url>
 	</scm>
+
+	<distributionManagement>
+		<relocation>
+			<groupId>net.fortuna.mstor</groupId>
+			<artifactId>mstor</artifactId>
+			<version>0.9.11</version>
+			<message>
+				Updated group id to conform with maven standards
+			</message>
+		</relocation>
+	</distributionManagement>
 
 	<build>
 		<sourceDirectory>source</sourceDirectory>
@@ -159,12 +170,12 @@
 			<scope>test</scope>
 		</dependency>
 		<!-- 
-		<dependency>
+			<dependency>
 			<groupId>net.sf.jsr107cache</groupId>
 			<artifactId>jsr107cache</artifactId>
 			<version>1.0</version>
-		</dependency>
-		 -->
+			</dependency>
+		-->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
