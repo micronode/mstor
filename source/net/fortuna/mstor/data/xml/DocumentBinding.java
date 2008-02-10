@@ -98,17 +98,15 @@ public class DocumentBinding extends XmlBinding {
         return document;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.data.MetaFolder#save()
+    /**
+     * @throws IOException
      */
     public final void save() throws IOException {
         XMLOutputter xmlOut = new XMLOutputter(Format.getPrettyFormat());
         xmlOut.getFormat().setIndent("  ");
         FileOutputStream fout = new FileOutputStream(file);
         try {
-            xmlOut.output(document, fout);
+            xmlOut.output(getDocument(), fout);
         }
         finally {
             fout.close();
