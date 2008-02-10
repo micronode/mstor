@@ -39,9 +39,13 @@ public class MStorFolderTest extends AbstractMStorTest {
     private static Properties p = new Properties();
     static {
         // disable metadata..
-        p.setProperty(CapabilityHints.KEY_METADATA,
-                CapabilityHints.VALUE_METADATA_DEFAULT);
+//        p.setProperty(CapabilityHints.KEY_METADATA,
+//                CapabilityHints.VALUE_METADATA_ENABLED);
 
+        p.setProperty(CapabilityHints.KEY_METADATA, CapabilityHints.VALUE_METADATA_ENABLED);
+//        p.setProperty(CapabilityHints.KEY_METADATA_STRATEGY,
+//                CapabilityHints.VALUE_METADATA_STRATEGY_JCR);
+        
         CapabilityHints.setHint(CapabilityHints.KEY_MBOX_BUFFER_STRATEGY,
                 CapabilityHints.VALUE_MBOX_BUFFER_STRATEGY_DIRECT);
         CapabilityHints.setHint(CapabilityHints.KEY_MBOX_CACHE_BUFFERS,
@@ -155,7 +159,7 @@ public class MStorFolderTest extends AbstractMStorTest {
     public final void testGetMessageCount() throws MessagingException {
         Folder inbox = getTestFolder(Folder.READ_ONLY);
         // assertEquals(INITIAL_MESSAGE_COUNT, inbox.getMessageCount());
-        assertTrue(inbox.getMessageCount() > 0);
+        assertTrue("Inbox has no messages", inbox.getMessageCount() > 0);
 
         if ("contenttype-semis.mbox".equals(getTestFile().getName())) {
             assertEquals(1, inbox.getMessageCount());
@@ -355,14 +359,16 @@ public class MStorFolderTest extends AbstractMStorTest {
         }
         copy.open(Folder.READ_WRITE);
 
+        int copyMessageCount = copy.getMessageCount();
+        
         for (int i = 1; i <= inbox.getMessageCount(); i++) {
             Message message = inbox.getMessage(i);
 
             log.info("Message subject: [" + message.getSubject() + "]");
-            inbox.copyMessages(new Message[] { message }, copy);
+            inbox.copyMessages(new Message[] {message}, copy);
         }
 
-        assertEquals(inbox.getMessageCount(), copy.getMessageCount());
+        assertEquals(copyMessageCount + inbox.getMessageCount(), copy.getMessageCount());
 
         // XXX: Temporarily close manually..
         assertTrue(inbox.isOpen());
