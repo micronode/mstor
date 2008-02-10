@@ -349,10 +349,16 @@ public class MetaMessage extends AbstractMessageDelegate {
             catch (IllegalNameException ine) {
                 log.warn("Invalid header (ignored): " + header.getName() + "="
                         + header.getValue());
+                if (log.isDebugEnabled()) {
+                    log.debug(ine);
+                }
             }
             catch (IllegalDataException ide) {
                 log.warn("Invalid header (ignored): " + header.getName() + "="
                         + header.getValue());
+                if (log.isDebugEnabled()) {
+                    log.debug(ide);
+                }
             }
         }
     }
