@@ -39,13 +39,12 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.Properties;
 
-import org.apache.commons.io.filefilter.DirectoryFileFilter;
-import org.apache.commons.io.filefilter.NotFileFilter;
-
 import junit.framework.TestSuite;
-import net.fortuna.mstor.MStorStoreTest;
 import net.fortuna.mstor.UIDFolderTest;
 import net.fortuna.mstor.util.CapabilityHints;
+
+import org.apache.commons.io.filefilter.DirectoryFileFilter;
+import org.apache.commons.io.filefilter.NotFileFilter;
 
 /**
  * @author Ben
@@ -57,7 +56,7 @@ public class MboxUIDFolderTest extends TestSuite {
      * @return
      */
     public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
+        TestSuite suite = new TestSuite(MboxUIDFolderTest.class.getSimpleName());
         
         Properties p = new Properties();
         p.setProperty(CapabilityHints.KEY_METADATA, CapabilityHints.VALUE_METADATA_ENABLED);

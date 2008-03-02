@@ -55,7 +55,7 @@ public class MboxMStorFolderTest extends TestSuite {
      * @return
      */
     public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
+        TestSuite suite = new TestSuite(MboxMStorFolderTest.class.getSimpleName());
         
         Properties p = new Properties();
         

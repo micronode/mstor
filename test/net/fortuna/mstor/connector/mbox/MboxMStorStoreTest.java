@@ -55,7 +55,7 @@ public class MboxMStorStoreTest extends TestSuite {
      * @return
      */
     public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
+        TestSuite suite = new TestSuite(MboxMStorStoreTest.class.getSimpleName());
         
         Properties p = new Properties();
         

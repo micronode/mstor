@@ -56,7 +56,7 @@ public class MboxTagsTermTest extends TestSuite {
      * @return
      */
     public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
+        TestSuite suite = new TestSuite(MboxTagsTermTest.class.getSimpleName());
         
         Properties p = new Properties();
         p.setProperty(CapabilityHints.KEY_METADATA, CapabilityHints.VALUE_METADATA_ENABLED);

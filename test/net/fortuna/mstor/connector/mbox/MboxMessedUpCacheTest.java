@@ -50,7 +50,7 @@ public class MboxMessedUpCacheTest extends TestSuite {
      * @return
      */
     public static TestSuite suite() {
-        TestSuite suite = new TestSuite();
+        TestSuite suite = new TestSuite(MboxMessedUpCacheTest.class.getSimpleName());
         
         Properties p = new Properties();
         suite.addTest(new MessedUpCacheTestCase("testMessedUpCache",
