@@ -92,6 +92,13 @@
 					<excludes>
 						<exclude>**/AllTests.java</exclude>
 						<exclude>**/AbstractMStorTest.java</exclude>
+						<exclude>**/MessedUpCacheTest.java</exclude>
+						<exclude>**/MStorStoreTest.java</exclude>
+						<exclude>**/MStorFolderTest.java</exclude>
+						<exclude>**/MStorMessageTest.java</exclude>
+						<exclude>**/UIDFolderTest.java</exclude>
+						<exclude>**/TagsTermTest.java</exclude>
+						<exclude>**/TagTest.java</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
