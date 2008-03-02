@@ -1,8 +1,5 @@
 package net.fortuna.mstor;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.util.Properties;
 import java.util.Random;
 
 import javax.mail.Flags;
@@ -10,47 +7,27 @@ import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
-import javax.mail.Store;
-import javax.mail.URLName;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import org.apache.commons.io.FileUtils;
-
-import junit.framework.TestCase;
-
-public class MessedUpCacheTestCase extends TestCase {
-    
-    private File testDir;
+/**
+ * @author Ben
+ *
+ */
+public class MessedUpCacheTestCase extends AbstractMStorTest {
     
     private static Random random;
-    
-    private Store store;
 
     /**
-     * @throws MessagingException
-     * @throws MalformedURLException
+     * @param method
+     * @param lifecycle
+     * @param username
+     * @param password
      */
-    public void setUp() throws MessagingException, MalformedURLException {
-        testDir = new File(System.getProperty("java.io.tmpdir"),
-                "mstor_test" + File.separator + getName());
-
-        Properties mailSessionProps  = new Properties();
-        Session mailSession = Session.getDefaultInstance(mailSessionProps);
-        URLName storeUrl = new URLName("mstor:" + testDir.getPath());
-//        String destination="mstor://"+(testDir.toURL());
-        store = mailSession.getStore(storeUrl);
-        store.connect();
-    }
-    
-    /**
-     * @throws Exception
-     */
-    protected void tearDown() throws Exception {
-        new File(testDir, "INBOX").delete();
-        new File(testDir, "INBOX.emf").delete();
-        FileUtils.deleteDirectory(testDir);
-        super.tearDown();
+    public MessedUpCacheTestCase(String method, StoreLifecycle lifecycle,
+            String username, String password) {
+        
+        super(method, lifecycle, username, password);
     }
     
     /**
@@ -89,7 +66,9 @@ public class MessedUpCacheTestCase extends TestCase {
      */
     public void testMessedUpCache() throws MessagingException {
         Folder inbox = store.getFolder("INBOX");
-        inbox.create(Folder.HOLDS_MESSAGES);
+        if (!inbox.exists()) {
+            inbox.create(Folder.HOLDS_MESSAGES);
+        }
         inbox.open(Folder.READ_WRITE);
         inbox.appendMessages(new MimeMessage[] {generateMessage(), generateMessage(), generateMessage()});
         inbox.getMessage(1).setFlag(Flags.Flag.DELETED, true);

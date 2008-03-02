@@ -35,20 +35,19 @@
  */
 package net.fortuna.mstor.search;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Store;
 import javax.mail.search.AddressStringTerm;
 import javax.mail.search.FromStringTerm;
 import javax.mail.search.OrTerm;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
-import net.fortuna.mstor.AbstractMStorTest;
+import junit.framework.TestCase;
+import net.fortuna.mstor.StoreLifecycle;
 import net.fortuna.mstor.tag.Taggable;
 import net.fortuna.mstor.tag.Tags;
 
@@ -63,23 +62,36 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
  * 
  * @author Ben Fortuna
  */
-public class TagsTermTest extends AbstractMStorTest {
+public class TagsTermTest extends TestCase {
 
     private static final Log LOG = LogFactory.getLog(TagsTermTest.class);
 
     private String tag = "Test 1";
 
-    private Folder inbox;
+//    private Folder inbox;
 
-    private String testFolder;
+//    private String testFolder;
+
+    private StoreLifecycle lifecycle;
+    
+    private Store store;
+    
+    private String username;
+    
+    private String password;
+    
+    private String[] folderNames;
 
     /**
      * Default constructor.
      */
-    public TagsTermTest(String method, File testFile) throws IOException {
-        // super(new File("etc/samples/TagsTerm"));
-        super(method, testFile);
-        testFolder = testFile.getName();
+    public TagsTermTest(String method, StoreLifecycle lifecycle,
+            String username, String password) {
+        
+        super(method);
+        this.lifecycle = lifecycle;
+        this.username = username;
+        this.password = password;
     }
 
     /*
@@ -89,12 +101,22 @@ public class TagsTermTest extends AbstractMStorTest {
      */
     protected void setUp() throws Exception {
         super.setUp();
+        lifecycle.startup();
+        store = lifecycle.getStore();
+        store.connect(username, password);
+        
+        List folderList = new ArrayList();
+        Folder[] folders = store.getDefaultFolder().list();
+        for (int i = 0; i < folders.length; i++) {
+            folderList.add(folders[i].getName());
+        }
+        folderNames = (String[]) folderList.toArray(new String[folderList.size()]);
 
-        inbox = store.getDefaultFolder().getFolder(testFolder);
-        inbox.open(Folder.READ_WRITE);
-
-        Taggable message = (Taggable) inbox.getMessage(1);
-        message.addTag(tag);
+//        inbox = store.getDefaultFolder().getFolder(testFolder);
+//        inbox.open(Folder.READ_WRITE);
+//
+//        Taggable message = (Taggable) inbox.getMessage(1);
+//        message.addTag(tag);
     }
 
     /*
@@ -103,7 +125,8 @@ public class TagsTermTest extends AbstractMStorTest {
      * @see junit.framework.TestCase#tearDown()
      */
     protected void tearDown() throws Exception {
-        inbox.close(false);
+        store.close();
+        lifecycle.shutdown();
 
         super.tearDown();
 
@@ -115,16 +138,25 @@ public class TagsTermTest extends AbstractMStorTest {
      * A unit test that tags a message and uses a search term to identify it.
      */
     public final void testTagMessage() throws MessagingException {
-        Taggable message = (Taggable) inbox.getMessage(1);
-        assertTrue(message.getTags().contains(tag));
-
-        Tags searchTags = new Tags();
-        searchTags.add(tag);
-        TagsTerm term = new TagsTerm(searchTags);
-
-        Message[] messages = inbox.search(term);
-        assertEquals(1, messages.length);
-        assertEquals(1, messages[0].getMessageNumber());
+        for (int n = 0; n < folderNames.length; n++) {
+            Folder folder = store.getFolder(folderNames[n]);
+            folder.open(Folder.READ_WRITE);
+            
+            Taggable message = (Taggable) folder.getMessage(1);
+            message.addTag(tag);
+            
+            assertTrue(message.getTags().contains(tag));
+    
+            Tags searchTags = new Tags();
+            searchTags.add(tag);
+            TagsTerm term = new TagsTerm(searchTags);
+    
+            Message[] messages = folder.search(term);
+            assertEquals(1, messages.length);
+            assertEquals(1, messages[0].getMessageNumber());
+            
+            folder.close(false);
+        }
     }
 
     /**
@@ -181,18 +213,30 @@ public class TagsTermTest extends AbstractMStorTest {
         OrTerm decoded = (OrTerm) xstream.fromXML(xml);
 
         // assertEquals(orterm.getTerms(), decoded.getTerms());
-        Message[] messages = inbox.search(decoded);
-        assertEquals(1, messages.length);
-        assertEquals(1, messages[0].getMessageNumber());
+        
+        for (int n = 0; n < folderNames.length; n++) {
+            Folder folder = store.getFolder(folderNames[n]);
+            folder.open(Folder.READ_WRITE);
 
-        TagsTerm decodedTags = (TagsTerm) decoded.getTerms()[0];
-        assertTrue(decodedTags.getTags().contains(tag));
+            Taggable message = (Taggable) folder.getMessage(1);
+            message.addTag(tag);
+            
+            Message[] messages = folder.search(decoded);
+            assertEquals(1, messages.length);
+            assertEquals(1, messages[0].getMessageNumber());
+    
+            TagsTerm decodedTags = (TagsTerm) decoded.getTerms()[0];
+            assertTrue(decodedTags.getTags().contains(tag));
+            
+            folder.close(false);
+        }
     }
 
     /**
      * @return
      * @throws IOException
      */
+    /*
     public static Test suite() throws IOException {
         TestSuite suite = new TestSuite();
 
@@ -205,4 +249,5 @@ public class TagsTermTest extends AbstractMStorTest {
         }
         return suite;
     }
+    */
 }

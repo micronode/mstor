@@ -36,21 +36,14 @@
  */
 package net.fortuna.mstor;
 
-import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
-import java.util.Properties;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.mail.Folder;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.URLName;
+import javax.mail.Store;
 
 import junit.framework.TestCase;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.DirectoryFileFilter;
-import org.apache.commons.io.filefilter.NotFileFilter;
 
 /**
  * Abstract base class for MStor unit tests. Provides setup of a mail store.
@@ -59,125 +52,52 @@ import org.apache.commons.io.filefilter.NotFileFilter;
  */
 public abstract class AbstractMStorTest extends TestCase {
 
-    private File source;
-
-    private File testDir;
-
-    private Properties sessionProps;
-
-    private Session session;
-
-    protected MStorStore store;
-
-    private String testFolderName;
+    protected StoreLifecycle lifecycle;
+    
+    protected Store store;
+    
+    protected String username;
+    
+    protected String password;
+    
+    protected String[] folderNames;
 
     /**
      * @param source
      * @throws IOException
      */
-    public AbstractMStorTest(String method, File source) throws IOException {
-        this(method, source, null);
-    }
-
-    /**
-     * @param source
-     * @throws IOException
-     */
-    public AbstractMStorTest(String method, File source, Properties props)
-            throws IOException {
+    public AbstractMStorTest(String method, StoreLifecycle lifecycle,
+            String username, String password) {
+        
         super(method);
-        this.source = source;
-        this.sessionProps = props;
-        this.testFolderName = source.getName();
+        this.lifecycle = lifecycle;
+        this.username = username;
+        this.password = password;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
     protected void setUp() throws Exception {
         super.setUp();
-        if (sessionProps != null) {
-            session = Session.getDefaultInstance(sessionProps);
+        lifecycle.startup();
+        store = lifecycle.getStore();
+        store.connect(username, password);
+        
+        List folderList = new ArrayList();
+        Folder[] folders = store.getDefaultFolder().list();
+        for (int i = 0; i < folders.length; i++) {
+            folderList.add(folders[i].getName());
         }
-        else {
-            session = Session.getDefaultInstance(new Properties());
-        }
-        testDir = createTestHierarchy(source);
-        URLName storeUrl = new URLName("mstor:" + testDir.getPath());
-        store = new MStorStore(session, storeUrl);
-        store.connect();
+        folderNames = (String[]) folderList.toArray(new String[folderList.size()]);
     }
-
-    /*
-     * (non-Javadoc)
-     * 
+    
+    /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
     protected void tearDown() throws Exception {
-        /*
-        Folder[] folders = store.getDefaultFolder().list();
-        for (int i = 0; i < folders.length; i++) {
-            if (folders[i].isOpen()) {
-                folders[i].close(false);
-            }
-        }
-        */
-        if (store != null && store.isConnected()) {
-            store.close();
-            store = null;
-        }
-        FileUtils.deleteDirectory(testDir);
+        store.close();
+        lifecycle.shutdown();
         super.tearDown();
-    }
-
-    /**
-     * @return
-     */
-    protected File getTestFile() {
-        return source;
-    }
-
-    /**
-     * @return
-     */
-    protected Folder getTestFolder(int mode) throws MessagingException {
-        Folder folder = store.getFolder(testFolderName);
-        folder.open(mode);
-        return folder;
-    }
-
-    /**
-     * @param url
-     * @return
-     */
-    private File createTestHierarchy(File source) throws IOException {
-        File testDir = new File(System.getProperty("java.io.tmpdir"),
-                "mstor_test" + File.separator + getName());
-
-        if (source.isDirectory()) {
-            FileUtils.copyDirectory(source, testDir);
-        }
-        else {
-            FileUtils.copyFileToDirectory(source, testDir);
-        }
-        return testDir;
-    }
-
-    /**
-     * @return
-     */
-    protected static File[] getSamples() {
-        return new File("etc/samples")
-                .listFiles((FileFilter) new NotFileFilter(
-                        DirectoryFileFilter.INSTANCE));
-    }
-
-    /**
-     * Overridden to return the current mbox file under test.
-     */
-    public final String getName() {
-        return super.getName() + " [" + source.getName() + "]";
     }
 }

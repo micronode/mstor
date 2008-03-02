@@ -35,17 +35,17 @@
  */
 package net.fortuna.mstor.tag;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Store;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import net.fortuna.mstor.AbstractMStorTest;
+import junit.framework.TestCase;
+import net.fortuna.mstor.StoreLifecycle;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -55,20 +55,60 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @author Ben Fortuna
  */
-public class TagTest extends AbstractMStorTest {
+public class TagTest extends TestCase {
 
     private static final Log LOG = LogFactory.getLog(TagTest.class);
 
-    private String testFolder;
+//    private String testFolder;
+
+    private StoreLifecycle lifecycle;
+    
+    private Store store;
+    
+    private String username;
+    
+    private String password;
+    
+    private String[] folderNames;
 
     /**
      * Default constructor.
      */
-    public TagTest(String method, File testFile) throws IOException {
-        // super(new File("etc/samples/Tags"));
-        super(method, testFile);
-        testFolder = testFile.getName();
+    public TagTest(String method, StoreLifecycle lifecycle,
+            String username, String password) {
+        
+        super(method);
+        this.lifecycle = lifecycle;
+        this.username = username;
+        this.password = password;
     }
+
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#setUp()
+     */
+    protected void setUp() throws Exception {
+        super.setUp();
+        lifecycle.startup();
+        store = lifecycle.getStore();
+        store.connect(username, password);
+        
+        List folderList = new ArrayList();
+        Folder[] folders = store.getDefaultFolder().list();
+        for (int i = 0; i < folders.length; i++) {
+            folderList.add(folders[i].getName());
+        }
+        folderNames = (String[]) folderList.toArray(new String[folderList.size()]);
+    }
+    
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#tearDown()
+     */
+    protected void tearDown() throws Exception {
+        store.close();
+        lifecycle.shutdown();
+        super.tearDown();
+    }
+
 
     /**
      * Logs a summary of all messages in the specified folder.
@@ -94,44 +134,49 @@ public class TagTest extends AbstractMStorTest {
      * A unit test that tags a message.
      */
     public void testTagMessage() throws MessagingException {
-        Folder inbox = store.getDefaultFolder().getFolder(testFolder);
-        inbox.open(Folder.READ_WRITE);
+        for (int n = 0; n < folderNames.length; n++) {
+            Folder folder = store.getFolder(folderNames[n]);
+            folder.open(Folder.READ_WRITE);
 
-        String tag = "Test 1";
-
-        Message message = inbox.getMessage(1);
-        Tags.addTag(tag, message);
-        assertTrue(Tags.getTags(message).contains(tag));
-
-        logMessages(inbox);
-
-        inbox.close(false);
+            String tag = "Test 1";
+    
+            Message message = folder.getMessage(1);
+            Tags.addTag(tag, message);
+            assertTrue(Tags.getTags(message).contains(tag));
+    
+            logMessages(folder);
+    
+            folder.close(false);
+        }
     }
 
     /**
      * A unit test that untags a message.
      */
     public void testUntagMessage() throws MessagingException {
-        Folder inbox = store.getDefaultFolder().getFolder(testFolder);
-        inbox.open(Folder.READ_WRITE);
+        for (int n = 0; n < folderNames.length; n++) {
+            Folder folder = store.getFolder(folderNames[n]);
+            folder.open(Folder.READ_WRITE);
 
-        String tag = "Test 1";
-
-        Message message = inbox.getMessage(1);
-        Tags.addTag(tag, message);
-        assertTrue(Tags.getTags(message).contains(tag));
-        Tags.removeTag(tag, message);
-        assertFalse(Tags.getTags(message).contains(tag));
-
-        logMessages(inbox);
-
-        inbox.close(false);
+            String tag = "Test 1";
+    
+            Message message = folder.getMessage(1);
+            Tags.addTag(tag, message);
+            assertTrue(Tags.getTags(message).contains(tag));
+            Tags.removeTag(tag, message);
+            assertFalse(Tags.getTags(message).contains(tag));
+    
+            logMessages(folder);
+    
+            folder.close(false);
+        }
     }
 
     /**
      * @return
      * @throws IOException
      */
+    /*
     public static Test suite() throws IOException {
         TestSuite suite = new TestSuite();
 
@@ -144,4 +189,5 @@ public class TagTest extends AbstractMStorTest {
         }
         return suite;
     }
+    */
 }

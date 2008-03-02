@@ -1,9 +1,9 @@
 /*
  * $Id$
  *
- * Created on 14/05/2006
+ * Created on 01/03/2008
  *
- * Copyright (c) 2005, Ben Fortuna
+ * Copyright (c) 2008, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,51 +35,26 @@
  */
 package net.fortuna.mstor;
 
-import java.io.IOException;
-
-import junit.framework.TestSuite;
-import net.fortuna.mstor.connector.ProtocolHandlerFactoryTest;
-import net.fortuna.mstor.connector.mbox.MboxMStorFolderTest;
-import net.fortuna.mstor.connector.mbox.MboxMStorMessageTest;
-import net.fortuna.mstor.connector.mbox.MboxMStorStoreTest;
-import net.fortuna.mstor.connector.mbox.MboxTagTest;
-import net.fortuna.mstor.connector.mbox.MboxTagsTermTest;
-import net.fortuna.mstor.connector.mbox.MboxUIDFolderTest;
-import net.fortuna.mstor.data.MboxEncoderTest;
-import net.fortuna.mstor.data.MboxFileTest;
-import net.fortuna.mstor.tag.TagsTest;
+import javax.mail.Store;
 
 /**
- * A suite of all unit tests.
- * 
- * @author Ben Fortuna
+ * @author Ben
+ *
  */
-public class AllTests extends TestSuite {
+public interface StoreLifecycle {
 
     /**
-     * @return a suit of unit tests.
+     * Initialise the store lifecycle.
      */
-    public static TestSuite suite() throws IOException {
-        TestSuite suite = new TestSuite();
-
-        // handlers..
-        suite.addTestSuite(ProtocolHandlerFactoryTest.class);
-        
-        // mbox connector..
-        suite.addTest(MboxMStorStoreTest.suite());
-        suite.addTest(MboxMStorFolderTest.suite());
-        suite.addTest(MboxMStorMessageTest.suite());
-        suite.addTest(MboxUIDFolderTest.suite());
-
-        // mbox..
-        suite.addTestSuite(MboxEncoderTest.class);
-        suite.addTest(MboxFileTest.suite());
-
-        // tags..
-        suite.addTestSuite(TagsTest.class);
-        suite.addTest(MboxTagTest.suite());
-        suite.addTest(MboxTagsTermTest.suite());
-
-        return suite;
-    }
+    void startup() throws Exception;
+    
+    /**
+     * Deconstruct the store lifecycle.
+     */
+    void shutdown() throws Exception;
+    
+    /**
+     * @return
+     */
+    Store getStore();
 }
