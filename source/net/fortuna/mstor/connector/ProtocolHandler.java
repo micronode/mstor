@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Created on 21/07/2007
+ * Created on 30/07/2007
  *
  * Copyright (c) 2007, Ben Fortuna
  * All rights reserved.
@@ -33,41 +33,54 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.mstor.delegate;
+package net.fortuna.mstor.connector;
 
-import java.io.IOException;
-
-import net.fortuna.mstor.FolderDelegate;
-import net.fortuna.mstor.MessageDelegate;
+import javax.mail.AuthenticationFailedException;
+import javax.mail.Folder;
+import javax.mail.MessagingException;
+import javax.mail.URLName;
 
 /**
+ * Implementors provide protocol-specific storage support.
  * @author Ben
  *
  */
-public abstract class AbstractFolderDelegate implements FolderDelegate {
+public interface ProtocolHandler {
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.MetaFolder#allocateUid(net.fortuna.mstor.MetaMessage)
+    /**
+     * @param host
+     * @param port
+     * @param user
+     * @param password
+     * @return
+     * @throws AuthenticationFailedException
+     * @throws MessagingException
      */
-    public final long allocateUid(MessageDelegate message)
-        throws UnsupportedOperationException, DelegateException {
-        
-        long uid = getLastUid() + 1;
-        message.setUid(uid);
-        setLastUid(uid);
-
-        return uid;
-    }
+    boolean connect(String host, int port, String user, String password)
+        throws AuthenticationFailedException, MessagingException;
     
     /**
-     * @param uid
-     * @throws IOException
+     * @throws MessagingException
      */
-    protected abstract void setLastUid(long uid) throws UnsupportedOperationException, DelegateException;
-
+    void disconnect() throws MessagingException;
+    
     /**
-     * @param messageNumber
      * @return
+     * @throws MessagingException
      */
-    protected abstract MessageDelegate createMessage(int messageNumber) throws DelegateException;
+    Folder getDefaultFolder() throws MessagingException;
+    
+    /**
+     * @param name
+     * @return
+     * @throws MessagingException
+     */
+    Folder getFolder(String name) throws MessagingException;
+    
+    /**
+     * @param url
+     * @return
+     * @throws MessagingException
+     */
+    Folder getFolder(URLName url) throws MessagingException;
 }

@@ -33,7 +33,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.mstor.delegate;
+package net.fortuna.mstor.connector.mbox;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -47,6 +47,8 @@ import javax.mail.Header;
 import javax.mail.Flags.Flag;
 import javax.mail.internet.InternetHeaders;
 
+import net.fortuna.mstor.connector.AbstractMessageDelegate;
+import net.fortuna.mstor.connector.DelegateException;
 import net.fortuna.mstor.data.MboxFile;
 import net.fortuna.mstor.data.xml.ElementBinding;
 

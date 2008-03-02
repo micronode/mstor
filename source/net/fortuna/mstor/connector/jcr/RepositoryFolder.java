@@ -33,7 +33,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.mstor.delegate;
+package net.fortuna.mstor.connector.jcr;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,10 +49,12 @@ import javax.jcr.query.QueryManager;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 
-import net.fortuna.mstor.FolderDelegate;
-import net.fortuna.mstor.MessageDelegate;
-import net.fortuna.mstor.RepositoryHandler.NodeNames;
-import net.fortuna.mstor.RepositoryHandler.PropertyNames;
+import net.fortuna.mstor.connector.AbstractFolderDelegate;
+import net.fortuna.mstor.connector.DelegateException;
+import net.fortuna.mstor.connector.FolderDelegate;
+import net.fortuna.mstor.connector.MessageDelegate;
+import net.fortuna.mstor.connector.jcr.RepositoryHandler.NodeNames;
+import net.fortuna.mstor.connector.jcr.RepositoryHandler.PropertyNames;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -152,7 +154,7 @@ public class RepositoryFolder extends AbstractFolderDelegate {
             return new RepositoryFolder(folderNode);
         }
         catch (RepositoryException re) {
-            log.error("Error retrieving folder parent", re);
+            log.error("Error retrieving folder [" + name + "]", re);
         }
         return null;
     }

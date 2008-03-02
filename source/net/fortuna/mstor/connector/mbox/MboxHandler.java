@@ -33,7 +33,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.mstor;
+package net.fortuna.mstor.connector.mbox;
 
 import java.io.File;
 
@@ -43,8 +43,9 @@ import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.URLName;
 
-import net.fortuna.mstor.delegate.MboxFolder;
-import net.fortuna.mstor.delegate.MetaFolder;
+import net.fortuna.mstor.MStorFolder;
+import net.fortuna.mstor.MStorStore;
+import net.fortuna.mstor.connector.AbstractProtocolHandler;
 import net.fortuna.mstor.util.CapabilityHints;
 
 /**
@@ -80,7 +81,7 @@ public class MboxHandler extends AbstractProtocolHandler {
                 CapabilityHints.KEY_METADATA,
                 CapabilityHints.getHint(CapabilityHints.KEY_METADATA));
 
-        metaEnabled = !CapabilityHints.VALUE_METADATA_DISABLED
+        metaEnabled = CapabilityHints.VALUE_METADATA_ENABLED
                 .equals(metadataStrategy);
     }
     

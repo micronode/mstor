@@ -51,7 +51,8 @@ import javax.mail.UIDFolder;
 import javax.mail.event.ConnectionEvent;
 import javax.mail.event.FolderEvent;
 
-import net.fortuna.mstor.delegate.DelegateException;
+import net.fortuna.mstor.connector.DelegateException;
+import net.fortuna.mstor.connector.FolderDelegate;
 import net.fortuna.mstor.util.Cache;
 
 /**

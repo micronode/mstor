@@ -1,9 +1,9 @@
 /*
  * $Id$
  *
- * Created on 30/07/2007
+ * Created on 01/03/2008
  *
- * Copyright (c) 2007, Ben Fortuna
+ * Copyright (c) 2008, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,54 +33,44 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.mstor;
+package net.fortuna.mstor.connector.mbox;
 
-import javax.mail.AuthenticationFailedException;
-import javax.mail.Folder;
-import javax.mail.MessagingException;
-import javax.mail.URLName;
+import java.io.File;
+import java.io.FileFilter;
+import java.util.Properties;
+
+import org.apache.commons.io.filefilter.DirectoryFileFilter;
+import org.apache.commons.io.filefilter.NotFileFilter;
+
+import junit.framework.TestSuite;
+import net.fortuna.mstor.MStorStoreTest;
 
 /**
- * Implementors provide protocol-specific storage support.
  * @author Ben
  *
  */
-public interface ProtocolHandler {
+public class MboxMStorStoreTest extends TestSuite {
 
     /**
-     * @param host
-     * @param port
-     * @param user
-     * @param password
      * @return
-     * @throws AuthenticationFailedException
-     * @throws MessagingException
      */
-    boolean connect(String host, int port, String user, String password)
-        throws AuthenticationFailedException, MessagingException;
-    
-    /**
-     * @throws MessagingException
-     */
-    void disconnect() throws MessagingException;
-    
-    /**
-     * @return
-     * @throws MessagingException
-     */
-    Folder getDefaultFolder() throws MessagingException;
-    
-    /**
-     * @param name
-     * @return
-     * @throws MessagingException
-     */
-    Folder getFolder(String name) throws MessagingException;
-    
-    /**
-     * @param url
-     * @return
-     * @throws MessagingException
-     */
-    Folder getFolder(URLName url) throws MessagingException;
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        
+        Properties p = new Properties();
+        
+        File[] samples = new File("etc/samples").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
+        //File[] samples = new File[] {new File("etc/samples/samples.mbx")};
+
+        for (int i = 0; i < samples.length; i++) {
+//            log.info("Sample [" + samples[i] + "]");
+            suite.addTest(new MStorStoreTest("testGetDefaultFolder",
+                    new MboxStoreLifecycle("testGetDefaultFolder", p, samples[i]), null, null));
+            suite.addTest(new MStorStoreTest("testGetFolderString",
+                    new MboxStoreLifecycle("testGetFolderString", p, samples[i]), null, null));
+            suite.addTest(new MStorStoreTest("testGetFolderURLName",
+                    new MboxStoreLifecycle("testGetFolderURLName", p, samples[i]), null, null));
+        }
+        return suite;
+    }
 }

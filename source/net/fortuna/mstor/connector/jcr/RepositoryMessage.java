@@ -33,7 +33,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.mstor.delegate;
+package net.fortuna.mstor.connector.jcr;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -48,8 +48,10 @@ import javax.mail.Header;
 import javax.mail.Flags.Flag;
 import javax.mail.internet.InternetHeaders;
 
-import net.fortuna.mstor.RepositoryHandler.NodeNames;
-import net.fortuna.mstor.RepositoryHandler.PropertyNames;
+import net.fortuna.mstor.connector.AbstractMessageDelegate;
+import net.fortuna.mstor.connector.DelegateException;
+import net.fortuna.mstor.connector.jcr.RepositoryHandler.NodeNames;
+import net.fortuna.mstor.connector.jcr.RepositoryHandler.PropertyNames;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

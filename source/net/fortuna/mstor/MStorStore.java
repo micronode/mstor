@@ -41,6 +41,9 @@ import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.URLName;
 
+import net.fortuna.mstor.connector.ProtocolHandler;
+import net.fortuna.mstor.connector.ProtocolHandlerFactory;
+
 /**
  * Implementation of a javamail store for the mstor provider.
  * @author Ben Fortuna

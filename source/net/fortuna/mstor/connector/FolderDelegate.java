@@ -33,7 +33,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.mstor;
+package net.fortuna.mstor.connector;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,7 +42,7 @@ import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 
-import net.fortuna.mstor.delegate.DelegateException;
+import net.fortuna.mstor.MStorFolder;
 
 /**
  * Implementors support delegation of specific functions from {@link MStorFolder}.

@@ -1,9 +1,9 @@
 /*
  * $Id$
  *
- * Created on 05/08/2007
+ * Created on 01/03/2008
  *
- * Copyright (c) 2007, Ben Fortuna
+ * Copyright (c) 2008, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,34 +33,46 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.mstor;
+package net.fortuna.mstor.connector.mbox;
 
-import javax.mail.Session;
-import javax.mail.URLName;
+import java.io.File;
+import java.io.FileFilter;
+import java.util.Properties;
+
+import junit.framework.TestSuite;
+import net.fortuna.mstor.MStorMessageTest;
+
+import org.apache.commons.io.filefilter.DirectoryFileFilter;
+import org.apache.commons.io.filefilter.NotFileFilter;
 
 /**
  * @author Ben
  *
  */
-public class ProtocolHandlerFactory {
+public class MboxMStorMessageTest extends TestSuite {
 
-    private static ProtocolHandlerFactory instance = new ProtocolHandlerFactory();
-    
     /**
-     * @param url
      * @return
      */
-    public ProtocolHandler create(URLName url, MStorStore store, Session session) {
-        if (url.getHost() != null) {
-            return new RepositoryHandler(url, store);
-        }
-        return new MboxHandler(url, store, session);
-    }
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        
+        Properties p = new Properties();
+        
+        File[] samples = new File("etc/samples").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
+        //File[] samples = new File[] {new File("etc/samples/samples.mbx")};
 
-    /**
-     * @return the instance
-     */
-    public static final ProtocolHandlerFactory getInstance() {
-        return instance;
+        for (int i = 0; i < samples.length; i++) {
+//            log.info("Sample [" + samples[i] + "]");
+            suite.addTest(new MStorMessageTest("testGetReceivedDate",
+                    new MboxStoreLifecycle("testGetReceivedDate", p, samples[i]), null, null));
+            suite.addTest(new MStorMessageTest("testSetFlag",
+                    new MboxStoreLifecycle("testSetFlag", p, samples[i]), null, null));
+            suite.addTest(new MStorMessageTest("testGetFlags",
+                    new MboxStoreLifecycle("testGetFlags", p, samples[i]), null, null));
+            suite.addTest(new MStorMessageTest("testGetAllHeaders",
+                    new MboxStoreLifecycle("testGetAllHeaders", p, samples[i]), null, null));
+        }
+        return suite;
     }
 }

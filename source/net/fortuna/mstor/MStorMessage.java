@@ -49,6 +49,7 @@ import javax.mail.Flags.Flag;
 import javax.mail.internet.InternetHeaders;
 import javax.mail.internet.MimeMessage;
 
+import net.fortuna.mstor.connector.MessageDelegate;
 import net.fortuna.mstor.tag.Taggable;
 import net.fortuna.mstor.tag.Tags;
 

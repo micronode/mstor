@@ -33,7 +33,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.mstor;
+package net.fortuna.mstor.connector.jcr;
 
 import java.io.File;
 import java.util.Hashtable;
@@ -52,7 +52,9 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import net.fortuna.mstor.delegate.RepositoryFolder;
+import net.fortuna.mstor.MStorFolder;
+import net.fortuna.mstor.MStorStore;
+import net.fortuna.mstor.connector.AbstractProtocolHandler;
 
 /**
  * Java Content Repository (JCR)-based mail storage protocol handler.
