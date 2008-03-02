@@ -93,9 +93,27 @@ public class MboxFileTest extends TestCase {
      * @throws IOException
      */
     public final void testGetMessageCount() throws IOException {
-        assertTrue(mbox.getMessageCount() >= 0);
+//        assertTrue(mbox.getMessageCount() >= 0);
+        if (testFile.getName().equals("contenttype-semis.mbox")) {
+            assertEquals(1, mbox.getMessageCount());
+        }
+        else if (testFile.getName().equals("imagined.mbox")) {
+            assertEquals(293, mbox.getMessageCount());
+        }
+        else if (testFile.getName().equals("parseexception.mbox")) {
+            assertEquals(1, mbox.getMessageCount());
+        }
+        else if (testFile.getName().equals("samples.mbx")) {
+            assertEquals(4, mbox.getMessageCount());
+        }
+        else if (testFile.getName().equals("subject-0x1f.mbox")) {
+            assertEquals(1, mbox.getMessageCount());
+        }
+        else if (testFile.getName().equals("received-0xc.mbox")) {
+            assertEquals(1, mbox.getMessageCount());
+        }
 
-        log.info("Message count: " + mbox.getMessageCount());
+//        log.info("Message count: " + mbox.getMessageCount());
     }
 
     /**
