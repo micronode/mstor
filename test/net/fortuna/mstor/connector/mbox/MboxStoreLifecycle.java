@@ -102,6 +102,9 @@ public class MboxStoreLifecycle implements StoreLifecycle {
      * @see net.fortuna.mstor.StoreLifecycle#startup()
      */
     public void startup() throws Exception {
+        // make sure test directory is clean..
+        FileUtils.deleteDirectory(testDir);
+        
         if (testFile != null) {
             if (testFile.isDirectory()) {
                 FileUtils.copyDirectory(testFile, testDir);
