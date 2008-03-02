@@ -120,7 +120,7 @@ public class MStorMessageTest extends AbstractMStorTest {
                 Message message = folder.getMessage(i);
                 for (Enumeration e = message.getAllHeaders(); e.hasMoreElements();) {
                     Header header = (Header) e.nextElement();
-                    assertFalse("From_ line returned as header", header.getName()
+                    assertFalse("From_ line returned as header [" + folder.getFullName() + "]", header.getName()
                             .startsWith("From "));
                 }
             }
