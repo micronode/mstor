@@ -51,21 +51,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.InvalidMarkException;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.CodingErrorAction;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -94,7 +87,7 @@ public class MboxFile {
     public static final String READ_WRITE = "rw";
 
     private static final String TEMP_FILE_EXTENSION = ".tmp";
-
+    
     /**
      * The prefix for all "From_" lines in an mbox file.
      */
@@ -103,27 +96,15 @@ public class MboxFile {
     /**
      * A pattern representing the format of the "From_" line for the first message in an mbox file.
      */
-    private static final Pattern INITIAL_FROM__PATTERN = Pattern.compile("^" + FROM__PREFIX + ".*",
+    private static final Pattern VALID_MBOX_PATTERN = Pattern.compile("^" + FROM__PREFIX + ".*",
             Pattern.DOTALL);
-
-    /**
-     * A pattern representing the format of all "From_" lines except for the first message in an
-     * mbox file.
-     */
-    private static final Pattern FROM__PATTERN = Pattern.compile("\\n" + FROM__PREFIX);
 
     /**
      * Pattern used to match the From_ line within a message buffer.
      */
-    private static final Pattern FROM__LINE_PATTERN = Pattern.compile("^" + FROM__PREFIX + ".*\\n",
-            Pattern.UNIX_LINES);
-    
-    /**
-     * A pattern representing the masked format of all message content matching the "From_" line
-     * pattern.
-     */
-    // private static final String MASKED_FROM__PATTERN = "\n>" + FROM__PREFIX;
-    private static final String FROM__DATE_PATTERN = "EEE MMM d HH:mm:ss yyyy";
+//    private static final Pattern FROM__LINE_PATTERN = Pattern.compile("[\\n\\n|\\r\\n\\r\\n]" + FROM__PREFIX + ".*$",
+//            Pattern.MULTILINE);
+    static final Pattern FROM__LINE_PATTERN = Pattern.compile("(\\A|\\n{2}|(\\r\\n){2})^From .*$", Pattern.MULTILINE);
 
     private static final int DEFAULT_BUFFER_SIZE = 8192;
 
@@ -138,57 +119,12 @@ public class MboxFile {
 
     private Log log = LogFactory.getLog(MboxFile.class);
 
-    /**
-     * @author Ben Fortuna
-     */
-    private class BufferInputStream extends InputStream {
-
-        private ByteBuffer buffer;
-
-        /**
-         * @param buffer
-         */
-        public BufferInputStream(final ByteBuffer b) {
-            this.buffer = b;
-        }
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see java.io.InputStream#read()
-         */
-        public synchronized int read() throws IOException {
-            if (!buffer.hasRemaining()) {
-                return -1;
-            }
-            return buffer.get();
-        }
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see java.io.InputStream#read(byte[], int, int)
-         */
-        public synchronized int read(final byte[] bytes, final int offset,
-                final int length) throws IOException {
-            int read = Math.min(length, buffer.remaining());
-            buffer.get(bytes, offset, read);
-            return read;
-        }
-    }
-
     private CharsetDecoder decoder = charset.newDecoder();
 
     private CharsetEncoder encoder = charset.newEncoder();
     {
         encoder.onUnmappableCharacter(CodingErrorAction.REPLACE);
         // decoder.onMalformedInput(CodingErrorAction.REPLACE);
-    }
-
-    private DateFormat from_DateFormat = new SimpleDateFormat(
-            FROM__DATE_PATTERN, Locale.US);
-    {
-        from_DateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 
     /**
@@ -327,26 +263,34 @@ public class MboxFile {
             log.debug("Buffer [" + cs + "]");
 
             // check that first message is correct..
-            if (INITIAL_FROM__PATTERN.matcher(cs).matches()) {
-                // debugging..
-                log.debug("Matched first message..");
-
-                posList.add(new Long(0));
-            }
+//            if (VALID_MBOX_PATTERN.matcher(cs).matches()) {
+//                // debugging..
+//                log.debug("Matched first message..");
+//
+//                posList.add(new Long(0));
+//            }
 
             // indicates the offset of the current buffer..
             long offset = 0;
 
             for (;;) {
                 // Matcher matcher = fromPattern.matcher(buffer.asCharBuffer());
-                Matcher matcher = FROM__PATTERN.matcher(cs);
+                Matcher matcher = FROM__LINE_PATTERN.matcher(cs);
 
                 while (matcher.find()) {
                     // debugging..
                     log.debug("Found match at [" + (offset + matcher.start()) + "]");
 
                     // add one (1) to position to account for newline..
-                    posList.add(new Long(offset + matcher.start() + 1));
+//                    int fromPrefixOffset = matcher.group().length() - FROM__PREFIX.length();
+//                    Matcher nlMatcher = Pattern.compile("^\\s*").matcher(matcher.group());
+//                    if (nlMatcher.find()) {
+//                        posList.add(new Long(offset + matcher.start() + nlMatcher.end())); // + fromPrefixOffset));
+//                    }
+//                    else {
+//                        posList.add(new Long(offset + matcher.start())); // + fromPrefixOffset));
+//                    }
+                    posList.add(new Long(offset + matcher.start())); // + fromPrefixOffset));
                 }
 
                 // if (offset + cb.limit() >= getChannel().size()) {
@@ -426,23 +370,37 @@ public class MboxFile {
             
             buffer = read(position, (int) size);
             
-            // adjust position to exclude the From_ line..
-            Matcher matcher = FROM__LINE_PATTERN.matcher(decoder.decode(buffer));
-            if (matcher.find()) {
-                buffer.rewind();
-                buffer.position(buffer.position() + matcher.end());
-                buffer.mark();
-            }
-            
             if (CapabilityHints.VALUE_MBOX_CACHE_BUFFERS_ENABLED
                     .equals(CapabilityHints.getHint(CapabilityHints.KEY_MBOX_CACHE_BUFFERS))) {
 
                 // add buffer to cache..
                 getMessageCache().put(new Integer(index), buffer);
             }
+            
+            // adjust position to exclude the From_ line..
+            /*
+            Matcher matcher = null;
+            if (index == 0) {
+                matcher = INITIAL_FROM__LINE_PATTERN.matcher(decoder.decode(buffer));
+                if (matcher.find()) {
+                    buffer.rewind();
+                    buffer.position(buffer.position() + matcher.end());
+                    buffer.mark();
+                }
+            }
+            else {
+                matcher = FROM__LINE_PATTERN.matcher(decoder.decode(buffer));
+                if (matcher.find()) {
+                    buffer.rewind();
+                    buffer.position(buffer.position() + matcher.end() + 1);
+                    buffer.mark();
+                }
+            }
+            */
         }
         
         // rewind for a re-read of buffer data..
+        /*
         try {
             buffer.reset();
         }
@@ -450,6 +408,8 @@ public class MboxFile {
             buffer.rewind();
         }
         return new BufferInputStream(buffer);
+        */
+        return new MessageInputStream(buffer);
     }
 
     /**
@@ -488,8 +448,10 @@ public class MboxFile {
      * @param message
      */
     public final void appendMessage(final byte[] message) throws IOException {
-        long newMessagePosition = getChannel().size();
-        appendMessage(message, getChannel());
+//        long newMessagePosition = getChannel().size();
+        
+        MessageAppender appender = new MessageAppender(getChannel());
+        long newMessagePosition = appender.appendMessage(message);
 
         // update message positions..
         if (messagePositions != null) {
@@ -499,64 +461,6 @@ public class MboxFile {
             newMessagePositions[newMessagePositions.length - 1] = newMessagePosition;
             messagePositions = newMessagePositions;
         }
-    }
-
-    /**
-     * Appends the specified message (represented by a CharSequence) to the specified channel.
-     *
-     * @param message
-     * @param channel
-     * @throws IOException
-     */
-    private void appendMessage(final byte[] message, final FileChannel channel)
-            throws IOException {
-        // ByteBuffer buffer = ByteBuffer.allocate(message.length());
-
-        /*
-         * // copy message to avoid modifying method arguments directly.. CharSequence newMessage =
-         * message.toString(); // encoder.reset(); // add ">" characters to message content matching
-         * the "From_" line pattern // to maintain integrity of mbox file.. // NOTE: This shouldn't
-         * replace any existing "From_" line as the from pattern // contains a newline.. //Pattern
-         * fromPattern = Pattern.compile("\n\r\n" + FROM_); Pattern fromPattern =
-         * Pattern.compile(FROM__PATTERN); //Matcher matcher =
-         * fromPattern.matcher(buffer.asCharBuffer()); Matcher matcher =
-         * fromPattern.matcher(newMessage); if (matcher.find()) { matcher.reset(); newMessage =
-         * matcher.replaceAll(MASKED_FROM__PATTERN); }
-         */
-
-        ByteBuffer buffer = ByteBuffer.wrap(MboxEncoder.encode(message));
-        // ByteBuffer buffer = ByteBuffer.wrap(message);
-        CharBuffer decoded = decoder.decode(buffer);
-
-        // debugging..
-        if (log.isDebugEnabled()) {
-            log.debug("Appending message [" + decoded + "]");
-        }
-
-        if (!hasFrom_Line(decoded)) {
-            // debugging..
-            if (log.isDebugEnabled()) {
-                log.debug("No From_ line found - inserting..");
-            }
-
-            // if not first message add required newlines..
-            /*
-             * if (channel.size() > 0) { channel.write(encoder.encode(CharBuffer.wrap("\r\n\r\n")),
-             * channel .size()); // encoder.encode(CharBuffer.wrap("\n\n"), buffer, false); }
-             */
-            channel.write(encoder.encode(CharBuffer.wrap(FROM__PREFIX + "- "
-                    + from_DateFormat.format(new Date()) + "\r\n")), channel
-                    .size());
-            // encoder.encode(CharBuffer.wrap(DEFAULT_FROM__LINE), buffer,
-            // false);
-        }
-        buffer.rewind();
-
-        channel.write(buffer, channel.size());
-        // encoder.encode(CharBuffer.wrap(message), buffer, true);
-        // encoder.flush(buffer);
-
-        // channel.write(buffer, channel.size());
     }
 
     /**
@@ -572,6 +476,7 @@ public class MboxFile {
 
         FileOutputStream newOut = new FileOutputStream(newFile);
         FileChannel newChannel = newOut.getChannel();
+        MessageAppender appender = new MessageAppender(newChannel);
 
         loop: for (int i = 0; i < getMessagePositions().length; i++) {
             for (int j = 0; j < msgnums.length; j++) {
@@ -581,7 +486,7 @@ public class MboxFile {
                 }
             }
             // append current message to new file..
-            appendMessage(getMessage(i), newChannel);
+            appender.appendMessage(getMessage(i));
         }
         // ensure new file is properly written..
         newOut.close();
@@ -668,18 +573,6 @@ public class MboxFile {
     }
 
     /**
-     * Indicates whether the specified CharSequence representation of a message contains a "From_"
-     * line.
-     *
-     * @param message a CharSequence representing a message
-     * @return true if a "From_" line is found, otherwise false
-     */
-    private static boolean hasFrom_Line(final CharSequence message) {
-        return Pattern.compile(FROM__PREFIX + ".*", Pattern.DOTALL).matcher(
-                message).matches();
-    }
-
-    /**
      * Indicates whether the specified file appears to be a valid mbox file. Note that this method
      * does not check the entire file for validity, but rather checks the first line for indication
      * that this is an mbox file.
@@ -693,7 +586,7 @@ public class MboxFile {
             // check that first message is correct..
             String line = reader.readLine();
 
-            return INITIAL_FROM__PATTERN.matcher(line).matches();
+            return VALID_MBOX_PATTERN.matcher(line).matches();
         }
         catch (Exception e) {
             Log log = LogFactory.getLog(MboxFile.class);
