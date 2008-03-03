@@ -1,9 +1,9 @@
 /*
  * $Id$
  *
- * Created on 14/05/2006
+ * Created on 03/03/2008
  *
- * Copyright (c) 2005, Ben Fortuna
+ * Copyright (c) 2008, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,55 +33,72 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.mstor;
+package net.fortuna.mstor.data;
 
+import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.filefilter.DirectoryFileFilter;
+import org.apache.commons.io.filefilter.NotFileFilter;
+
+import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import net.fortuna.mstor.connector.ProtocolHandlerFactoryTest;
-import net.fortuna.mstor.connector.mbox.MboxMStorFolderTest;
-import net.fortuna.mstor.connector.mbox.MboxMStorMessageTest;
-import net.fortuna.mstor.connector.mbox.MboxMStorStoreTest;
-import net.fortuna.mstor.connector.mbox.MboxTagTest;
-import net.fortuna.mstor.connector.mbox.MboxTagsTermTest;
-import net.fortuna.mstor.connector.mbox.MboxUIDFolderTest;
-import net.fortuna.mstor.data.MboxEncoderTest;
-import net.fortuna.mstor.data.MboxFileTest;
-import net.fortuna.mstor.data.MessageInputStreamTest;
-import net.fortuna.mstor.tag.TagsTest;
 
 /**
- * A suite of all unit tests.
- * 
- * @author Ben Fortuna
+ * @author Ben
+ *
  */
-public class AllTests extends TestSuite {
+public class MessageInputStreamTest extends TestCase {
 
+    private File testFile;
+    
+    private MessageInputStream in;
+    
     /**
-     * @return a suit of unit tests.
+     * @param method
+     * @param testFile
      */
-    public static TestSuite suite() throws IOException {
-        TestSuite suite = new TestSuite();
+    public MessageInputStreamTest(String method, File testFile) {
+        super(method);
+        this.testFile = testFile;
+    }
+    
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#setUp()
+     */
+    protected void setUp() throws Exception {
+        super.setUp();
+        byte[] message = FileUtils.readFileToByteArray(testFile);
+        in = new MessageInputStream(ByteBuffer.wrap(message));
+    }
+    
+    /**
+     * 
+     */
+    public void testRead() throws IOException {
+        String message = IOUtils.toString(in);
+        assertNotNull(message);
+    }
+    
+    /**
+     * @return
+     */
+    public static Test suite() {
 
-        // handlers..
-        suite.addTestSuite(ProtocolHandlerFactoryTest.class);
+        TestSuite suite = new TestSuite(MessageInputStream.class.getSimpleName());
         
-        // mbox connector..
-        suite.addTest(MboxMStorStoreTest.suite());
-        suite.addTest(MboxMStorFolderTest.suite());
-        suite.addTest(MboxMStorMessageTest.suite());
-        suite.addTest(MboxUIDFolderTest.suite());
-
-        // mbox..
-        suite.addTestSuite(MboxEncoderTest.class);
-        suite.addTest(MboxFileTest.suite());
-        suite.addTest(MessageInputStreamTest.suite());
-
-        // tags..
-        suite.addTestSuite(TagsTest.class);
-        suite.addTest(MboxTagTest.suite());
-        suite.addTest(MboxTagsTermTest.suite());
-
+        File[] testFiles = new File("etc/samples/messages").listFiles(
+                (FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
+        
+        for (int i = 0; i < testFiles.length; i++) {
+            suite.addTest(new MessageInputStreamTest("testRead", testFiles[i]));
+        }
         return suite;
     }
+    
 }
