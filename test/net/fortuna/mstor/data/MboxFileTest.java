@@ -63,7 +63,7 @@ public class MboxFileTest extends TestCase {
      */
     protected final void setUp() throws Exception {
         super.setUp();
-        // File f = new File("etc/samples/MboxFile/Inbox");
+        // File f = new File("etc/samples/mailboxes/MboxFile/Inbox");
         testFile = createTestHierarchy(new File(filename));
         mbox = new MboxFile(testFile, MboxFile.READ_WRITE);
     }
@@ -174,10 +174,10 @@ public class MboxFileTest extends TestCase {
      */
     public static Test suite() {
 
-        TestSuite suite = new TestSuite();
+        TestSuite suite = new TestSuite(MboxFileTest.class.getSimpleName());
         
 //        suite.addTest(new MboxFileTest("testGetMessageCount", "/tmp/Inbox"));
-        File[] testFiles = new File("etc/samples")
+        File[] testFiles = new File("etc/samples/mailboxes")
                 .listFiles((FileFilter) new NotFileFilter(
                         DirectoryFileFilter.INSTANCE));
         for (int i = 0; i < testFiles.length; i++) {

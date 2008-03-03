@@ -61,8 +61,8 @@ public class MboxTagsTermTest extends TestSuite {
         Properties p = new Properties();
         p.setProperty(CapabilityHints.KEY_METADATA, CapabilityHints.VALUE_METADATA_ENABLED);
         
-        File[] samples = new File("etc/samples").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
-        //File[] samples = new File[] {new File("etc/samples/samples.mbx")};
+        File[] samples = new File("etc/samples/mailboxes").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
+        //File[] samples = new File[] {new File("etc/samples/mailboxes/samples.mbx")};
 
         for (int i = 0; i < samples.length; i++) {
 //            log.info("Sample [" + samples[i] + "]");
