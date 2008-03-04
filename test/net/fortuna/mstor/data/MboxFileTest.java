@@ -98,19 +98,31 @@ public class MboxFileTest extends TestCase {
             assertEquals(1, mbox.getMessageCount());
         }
         else if (testFile.getName().equals("imagined.mbox")) {
-            assertEquals(293, mbox.getMessageCount());
+            assertEquals(223, mbox.getMessageCount());
         }
         else if (testFile.getName().equals("parseexception.mbox")) {
             assertEquals(1, mbox.getMessageCount());
         }
         else if (testFile.getName().equals("samples.mbx")) {
-            assertEquals(4, mbox.getMessageCount());
+            assertEquals(2, mbox.getMessageCount());
         }
         else if (testFile.getName().equals("subject-0x1f.mbox")) {
             assertEquals(1, mbox.getMessageCount());
         }
         else if (testFile.getName().equals("received-0xc.mbox")) {
             assertEquals(1, mbox.getMessageCount());
+        }
+        else if (testFile.getAbsolutePath().endsWith("mail.internode.on.net/Inbox")) {
+            assertEquals(28, mbox.getMessageCount());
+        }
+        else if (testFile.getAbsolutePath().endsWith("mail.modularity.net.au/Inbox")) {
+            assertEquals(139, mbox.getMessageCount());
+        }
+        else if (testFile.getAbsolutePath().endsWith("pop.gmail.com/Inbox")) {
+            assertEquals(1240, mbox.getMessageCount());
+        }
+        else if (testFile.getAbsolutePath().endsWith("pop.hotpop.com/Inbox")) {
+            assertEquals(178, mbox.getMessageCount());
         }
 
 //        log.info("Message count: " + mbox.getMessageCount());
@@ -204,6 +216,17 @@ public class MboxFileTest extends TestCase {
                     .addTest(new MboxFileTest("testPurge", testFiles[i]
                             .getPath()));
         }
+        
+        // real mailboxes..
+//        suite.addTest(new MboxFileTest("testGetMessageCount",
+//                "/home/fortuna/.mozilla-thunderbird/djm89os8.default/Mail/mail.internode.on.net/Inbox"));
+//        suite.addTest(new MboxFileTest("testGetMessageCount",
+//                "/home/fortuna/.mozilla-thunderbird/djm89os8.default/Mail/mail.modularity.net.au/Inbox"));
+//        suite.addTest(new MboxFileTest("testGetMessageCount",
+//                "/home/fortuna/.mozilla-thunderbird/djm89os8.default/Mail/pop.gmail.com/Inbox"));
+//        suite.addTest(new MboxFileTest("testGetMessageCount",
+//                "/home/fortuna/.mozilla-thunderbird/djm89os8.default/Mail/pop.hotpop.com/Inbox"));
+        
         return suite;
     }
 }

@@ -180,13 +180,13 @@ public class MStorFolderTest extends AbstractMStorTest {
                 assertEquals(1, folder.getMessageCount());
             }
             else if (folder.getName().equals("imagined.mbox")) {
-                assertEquals(293, folder.getMessageCount());
+                assertEquals(223, folder.getMessageCount());
             }
             else if (folder.getName().equals("parseexception.mbox")) {
                 assertEquals(1, folder.getMessageCount());
             }
             else if (folder.getName().equals("samples.mbx")) {
-                assertEquals(4, folder.getMessageCount());
+                assertEquals(2, folder.getMessageCount());
             }
             else if (folder.getName().equals("subject-0x1f.mbox")) {
                 assertEquals(1, folder.getMessageCount());
@@ -328,10 +328,10 @@ public class MStorFolderTest extends AbstractMStorTest {
             copy2.open(Folder.READ_ONLY);
     
             messages = folder.getMessages(1, folder.getMessageCount());
-            for (int i = 1; i < messages.length; i++) {
+            for (int i = 0; i < messages.length; i++) {
                 Message m = copy2.getMessage(copy2.getMessageCount()
-                        - (messages.length - 1 - i));
-                assertEquals(IOUtils.toString(messages[i].getInputStream()),
+                        - (messages.length - i - 1));
+                assertEquals("Copy doesn't match message [" + i + "]", IOUtils.toString(messages[i].getInputStream()),
                         IOUtils.toString(m.getInputStream()));
             }
             assertTrue(folder.isOpen());
