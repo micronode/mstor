@@ -37,7 +37,7 @@
 		<url>http://mstor.cvs.sourceforge.net/mstor/mstor</url>
 	  <tag>mstor-0_9_11</tag>
   </scm>
-
+<!-- 
 	<distributionManagement>
 		<relocation>
 			<groupId>net.fortuna.mstor</groupId>
@@ -48,7 +48,7 @@
 			</message>
 		</relocation>
 	</distributionManagement>
-
+ -->
 	<build>
 		<sourceDirectory>source</sourceDirectory>
 		<testSourceDirectory>test</testSourceDirectory>
