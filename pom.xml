@@ -222,7 +222,7 @@
 				<artifactId>clirr-maven-plugin</artifactId>
 				<configuration>
 					<minSeverity>info</minSeverity>
-					<comparisonVersion>0.9.11</comparisonVersion>
+					<comparisonVersion>0.9.10</comparisonVersion>
 				</configuration>
 			</plugin>
 			<plugin>
