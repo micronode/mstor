@@ -222,7 +222,7 @@
 				<artifactId>clirr-maven-plugin</artifactId>
 				<configuration>
 					<minSeverity>info</minSeverity>
-					<comparisonVersion>0.9.10</comparisonVersion>
+					<comparisonVersion>0.9.11</comparisonVersion>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -236,10 +236,10 @@
 							<type>tag</type>
 							<tags>
 								<tag implementation="java.lang.String">
-									v0_9_9
+									mstor-0_9_10
 								</tag>
 								<tag implementation="java.lang.String">
-									mstor-0_9_10
+									mstor-0_9_11
 								</tag>
 							</tags>
 						</configuration>
