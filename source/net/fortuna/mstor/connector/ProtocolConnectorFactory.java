@@ -39,32 +39,32 @@ import javax.mail.Session;
 import javax.mail.URLName;
 
 import net.fortuna.mstor.MStorStore;
-import net.fortuna.mstor.connector.jcr.RepositoryHandler;
-import net.fortuna.mstor.connector.mbox.MboxHandler;
+import net.fortuna.mstor.connector.jcr.RepositoryConnector;
+import net.fortuna.mstor.connector.mbox.MboxConnector;
 
 /**
  * @author Ben
  *
  */
-public class ProtocolHandlerFactory {
+public class ProtocolConnectorFactory {
 
-    private static ProtocolHandlerFactory instance = new ProtocolHandlerFactory();
+    private static ProtocolConnectorFactory instance = new ProtocolConnectorFactory();
     
     /**
      * @param url
      * @return
      */
-    public ProtocolHandler create(URLName url, MStorStore store, Session session) {
+    public ProtocolConnector create(URLName url, MStorStore store, Session session) {
         if (url.getHost() != null) {
-            return new RepositoryHandler(url, store);
+            return new RepositoryConnector(url, store);
         }
-        return new MboxHandler(url, store, session);
+        return new MboxConnector(url, store, session);
     }
 
     /**
      * @return the instance
      */
-    public static final ProtocolHandlerFactory getInstance() {
+    public static final ProtocolConnectorFactory getInstance() {
         return instance;
     }
 }

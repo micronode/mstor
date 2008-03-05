@@ -45,7 +45,7 @@ import javax.mail.URLName;
 
 import net.fortuna.mstor.MStorFolder;
 import net.fortuna.mstor.MStorStore;
-import net.fortuna.mstor.connector.AbstractProtocolHandler;
+import net.fortuna.mstor.connector.AbstractProtocolConnector;
 import net.fortuna.mstor.util.CapabilityHints;
 
 /**
@@ -65,14 +65,14 @@ import net.fortuna.mstor.util.CapabilityHints;
  * @author Ben
  *
  */
-public class MboxHandler extends AbstractProtocolHandler {
+public class MboxConnector extends AbstractProtocolConnector {
     
     private boolean metaEnabled;
     
     /**
      * @param url
      */
-    public MboxHandler(URLName url, MStorStore store, Session session) {
+    public MboxConnector(URLName url, MStorStore store, Session session) {
         super(url, store);
 //        this.session = session;
         

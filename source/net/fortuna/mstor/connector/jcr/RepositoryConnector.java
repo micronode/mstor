@@ -54,7 +54,7 @@ import javax.naming.NamingException;
 
 import net.fortuna.mstor.MStorFolder;
 import net.fortuna.mstor.MStorStore;
-import net.fortuna.mstor.connector.AbstractProtocolHandler;
+import net.fortuna.mstor.connector.AbstractProtocolConnector;
 
 /**
  * Java Content Repository (JCR)-based mail storage protocol handler.
@@ -66,7 +66,7 @@ import net.fortuna.mstor.connector.AbstractProtocolHandler;
  * @author Ben
  *
  */
-public class RepositoryHandler extends AbstractProtocolHandler {
+public class RepositoryConnector extends AbstractProtocolConnector {
 
     public static final String NAMESPACE = "mstor";
 
@@ -130,7 +130,7 @@ public class RepositoryHandler extends AbstractProtocolHandler {
      * @param store
      * @param session
      */
-    public RepositoryHandler(URLName url, MStorStore store) {
+    public RepositoryConnector(URLName url, MStorStore store) {
         super(url, store);
     }
     

@@ -38,7 +38,7 @@ package net.fortuna.mstor;
 import java.io.IOException;
 
 import junit.framework.TestSuite;
-import net.fortuna.mstor.connector.ProtocolHandlerFactoryTest;
+import net.fortuna.mstor.connector.ProtocolConnectorFactoryTest;
 import net.fortuna.mstor.connector.mbox.MboxMStorFolderTest;
 import net.fortuna.mstor.connector.mbox.MboxMStorMessageTest;
 import net.fortuna.mstor.connector.mbox.MboxMStorStoreTest;
@@ -64,7 +64,7 @@ public class AllTests extends TestSuite {
         TestSuite suite = new TestSuite();
 
         // handlers..
-        suite.addTestSuite(ProtocolHandlerFactoryTest.class);
+        suite.addTestSuite(ProtocolConnectorFactoryTest.class);
         
         // mbox connector..
         suite.addTest(MboxMStorStoreTest.suite());

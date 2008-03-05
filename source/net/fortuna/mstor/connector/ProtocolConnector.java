@@ -45,7 +45,7 @@ import javax.mail.URLName;
  * @author Ben
  *
  */
-public interface ProtocolHandler {
+public interface ProtocolConnector {
 
     /**
      * @param host

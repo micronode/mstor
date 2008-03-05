@@ -50,8 +50,8 @@ import javax.mail.internet.InternetHeaders;
 
 import net.fortuna.mstor.connector.AbstractMessageDelegate;
 import net.fortuna.mstor.connector.DelegateException;
-import net.fortuna.mstor.connector.jcr.RepositoryHandler.NodeNames;
-import net.fortuna.mstor.connector.jcr.RepositoryHandler.PropertyNames;
+import net.fortuna.mstor.connector.jcr.RepositoryConnector.NodeNames;
+import net.fortuna.mstor.connector.jcr.RepositoryConnector.PropertyNames;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Created on 05/08/2007
+ * Created on 08/10/2007
  *
  * Copyright (c) 2007, Ben Fortuna
  * All rights reserved.
@@ -35,26 +35,34 @@
  */
 package net.fortuna.mstor.connector;
 
+import java.util.Properties;
+
+import javax.mail.Session;
 import javax.mail.URLName;
 
-import net.fortuna.mstor.MStorStore;
+import net.fortuna.mstor.connector.ProtocolConnectorFactory;
+import net.fortuna.mstor.connector.jcr.RepositoryConnector;
+import net.fortuna.mstor.connector.mbox.MboxConnector;
+
+import junit.framework.TestCase;
 
 /**
  * @author Ben
  *
  */
-public abstract class AbstractProtocolHandler implements ProtocolHandler {
-    
-    protected URLName url;
-    
-    protected MStorStore store;
+public class ProtocolConnectorFactoryTest extends TestCase {
 
     /**
-     * @param url
-     * @param store
+     * Test method for {@link net.fortuna.mstor.connector.ProtocolConnectorFactory#create(javax.mail.URLName, net.fortuna.mstor.MStorStore, javax.mail.Session)}.
      */
-    public AbstractProtocolHandler(URLName url, MStorStore store) {
-        this.url = url;
-        this.store = store;
+    public void testCreate() {
+        assertTrue(ProtocolConnectorFactory.getInstance().create(
+                new URLName("mstor", null, -1, "/tmp/mbox", null, null),
+                null, Session.getDefaultInstance(new Properties())) instanceof MboxConnector);
+        
+        assertTrue(ProtocolConnectorFactory.getInstance().create(
+                new URLName("mstor", "localhost", -1, "/tmp/mbox", "test", null),
+                null, null) instanceof RepositoryConnector);
     }
+
 }

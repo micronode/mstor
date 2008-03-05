@@ -41,8 +41,8 @@ import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.URLName;
 
-import net.fortuna.mstor.connector.ProtocolHandler;
-import net.fortuna.mstor.connector.ProtocolHandlerFactory;
+import net.fortuna.mstor.connector.ProtocolConnector;
+import net.fortuna.mstor.connector.ProtocolConnectorFactory;
 
 /**
  * Implementation of a javamail store for the mstor provider.
@@ -52,7 +52,7 @@ public class MStorStore extends Store {
 
     public static final String INBOX = "Inbox";
     
-    private ProtocolHandler protocolHandler;
+    private ProtocolConnector protocolHandler;
 
     /**
      * Constructor.
@@ -62,7 +62,7 @@ public class MStorStore extends Store {
      */
     public MStorStore(final Session session, final URLName url) {
         super(session, url);
-        protocolHandler = ProtocolHandlerFactory.getInstance().create(
+        protocolHandler = ProtocolConnectorFactory.getInstance().create(
                 url, this, session);
     }
     
