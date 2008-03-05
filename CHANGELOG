@@ -2,6 +2,15 @@
  mstor - Changes
 =================
 
+0.9.11:
+
+ - Refactored architecture for improved extensibility
+ 
+ - Improved regular expressions for mbox parsing to eliminate phantom messages
+ 
+ - Refactored unit test framework for improved test coverage
+ 
+ 
 0.9.10:
 
  - Added support for UID+ folders
