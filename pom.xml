@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<parent>
 		<artifactId>modularity-parent</artifactId>
@@ -9,7 +11,7 @@
 	<groupId>net.fortuna.mstor</groupId>
 	<artifactId>mstor</artifactId>
 	<name>mstor</name>
-	<version>0.9.12-SNAPSHOT</version>
+	<version>0.9.11</version>
 	<description>
 		A JavaMail local store provider based on the mbox email storage
 		format
@@ -28,22 +30,27 @@
 	</licenses>
 
 	<scm>
-		<connection>scm:cvs:pserver:anonymous:@mstor.cvs.sourceforge.net:/cvsroot/mstor:mstor</connection>
-		<developerConnection>scm:cvs:ext:fortuna@mstor.cvs.sourceforge.net:/cvsroot/mstor:mstor</developerConnection>
+		<connection>
+			scm:cvs:pserver:anonymous:@mstor.cvs.sourceforge.net:/cvsroot/mstor:mstor
+		</connection>
+		<developerConnection>
+			scm:cvs:ext:fortuna@mstor.cvs.sourceforge.net:/cvsroot/mstor:mstor
+		</developerConnection>
 		<url>http://mstor.cvs.sourceforge.net/mstor/mstor</url>
-  </scm>
-
-	<distributionManagement>
+		<tag>mstor-0_9_11</tag>
+	</scm>
+	<!-- 
+		<distributionManagement>
 		<relocation>
-			<groupId>net.fortuna.mstor</groupId>
-			<artifactId>mstor</artifactId>
-			<version>0.9.11</version>
-			<message>
-				Updated group id to conform with maven standards
-			</message>
+		<groupId>net.fortuna.mstor</groupId>
+		<artifactId>mstor</artifactId>
+		<version>0.9.11</version>
+		<message>
+		Updated group id to conform with maven standards
+		</message>
 		</relocation>
-	</distributionManagement>
-
+		</distributionManagement>
+	-->
 	<build>
 		<sourceDirectory>source</sourceDirectory>
 		<testSourceDirectory>test</testSourceDirectory>
@@ -217,7 +224,16 @@
 				<artifactId>clirr-maven-plugin</artifactId>
 				<configuration>
 					<minSeverity>info</minSeverity>
-					<comparisonVersion>0.9.10</comparisonVersion>
+					<comparisonArtifacts>
+						<comparisonArtifact>
+							<groupId>net.fortuna</groupId>
+							<artifactId>mstor</artifactId>
+							<version>0.9.10</version>
+						</comparisonArtifact>
+					</comparisonArtifacts>
+					<!-- 
+						<comparisonVersion>0.9.10</comparisonVersion>
+					-->
 				</configuration>
 			</plugin>
 			<plugin>
@@ -230,11 +246,13 @@
 						<configuration>
 							<type>tag</type>
 							<tags>
-								<tag implementation="java.lang.String">
-									v0_9_9
-								</tag>
-								<tag implementation="java.lang.String">
+								<tag
+									implementation="java.lang.String">
 									mstor-0_9_10
+								</tag>
+								<tag
+									implementation="java.lang.String">
+									mstor-0_9_11
 								</tag>
 							</tags>
 						</configuration>
