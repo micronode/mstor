@@ -48,7 +48,7 @@ public class Cache extends LinkedHashMap {
 
     private static final long serialVersionUID = 4000823529559716310L;
 
-    private static final int DEFAULT_MAX_ENTRIES = 100;
+    private static final int DEFAULT_MAX_ENTRIES = 1000;
 
     private static final String MAX_ENTRIES_PROPERTY = "mstor.cache.maxentries";
 
