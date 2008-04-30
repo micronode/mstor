@@ -35,19 +35,14 @@
  */
 package net.fortuna.mstor.connector.mbox;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
 
-import net.fortuna.mstor.connector.AbstractFolderDelegate;
 import net.fortuna.mstor.connector.DelegateException;
 import net.fortuna.mstor.connector.FolderDelegate;
 import net.fortuna.mstor.connector.MessageDelegate;
@@ -61,7 +56,7 @@ import org.jdom.Namespace;
  * 
  * @author benfortuna
  */
-public class MetaFolder extends AbstractFolderDelegate {
+public class MetaFolder extends AbstractMetaFolder {
 
     private static final String ELEMENT_FOLDER = "folder";
 
@@ -74,17 +69,8 @@ public class MetaFolder extends AbstractFolderDelegate {
 //    private Log log = LogFactory.getLog(MetaFolder.class);
 
     public static final String FILE_EXTENSION = ".emf";
-
-    private static final Random UID_VALIDITY_GENERATOR = new Random();
-
-    private File file;
     
     private DocumentBinding binding;
-    
-    /**
-     * A delegate used by metafolder to perform operations not supported in metadata.
-     */
-    private FolderDelegate delegate;
     
     /**
      * Constructs a new meta folder instance.
@@ -92,9 +78,8 @@ public class MetaFolder extends AbstractFolderDelegate {
      * @param file the meta folder file
      */
     public MetaFolder(FolderDelegate delegate) {
-        this.file = getMetaFile(delegate);
-        this.delegate = delegate;
-        binding = new DocumentBinding(file, ELEMENT_FOLDER);
+    	super(delegate);
+        binding = new DocumentBinding(getFile(), ELEMENT_FOLDER);
     }
 
     /**
@@ -104,46 +89,22 @@ public class MetaFolder extends AbstractFolderDelegate {
      * @param namespace the namespace for the metadata
      */
     public MetaFolder(final Namespace namespace, FolderDelegate delegate) {
-        this.file = getMetaFile(delegate);
-        this.delegate = delegate;
-        binding = new DocumentBinding(file, namespace, ELEMENT_FOLDER);
-    }
-
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#getType()
-     */
-    public int getType() {
-        return delegate.getType();
-    }
-    
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#getName()
-     */
-    public final String getName() {
-//        return binding.getDocument().getRootElement().getAttributeValue(
-//                ATTRIBUTE_FOLDER_NAME);
-        return delegate.getName();
-    }
-
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#getFullName()
-     */
-    public String getFullName() {
-        return delegate.getFullName();
+    	super(delegate);
+        binding = new DocumentBinding(getFile(), namespace, ELEMENT_FOLDER);
     }
     
     /* (non-Javadoc)
      * @see net.fortuna.mstor.FolderDelegate#getParent()
      */
     public FolderDelegate getParent() {
-        return new MetaFolder(delegate.getParent());
+        return new MetaFolder(getDelegate().getParent());
     }
     
     /* (non-Javadoc)
      * @see net.fortuna.mstor.FolderDelegate#getFolder(java.lang.String)
      */
     public FolderDelegate getFolder(String name) {
-        return new MetaFolder(delegate.getFolder(name));
+        return new MetaFolder(getDelegate().getFolder(name));
     }
 
     /* (non-Javadoc)
@@ -152,122 +113,13 @@ public class MetaFolder extends AbstractFolderDelegate {
     public FolderDelegate[] list(String pattern) {
         List folders = new ArrayList();
         
-        FolderDelegate[] delegateList = delegate.list(pattern);
+        FolderDelegate[] delegateList = getDelegate().list(pattern);
         for (int i = 0; i < delegateList.length; i++) {
             folders.add(new MetaFolder(delegateList[i]));
         }
         
         return (FolderDelegate[]) folders.toArray(
                 new FolderDelegate[folders.size()]);
-    }
-    
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#exists()
-     */
-    public boolean exists() {
-        return delegate.exists();
-    }
-    
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#delete()
-     */
-    public boolean delete() {
-        return delegate.delete() && file.delete();
-    }
-    
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#renameTo(java.lang.String)
-     */
-    public boolean renameTo(String name) {
-        return delegate.renameTo(name)
-            && (!file.exists() || file.renameTo(
-                    new File(file.getParent(), name + FILE_EXTENSION)));
-    }
-    
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#open(int)
-     */
-    public void open(int mode) {
-        delegate.open(mode);
-    }
-    
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#close()
-     */
-    public void close() throws MessagingException {
-        delegate.close();
-    }
-    
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#getSeparator()
-     */
-    public char getSeparator() {
-        return delegate.getSeparator();
-    }
-    
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#getMessageCount()
-     */
-    public int getMessageCount() throws MessagingException {
-        return delegate.getMessageCount();
-    }
-    
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#getMessageAsStream(int)
-     */
-    public InputStream getMessageAsStream(int index) throws IOException {
-        return delegate.getMessageAsStream(index);
-    }
-    
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#appendMessages(javax.mail.Message[])
-     */
-    public void appendMessages(Message[] messages) throws MessagingException {
-        try {
-            Date received = new Date();
-            for (int i = 0; i < messages.length; i++) {
-                MessageDelegate md = getMessage(messages[i].getMessageNumber());
-                md.setReceived(received);
-                md.setFlags(messages[i].getFlags());
-                md.setHeaders(messages[i].getAllHeaders());
-                allocateUid(md);
-            }
-            delegate.appendMessages(messages);
-            save();
-        }
-        catch (DelegateException de) {
-            throw new MessagingException("Error saving changes", de);
-        }
-    }
-    
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#create(int)
-     */
-    public boolean create(int type) throws MessagingException {
-        return delegate.create(type);
-    }
-    
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#expunge(javax.mail.Message[])
-     */
-    public void expunge(Message[] deleted) throws MessagingException {
-        delegate.expunge(deleted);
-        removeMessages(deleted);
-        try {
-            save();
-        }
-        catch (DelegateException de) {
-            throw new MessagingException("Error saving changes", de);
-        }
-    }
-    
-    /**
-     * @param delegate
-     * @return
-     */
-    private File getMetaFile(FolderDelegate delegate) {
-        File metaFile = new File(delegate.getFullName() + FILE_EXTENSION);
-        return metaFile;
     }
     
     /*
@@ -364,7 +216,7 @@ public class MetaFolder extends AbstractFolderDelegate {
      * @param messages
      * @return
      */
-    private MessageDelegate[] removeMessages(Message[] messages) {
+    protected MessageDelegate[] removeMessages(Message[] messages) {
         List metas = new ArrayList();
 
         for (Iterator i = binding.getDocument().getRootElement().getChildren(
@@ -447,8 +299,7 @@ public class MetaFolder extends AbstractFolderDelegate {
         
         if (uidValidityElement == null) {
             uidValidityElement = new Element(ELEMENT_UID_VALIDITY, binding.getNamespace());
-            uidValidityElement.setText(String.valueOf(UID_VALIDITY_GENERATOR
-                    .nextInt(Integer.MAX_VALUE)));
+            uidValidityElement.setText(String.valueOf(newUidValidity()));
             binding.getDocument().getRootElement().addContent(uidValidityElement);
             
             try {
@@ -470,6 +321,13 @@ public class MetaFolder extends AbstractFolderDelegate {
         save();
     }
     
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.connector.mbox.AbstractMetaFolder#getFileExtension()
+     */
+    protected String getFileExtension() {
+    	return FILE_EXTENSION;
+    }
+    
     /**
      * @throws DelegateException
      */
@@ -480,12 +338,5 @@ public class MetaFolder extends AbstractFolderDelegate {
         catch (IOException ioe) {
             throw new DelegateException("Error saving changes", ioe);
         }
-    }
-
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#getLastModified()
-     */
-    public long getLastModified() throws UnsupportedOperationException {
-        return delegate.getLastModified();
     }
 }
