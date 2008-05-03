@@ -1,5 +1,6 @@
 package net.fortuna.mstor.data.yaml;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FolderExt {
@@ -10,6 +11,13 @@ public class FolderExt {
 	
 	private long uidValidity;
 
+	/**
+	 * Default constructor.
+	 */
+	public FolderExt() {
+	    messages = new ArrayList();
+	}
+	
 	/**
 	 * @return the lastUid
 	 */
