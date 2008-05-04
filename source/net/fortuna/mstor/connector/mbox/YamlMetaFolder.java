@@ -1,6 +1,6 @@
 package net.fortuna.mstor.connector.mbox;
 
-import java.io.FileOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -16,7 +16,8 @@ import net.fortuna.mstor.connector.MessageDelegate;
 import net.fortuna.mstor.data.yaml.FolderExt;
 import net.fortuna.mstor.data.yaml.MessageExt;
 
-import org.ho.yaml.Yaml;
+import org.ho.yaml.YamlConfig;
+import org.ho.yaml.YamlDecoder;
 
 /**
  * @author Ben
@@ -25,16 +26,27 @@ public class YamlMetaFolder extends AbstractMetaFolder {
 
     private FolderExt folderExt;
 
+    private YamlConfig yamlConfig;
+    
     /**
      * @param delegate
      */
     public YamlMetaFolder(FolderDelegate delegate) {
         super(delegate);
+        yamlConfig = new YamlConfig();
+        YamlDecoder decoder = null;
         try {
-            folderExt = (FolderExt) Yaml.loadType(getFile(), FolderExt.class);
+//            folderExt = (FolderExt) yamlConfig.loadType(getFile(), FolderExt.class);
+            decoder = new YamlDecoder(new FileInputStream(getFile()));
+            folderExt = (FolderExt) decoder.readObjectOfType(FolderExt.class);
         }
         catch (IOException ioe) {
             folderExt = new FolderExt();
+        }
+        finally {
+            if (decoder != null) {
+                decoder.close();
+            }
         }
     }
 
@@ -63,22 +75,23 @@ public class YamlMetaFolder extends AbstractMetaFolder {
      * @see net.fortuna.mstor.connector.mbox.AbstractMetaFolder#save()
      */
     protected void save() throws DelegateException {
-        FileOutputStream fout = null;
+//        FileOutputStream fout = null;
         try {
-            fout = new FileOutputStream(getFile());
-            Yaml.dump(folderExt, fout);
+            yamlConfig.dump(folderExt, getFile());
+//            fout = new FileOutputStream(getFile());
+//            yamlConfig.dump(folderExt, fout);
         }
         catch (IOException ioe) {
             throw new DelegateException("Error saving metadata", ioe);
         }
-        finally {
-            if (fout != null) {
-                try {
-                    fout.close();
-                }
-                catch (IOException ioe) {}
-            }
-        }
+//        finally {
+//            if (fout != null) {
+//                try {
+//                    fout.close();
+//                }
+//                catch (IOException ioe) {}
+//            }
+//        }
     }
 
     /*
