@@ -45,26 +45,6 @@ import java.util.Properties;
 public final class CapabilityHints {
 
     /**
-     * A capability hint to indicate the preferred strategy for reading mbox files into a buffer.
-     */
-    public static final String KEY_MBOX_BUFFER_STRATEGY = "mstor.mbox.bufferStrategy";
-
-    /**
-     * A value to enable the use of Java NIO buffer mapping when reading mbox files.
-     */
-    public static final String VALUE_MBOX_BUFFER_STRATEGY_MAPPED = "mapped";
-
-    /**
-     * A value to enable the use of direct buffers when reading mbox files.
-     */
-    public static final String VALUE_MBOX_BUFFER_STRATEGY_DIRECT = "direct";
-
-    /**
-     * A value to enable the use of default buffers when reading mbox files.
-     */
-    public static final String VALUE_MBOX_BUFFER_STRATEGY_DEFAULT = "default";
-
-    /**
      * A capability hint to indicate whether buffers used to read mbox message data are cached for
      * faster access.
      */
@@ -107,6 +87,12 @@ public final class CapabilityHints {
      */
     public static final String VALUE_METADATA_DEFAULT = "default";
 
+    public static final String KEY_METADATA_STRATEGY = "mstor.metadataStrategy";
+    
+    public static final String VALUE_METADATA_STRATEGY_XML = "xml";
+    
+    public static final String VALUE_METADATA_STRATEGY_JCR = "jcr";
+    
     /**
      * A capability hint to enable mozilla mbox compatibility.
      */

@@ -64,6 +64,7 @@ import java.util.regex.Pattern;
 
 import net.fortuna.mstor.util.Cache;
 import net.fortuna.mstor.util.CapabilityHints;
+import net.fortuna.mstor.util.Configurator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -82,6 +83,44 @@ import org.apache.commons.logging.LogFactory;
  */
 public class MboxFile {
 
+    /**
+     * A capability hint to indicate the preferred strategy for reading mbox files into a buffer.
+     */
+    public static final String KEY_BUFFER_STRATEGY = "mstor.mbox.bufferStrategy";
+
+    /**
+     * @author Ben
+     *
+     */
+    public static final class BufferStrategy extends org.apache.commons.lang.enums.Enum {
+        
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -8365766175291020044L;
+
+        public static final BufferStrategy DEFAULT = new BufferStrategy("default");
+        
+        public static final BufferStrategy MAPPED = new BufferStrategy("mapped");
+        
+        public static final BufferStrategy DIRECT = new BufferStrategy("direct");
+        
+        /**
+         * @param name
+         */
+        private BufferStrategy(String name) {
+            super(name);
+        }
+        
+        /**
+         * @param name
+         * @return
+         */
+        public static BufferStrategy getBufferStrategy(String name) {
+            return (BufferStrategy) getEnum(BufferStrategy.class, name);
+        }
+    }
+    
     public static final String READ_ONLY = "r";
 
     public static final String READ_WRITE = "rw";
@@ -206,20 +245,19 @@ public class MboxFile {
 
         ByteBuffer buffer = null;
         try {
-            if (CapabilityHints.VALUE_MBOX_BUFFER_STRATEGY_MAPPED
-                    .equals(CapabilityHints.getHint(CapabilityHints.KEY_MBOX_BUFFER_STRATEGY))) {
-
+            if (BufferStrategy.MAPPED.equals(BufferStrategy.getBufferStrategy(Configurator.getProperty(KEY_BUFFER_STRATEGY)))) {
                 buffer = getChannel().map(FileChannel.MapMode.READ_ONLY,
                         position, size);
             }
             else {
-                if (CapabilityHints.VALUE_MBOX_BUFFER_STRATEGY_DIRECT
-                        .equals(CapabilityHints.getHint(CapabilityHints.KEY_MBOX_BUFFER_STRATEGY))) {
-
+                if (BufferStrategy.DIRECT.equals(BufferStrategy.getBufferStrategy(Configurator.getProperty(KEY_BUFFER_STRATEGY)))) {
                     buffer = ByteBuffer.allocateDirect(size);
                 }
-                else {
+                else if (BufferStrategy.DEFAULT.equals(BufferStrategy.getBufferStrategy(Configurator.getProperty(KEY_BUFFER_STRATEGY)))) {
                     buffer = ByteBuffer.allocate(size);
+                }
+                else {
+                    throw new IllegalArgumentException("Unrecognised buffer strategy: " + Configurator.getProperty(KEY_BUFFER_STRATEGY));
                 }
                 getChannel().position(position);
                 getChannel().read(buffer);
