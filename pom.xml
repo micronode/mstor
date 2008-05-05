@@ -67,6 +67,7 @@
 				<directory>test</directory>
 				<includes>
 					<include>log4j.properties</include>
+					<include>mstor.properties</include>
 				</includes>
 			</testResource>
 		</testResources>
