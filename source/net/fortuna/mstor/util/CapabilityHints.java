@@ -64,34 +64,6 @@ public final class CapabilityHints {
      * A value to disable caching of message buffers when reading mbox files.
      */
     public static final String VALUE_MBOX_CACHE_BUFFERS_DEFAULT = "default";
-
-    /**
-     * A capability hint to indicate whether metadata should be used when accessing folders and
-     * messages. Note that if this property is specified as a JavaMail session property it will
-     * override capability hint and System property settings.
-     */
-    public static final String KEY_METADATA = "mstor.metadata";
-
-    /**
-     * A value to enable the use of folder and message metadata.
-     */
-    public static final String VALUE_METADATA_ENABLED = "enabled";
-
-    /**
-     * A value to disable the use of folder and message metadata.
-     */
-    public static final String VALUE_METADATA_DISABLED = "disabled";
-
-    /**
-     * A value to disable the use of folder and message metadata.
-     */
-    public static final String VALUE_METADATA_DEFAULT = "default";
-
-    public static final String KEY_METADATA_STRATEGY = "mstor.metadataStrategy";
-    
-    public static final String VALUE_METADATA_STRATEGY_XML = "xml";
-    
-    public static final String VALUE_METADATA_STRATEGY_JCR = "jcr";
     
     /**
      * A capability hint to enable mozilla mbox compatibility.

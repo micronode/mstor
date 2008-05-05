@@ -46,7 +46,7 @@ import javax.mail.URLName;
 import net.fortuna.mstor.MStorFolder;
 import net.fortuna.mstor.MStorStore;
 import net.fortuna.mstor.connector.AbstractProtocolConnector;
-import net.fortuna.mstor.util.CapabilityHints;
+import net.fortuna.mstor.util.Configurator;
 
 /**
  * An mbox-based protocol handler.
@@ -66,8 +66,43 @@ import net.fortuna.mstor.util.CapabilityHints;
  *
  */
 public class MboxConnector extends AbstractProtocolConnector {
-    
-    private boolean metaEnabled;
+
+    public static final String KEY_METADATA_STRATEGY = "mstor.mbox.metadataStrategy";
+
+    /**
+     * @author Ben
+     *
+     */
+    public static final class MetadataStrategy extends org.apache.commons.lang.enums.Enum {
+        
+        /**
+         * 
+         */
+        private static final long serialVersionUID = -4714029713605392662L;
+
+        public static final MetadataStrategy XML = new MetadataStrategy("xml");
+        
+        public static final MetadataStrategy YAML = new MetadataStrategy("yaml");
+
+        public static final MetadataStrategy NONE = new MetadataStrategy("none");
+        
+        /**
+         * @param name
+         */
+        private MetadataStrategy(String name) {
+            super(name);
+        }
+        
+        /**
+         * @param name
+         * @return
+         */
+        public static MetadataStrategy getMetadataStrategy(String name) {
+            return (MetadataStrategy) getEnum(MetadataStrategy.class, name);
+        }
+    }
+
+    private MetadataStrategy metadataStrategy;
     
     /**
      * @param url
@@ -76,13 +111,8 @@ public class MboxConnector extends AbstractProtocolConnector {
         super(url, store);
 //        this.session = session;
         
-        // enable metadata by default..
-        String metadataStrategy = session.getProperties().getProperty(
-                CapabilityHints.KEY_METADATA,
-                CapabilityHints.getHint(CapabilityHints.KEY_METADATA));
-
-        metaEnabled = CapabilityHints.VALUE_METADATA_ENABLED
-                .equals(metadataStrategy);
+        metadataStrategy = MetadataStrategy.getMetadataStrategy(session.getProperties().getProperty(KEY_METADATA_STRATEGY,
+                Configurator.getProperty(KEY_METADATA_STRATEGY)));
     }
     
     /* (non-Javadoc)
@@ -121,10 +151,16 @@ public class MboxConnector extends AbstractProtocolConnector {
             file = new File(url.getFile(), name);
         }
 
-        if (metaEnabled) {
+        if (MetadataStrategy.YAML.equals(metadataStrategy)) {
+            return new MStorFolder(store, new YamlMetaFolder(new MboxFolder(file)));
+        }
+        else if (MetadataStrategy.XML.equals(metadataStrategy)) {
             return new MStorFolder(store, new MetaFolder(new MboxFolder(file)));
         }
-        return new MStorFolder(store, new MboxFolder(file));
+        else if (MetadataStrategy.NONE.equals(metadataStrategy)) {
+            return new MStorFolder(store, new MboxFolder(file));
+        }
+        throw new IllegalArgumentException("Unrecognised metadata strategy: " + metadataStrategy);
     }
 
     /* (non-Javadoc)

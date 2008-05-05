@@ -14,6 +14,7 @@ import java.io.IOException;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import net.fortuna.mstor.data.MboxFile.BufferStrategy;
 import net.fortuna.mstor.util.CapabilityHints;
 
 import org.apache.commons.io.FileUtils;
@@ -48,12 +49,11 @@ public class MboxFileTest extends TestCase {
      * @param bufferStrategy
      * @param cacheStrategy
      */
-    public MboxFileTest(String method, String filename, String bufferStrategy,
+    public MboxFileTest(String method, String filename, BufferStrategy bufferStrategy,
             String cacheStrategy) {
         super(method);
         this.filename = filename;
-        CapabilityHints.setHint(CapabilityHints.KEY_MBOX_BUFFER_STRATEGY,
-                bufferStrategy);
+        System.setProperty(MboxFile.KEY_BUFFER_STRATEGY, bufferStrategy.getName());
         CapabilityHints.setHint(CapabilityHints.KEY_MBOX_CACHE_BUFFERS,
                 cacheStrategy);
     }
@@ -196,19 +196,19 @@ public class MboxFileTest extends TestCase {
             log.info("Sample [" + testFiles[i] + "]");
             suite.addTest(new MboxFileTest("testGetMessage", testFiles[i]
                     .getPath(),
-                    CapabilityHints.VALUE_MBOX_BUFFER_STRATEGY_DEFAULT,
+                    BufferStrategy.DEFAULT,
                     CapabilityHints.VALUE_MBOX_CACHE_BUFFERS_DISABLED));
             suite.addTest(new MboxFileTest("testGetMessage", testFiles[i]
                     .getPath(),
-                    CapabilityHints.VALUE_MBOX_BUFFER_STRATEGY_DIRECT,
+                    BufferStrategy.DIRECT,
                     CapabilityHints.VALUE_MBOX_CACHE_BUFFERS_DISABLED));
             suite.addTest(new MboxFileTest("testGetMessage", testFiles[i]
                     .getPath(),
-                    CapabilityHints.VALUE_MBOX_BUFFER_STRATEGY_MAPPED,
+                    BufferStrategy.MAPPED,
                     CapabilityHints.VALUE_MBOX_CACHE_BUFFERS_DISABLED));
             suite.addTest(new MboxFileTest("testGetMessage", testFiles[i]
                     .getPath(),
-                    CapabilityHints.VALUE_MBOX_BUFFER_STRATEGY_DEFAULT,
+                    BufferStrategy.DEFAULT,
                     CapabilityHints.VALUE_MBOX_CACHE_BUFFERS_ENABLED));
             suite.addTest(new MboxFileTest("testGetMessageCount", testFiles[i]
                     .getPath()));
