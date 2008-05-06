@@ -40,7 +40,6 @@ package net.fortuna.mstor;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.mail.Flags;
 import javax.mail.Folder;
@@ -53,7 +52,9 @@ import javax.mail.event.FolderEvent;
 
 import net.fortuna.mstor.connector.DelegateException;
 import net.fortuna.mstor.connector.FolderDelegate;
-import net.fortuna.mstor.util.Cache;
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
 
 /**
  * A folder implementation for the mstor javamail provider.
@@ -75,7 +76,7 @@ public class MStorFolder extends Folder implements UIDFolder {
     /**
      * A cache for messages.
      */
-    private Map messageCache;
+//    private Map messageCache;
 
     private MStorStore mStore;
 
@@ -305,6 +306,9 @@ public class MStorFolder extends Folder implements UIDFolder {
             expunge();
         }
 
+        // clear cache..
+        getMessageCache().removeAll();
+        
         // mark as closed and notify listeners even if not successfully closed..
         open = false;
         notifyConnectionListeners(ConnectionEvent.CLOSED);
@@ -367,8 +371,12 @@ public class MStorFolder extends Folder implements UIDFolder {
             throw new MessagingException("Invalid folder type");
         }
 
-        Message message = (Message) getMessageCache().get(
-                String.valueOf(index));
+        Message message = null;
+        
+        Element cacheElement = getMessageCache().get(new Integer(index));
+        if (cacheElement != null) {
+            message = (Message) cacheElement.getValue();
+        }
 
         if (message == null) {
             try {
@@ -377,7 +385,7 @@ public class MStorFolder extends Folder implements UIDFolder {
                         delegate.getMessageAsStream(index), index,
                         delegate.getMessage(index));
 
-                getMessageCache().put(String.valueOf(index), message);
+                getMessageCache().put(new Element(new Integer(index), message));
             }
             catch (IOException ioe) {
                 throw new MessagingException("Error ocurred reading message ["
@@ -444,7 +452,8 @@ public class MStorFolder extends Folder implements UIDFolder {
         notifyMessageRemovedListeners(true, deleted);
         
         // reset cache..
-        messageCache = null;
+//        messageCache = null;
+        getMessageCache().removeAll();
 
         return deleted;
     }
@@ -452,11 +461,13 @@ public class MStorFolder extends Folder implements UIDFolder {
     /**
      * @return Returns the messageCache.
      */
-    private Map getMessageCache() {
-        if (messageCache == null) {
-            messageCache = new Cache();
+    private Cache getMessageCache() {
+        CacheManager manager = CacheManager.create();
+        String cacheName = "mstor.folder." + getFullName().hashCode();
+        if (manager.getCache(cacheName) == null) {
+            manager.addCache(cacheName);
         }
-        return messageCache;
+        return manager.getCache(cacheName);
     }
 
     /**
