@@ -408,8 +408,7 @@ public class MboxFile {
             
             buffer = read(position, (int) size);
             
-            if (CapabilityHints.VALUE_MBOX_CACHE_BUFFERS_ENABLED
-                    .equals(CapabilityHints.getHint(CapabilityHints.KEY_MBOX_CACHE_BUFFERS))) {
+            if (CapabilityHints.isHintEnabled(CapabilityHints.KEY_MBOX_CACHE_BUFFERS)) {
 
                 // add buffer to cache..
                 getMessageCache().put(new Integer(index), buffer);

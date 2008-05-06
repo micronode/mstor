@@ -50,12 +50,12 @@ public class MboxFileTest extends TestCase {
      * @param cacheStrategy
      */
     public MboxFileTest(String method, String filename, BufferStrategy bufferStrategy,
-            String cacheStrategy) {
+            boolean cacheEnabled) {
         super(method);
         this.filename = filename;
         System.setProperty(MboxFile.KEY_BUFFER_STRATEGY, bufferStrategy.getName());
-        CapabilityHints.setHint(CapabilityHints.KEY_MBOX_CACHE_BUFFERS,
-                cacheStrategy);
+        CapabilityHints.setHintEnabled(CapabilityHints.KEY_MBOX_CACHE_BUFFERS,
+                cacheEnabled);
     }
 
     /*
@@ -197,19 +197,19 @@ public class MboxFileTest extends TestCase {
             suite.addTest(new MboxFileTest("testGetMessage", testFiles[i]
                     .getPath(),
                     BufferStrategy.DEFAULT,
-                    CapabilityHints.VALUE_MBOX_CACHE_BUFFERS_DISABLED));
+                    false));
             suite.addTest(new MboxFileTest("testGetMessage", testFiles[i]
                     .getPath(),
                     BufferStrategy.DIRECT,
-                    CapabilityHints.VALUE_MBOX_CACHE_BUFFERS_DISABLED));
+                    false));
             suite.addTest(new MboxFileTest("testGetMessage", testFiles[i]
                     .getPath(),
                     BufferStrategy.MAPPED,
-                    CapabilityHints.VALUE_MBOX_CACHE_BUFFERS_DISABLED));
+                    false));
             suite.addTest(new MboxFileTest("testGetMessage", testFiles[i]
                     .getPath(),
                     BufferStrategy.DEFAULT,
-                    CapabilityHints.VALUE_MBOX_CACHE_BUFFERS_ENABLED));
+                    true));
             suite.addTest(new MboxFileTest("testGetMessageCount", testFiles[i]
                     .getPath()));
             suite

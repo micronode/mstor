@@ -284,9 +284,7 @@ public class MboxFolder extends AbstractFolderDelegate {
             try {
                 out.reset();
 
-                if (CapabilityHints.VALUE_MOZILLA_COMPATIBILITY_ENABLED
-                        .equals(CapabilityHints
-                                .getHint(CapabilityHints.KEY_MOZILLA_COMPATIBILITY))) {
+                if (CapabilityHints.isHintEnabled(CapabilityHints.KEY_MBOX_MOZILLA_COMPATIBILITY)) {
 
                     messages[i].setHeader("X-Mozilla-Status", "0000");
                     messages[i].setHeader("X-Mozilla-Status-2", "00000000");

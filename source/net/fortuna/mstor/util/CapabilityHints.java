@@ -35,10 +35,12 @@
  */
 package net.fortuna.mstor.util;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
- * A set of keys used to enable compatibility features.
+ * A set of keys used to enable capability features.
  * 
  * @author Ben Fortuna
  */
@@ -49,39 +51,13 @@ public final class CapabilityHints {
      * faster access.
      */
     public static final String KEY_MBOX_CACHE_BUFFERS = "mstor.mbox.cacheBuffers";
-
-    /**
-     * A value to enable caching of message buffers when reading mbox files.
-     */
-    public static final String VALUE_MBOX_CACHE_BUFFERS_ENABLED = "enabled";
-
-    /**
-     * A value to disable caching of message buffers when reading mbox files.
-     */
-    public static final String VALUE_MBOX_CACHE_BUFFERS_DISABLED = "disabled";
-
-    /**
-     * A value to disable caching of message buffers when reading mbox files.
-     */
-    public static final String VALUE_MBOX_CACHE_BUFFERS_DEFAULT = "default";
     
     /**
      * A capability hint to enable mozilla mbox compatibility.
      */
-    public static final String KEY_MOZILLA_COMPATIBILITY = "mstor.mozillaCompatibility";
+    public static final String KEY_MBOX_MOZILLA_COMPATIBILITY = "mstor.mbox.mozillaCompatibility";
 
-    /**
-     * A value used to enabled mozilla mbox compatibility.
-     */
-    public static final String VALUE_MOZILLA_COMPATIBILITY_ENABLED = "enabled";
-
-    /**
-     * A value used to disable mozilla mbox compatibility.
-     */
-    public static final String VALUE_MOZILLA_COMPATIBILITY_DISABLED = "disabled";
-
-    private static final Properties HINTS = new Properties(System
-            .getProperties());
+    private static final Map HINTS = new HashMap();
 
     /**
      * Constructor made private to enforce static nature.
@@ -93,15 +69,18 @@ public final class CapabilityHints {
      * @param key
      * @param value
      */
-    public static void setHint(final String key, final String value) {
-        HINTS.setProperty(key, value);
+    public static void setHintEnabled(final String key, final boolean enabled) {
+        HINTS.put(key, Boolean.valueOf(enabled));
     }
 
     /**
      * @param key
      * @return
      */
-    public static String getHint(final String key) {
-        return HINTS.getProperty(key);
+    public static boolean isHintEnabled(final String key) {
+    	if (Configurator.getProperty(key) != null) {
+    		return Boolean.valueOf(Configurator.getProperty(key)).booleanValue();
+    	}
+        return Boolean.TRUE.equals(HINTS.get(key));
     }
 }
