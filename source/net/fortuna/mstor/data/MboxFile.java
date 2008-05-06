@@ -62,9 +62,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.fortuna.mstor.util.Cache;
 import net.fortuna.mstor.util.CapabilityHints;
 import net.fortuna.mstor.util.Configurator;
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -188,7 +190,7 @@ public class MboxFile {
     /**
      * A cache used to store mapped regions of the mbox file representing message data.
      */
-    private Cache messageCache;
+//    private Cache messageCache;
 
     /**
      * Constructor.
@@ -376,10 +378,12 @@ public class MboxFile {
      * Returns the message cache.
      */
     private Cache getMessageCache() {
-        if (messageCache == null) {
-            messageCache = new Cache();
+        CacheManager manager = CacheManager.create();
+        String cacheName = "mstor.mbox." + file.getAbsolutePath().hashCode();
+        if (manager.getCache(cacheName) == null) {
+            manager.addCache(cacheName);
         }
-        return messageCache;
+        return manager.getCache(cacheName);
     }
 
     /**
@@ -391,8 +395,14 @@ public class MboxFile {
     public final InputStream getMessageAsStream(final int index)
             throws IOException {
         
-        ByteBuffer buffer = (ByteBuffer) getMessageCache().get(
-                new Integer(index));
+        ByteBuffer buffer = null;
+        
+        if (CapabilityHints.isHintEnabled(CapabilityHints.KEY_MBOX_CACHE_BUFFERS)) {
+            Element cacheElement = getMessageCache().get(new Integer(index));
+            if (cacheElement != null) {
+                buffer = (ByteBuffer) cacheElement.getObjectValue();
+            }
+        }
 
         if (buffer == null) {
             long position = getMessagePositions()[index];
@@ -409,9 +419,8 @@ public class MboxFile {
             buffer = read(position, (int) size);
             
             if (CapabilityHints.isHintEnabled(CapabilityHints.KEY_MBOX_CACHE_BUFFERS)) {
-
                 // add buffer to cache..
-                getMessageCache().put(new Integer(index), buffer);
+                getMessageCache().put(new Element(new Integer(index), buffer));
             }
             
             // adjust position to exclude the From_ line..
@@ -498,6 +507,9 @@ public class MboxFile {
             newMessagePositions[newMessagePositions.length - 1] = newMessagePosition;
             messagePositions = newMessagePositions;
         }
+        
+        // clear cache..
+        getMessageCache().removeAll();
     }
 
     /**
@@ -596,9 +608,9 @@ public class MboxFile {
      * @throws IOException
      */
     public final void close() throws IOException {
-        if (messageCache != null) {
-            messageCache.clear();
-        }
+//        if (messageCache != null) {
+//            messageCache.clear();
+//        }
         if (messagePositions != null) {
             messagePositions = null;
         }
