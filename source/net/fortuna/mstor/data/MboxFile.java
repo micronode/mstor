@@ -155,7 +155,7 @@ public class MboxFile {
     // System.getProperty("file.encoding")));
     // private static Charset charset =
     // Charset.forName(System.getProperty("mstor.mbox.encoding", "US-ASCII"));
-    private static Charset charset = Charset.forName(System.getProperty(
+    private static Charset charset = Charset.forName(Configurator.getProperty(
             "mstor.mbox.encoding", "ISO-8859-1"));
 
     private Log log = LogFactory.getLog(MboxFile.class);
