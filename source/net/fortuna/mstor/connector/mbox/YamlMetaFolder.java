@@ -65,10 +65,45 @@ public class YamlMetaFolder extends AbstractMetaFolder {
      * @see net.fortuna.mstor.connector.mbox.AbstractMetaFolder#removeMessages(javax.mail.Message[])
      */
     protected MessageDelegate[] removeMessages(Message[] deleted) {
-        // TODO Auto-generated method stub
-        return null;
+        List metas = new ArrayList();
+
+        for (Iterator i = folderExt.getMessages().iterator(); i
+                .hasNext();) {
+
+            MessageExt messageExt = (MessageExt) i.next();
+            int messageNumber = messageExt.getMessageNumber();
+
+            for (int n = 0; n < deleted.length; n++) {
+                if (deleted[n].getMessageNumber() == messageNumber) {
+                    i.remove();
+                    metas.add(new YamlMetaMessage(messageExt, this));
+                    updateMessageNumbers(messageNumber, -1);
+                    break;
+                }
+            }
+        }
+        return (YamlMetaMessage[]) metas.toArray(new YamlMetaMessage[metas.size()]);
     }
 
+
+    /**
+     * Updates all message numbers according to the specified arguments. Used when message metadata
+     * is removed from the list.
+     * 
+     * @param startIndex anything greater than (or equal to) the start index is affected
+     * @param delta amount to adjust relevant message numbers by
+     */
+    private void updateMessageNumbers(final int startIndex, final int delta) {
+        for (Iterator i = folderExt.getMessages().iterator(); i
+                .hasNext();) {
+            MessageExt messageExt = (MessageExt) i.next();
+            int messageNumber = messageExt.getMessageNumber();
+            if (messageNumber >= startIndex) {
+                messageExt.setMessageNumber(messageNumber + delta);
+            }
+        }
+    }
+    
     /*
      * (non-Javadoc)
      * 
