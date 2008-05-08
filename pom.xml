@@ -68,6 +68,7 @@
 				<includes>
 					<include>log4j.properties</include>
 					<include>mstor.properties</include>
+					<include>ehcache.xml</include>
 				</includes>
 			</testResource>
 		</testResources>
