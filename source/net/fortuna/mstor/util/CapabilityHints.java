@@ -37,7 +37,6 @@ package net.fortuna.mstor.util;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * A set of keys used to enable capability features.
