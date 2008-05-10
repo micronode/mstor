@@ -56,12 +56,10 @@ public class FlagsWrapper extends DelayedCreationBeanWrapper {
     /* (non-Javadoc)
      * @see org.ho.yaml.wrapper.DelayedCreationBeanWrapper#getPropertyNames()
      */
-    @Override
     public String[] getPropertyNames() {
         return new String[] {"systemFlags", "userFlags"};
     }
 
-    @Override
     protected Object createObject() {
         Flags flags = (Flags) createPrototype();
         Flag[] systemFlags = (Flag[]) values.get("systemFlags");
@@ -75,7 +73,6 @@ public class FlagsWrapper extends DelayedCreationBeanWrapper {
         return flags;
     }
     
-    @Override
     public Object createPrototype() {
         return new Flags();
     }

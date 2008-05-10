@@ -55,12 +55,10 @@ public class FlagWrapper extends DelayedCreationBeanWrapper {
     /* (non-Javadoc)
      * @see org.ho.yaml.wrapper.DelayedCreationBeanWrapper#getPropertyNames()
      */
-    @Override
     public String[] getPropertyNames() {
         return new String[] {"flag"};
     }
 
-    @Override
     public Object getProperty(Object obj, String name) {
         if ("flag".equals(name)) {
             if (Flag.ANSWERED.equals(obj)) {
@@ -88,7 +86,6 @@ public class FlagWrapper extends DelayedCreationBeanWrapper {
         return super.getProperty(obj, name);
     }
     
-    @Override
     protected Object createObject() {
         if ("ANSWERED".equals(values.get("flag"))) {
             return Flag.ANSWERED;
@@ -114,7 +111,6 @@ public class FlagWrapper extends DelayedCreationBeanWrapper {
         return createPrototype();
     }
     
-    @Override
     public Object createPrototype() {
         return Flag.USER;
     }
