@@ -1,0 +1,7 @@
+minimalOutput: true
+indentAmount: "  "
+suppressWarnings: true
+encoding: "ISO-8859-1"
+transfers:
+  folder: net.fortuna.mstor.data.yaml.FolderExt
+  message: net.fortuna.mstor.data.yaml.MessageExt
