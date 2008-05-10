@@ -16,7 +16,7 @@ import net.fortuna.mstor.connector.MessageDelegate;
 import net.fortuna.mstor.data.yaml.FolderExt;
 import net.fortuna.mstor.data.yaml.MessageExt;
 
-import org.ho.yaml.YamlConfig;
+import org.ho.yaml.Yaml;
 import org.ho.yaml.YamlDecoder;
 
 /**
@@ -26,14 +26,14 @@ public class YamlMetaFolder extends AbstractMetaFolder {
 
     private FolderExt folderExt;
 
-    private YamlConfig yamlConfig;
+//    private YamlConfig yamlConfig;
     
     /**
      * @param delegate
      */
     public YamlMetaFolder(FolderDelegate delegate) {
         super(delegate);
-        yamlConfig = new YamlConfig();
+//        yamlConfig = new YamlConfig();
         YamlDecoder decoder = null;
         try {
 //            folderExt = (FolderExt) yamlConfig.loadType(getFile(), FolderExt.class);
@@ -112,7 +112,7 @@ public class YamlMetaFolder extends AbstractMetaFolder {
     protected void save() throws DelegateException {
 //        FileOutputStream fout = null;
         try {
-            yamlConfig.dump(folderExt, getFile());
+            Yaml.dump(folderExt, getFile());
 //            fout = new FileOutputStream(getFile());
 //            yamlConfig.dump(folderExt, fout);
         }
@@ -161,7 +161,7 @@ public class YamlMetaFolder extends AbstractMetaFolder {
      * @see net.fortuna.mstor.connector.FolderDelegate#getFolder(java.lang.String)
      */
     public FolderDelegate getFolder(String name) {
-        return new YamlMetaFolder(getDelegate());
+        return new YamlMetaFolder(getDelegate().getFolder(name));
     }
 
     /*
