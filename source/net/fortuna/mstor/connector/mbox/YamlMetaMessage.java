@@ -83,7 +83,7 @@ public class YamlMetaMessage extends AbstractMessageDelegate {
      * @see net.fortuna.mstor.connector.MessageDelegate#getHeaders()
      */
     public InternetHeaders getHeaders() {
-        return messageExt.getHeaders();
+        return messageExt.getInternetHeaders();
     }
 
     /* (non-Javadoc)
@@ -158,7 +158,7 @@ public class YamlMetaMessage extends AbstractMessageDelegate {
             Header header = (Header) headers.nextElement();
             iHeaders.addHeader(header.getName(), header.getValue());
         }
-        messageExt.setHeaders(iHeaders);
+        messageExt.setInternetHeaders(iHeaders);
     }
 
     /* (non-Javadoc)

@@ -23,8 +23,8 @@ public class MessageExt {
 
     private Flags flags;
 
-    private InternetHeaders headers;
-
+    private InternetHeaders internetHeaders;
+    
     private long uid;
 
     /**
@@ -127,15 +127,15 @@ public class MessageExt {
     /**
      * @return the headers
      */
-    public final InternetHeaders getHeaders() {
-        return headers;
+    public final InternetHeaders getInternetHeaders() {
+        return internetHeaders;
     }
 
     /**
      * @param headers the headers to set
      */
-    public final void setHeaders(InternetHeaders headers) {
-        this.headers = headers;
+    public final void setInternetHeaders(InternetHeaders headers) {
+        this.internetHeaders = headers;
     }
 
     /**
