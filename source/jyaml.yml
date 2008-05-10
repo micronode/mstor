@@ -5,6 +5,9 @@ encoding: "ISO-8859-1"
 transfers:
   folder: net.fortuna.mstor.data.yaml.FolderExt
   message: net.fortuna.mstor.data.yaml.MessageExt
+  header: javax.mail.Header
 handlers:
   javax.mail.Flags: net.fortuna.mstor.data.yaml.FlagsWrapper
   javax.mail.Flags$Flag: net.fortuna.mstor.data.yaml.FlagWrapper
+  javax.mail.internet.InternetHeaders: net.fortuna.mstor.data.yaml.InternetHeadersWrapper
+  javax.mail.Header: net.fortuna.mstor.data.yaml.HeaderWrapper
