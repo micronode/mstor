@@ -41,6 +41,7 @@ import java.util.Properties;
 
 import junit.framework.TestSuite;
 import net.fortuna.mstor.MStorFolderTest;
+import net.fortuna.mstor.connector.mbox.MboxConnector.MetadataStrategy;
 
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.NotFileFilter;
@@ -58,6 +59,7 @@ public class MboxMStorFolderTest extends TestSuite {
         TestSuite suite = new TestSuite(MboxMStorFolderTest.class.getSimpleName());
         
         Properties p = new Properties();
+        p.setProperty(MboxConnector.KEY_METADATA_STRATEGY, MetadataStrategy.YAML.getName());
         
         File[] samples = new File("etc/samples/mailboxes").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
         //File[] samples = new File[] {new File("etc/samples/mailboxes/samples.mbx")};
