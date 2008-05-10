@@ -61,7 +61,7 @@ public class HeaderWrapper extends DelayedCreationBeanWrapper {
 
     public Object getProperty(Object obj, String name) {
         if ("value".equals(name)) {
-            return ((Header) obj).getValue().replaceAll("\\x1F", "");
+            return ((Header) obj).getValue().replaceAll("\\x1F|\\x0C", "");
         }
         return super.getProperty(obj, name);
     }
