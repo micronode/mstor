@@ -75,12 +75,22 @@ public class MStorMessageTest extends AbstractMStorTest {
     
             Message message;
     
-            for (int i = 1; i <= folder.getMessageCount(); i++) {
+            for (int i = 1; i <= folder.getMessageCount() && i <= 10; i++) {
                 message = folder.getMessage(i);
                 message.setFlag(Flags.Flag.SEEN, false);
                 message.setFlag(Flags.Flag.ANSWERED, true);
                 message.setFlag(Flags.Flag.USER, true);
                 message.setFlags(flags, true);
+                folder.close(false);
+                
+                folder = store.getFolder(folderNames[n]);
+                folder.open(Folder.READ_ONLY);
+                message = folder.getMessage(i);
+                assertTrue(message.getFlags().contains(Flags.Flag.SEEN));
+                assertTrue(message.getFlags().contains(Flags.Flag.RECENT));
+                assertTrue(message.getFlags().contains("user 1"));
+                assertTrue(message.getFlags().contains("user 2"));
+                assertFalse(message.getFlags().contains("user 3"));
             }
             folder.close(false);
         }
