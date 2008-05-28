@@ -495,17 +495,21 @@ public class MboxFile {
      */
     public final void appendMessage(final byte[] message) throws IOException {
 //        long newMessagePosition = getChannel().size();
-        
-        MessageAppender appender = new MessageAppender(getChannel());
-        long newMessagePosition = appender.appendMessage(message);
 
-        // update message positions..
-        if (messagePositions != null) {
-            long[] newMessagePositions = new long[messagePositions.length + 1];
-            System.arraycopy(messagePositions, 0, newMessagePositions, 0,
-                    messagePositions.length);
-            newMessagePositions[newMessagePositions.length - 1] = newMessagePosition;
-            messagePositions = newMessagePositions;
+        // synchronise purging and appending to avoid message loss..
+        synchronized (file) {
+            
+            MessageAppender appender = new MessageAppender(getChannel());
+            long newMessagePosition = appender.appendMessage(message);
+    
+            // update message positions..
+            if (messagePositions != null) {
+                long[] newMessagePositions = new long[messagePositions.length + 1];
+                System.arraycopy(messagePositions, 0, newMessagePositions, 0,
+                        messagePositions.length);
+                newMessagePositions[newMessagePositions.length - 1] = newMessagePosition;
+                messagePositions = newMessagePositions;
+            }
         }
         
         // clear cache..
@@ -527,35 +531,39 @@ public class MboxFile {
         FileChannel newChannel = newOut.getChannel();
         MessageAppender appender = new MessageAppender(newChannel);
 
-        loop: for (int i = 0; i < getMessagePositions().length; i++) {
-            for (int j = 0; j < msgnums.length; j++) {
-                if (msgnums[j] == i) {
-                    // don't save message to file if in purge list..
-                    continue loop;
+        // synchronise purging and appending to avoid message loss..
+        synchronized (file) {
+            
+            loop: for (int i = 0; i < getMessagePositions().length; i++) {
+                for (int j = 0; j < msgnums.length; j++) {
+                    if (msgnums[j] == i) {
+                        // don't save message to file if in purge list..
+                        continue loop;
+                    }
                 }
+                // append current message to new file..
+                appender.appendMessage(getMessage(i));
             }
-            // append current message to new file..
-            appender.appendMessage(getMessage(i));
+            // ensure new file is properly written..
+            newOut.close();
+
+            // release system resources..
+            close();
+
+            // Create the new file in the temp directory which is always read/write
+            File tempFile = new File(System.getProperty("java.io.tmpdir"),
+                    file.getName() + "." + System.currentTimeMillis());
+            
+            if (!renameTo(file, tempFile)) {
+                throw new IOException("Unable to rename existing file");
+            }
+            // wait until exit to delete in case program terminates
+            // abnormally and need to recover data..
+            tempFile.deleteOnExit();
+
+            // rename new file..
+            renameTo(newFile, file);
         }
-        // ensure new file is properly written..
-        newOut.close();
-
-        // release system resources..
-        close();
-
-        // Create the new file in the temp directory which is always read/write
-        File tempFile = new File(System.getProperty("java.io.tmpdir"),
-                file.getName() + "." + System.currentTimeMillis());
-        
-        if (!renameTo(file, tempFile)) {
-            throw new IOException("Unable to rename existing file");
-        }
-        // wait until exit to delete in case program terminates
-        // abnormally and need to recover data..
-        tempFile.deleteOnExit();
-
-        // rename new file..
-        renameTo(newFile, file);
     }
 
     /**
