@@ -635,7 +635,7 @@ public class MboxFile {
             // check that first message is correct..
             String line = reader.readLine();
 
-            return VALID_MBOX_PATTERN.matcher(line).matches();
+            return line == null || VALID_MBOX_PATTERN.matcher(line).matches();
         }
         catch (Exception e) {
             Log log = LogFactory.getLog(MboxFile.class);
