@@ -24,6 +24,8 @@ import org.ho.yaml.YamlDecoder;
  */
 public class YamlMetaFolder extends AbstractMetaFolder {
 
+    public static final String FILE_EXTENSION = ".yml";
+
     private FolderExt folderExt;
 
 //    private YamlConfig yamlConfig;
@@ -56,7 +58,7 @@ public class YamlMetaFolder extends AbstractMetaFolder {
      * @see net.fortuna.mstor.connector.mbox.AbstractMetaFolder#getFileExtension()
      */
     protected String getFileExtension() {
-        return ".yml";
+        return FILE_EXTENSION;
     }
 
     /*
@@ -112,7 +114,7 @@ public class YamlMetaFolder extends AbstractMetaFolder {
     protected void save() throws DelegateException {
 //        FileOutputStream fout = null;
         try {
-            Yaml.dump(folderExt, getFile());
+            Yaml.dump(folderExt, getFile(), true);
 //            fout = new FileOutputStream(getFile());
 //            yamlConfig.dump(folderExt, fout);
         }

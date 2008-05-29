@@ -73,14 +73,15 @@ public class MboxFolder extends AbstractFolderDelegate {
          * @see java.io.FileFilter#accept(java.io.File)
          */
         public boolean accept(File pathname) {
-            if (pathname.getName().endsWith(MetaFolder.FILE_EXTENSION)) {
+            if (pathname.getName().endsWith(MetaFolder.FILE_EXTENSION)
+                    || pathname.getName().endsWith(YamlMetaFolder.FILE_EXTENSION)) {
                 return false;
             }
             else if (pathname.getName().endsWith(DIR_EXTENSION)) {
                 return false;
             }
-            else if (!pathname.isDirectory() && pathname.length() >= 0
-                    && !MboxFile.isValid(pathname)) {
+            else if (!pathname.isDirectory() && !pathname.getName().startsWith(".")
+                    && pathname.length() >= 0 && !MboxFile.isValid(pathname)) {
                 return false;
             }
             return true;
