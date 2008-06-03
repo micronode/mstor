@@ -355,6 +355,12 @@ public class MboxFolder extends AbstractFolderDelegate {
      * @see net.fortuna.mstor.FolderDelegate#expunge(javax.mail.Message[])
      */
     public final void expunge(Message[] deleted) throws MessagingException {
+        
+        // No need to do anything if no messages have been deleted..
+        if (deleted.length == 0) {
+            return;
+        }
+        
         int[] mboxIndices = new int[deleted.length];
         int[] metaIndices = new int[deleted.length];
 
