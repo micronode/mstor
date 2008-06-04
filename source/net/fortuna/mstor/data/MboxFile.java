@@ -248,8 +248,7 @@ public class MboxFile {
         ByteBuffer buffer = null;
         try {
             if (BufferStrategy.MAPPED.equals(BufferStrategy.getBufferStrategy(Configurator.getProperty(KEY_BUFFER_STRATEGY)))) {
-                buffer = getChannel().map(FileChannel.MapMode.READ_ONLY,
-                        position, size);
+                buffer = getChannel().map(FileChannel.MapMode.READ_ONLY, position, size);
             }
             else {
                 if (BufferStrategy.DIRECT.equals(BufferStrategy.getBufferStrategy(Configurator.getProperty(KEY_BUFFER_STRATEGY)))) {
@@ -263,6 +262,7 @@ public class MboxFile {
                 }
                 getChannel().position(position);
                 getChannel().read(buffer);
+                buffer.flip();
             }
         }
         catch (IOException ioe) {
@@ -272,7 +272,6 @@ public class MboxFile {
             getRaf().read(buf);
             buffer = ByteBuffer.wrap(buf);
         }
-        buffer.flip();
         return buffer;
     }
 
