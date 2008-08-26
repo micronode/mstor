@@ -213,7 +213,12 @@ public class RepositoryConnector extends AbstractProtocolConnector {
                 }
                 catch (PathNotFoundException pnfe) {
                     if ("true".equals(session.getProperty("mstor.repository.create"))) {
-                        rootNode = repositorySession.getRootNode().addNode(mailRoot);
+                        String[] nodes = mailRoot.split("/");
+                        rootNode = repositorySession.getRootNode();
+                        for (int i = 0; i < nodes.length; i++) {
+                            rootNode = rootNode.addNode(nodes[i]);
+                        }
+                        repositorySession.save();
                     }
                     else {
                         throw pnfe;
