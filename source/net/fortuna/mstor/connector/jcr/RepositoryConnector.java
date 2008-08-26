@@ -35,11 +35,13 @@
  */
 package net.fortuna.mstor.connector.jcr;
 
-import java.io.File;
-import java.util.Hashtable;
+import java.util.Properties;
 
 import javax.jcr.Credentials;
 import javax.jcr.LoginException;
+import javax.jcr.NamespaceException;
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
 import javax.jcr.SimpleCredentials;
@@ -47,6 +49,8 @@ import javax.jcr.Workspace;
 import javax.mail.AuthenticationFailedException;
 import javax.mail.Folder;
 import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
 import javax.mail.URLName;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -121,6 +125,8 @@ public class RepositoryConnector extends AbstractProtocolConnector {
         
     }
     
+    private Session session;
+    
     private Repository repository;
     
     private javax.jcr.Session repositorySession;
@@ -130,27 +136,52 @@ public class RepositoryConnector extends AbstractProtocolConnector {
      * @param store
      * @param session
      */
-    public RepositoryConnector(URLName url, MStorStore store) {
+    public RepositoryConnector(URLName url, MStorStore store, Session session) {
         super(url, store);
+        this.session = session;
     }
     
     /* (non-Javadoc)
-     * @see net.fortuna.mstor.ProtocolHandler#connect(java.lang.String, int, java.lang.String, java.lang.String)
+     * @see net.fortuna.mstor.connector.ProtocolConnector#connect()
      */
-    public boolean connect(String host, int port, String user, String password)
-            throws AuthenticationFailedException, MessagingException {
-
+    public boolean connect() throws AuthenticationFailedException, MessagingException {
+        String providerUrl = session.getProperty("mstor.repository.provider.url");
+        
         try {
-            if (user != null) {
-                Credentials credentials = new SimpleCredentials(user, password.toCharArray());
-                repositorySession = getRepository().login(credentials);
+            Context context = null;
+            if (providerUrl != null) {
+                Properties p = new Properties();
+                p.setProperty(Context.PROVIDER_URL, providerUrl);
+                context = new InitialContext(p);
+            }
+            else {
+                context = new InitialContext();
+            }
+            
+            repository = (Repository) context.lookup(session.getProperty("mstor.repository.name"));
+        }
+        catch (NamingException ne) {
+            throw new MessagingException("Error locating repository", ne);
+        }
+        
+        PasswordAuthentication auth = session.requestPasswordAuthentication(null, 0, "mstor", null, null);
+            
+        try {
+            if (auth != null) {
+                Credentials credentials = new SimpleCredentials(auth.getUserName(), auth.getPassword().toCharArray());
+                repositorySession = repository.login(credentials);
             }
             else {
                 // login anonymously..
-                repositorySession = getRepository().login();
+                repositorySession = repository.login();
             }
             Workspace ws = repositorySession.getWorkspace();
-            ws.getNamespaceRegistry().registerNamespace(NAMESPACE, NAMESPACE_URL);
+            try {
+                ws.getNamespaceRegistry().getURI(NAMESPACE);
+            }
+            catch (NamespaceException ne) {
+                ws.getNamespaceRegistry().registerNamespace(NAMESPACE, NAMESPACE_URL);
+            }
             return true;
         }
         catch (LoginException le) {
@@ -160,10 +191,6 @@ public class RepositoryConnector extends AbstractProtocolConnector {
         catch (RepositoryException re) {
             throw new MessagingException("Error authenicating user", re);
         }
-        catch (NamingException ne) {
-            throw new MessagingException("Error locating repository", ne);
-        }
-//        return false;
     }
 
     /* (non-Javadoc)
@@ -177,19 +204,30 @@ public class RepositoryConnector extends AbstractProtocolConnector {
      * @see net.fortuna.mstor.ProtocolHandler#getDefaultFolder()
      */
     public Folder getDefaultFolder() throws MessagingException {
+        Node rootNode = null;
+        String mailRoot = session.getProperty("mstor.repository.root");
         try {
-            if (url.getRef() != null) {
-                return new MStorFolder(store, new RepositoryFolder(
-                        repositorySession.getRootNode().getNode(url.getRef())));
+            if (mailRoot != null) {
+                try {
+                    rootNode = repositorySession.getRootNode().getNode(mailRoot);
+                }
+                catch (PathNotFoundException pnfe) {
+                    if ("true".equals(session.getProperty("mstor.repository.create"))) {
+                        rootNode = repositorySession.getRootNode().addNode(mailRoot);
+                    }
+                    else {
+                        throw pnfe;
+                    }
+                }
             }
             else {
-                return new MStorFolder(store, new RepositoryFolder(
-                        repositorySession.getRootNode()));
+                rootNode = repositorySession.getRootNode();
             }
         }
         catch (RepositoryException re) {
             throw new MessagingException("Error retrieving default folder node", re);
         }
+        return new MStorFolder(store, new RepositoryFolder(rootNode));
     }
     
     /* (non-Javadoc)
@@ -211,37 +249,5 @@ public class RepositoryConnector extends AbstractProtocolConnector {
      */
     public Folder getFolder(URLName url) throws MessagingException {
         return getDefaultFolder().getFolder(url.getFile());
-    }
-    
-    /**
-     * @return
-     * @throws NamingException
-     */
-    private Repository getRepository() throws NamingException, RepositoryException {
-        if (repository == null) {
-            Hashtable env = new Hashtable();
-            if (url.getHost() != null) {
-                if (url.getPort() > 0) {
-                    env.put(Context.PROVIDER_URL, url.getHost() + ':' + url.getPort());
-                }
-                else {
-                    env.put(Context.PROVIDER_URL, url.getHost());
-                }
-            }
-            else {
-                env.put(Context.PROVIDER_URL, "localhost");
-            }
-            Context context = new InitialContext(env);
-            String repoName = new File(url.getFile()).getName();
-//            try {
-                repository = (Repository) context.lookup(repoName);
-//            }
-//            catch (NamingException ne) {
-                // bind repository..
-//                RegistryHelper.registerRepository(context, repoName, "repository.xml", new File(url.getFile(), ".metadata").getAbsolutePath(), false);
-//            }
-//            repository = (Repository) context.lookup(repoName);
-        }
-        return repository;
     }
 }

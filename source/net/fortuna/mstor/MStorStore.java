@@ -114,7 +114,8 @@ public class MStorStore extends Store {
     protected final boolean protocolConnect(final String host, final int port,
             final String user, final String password) throws MessagingException {
         
-        return protocolHandler.connect(host, port, user, password);
+//        return protocolHandler.connect(host, port, user, password);
+        return protocolHandler.connect();
     }
 
     /**

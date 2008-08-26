@@ -114,13 +114,11 @@ public class MboxConnector extends AbstractProtocolConnector {
         metadataStrategy = MetadataStrategy.getMetadataStrategy(session.getProperties().getProperty(KEY_METADATA_STRATEGY,
                 Configurator.getProperty(KEY_METADATA_STRATEGY)));
     }
-    
+
     /* (non-Javadoc)
-     * @see net.fortuna.mstor.ProtocolHandler#connect(java.lang.String, int, java.lang.String, java.lang.String)
+     * @see net.fortuna.mstor.connector.ProtocolConnector#connect()
      */
-    public boolean connect(String host, int port, String user, String password)
-            throws AuthenticationFailedException, MessagingException {
-        
+    public boolean connect() throws AuthenticationFailedException, MessagingException {
         // Authentication not supported..
         return true;
     }

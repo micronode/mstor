@@ -48,16 +48,11 @@ import javax.mail.URLName;
 public interface ProtocolConnector {
 
     /**
-     * @param host
-     * @param port
-     * @param user
-     * @param password
      * @return
      * @throws AuthenticationFailedException
      * @throws MessagingException
      */
-    boolean connect(String host, int port, String user, String password)
-        throws AuthenticationFailedException, MessagingException;
+    boolean connect() throws AuthenticationFailedException, MessagingException;
     
     /**
      * @throws MessagingException

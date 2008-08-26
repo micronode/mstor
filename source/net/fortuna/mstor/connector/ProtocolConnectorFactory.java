@@ -55,8 +55,8 @@ public class ProtocolConnectorFactory {
      * @return
      */
     public ProtocolConnector create(URLName url, MStorStore store, Session session) {
-        if (url.getHost() != null) {
-            return new RepositoryConnector(url, store);
+        if (session.getProperty("mstor.repository.name") != null) {
+            return new RepositoryConnector(url, store, session);
         }
         return new MboxConnector(url, store, session);
     }
