@@ -103,7 +103,7 @@ public class MetaFolder extends AbstractMetaFolder {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.FolderDelegate#getFolder(java.lang.String)
      */
-    public FolderDelegate getFolder(String name) {
+    public FolderDelegate getFolder(String name) throws MessagingException {
         return new MetaFolder(getDelegate().getFolder(name));
     }
 

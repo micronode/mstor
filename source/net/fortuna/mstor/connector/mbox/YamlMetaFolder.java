@@ -162,7 +162,7 @@ public class YamlMetaFolder extends AbstractMetaFolder {
      * 
      * @see net.fortuna.mstor.connector.FolderDelegate#getFolder(java.lang.String)
      */
-    public FolderDelegate getFolder(String name) {
+    public FolderDelegate getFolder(String name) throws MessagingException {
         return new YamlMetaFolder(getDelegate().getFolder(name));
     }
 
