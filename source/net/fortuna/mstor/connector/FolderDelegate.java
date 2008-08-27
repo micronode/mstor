@@ -108,7 +108,7 @@ public interface FolderDelegate {
      * @param name
      * @return
      */
-    FolderDelegate getFolder(String name);
+    FolderDelegate getFolder(String name) throws MessagingException;
     
     /**
      * Delete the folder delegate.

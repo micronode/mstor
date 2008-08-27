@@ -44,7 +44,6 @@ import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
-import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -102,7 +101,8 @@ public class RepositoryFolder extends AbstractFolderDelegate {
      */
     public String getName() {
         try {
-            return node.getProperty(PropertyNames.NAME).getString();
+//            return node.getProperty(PropertyNames.NAME).getString();
+            return node.getName();
         }
         catch (RepositoryException re) {
             log.error("Error retrieving folder name", re);
@@ -144,7 +144,8 @@ public class RepositoryFolder extends AbstractFolderDelegate {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.FolderDelegate#getFolder(java.lang.String)
      */
-    public FolderDelegate getFolder(String name) {
+    public FolderDelegate getFolder(String name) throws MessagingException {
+        /*
         try {
             String queryString = node.getPath() + getSeparator() + NodeNames.FOLDER
                     + '[' + PropertyNames.NAME + '=' + name + ']';
@@ -157,6 +158,16 @@ public class RepositoryFolder extends AbstractFolderDelegate {
             log.error("Error retrieving folder [" + name + "]", re);
         }
         return null;
+        */
+        try {
+            if (node.hasNode(name)) {
+                return new RepositoryFolder(node.getNode(name));
+            }
+            return new RepositoryFolder(node.addNode(name));
+        }
+        catch (RepositoryException re) {
+            throw new MessagingException("Error retrieving folder [" + name + "]", re);
+        }
     }
     
     /* (non-Javadoc)
