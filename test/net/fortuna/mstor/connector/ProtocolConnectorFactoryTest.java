@@ -56,13 +56,15 @@ public class ProtocolConnectorFactoryTest extends TestCase {
      * Test method for {@link net.fortuna.mstor.connector.ProtocolConnectorFactory#create(javax.mail.URLName, net.fortuna.mstor.MStorStore, javax.mail.Session)}.
      */
     public void testCreate() {
+        Properties p = new Properties();
         assertTrue(ProtocolConnectorFactory.getInstance().create(
                 new URLName("mstor", null, -1, "/tmp/mbox", null, null),
-                null, Session.getDefaultInstance(new Properties())) instanceof MboxConnector);
+                null, Session.getDefaultInstance(p)) instanceof MboxConnector);
         
+        p.setProperty("mstor.repository.name", "test");
         assertTrue(ProtocolConnectorFactory.getInstance().create(
                 new URLName("mstor", "localhost", -1, "/tmp/mbox", "test", null),
-                null, null) instanceof RepositoryConnector);
+                null, Session.getDefaultInstance(p)) instanceof RepositoryConnector);
     }
 
 }
