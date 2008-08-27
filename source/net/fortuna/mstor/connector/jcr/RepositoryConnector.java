@@ -165,15 +165,19 @@ public class RepositoryConnector extends AbstractProtocolConnector {
         }
         
         PasswordAuthentication auth = session.requestPasswordAuthentication(null, 0, "mstor", null, null);
+//        PasswordAuthentication auth = session.getPasswordAuthentication(url);
+        
+        // may be null, in which case the default workspace is used..
+        String workspaceName = session.getProperty("mstor.repository.workspace");
             
         try {
             if (auth != null) {
                 Credentials credentials = new SimpleCredentials(auth.getUserName(), auth.getPassword().toCharArray());
-                repositorySession = repository.login(credentials);
+                repositorySession = repository.login(credentials, workspaceName);
             }
             else {
                 // login anonymously..
-                repositorySession = repository.login();
+                repositorySession = repository.login(workspaceName);
             }
             Workspace ws = repositorySession.getWorkspace();
             try {
