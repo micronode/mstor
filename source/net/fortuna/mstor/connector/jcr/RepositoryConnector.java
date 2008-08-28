@@ -86,7 +86,7 @@ public class RepositoryConnector extends AbstractProtocolConnector {
         
         public static final String MESSAGE = NAMESPACE + ':' + "message";
         
-        public static final String CONTENT = NAMESPACE + ':' + "content";
+//        public static final String CONTENT = NAMESPACE + ':' + "content";
         
         // message-specific nodes..
         public static final String HEADER = NAMESPACE + ':' + "header";
@@ -220,9 +220,14 @@ public class RepositoryConnector extends AbstractProtocolConnector {
                         String[] nodes = mailRoot.split("/");
                         rootNode = repositorySession.getRootNode();
                         for (int i = 0; i < nodes.length; i++) {
-                            rootNode = rootNode.addNode(nodes[i]);
+                            try {
+                                rootNode = rootNode.getNode(nodes[i]);
+                            }
+                            catch (PathNotFoundException pnfe2) {
+                                rootNode = rootNode.addNode(nodes[i]);
+                            }
                         }
-                        repositorySession.save();
+                        repositorySession.getRootNode().save();
                     }
                     else {
                         throw pnfe;
@@ -236,7 +241,7 @@ public class RepositoryConnector extends AbstractProtocolConnector {
         catch (RepositoryException re) {
             throw new MessagingException("Error retrieving default folder node", re);
         }
-        return new MStorFolder(store, new RepositoryFolder(rootNode));
+        return new MStorFolder(store, new RepositoryFolder(rootNode, true));
     }
     
     /* (non-Javadoc)

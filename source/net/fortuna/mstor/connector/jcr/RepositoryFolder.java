@@ -44,6 +44,7 @@ import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
+import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -54,6 +55,8 @@ import net.fortuna.mstor.connector.FolderDelegate;
 import net.fortuna.mstor.connector.MessageDelegate;
 import net.fortuna.mstor.connector.jcr.RepositoryConnector.NodeNames;
 import net.fortuna.mstor.connector.jcr.RepositoryConnector.PropertyNames;
+import net.fortuna.mstor.connector.jcr.query.GetFolderQueryBuilder;
+import net.fortuna.mstor.connector.jcr.query.ListFoldersQueryBuilder;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -68,12 +71,22 @@ public class RepositoryFolder extends AbstractFolderDelegate {
     
     private Node node;
     
-    private QueryManager queryManager;
+    private boolean root;
     
+    private QueryManager queryManager;
+
     /**
      * @param node
      */
     public RepositoryFolder(Node node) {
+        this(node, false);
+    }
+
+    /**
+     * @param node
+     * @param root indicates whether this is the root folder
+     */
+    public RepositoryFolder(Node node, boolean root) {
         this.node = node;
         try {
             this.queryManager = node.getSession().getWorkspace().getQueryManager();
@@ -81,6 +94,7 @@ public class RepositoryFolder extends AbstractFolderDelegate {
         catch (RepositoryException re) {
             log.error("Error obtaining query manager", re);
         }
+        this.root = root;
     }
     
     /* (non-Javadoc)
@@ -101,8 +115,8 @@ public class RepositoryFolder extends AbstractFolderDelegate {
      */
     public String getName() {
         try {
-//            return node.getProperty(PropertyNames.NAME).getString();
-            return node.getName();
+            return node.getProperty(PropertyNames.NAME).getString();
+//            return node.getName();
         }
         catch (RepositoryException re) {
             log.error("Error retrieving folder name", re);
@@ -123,20 +137,32 @@ public class RepositoryFolder extends AbstractFolderDelegate {
         }
         b.insert(0, "//");
         return b.toString();
+
+        /*
+        try {
+            return node.getPath();
+        }
+        catch (RepositoryException re) {
+            log.error("Error retrieving folder name", re);
+        }
+        return null;
+        */
     }
     
     /* (non-Javadoc)
      * @see net.fortuna.mstor.FolderDelegate#getParent()
      */
     public FolderDelegate getParent() {
-        try {
-            Node parentNode = node.getParent();
-            if (!parentNode.equals(node.getSession().getRootNode())) {
+        if (!root) {
+            try {
+//                Node parentNode = node.getParent();
+//                if (!parentNode.equals(node.getSession().getRootNode())) {
                 return new RepositoryFolder(node.getParent());
+//                }
             }
-        }
-        catch (RepositoryException re) {
-            log.error("Error retrieving folder parent", re);
+            catch (RepositoryException re) {
+                log.error("Error retrieving folder parent", re);
+            }
         }
         return null;
     }
@@ -145,20 +171,29 @@ public class RepositoryFolder extends AbstractFolderDelegate {
      * @see net.fortuna.mstor.FolderDelegate#getFolder(java.lang.String)
      */
     public FolderDelegate getFolder(String name) throws MessagingException {
-        /*
         try {
-            String queryString = node.getPath() + getSeparator() + NodeNames.FOLDER
-                    + '[' + PropertyNames.NAME + '=' + name + ']';
+            Node folderNode = null;
             
-            Query folderQuery = queryManager.createQuery(queryString, Query.XPATH);
-            Node folderNode = folderQuery.execute().getNodes().nextNode();
+//            String queryString = node.getPath() + getSeparator() + NodeNames.FOLDER
+//                    + '[' + PropertyNames.NAME + '=' + name + ']';
+            
+//            Query folderQuery = queryManager.createQuery(queryString, Query.XPATH);
+            Query query = new GetFolderQueryBuilder(queryManager, node, name).build();
+            NodeIterator nodes = query.execute().getNodes();
+            if (nodes.hasNext()) {
+                folderNode = nodes.nextNode();
+            }
+            else {
+                folderNode = node.addNode(NodeNames.FOLDER);
+                folderNode.setProperty(PropertyNames.NAME, name);
+            }
             return new RepositoryFolder(folderNode);
         }
         catch (RepositoryException re) {
             log.error("Error retrieving folder [" + name + "]", re);
         }
         return null;
-        */
+/*
         try {
             if (node.hasNode(name)) {
                 return new RepositoryFolder(node.getNode(name));
@@ -168,6 +203,7 @@ public class RepositoryFolder extends AbstractFolderDelegate {
         catch (RepositoryException re) {
             throw new MessagingException("Error retrieving folder [" + name + "]", re);
         }
+*/
     }
     
     /* (non-Javadoc)
@@ -176,7 +212,15 @@ public class RepositoryFolder extends AbstractFolderDelegate {
     public FolderDelegate[] list(String pattern) {
         List folders = new ArrayList();
         try {
-            NodeIterator ni = node.getNodes(NodeNames.FOLDER);
+//            NodeIterator ni = node.getNodes(NodeNames.FOLDER);
+//            NodeIterator ni = node.getNodes(pattern);
+//            Query query = queryManager.createQuery(node.getPath()+ "//element(*," + NodeNames.FOLDER + ")",
+//                    Query.XPATH);
+//            Query query = queryManager.createQuery(node.getPath() + getSeparator() + NodeNames.FOLDER
+//                    + '[' + PropertyNames.NAME + '=' + pattern + ']', Query.XPATH);
+            Query query = new ListFoldersQueryBuilder(queryManager, node, pattern).build();
+
+            NodeIterator ni = query.execute().getNodes();
             while (ni.hasNext()) {
                 folders.add(new RepositoryFolder(ni.nextNode()));
             }
@@ -267,8 +311,14 @@ public class RepositoryFolder extends AbstractFolderDelegate {
      */
     public InputStream getMessageAsStream(int index) throws IOException {
         try {
-            Node messageNode = node.getNode(NodeNames.MESSAGE + '[' + index + ']');
-            return messageNode.getProperty(NodeNames.CONTENT).getStream();
+//            Node messageNode = node.getNode(NodeNames.MESSAGE + '[' + index + ']');
+//            return messageNode.getProperty(NodeNames.CONTENT).getStream();
+            try {
+                node = node.getNode("jcr:content");
+            } catch (PathNotFoundException e) {
+                node = node.getProperty("jcr:content").getNode();
+            }
+            return node.getProperty("jcr:data").getStream();
         }
         catch (RepositoryException re) {
             log.error("Error retrieving message stream", re);
@@ -290,6 +340,7 @@ public class RepositoryFolder extends AbstractFolderDelegate {
     public boolean create(int type) throws MessagingException {
         try {
             node.setProperty(PropertyNames.TYPE, type);
+            node.getParent().save();
             return true;
         }
         catch (RepositoryException re) {
@@ -308,9 +359,7 @@ public class RepositoryFolder extends AbstractFolderDelegate {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.data.AbstractFolderDelegate#createMetaMessage(int)
      */
-    protected MessageDelegate createMessage(int messageNumber)
-        throws DelegateException {
-        
+    protected MessageDelegate createMessage(int messageNumber) throws DelegateException {
         try {
             Node messageNode = node.addNode(NodeNames.MESSAGE);
             messageNode.setProperty("messageNumber", messageNumber);
@@ -329,9 +378,7 @@ public class RepositoryFolder extends AbstractFolderDelegate {
             NodeIterator messageNodes = node.getNodes(NodeNames.MESSAGE);
             while (messageNodes.hasNext()) {
                 Node messageNode = messageNodes.nextNode();
-                if (messageNode.getProperty("messageNumber").getLong()
-                        == messageNumber) {
-                    
+                if (messageNode.getProperty("messageNumber").getLong() == messageNumber) {
                     return new RepositoryMessage(messageNode);
                 }
             }
@@ -390,6 +437,18 @@ public class RepositoryFolder extends AbstractFolderDelegate {
      * @see net.fortuna.mstor.FolderDelegate#getLastModified()
      */
     public long getLastModified() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException();
+//        throw new UnsupportedOperationException();
+        try {
+            try {
+                node = node.getNode("jcr:content");
+            } catch (PathNotFoundException e) {
+                node = node.getProperty("jcr:content").getNode();
+            }
+            return node.getProperty("jcr:lastModified").getDate().getTime().getTime();
+        }
+        catch (RepositoryException re) {
+            log.error("Error retrieving timestamp", re);
+        }
+        return 0;
     }
 }
