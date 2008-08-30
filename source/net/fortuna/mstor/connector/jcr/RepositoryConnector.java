@@ -41,7 +41,6 @@ import javax.jcr.Credentials;
 import javax.jcr.LoginException;
 import javax.jcr.NamespaceException;
 import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
 import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
 import javax.jcr.SimpleCredentials;
@@ -209,30 +208,21 @@ public class RepositoryConnector extends AbstractProtocolConnector {
      */
     public Folder getDefaultFolder() throws MessagingException {
         Node rootNode = null;
-        String mailRoot = session.getProperty("mstor.repository.root");
+        String rootUuid = session.getProperty("mstor.repository.root.uuid");
         try {
-            if (mailRoot != null) {
-                try {
-                    rootNode = repositorySession.getRootNode().getNode(mailRoot);
-                }
-                catch (PathNotFoundException pnfe) {
-                    if ("true".equals(session.getProperty("mstor.repository.create"))) {
-                        String[] nodes = mailRoot.split("/");
-                        rootNode = repositorySession.getRootNode();
-                        for (int i = 0; i < nodes.length; i++) {
-                            try {
-                                rootNode = rootNode.getNode(nodes[i]);
-                            }
-                            catch (PathNotFoundException pnfe2) {
-                                rootNode = rootNode.addNode(nodes[i]);
-                            }
-                        }
-                        repositorySession.getRootNode().save();
-                    }
-                    else {
-                        throw pnfe;
-                    }
-                }
+            if (rootUuid != null) {
+//                try {
+                    rootNode = repositorySession.getNodeByUUID(rootUuid);
+//                }
+//                catch (PathNotFoundException pnfe) {
+//                    if ("true".equals(session.getProperty("mstor.repository.create"))) {
+//                        rootNode = RepositoryUtils.createNodesForPath(mailRoot, repositorySession.getRootNode());
+//                        repositorySession.getRootNode().save();
+//                    }
+//                    else {
+//                        throw pnfe;
+//                    }
+//                }
             }
             else {
                 rootNode = repositorySession.getRootNode();
