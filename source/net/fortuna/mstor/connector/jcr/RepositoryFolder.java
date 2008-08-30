@@ -185,6 +185,7 @@ public class RepositoryFolder extends AbstractFolderDelegate {
             }
             else {
                 folderNode = node.addNode(NodeNames.FOLDER);
+                folderNode.addMixin("mix:referenceable");
                 folderNode.setProperty(PropertyNames.NAME, name);
             }
             return new RepositoryFolder(folderNode);

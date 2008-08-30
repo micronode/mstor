@@ -68,8 +68,11 @@ public class GetFolderQueryBuilder extends AbstractQueryBuilder {
      */
     protected String getQueryString() throws RepositoryException {
         StringBuffer b = new StringBuffer();
-        b.append('/');
-        b.append(node.getPath());
+//        b.append('/');
+//        b.append(node.getPath());
+        b.append("//*[@jcr:uuid='");
+        b.append(node.getUUID());
+        b.append("']");
         b.append('/');
         b.append(NodeNames.FOLDER);
         b.append("[@");
