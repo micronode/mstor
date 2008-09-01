@@ -38,7 +38,6 @@ package net.fortuna.mstor.connector.jcr.query;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.query.Query;
-import javax.jcr.query.QueryManager;
 
 import net.fortuna.mstor.connector.jcr.RepositoryConnector.NodeNames;
 import net.fortuna.mstor.connector.jcr.RepositoryConnector.PropertyNames;
@@ -56,9 +55,10 @@ public class GetFolderQueryBuilder extends AbstractQueryBuilder {
     /**
      * @param manager
      * @param type
+     * @throws RepositoryException 
      */
-    public GetFolderQueryBuilder(QueryManager manager, Node node, String folderName) {
-        super(manager, Query.XPATH);
+    public GetFolderQueryBuilder(Node node, String folderName) throws RepositoryException {
+        super(node.getSession().getWorkspace().getQueryManager(), Query.XPATH);
         this.node = node;
         this.folderName = folderName;
     }

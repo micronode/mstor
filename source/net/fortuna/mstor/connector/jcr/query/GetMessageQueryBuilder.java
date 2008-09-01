@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Created on 28/08/2008
+ * Created on 01/09/2008
  *
  * Copyright (c) 2008, Ben Fortuna
  * All rights reserved.
@@ -46,21 +46,21 @@ import net.fortuna.mstor.connector.jcr.RepositoryConnector.PropertyNames;
  * @author Ben
  *
  */
-public class ListFoldersQueryBuilder extends AbstractQueryBuilder {
+public class GetMessageQueryBuilder extends AbstractQueryBuilder {
 
-    private String pattern;
-    
     private Node node;
     
+    private int messageNumber;
+
     /**
      * @param manager
      * @param type
      * @throws RepositoryException 
      */
-    public ListFoldersQueryBuilder(Node node, String pattern) throws RepositoryException {
+    public GetMessageQueryBuilder(Node node, int messageNumber) throws RepositoryException {
         super(node.getSession().getWorkspace().getQueryManager(), Query.XPATH);
         this.node = node;
-        this.pattern = pattern;
+        this.messageNumber = messageNumber;
     }
 
     /* (non-Javadoc)
@@ -68,20 +68,16 @@ public class ListFoldersQueryBuilder extends AbstractQueryBuilder {
      */
     protected String getQueryString() throws RepositoryException {
         StringBuffer b = new StringBuffer();
-//        b.append('/');
-//        b.append(node.getPath());
         b.append("//*[@jcr:uuid='");
         b.append(node.getUUID());
         b.append("']");
         b.append('/');
-        b.append(NodeNames.FOLDER);
-        if (!"%".equals(pattern)) {
-            b.append("[@");
-            b.append(PropertyNames.NAME);
-            b.append("='");
-            b.append(pattern);
-            b.append("']");
-        }
+        b.append(NodeNames.MESSAGE);
+        b.append("[@");
+        b.append(PropertyNames.MESSAGE_NUMBER);
+        b.append('=');
+        b.append(messageNumber);
+        b.append(']');
         return b.toString();
     }
 
