@@ -35,6 +35,8 @@
  */
 package net.fortuna.mstor.connector.jcr;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -45,7 +47,6 @@ import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.query.Query;
-import javax.jcr.query.QueryManager;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 
@@ -56,6 +57,7 @@ import net.fortuna.mstor.connector.MessageDelegate;
 import net.fortuna.mstor.connector.jcr.RepositoryConnector.NodeNames;
 import net.fortuna.mstor.connector.jcr.RepositoryConnector.PropertyNames;
 import net.fortuna.mstor.connector.jcr.query.GetFolderQueryBuilder;
+import net.fortuna.mstor.connector.jcr.query.GetMessageQueryBuilder;
 import net.fortuna.mstor.connector.jcr.query.ListFoldersQueryBuilder;
 
 import org.apache.commons.logging.Log;
@@ -72,8 +74,6 @@ public class RepositoryFolder extends AbstractFolderDelegate {
     private Node node;
     
     private boolean root;
-    
-    private QueryManager queryManager;
 
     /**
      * @param node
@@ -88,12 +88,6 @@ public class RepositoryFolder extends AbstractFolderDelegate {
      */
     public RepositoryFolder(Node node, boolean root) {
         this.node = node;
-        try {
-            this.queryManager = node.getSession().getWorkspace().getQueryManager();
-        }
-        catch (RepositoryException re) {
-            log.error("Error obtaining query manager", re);
-        }
         this.root = root;
     }
     
@@ -135,7 +129,7 @@ public class RepositoryFolder extends AbstractFolderDelegate {
             b.insert(0, parent.getName());
             parent = parent.getParent();
         }
-        b.insert(0, "//");
+        b.insert(0, "/");
         return b.toString();
 
         /*
@@ -178,22 +172,22 @@ public class RepositoryFolder extends AbstractFolderDelegate {
 //                    + '[' + PropertyNames.NAME + '=' + name + ']';
             
 //            Query folderQuery = queryManager.createQuery(queryString, Query.XPATH);
-            Query query = new GetFolderQueryBuilder(queryManager, node, name).build();
+            Query query = new GetFolderQueryBuilder(node, name).build();
             NodeIterator nodes = query.execute().getNodes();
             if (nodes.hasNext()) {
                 folderNode = nodes.nextNode();
             }
             else {
-                folderNode = node.addNode(NodeNames.FOLDER);
+                folderNode = node.addNode(NodeNames.FOLDER); //, "nt:folder");
                 folderNode.addMixin("mix:referenceable");
                 folderNode.setProperty(PropertyNames.NAME, name);
             }
             return new RepositoryFolder(folderNode);
         }
         catch (RepositoryException re) {
-            log.error("Error retrieving folder [" + name + "]", re);
+            throw new MessagingException("Error retrieving folder [" + name + "]", re);
         }
-        return null;
+//        return null;
 /*
         try {
             if (node.hasNode(name)) {
@@ -219,7 +213,7 @@ public class RepositoryFolder extends AbstractFolderDelegate {
 //                    Query.XPATH);
 //            Query query = queryManager.createQuery(node.getPath() + getSeparator() + NodeNames.FOLDER
 //                    + '[' + PropertyNames.NAME + '=' + pattern + ']', Query.XPATH);
-            Query query = new ListFoldersQueryBuilder(queryManager, node, pattern).build();
+            Query query = new ListFoldersQueryBuilder(node, pattern).build();
 
             NodeIterator ni = query.execute().getNodes();
             while (ni.hasNext()) {
@@ -314,16 +308,29 @@ public class RepositoryFolder extends AbstractFolderDelegate {
         try {
 //            Node messageNode = node.getNode(NodeNames.MESSAGE + '[' + index + ']');
 //            return messageNode.getProperty(NodeNames.CONTENT).getStream();
-            try {
-                node = node.getNode("jcr:content");
-            } catch (PathNotFoundException e) {
-                node = node.getProperty("jcr:content").getNode();
+            NodeIterator messageNodes = node.getNodes(NodeNames.MESSAGE);
+            Node messageNode = null;
+            int i = 0;
+            while (messageNodes.hasNext()) {
+                messageNode = messageNodes.nextNode();
+                if (i++ == index) {
+                    break;
+                }
             }
-            return node.getProperty("jcr:data").getStream();
+            if (messageNode != null) {
+                Node contentNode = null;
+                try {
+                    contentNode = messageNode.getNode("jcr:content");
+                } catch (PathNotFoundException e) {
+                    contentNode = messageNode.getProperty("jcr:content").getNode();
+                }
+                return contentNode.getProperty("jcr:data").getStream();
+            }
+            return null;
         }
         catch (RepositoryException re) {
             log.error("Error retrieving message stream", re);
-            throw new IOException("Error retrieving message stream: " + re.getMessage());
+            throw new IOException("Error retrieving message stream", re);
         }
     }
     
@@ -331,8 +338,25 @@ public class RepositoryFolder extends AbstractFolderDelegate {
      * @see net.fortuna.mstor.FolderDelegate#appendMessages(javax.mail.Message[])
      */
     public void appendMessages(Message[] messages) throws MessagingException {
-        // TODO Auto-generated method stub
-        
+        try {
+            for (int i = 0; i < messages.length; i++) {
+                Node messageNode = node.addNode(NodeNames.MESSAGE); //, "nt:file");
+                Node contentNode = messageNode.addNode("jcr:content", "nt:resource");
+                contentNode.setProperty("jcr:mimeType", messages[i].getContentType());
+//                contentNode.setProperty("jcr:encoding", arg1);
+                ByteArrayOutputStream contentOut = new ByteArrayOutputStream();
+                messages[i].writeTo(contentOut);
+                ByteArrayInputStream contentIn = new ByteArrayInputStream(contentOut.toByteArray());
+                contentNode.setProperty("jcr:data", contentIn);
+                node.save();
+            }
+        }
+        catch (RepositoryException re) {
+            throw new MessagingException("Error appending messages", re);
+        }
+        catch (IOException ioe) {
+            throw new MessagingException("Error appending messages", ioe);
+        }
     }
     
     /* (non-Javadoc)
@@ -362,8 +386,8 @@ public class RepositoryFolder extends AbstractFolderDelegate {
      */
     protected MessageDelegate createMessage(int messageNumber) throws DelegateException {
         try {
-            Node messageNode = node.addNode(NodeNames.MESSAGE);
-            messageNode.setProperty("messageNumber", messageNumber);
+            Node messageNode = node.addNode(NodeNames.MESSAGE); //, "nt:file");
+            messageNode.setProperty(PropertyNames.MESSAGE_NUMBER, messageNumber);
             return new RepositoryMessage(node);
         }
         catch (RepositoryException re) {
@@ -376,12 +400,19 @@ public class RepositoryFolder extends AbstractFolderDelegate {
      */
     public MessageDelegate getMessage(int messageNumber) throws DelegateException {
         try {
+            /*
             NodeIterator messageNodes = node.getNodes(NodeNames.MESSAGE);
             while (messageNodes.hasNext()) {
                 Node messageNode = messageNodes.nextNode();
                 if (messageNode.getProperty("messageNumber").getLong() == messageNumber) {
                     return new RepositoryMessage(messageNode);
                 }
+            }
+            */
+            Query query = new GetMessageQueryBuilder(node, messageNumber).build();
+            NodeIterator nodes = query.execute().getNodes();
+            if (nodes.hasNext()) {
+                return new RepositoryMessage(nodes.nextNode());
             }
         }
         catch (RepositoryException re) {
