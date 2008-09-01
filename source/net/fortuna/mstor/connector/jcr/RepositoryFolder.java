@@ -40,6 +40,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.jcr.Node;
@@ -348,6 +349,7 @@ public class RepositoryFolder extends AbstractFolderDelegate {
                 messages[i].writeTo(contentOut);
                 ByteArrayInputStream contentIn = new ByteArrayInputStream(contentOut.toByteArray());
                 contentNode.setProperty("jcr:data", contentIn);
+                contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
                 node.save();
             }
         }
