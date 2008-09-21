@@ -39,8 +39,8 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.query.Query;
 
-import net.fortuna.mstor.connector.jcr.RepositoryConnector.NodeNames;
-import net.fortuna.mstor.connector.jcr.RepositoryConnector.PropertyNames;
+import net.fortuna.mstor.connector.jcr.NodeProperty;
+import net.fortuna.mstor.connector.jcr.NodeType;
 
 /**
  * @author Ben
@@ -74,10 +74,10 @@ public class ListFoldersQueryBuilder extends AbstractQueryBuilder {
         b.append(node.getUUID());
         b.append("']");
         b.append('/');
-        b.append(NodeNames.FOLDER);
+        b.append(NodeType.FOLDER.toString());
         if (!"%".equals(pattern)) {
             b.append("[@");
-            b.append(PropertyNames.NAME);
+            b.append(NodeProperty.NAME);
             b.append("='");
             b.append(pattern);
             b.append("']");

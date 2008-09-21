@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Created on 28/08/2008
+ * Created on 21/09/2008
  *
  * Copyright (c) 2008, Ben Fortuna
  * All rights reserved.
@@ -33,54 +33,50 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.mstor.connector.jcr.query;
+package net.fortuna.mstor.connector.jcr;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-import javax.jcr.query.Query;
-
-import net.fortuna.mstor.connector.jcr.NodeProperty;
-import net.fortuna.mstor.connector.jcr.NodeType;
+import org.apache.commons.lang.enums.Enum;
 
 /**
  * @author Ben
  *
  */
-public class GetFolderQueryBuilder extends AbstractQueryBuilder {
-
-    private Node node;
-    
-    private String folderName;
+public final class NodeProperty extends Enum {
     
     /**
-     * @param manager
-     * @param type
-     * @throws RepositoryException 
+     * 
      */
-    public GetFolderQueryBuilder(Node node, String folderName) throws RepositoryException {
-        super(node.getSession().getWorkspace().getQueryManager(), Query.XPATH);
-        this.node = node;
-        this.folderName = folderName;
-    }
+    private static final long serialVersionUID = -3019029775415398021L;
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.jcr.query.AbstractQueryBuilder#getQueryString()
+    public static final NodeProperty NAME = new NodeProperty("mstor:name");
+    
+    // folder-specific properties..
+    public static final NodeProperty TYPE = new NodeProperty("mstor:type");
+    
+    public static final NodeProperty LAST_UID = new NodeProperty("mstor:last-uid");
+    
+    public static final NodeProperty UID_VALIDITY = new NodeProperty("mstor:uid-validity");
+    
+    // message-specific properties..
+    public static final NodeProperty VALUE = new NodeProperty("mstor:value");
+    
+    public static final NodeProperty MESSAGE_NUMBER = new NodeProperty("mstor:messageNumber");
+    
+    public static final NodeProperty RECEIVED = new NodeProperty("mstor:received");
+    
+    public static final NodeProperty REPLIED = new NodeProperty("mstor:replied");
+    
+    public static final NodeProperty FOWARDED = new NodeProperty("mstor:forwarded");
+    
+    public static final NodeProperty UID = new NodeProperty("mstor:uid");
+    
+    public static final NodeProperty EXPUNGED = new NodeProperty("mstor:expunged");
+
+    /**
+     * @param name
      */
-    protected String getQueryString() throws RepositoryException {
-        StringBuffer b = new StringBuffer();
-//        b.append('/');
-//        b.append(node.getPath());
-        b.append("//*[@jcr:uuid='");
-        b.append(node.getUUID());
-        b.append("']");
-        b.append('/');
-        b.append(NodeType.FOLDER.toString());
-        b.append("[@");
-        b.append(NodeProperty.NAME);
-        b.append('=');
-        b.append(folderName);
-        b.append(']');
-        return b.toString();
+    public NodeProperty(String name) {
+        super(name);
     }
 
 }

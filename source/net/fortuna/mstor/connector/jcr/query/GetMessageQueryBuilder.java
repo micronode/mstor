@@ -39,8 +39,8 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.query.Query;
 
-import net.fortuna.mstor.connector.jcr.RepositoryConnector.NodeNames;
-import net.fortuna.mstor.connector.jcr.RepositoryConnector.PropertyNames;
+import net.fortuna.mstor.connector.jcr.NodeProperty;
+import net.fortuna.mstor.connector.jcr.NodeType;
 
 /**
  * @author Ben
@@ -72,9 +72,9 @@ public class GetMessageQueryBuilder extends AbstractQueryBuilder {
         b.append(node.getUUID());
         b.append("']");
         b.append('/');
-        b.append(NodeNames.MESSAGE);
+        b.append(NodeType.MESSAGE.toString());
         b.append("[@");
-        b.append(PropertyNames.MESSAGE_NUMBER);
+        b.append(NodeProperty.MESSAGE_NUMBER);
         b.append('=');
         b.append(messageNumber);
         b.append(']');

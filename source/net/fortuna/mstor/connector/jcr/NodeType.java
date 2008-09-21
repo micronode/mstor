@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Created on 28/08/2008
+ * Created on 21/09/2008
  *
  * Copyright (c) 2008, Ben Fortuna
  * All rights reserved.
@@ -33,54 +33,34 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.mstor.connector.jcr.query;
+package net.fortuna.mstor.connector.jcr;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-import javax.jcr.query.Query;
-
-import net.fortuna.mstor.connector.jcr.NodeProperty;
-import net.fortuna.mstor.connector.jcr.NodeType;
+import org.apache.commons.lang.enums.Enum;
 
 /**
  * @author Ben
  *
  */
-public class GetFolderQueryBuilder extends AbstractQueryBuilder {
+public final class NodeType extends Enum {
 
-    private Node node;
-    
-    private String folderName;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8696436506816747256L;
+
+    public static final NodeType FOLDER = new NodeType("mstor:folder");
+
+    public static final NodeType MESSAGE = new NodeType("mstor:message");
+
+    public static final NodeType HEADER = new NodeType("mstor:header");
+
+    public static final NodeType FLAG = new NodeType("mstor:flag");
     
     /**
-     * @param manager
-     * @param type
-     * @throws RepositoryException 
+     * @param name
      */
-    public GetFolderQueryBuilder(Node node, String folderName) throws RepositoryException {
-        super(node.getSession().getWorkspace().getQueryManager(), Query.XPATH);
-        this.node = node;
-        this.folderName = folderName;
-    }
-
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.jcr.query.AbstractQueryBuilder#getQueryString()
-     */
-    protected String getQueryString() throws RepositoryException {
-        StringBuffer b = new StringBuffer();
-//        b.append('/');
-//        b.append(node.getPath());
-        b.append("//*[@jcr:uuid='");
-        b.append(node.getUUID());
-        b.append("']");
-        b.append('/');
-        b.append(NodeType.FOLDER.toString());
-        b.append("[@");
-        b.append(NodeProperty.NAME);
-        b.append('=');
-        b.append(folderName);
-        b.append(']');
-        return b.toString();
+    public NodeType(String name) {
+        super(name);
     }
 
 }

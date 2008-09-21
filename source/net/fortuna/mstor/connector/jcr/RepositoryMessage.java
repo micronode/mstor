@@ -50,8 +50,6 @@ import javax.mail.internet.InternetHeaders;
 
 import net.fortuna.mstor.connector.AbstractMessageDelegate;
 import net.fortuna.mstor.connector.DelegateException;
-import net.fortuna.mstor.connector.jcr.RepositoryConnector.NodeNames;
-import net.fortuna.mstor.connector.jcr.RepositoryConnector.PropertyNames;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -85,16 +83,16 @@ public class RepositoryMessage extends AbstractMessageDelegate {
     public Flags getFlags() {
         Flags flags = new Flags();
         try {
-            NodeIterator flagIterator = node.getNodes(NodeNames.FLAG);
+            NodeIterator flagIterator = node.getNodes(NodeType.FLAG.toString());
             while (flagIterator.hasNext()) {
                 Node flagNode = flagIterator.nextNode();
-                Flag flag = getFlag(flagNode.getProperty(PropertyNames.NAME).getString());
+                Flag flag = getFlag(flagNode.getProperty(NodeProperty.NAME.toString()).getString());
                 if (flag != null) {
                     flags.add(flag);
                 }
                 else {
                     // user flag..
-                    flags.add(flagNode.getProperty(PropertyNames.NAME).getString());
+                    flags.add(flagNode.getProperty(NodeProperty.NAME.toString()).getString());
                 }
             }
         }
@@ -109,7 +107,7 @@ public class RepositoryMessage extends AbstractMessageDelegate {
      */
     public Date getForwarded() {
         try {
-            return node.getProperty(PropertyNames.FOWARDED).getDate().getTime();
+            return node.getProperty(NodeProperty.FOWARDED.toString()).getDate().getTime();
         }
         catch (PathNotFoundException pnfe) {
             log.info("Forwarded date not set", pnfe);
@@ -126,11 +124,11 @@ public class RepositoryMessage extends AbstractMessageDelegate {
     public InternetHeaders getHeaders() {
         InternetHeaders headers = new InternetHeaders();
         try {
-            NodeIterator headerIterator = node.getNodes(NodeNames.HEADER);
+            NodeIterator headerIterator = node.getNodes(NodeType.HEADER.toString());
             while (headerIterator.hasNext()) {
                 Node headerNode = headerIterator.nextNode();
-                headers.addHeader(headerNode.getProperty(PropertyNames.NAME).getString(),
-                        headerNode.getProperty(PropertyNames.VALUE).getString());
+                headers.addHeader(headerNode.getProperty(NodeProperty.NAME.toString()).getString(),
+                        headerNode.getProperty(NodeProperty.VALUE.toString()).getString());
             }
         }
         catch (RepositoryException re) {
@@ -144,7 +142,7 @@ public class RepositoryMessage extends AbstractMessageDelegate {
      */
     public int getMessageNumber() {
         try {
-            return (int) node.getProperty(PropertyNames.MESSAGE_NUMBER).getLong();
+            return (int) node.getProperty(NodeProperty.MESSAGE_NUMBER.toString()).getLong();
         }
         catch (RepositoryException re) {
             log.error("Error retrieving message number", re);
@@ -157,7 +155,7 @@ public class RepositoryMessage extends AbstractMessageDelegate {
      */
     public Date getReceived() {
         try {
-            return node.getProperty(PropertyNames.RECEIVED).getDate().getTime();
+            return node.getProperty(NodeProperty.RECEIVED.toString()).getDate().getTime();
         }
         catch (PathNotFoundException pnfe) {
             log.info("Received date not set", pnfe);
@@ -173,7 +171,7 @@ public class RepositoryMessage extends AbstractMessageDelegate {
      */
     public Date getReplied() {
         try {
-            return node.getProperty(PropertyNames.REPLIED).getDate().getTime();
+            return node.getProperty(NodeProperty.REPLIED.toString()).getDate().getTime();
         }
         catch (PathNotFoundException pnfe) {
             log.info("Replied date not set", pnfe);
@@ -189,7 +187,7 @@ public class RepositoryMessage extends AbstractMessageDelegate {
      */
     public long getUid() {
         try {
-            return node.getProperty(PropertyNames.UID).getLong();
+            return node.getProperty(NodeProperty.UID.toString()).getLong();
         }
         catch (PathNotFoundException pnfe) {
             log.info("UID not set", pnfe);
@@ -205,7 +203,7 @@ public class RepositoryMessage extends AbstractMessageDelegate {
      */
     public boolean isExpunged() {
         try {
-            return node.getProperty(PropertyNames.EXPUNGED).getBoolean();
+            return node.getProperty(NodeProperty.EXPUNGED.toString()).getBoolean();
         }
         catch (PathNotFoundException pnfe) {
             log.info("Expunged flag not set", pnfe);
@@ -221,7 +219,7 @@ public class RepositoryMessage extends AbstractMessageDelegate {
      */
     public void setExpunged(boolean expunged) {
         try {
-            node.setProperty(PropertyNames.EXPUNGED, expunged);
+            node.setProperty(NodeProperty.EXPUNGED.toString(), expunged);
         }
         catch (RepositoryException re) {
             log.error("Error setting expunged flag", re);
@@ -236,13 +234,13 @@ public class RepositoryMessage extends AbstractMessageDelegate {
             for (int i = 0; i < flags.getSystemFlags().length; i++) {
                 String flagName = getFlagName(flags.getSystemFlags()[i]);
                 if (flagName != null) {
-                    Node flagNode = node.addNode(NodeNames.FLAG);
-                    flagNode.setProperty(PropertyNames.NAME, flagName);
+                    Node flagNode = node.addNode(NodeType.FLAG.toString());
+                    flagNode.setProperty(NodeProperty.NAME.toString(), flagName);
                 }
             }
             for (int i = 0; i < flags.getUserFlags().length; i++) {
-                Node flagNode = node.addNode(NodeNames.FLAG);
-                flagNode.setProperty(PropertyNames.NAME, flags.getUserFlags()[i]);
+                Node flagNode = node.addNode(NodeType.FLAG.toString());
+                flagNode.setProperty(NodeProperty.NAME.toString(), flags.getUserFlags()[i]);
             }
         }
         catch (RepositoryException re) {
@@ -257,7 +255,7 @@ public class RepositoryMessage extends AbstractMessageDelegate {
         try {
             Calendar cal = Calendar.getInstance();
             cal.setTime(forwarded);
-            node.setProperty(PropertyNames.FOWARDED, cal);
+            node.setProperty(NodeProperty.FOWARDED.toString(), cal);
         }
         catch (RepositoryException re) {
             log.error("Error setting forwarded date", re);
@@ -271,9 +269,9 @@ public class RepositoryMessage extends AbstractMessageDelegate {
         try {
             while (headers.hasMoreElements()) {
                 Header header = (Header) headers.nextElement();
-                Node headerNode = node.addNode(NodeNames.HEADER);
-                headerNode.setProperty(PropertyNames.NAME, header.getName());
-                headerNode.setProperty(PropertyNames.VALUE, header.getValue());
+                Node headerNode = node.addNode(NodeType.HEADER.toString());
+                headerNode.setProperty(NodeProperty.NAME.toString(), header.getName());
+                headerNode.setProperty(NodeProperty.VALUE.toString(), header.getValue());
             }
         }
         catch (RepositoryException re) {
@@ -288,7 +286,7 @@ public class RepositoryMessage extends AbstractMessageDelegate {
         try {
             Calendar cal = Calendar.getInstance();
             cal.setTime(received);
-            node.setProperty(PropertyNames.RECEIVED, cal);
+            node.setProperty(NodeProperty.RECEIVED.toString(), cal);
         }
         catch (RepositoryException re) {
             log.error("Error setting received date", re);
@@ -302,7 +300,7 @@ public class RepositoryMessage extends AbstractMessageDelegate {
         try {
             Calendar cal = Calendar.getInstance();
             cal.setTime(replied);
-            node.setProperty(PropertyNames.REPLIED, cal);
+            node.setProperty(NodeProperty.REPLIED.toString(), cal);
         }
         catch (RepositoryException re) {
             log.error("Error setting replied date", re);
@@ -314,7 +312,7 @@ public class RepositoryMessage extends AbstractMessageDelegate {
      */
     public void setUid(long uid) {
         try {
-            node.setProperty(PropertyNames.UID, uid);
+            node.setProperty(NodeProperty.UID.toString(), uid);
         }
         catch (RepositoryException re) {
             log.error("Error setting UID", re);

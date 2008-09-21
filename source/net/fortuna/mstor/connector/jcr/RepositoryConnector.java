@@ -74,55 +74,6 @@ public class RepositoryConnector extends AbstractProtocolConnector {
     public static final String NAMESPACE = "mstor";
 
     public static final String NAMESPACE_URL = "http://mstor.sourceforge.net/mstor/1.0";
-
-    /**
-     * Constants defining node names.
-     */
-    public static class NodeNames {
-        
-        // folder-specific nodes..
-        public static final String FOLDER = NAMESPACE + ':' + "folder";
-        
-        public static final String MESSAGE = NAMESPACE + ':' + "message";
-        
-//        public static final String CONTENT = NAMESPACE + ':' + "content";
-        
-        // message-specific nodes..
-        public static final String HEADER = NAMESPACE + ':' + "header";
-        
-        public static final String FLAG = NAMESPACE + ':' + "flag";
-    }
-
-    /**
-     * Constants defining property names.
-     */
-    public static class PropertyNames {
-        
-        public static final String NAME = NAMESPACE + ':' + "name";
-        
-        // folder-specific properties..
-        public static final String TYPE = NAMESPACE + ':' + "type";
-        
-        public static final String LAST_UID = NAMESPACE + ':' + "last-uid";
-        
-        public static final String UID_VALIDITY = NAMESPACE + ':' + "uid-validity";
-        
-        // message-specific properties..
-        public static final String VALUE = NAMESPACE + ':' + "value";
-        
-        public static final String MESSAGE_NUMBER = NAMESPACE + ':' + "messageNumber";
-        
-        public static final String RECEIVED = NAMESPACE + ':' + "received";
-        
-        public static final String REPLIED = NAMESPACE + ':' + "replied";
-        
-        public static final String FOWARDED = NAMESPACE + ':' + "forwarded";
-        
-        public static final String UID = NAMESPACE + ':' + "uid";
-        
-        public static final String EXPUNGED = NAMESPACE + ':' + "expunged";
-        
-    }
     
     private Session session;
     
