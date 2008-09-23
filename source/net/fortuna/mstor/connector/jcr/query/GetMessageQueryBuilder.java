@@ -72,9 +72,9 @@ public class GetMessageQueryBuilder extends AbstractQueryBuilder {
         b.append(node.getUUID());
         b.append("']");
         b.append('/');
-        b.append(NodeType.MESSAGE.toString());
+        b.append(NodeType.MESSAGE.getName());
         b.append("[@");
-        b.append(NodeProperty.MESSAGE_NUMBER);
+        b.append(NodeProperty.MESSAGE_NUMBER.getName());
         b.append('=');
         b.append(messageNumber);
         b.append(']');

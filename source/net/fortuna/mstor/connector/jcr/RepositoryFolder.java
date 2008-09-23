@@ -95,7 +95,7 @@ public class RepositoryFolder extends AbstractFolderDelegate {
      */
     public int getType() {
         try {
-            return (int) node.getProperty(NodeProperty.TYPE.toString()).getLong();
+            return (int) node.getProperty(NodeProperty.TYPE.getName()).getLong();
         }
         catch (RepositoryException re) {
             log.error("Error retrieving folder type", re);
@@ -108,7 +108,7 @@ public class RepositoryFolder extends AbstractFolderDelegate {
      */
     public String getName() {
         try {
-            return node.getProperty(NodeProperty.NAME.toString()).getString();
+            return node.getProperty(NodeProperty.NAME.getName()).getString();
 //            return node.getName();
         }
         catch (RepositoryException re) {
@@ -177,9 +177,9 @@ public class RepositoryFolder extends AbstractFolderDelegate {
                 folderNode = nodes.nextNode();
             }
             else {
-                folderNode = node.addNode(NodeType.FOLDER.toString()); //, "nt:folder");
+                folderNode = node.addNode(NodeType.FOLDER.getName()); //, "nt:folder");
                 folderNode.addMixin("mix:referenceable");
-                folderNode.setProperty(NodeProperty.NAME.toString(), name);
+                folderNode.setProperty(NodeProperty.NAME.getName(), name);
             }
             return new RepositoryFolder(folderNode);
         }
@@ -252,7 +252,7 @@ public class RepositoryFolder extends AbstractFolderDelegate {
      */
     public boolean renameTo(String name) {
         try {
-            node.setProperty(NodeProperty.NAME.toString(), name);
+            node.setProperty(NodeProperty.NAME.getName(), name);
             return true;
         }
         catch (RepositoryException re) {
@@ -293,7 +293,7 @@ public class RepositoryFolder extends AbstractFolderDelegate {
      */
     public int getMessageCount() throws MessagingException {
         try {
-            return (int) node.getNodes(NodeType.MESSAGE.toString()).getSize();
+            return (int) node.getNodes(NodeType.MESSAGE.getName()).getSize();
         }
         catch (RepositoryException re) {
             throw new MessagingException("Error retrieving message count", re);
@@ -307,7 +307,7 @@ public class RepositoryFolder extends AbstractFolderDelegate {
         try {
 //            Node messageNode = node.getNode(NodeNames.MESSAGE + '[' + index + ']');
 //            return messageNode.getProperty(NodeNames.CONTENT).getStream();
-            NodeIterator messageNodes = node.getNodes(NodeType.MESSAGE.toString());
+            NodeIterator messageNodes = node.getNodes(NodeType.MESSAGE.getName());
             Node messageNode = null;
             int i = 0;
             while (messageNodes.hasNext()) {
@@ -339,7 +339,7 @@ public class RepositoryFolder extends AbstractFolderDelegate {
     public void appendMessages(Message[] messages) throws MessagingException {
         try {
             for (int i = 0; i < messages.length; i++) {
-                Node messageNode = node.addNode(NodeType.MESSAGE.toString()); //, "nt:file");
+                Node messageNode = node.addNode(NodeType.MESSAGE.getName()); //, "nt:file");
                 Node contentNode = messageNode.addNode("jcr:content", "nt:resource");
                 contentNode.setProperty("jcr:mimeType", messages[i].getContentType());
 //                contentNode.setProperty("jcr:encoding", arg1);
@@ -364,7 +364,7 @@ public class RepositoryFolder extends AbstractFolderDelegate {
      */
     public boolean create(int type) throws MessagingException {
         try {
-            node.setProperty(NodeProperty.TYPE.toString(), type);
+            node.setProperty(NodeProperty.TYPE.getName(), type);
             node.getParent().save();
             return true;
         }
@@ -386,8 +386,8 @@ public class RepositoryFolder extends AbstractFolderDelegate {
      */
     protected MessageDelegate createMessage(int messageNumber) throws DelegateException {
         try {
-            Node messageNode = node.addNode(NodeType.MESSAGE.toString()); //, "nt:file");
-            messageNode.setProperty(NodeProperty.MESSAGE_NUMBER.toString(), messageNumber);
+            Node messageNode = node.addNode(NodeType.MESSAGE.getName()); //, "nt:file");
+            messageNode.setProperty(NodeProperty.MESSAGE_NUMBER.getName(), messageNumber);
             return new RepositoryMessage(node);
         }
         catch (RepositoryException re) {
@@ -426,7 +426,7 @@ public class RepositoryFolder extends AbstractFolderDelegate {
      */
     protected void setLastUid(long uid) {
         try {
-            node.setProperty(NodeProperty.LAST_UID.toString(), uid);
+            node.setProperty(NodeProperty.LAST_UID.getName(), uid);
         }
         catch (RepositoryException re) {
             log.error("Error updating last UID", re);
@@ -439,12 +439,12 @@ public class RepositoryFolder extends AbstractFolderDelegate {
     public long getLastUid() {
         try {
             try {
-                return node.getProperty(NodeProperty.LAST_UID.toString()).getLong();
+                return node.getProperty(NodeProperty.LAST_UID.getName()).getLong();
             }
             catch (PathNotFoundException pnfe) {
                 setLastUid(0);
             }
-            return node.getProperty(NodeProperty.LAST_UID.toString()).getLong();
+            return node.getProperty(NodeProperty.LAST_UID.getName()).getLong();
         }
         catch (RepositoryException re) {
             log.error("Error retreiving last UID", re);
@@ -457,7 +457,7 @@ public class RepositoryFolder extends AbstractFolderDelegate {
      */
     public long getUidValidity() {
         try {
-            return node.getProperty(NodeProperty.UID_VALIDITY.toString()).getLong();
+            return node.getProperty(NodeProperty.UID_VALIDITY.getName()).getLong();
         }
         catch (RepositoryException re) {
             log.error("Error retreiving UID validity", re);

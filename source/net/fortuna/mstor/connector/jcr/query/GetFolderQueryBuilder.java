@@ -74,9 +74,9 @@ public class GetFolderQueryBuilder extends AbstractQueryBuilder {
         b.append(node.getUUID());
         b.append("']");
         b.append('/');
-        b.append(NodeType.FOLDER.toString());
+        b.append(NodeType.FOLDER.getName());
         b.append("[@");
-        b.append(NodeProperty.NAME);
+        b.append(NodeProperty.NAME.getName());
         b.append('=');
         b.append(folderName);
         b.append(']');
