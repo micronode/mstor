@@ -22,7 +22,7 @@ import org.ho.yaml.YamlDecoder;
 /**
  * @author Ben
  */
-public class YamlMetaFolder extends AbstractMetaFolder {
+public class YamlMetaFolder extends AbstractMetaFolder<YamlMetaMessage> {
 
     public static final String FILE_EXTENSION = ".yml";
 
@@ -33,7 +33,7 @@ public class YamlMetaFolder extends AbstractMetaFolder {
     /**
      * @param delegate
      */
-    public YamlMetaFolder(FolderDelegate delegate) {
+    public YamlMetaFolder(FolderDelegate<MessageDelegate> delegate) {
         super(delegate);
 //        yamlConfig = new YamlConfig();
         YamlDecoder decoder = null;
@@ -66,7 +66,7 @@ public class YamlMetaFolder extends AbstractMetaFolder {
      * 
      * @see net.fortuna.mstor.connector.mbox.AbstractMetaFolder#removeMessages(javax.mail.Message[])
      */
-    protected MessageDelegate[] removeMessages(Message[] deleted) {
+    protected YamlMetaMessage[] removeMessages(Message[] deleted) {
         List metas = new ArrayList();
 
         for (Iterator i = folderExt.getMessages().iterator(); i
@@ -136,10 +136,10 @@ public class YamlMetaFolder extends AbstractMetaFolder {
      * 
      * @see net.fortuna.mstor.connector.AbstractFolderDelegate#createMessage(int)
      */
-    protected MessageDelegate createMessage(int messageNumber) throws DelegateException {
+    protected YamlMetaMessage createMessage(int messageNumber) throws DelegateException {
         MessageExt messageExt = new MessageExt(messageNumber);
         messageExt.setFlags(new Flags());
-        MessageDelegate delegate = new YamlMetaMessage(messageExt, this);
+        YamlMetaMessage delegate = new YamlMetaMessage(messageExt, this);
         // only add the metadata if message is associated with folder..
         if (messageNumber > 0) {
             folderExt.getMessages().add(messageNumber - 1, messageExt);
@@ -162,7 +162,7 @@ public class YamlMetaFolder extends AbstractMetaFolder {
      * 
      * @see net.fortuna.mstor.connector.FolderDelegate#getFolder(java.lang.String)
      */
-    public FolderDelegate getFolder(String name) throws MessagingException {
+    public YamlMetaFolder getFolder(String name) throws MessagingException {
         return new YamlMetaFolder(getDelegate().getFolder(name));
     }
 
@@ -180,7 +180,7 @@ public class YamlMetaFolder extends AbstractMetaFolder {
      * 
      * @see net.fortuna.mstor.connector.FolderDelegate#getMessage(int)
      */
-    public MessageDelegate getMessage(int messageNumber)
+    public YamlMetaMessage getMessage(int messageNumber)
             throws DelegateException {
 
         for (Iterator i = folderExt.getMessages().iterator(); i.hasNext();) {
@@ -189,7 +189,7 @@ public class YamlMetaFolder extends AbstractMetaFolder {
                 return new YamlMetaMessage(messageExt, this);
             }
         }
-        MessageDelegate newMessage = createMessage(messageNumber);
+        YamlMetaMessage newMessage = createMessage(messageNumber);
         // allocate a new UID for the message..
         allocateUid(newMessage);
 
@@ -201,7 +201,7 @@ public class YamlMetaFolder extends AbstractMetaFolder {
      * 
      * @see net.fortuna.mstor.connector.FolderDelegate#getParent()
      */
-    public FolderDelegate getParent() {
+    public YamlMetaFolder getParent() {
         return new YamlMetaFolder(getDelegate().getParent());
     }
     
@@ -227,14 +227,13 @@ public class YamlMetaFolder extends AbstractMetaFolder {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.connector.FolderDelegate#list(java.lang.String)
      */
-    public FolderDelegate[] list(String pattern) {
-        FolderDelegate[] folders = getDelegate().list(pattern);
-        List folderList = new ArrayList();
+    public YamlMetaFolder[] list(String pattern) {
+        FolderDelegate<MessageDelegate>[] folders = getDelegate().list(pattern);
+        List<YamlMetaFolder> folderList = new ArrayList();
         for (int i = 0; i < folders.length; i++) {
             folderList.add(new YamlMetaFolder(folders[i]));
         }
-        return (FolderDelegate[]) folderList
-                .toArray(new FolderDelegate[folderList.size()]);
+        return folderList.toArray(new YamlMetaFolder[folderList.size()]);
     }
 
 }

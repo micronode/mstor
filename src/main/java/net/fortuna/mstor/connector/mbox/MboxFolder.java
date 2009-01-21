@@ -61,7 +61,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Ben
  *
  */
-public class MboxFolder extends AbstractFolderDelegate {
+public class MboxFolder extends AbstractFolderDelegate<MessageDelegate> {
 
     static final String DIR_EXTENSION = ".sbd";
 
@@ -133,7 +133,7 @@ public class MboxFolder extends AbstractFolderDelegate {
     /**
      * @return
      */
-    public final FolderDelegate getParent() {
+    public final FolderDelegate<MessageDelegate> getParent() {
         return new MboxFolder(file.getParentFile());
     }
     
@@ -141,7 +141,7 @@ public class MboxFolder extends AbstractFolderDelegate {
      * @param name
      * @return
      */
-    public final FolderDelegate getFolder(final String name) {
+    public final FolderDelegate<MessageDelegate> getFolder(final String name) {
         File file = null;
 
         // if path is absolute don't use relative file..
@@ -169,8 +169,11 @@ public class MboxFolder extends AbstractFolderDelegate {
      * @param pattern
      * @return
      */
-    public final FolderDelegate[] list(final String pattern) {
-        List folders = new ArrayList();
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.connector.FolderDelegate#list(java.lang.String)
+     */
+    public final FolderDelegate<MessageDelegate>[] list(final String pattern) {
+        List<MboxFolder> folders = new ArrayList<MboxFolder>();
 
         File[] files = null;
         if (file.isDirectory()) {
@@ -184,8 +187,7 @@ public class MboxFolder extends AbstractFolderDelegate {
         for (int i = 0; files != null && i < files.length; i++) {
             folders.add(new MboxFolder(files[i]));
         }
-        return (FolderDelegate[]) folders.toArray(
-                new FolderDelegate[folders.size()]);
+        return folders.toArray(new MboxFolder[folders.size()]);
     }
     
     /**

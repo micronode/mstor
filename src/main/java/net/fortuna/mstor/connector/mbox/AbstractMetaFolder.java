@@ -54,7 +54,7 @@ import net.fortuna.mstor.connector.MessageDelegate;
  * 
  * @author benfortuna
  */
-public abstract class AbstractMetaFolder extends AbstractFolderDelegate {
+public abstract class AbstractMetaFolder<T extends MessageDelegate> extends AbstractFolderDelegate<T> {
 
     private static final Random UID_VALIDITY_GENERATOR = new Random();
 
@@ -63,14 +63,14 @@ public abstract class AbstractMetaFolder extends AbstractFolderDelegate {
     /**
      * A delegate used by metafolder to perform operations not supported in metadata.
      */
-    private FolderDelegate delegate;
+    private FolderDelegate<MessageDelegate> delegate;
     
     /**
      * Constructs a new meta folder instance.
      * 
      * @param file the meta folder file
      */
-    public AbstractMetaFolder(FolderDelegate delegate) {
+    public AbstractMetaFolder(FolderDelegate<MessageDelegate> delegate) {
         this.file = getMetaFile(delegate);
         this.delegate = delegate;
     }
@@ -161,7 +161,7 @@ public abstract class AbstractMetaFolder extends AbstractFolderDelegate {
         try {
             Date received = new Date();
             for (int i = 0; i < messages.length; i++) {
-                MessageDelegate md = getMessage(messages[i].getMessageNumber());
+                T md = getMessage(messages[i].getMessageNumber());
                 md.setReceived(received);
                 md.setFlags(messages[i].getFlags());
                 md.setHeaders(messages[i].getAllHeaders());
@@ -213,7 +213,7 @@ public abstract class AbstractMetaFolder extends AbstractFolderDelegate {
     /**
      * @return
      */
-    protected final FolderDelegate getDelegate() {
+    protected final FolderDelegate<MessageDelegate> getDelegate() {
     	return delegate;
     }
     
@@ -225,7 +225,7 @@ public abstract class AbstractMetaFolder extends AbstractFolderDelegate {
     /**
      * @param deleted
      */
-    protected abstract MessageDelegate[] removeMessages(Message[] deleted);
+    protected abstract T[] removeMessages(Message[] deleted);
     
     /**
      * @throws DelegateException
@@ -236,7 +236,7 @@ public abstract class AbstractMetaFolder extends AbstractFolderDelegate {
      * @param delegate
      * @return
      */
-    private File getMetaFile(FolderDelegate delegate) {
+    private File getMetaFile(FolderDelegate<MessageDelegate> delegate) {
         return new File(delegate.getFullName() + getFileExtension());
     }
 

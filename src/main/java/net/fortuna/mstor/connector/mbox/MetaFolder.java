@@ -56,7 +56,7 @@ import org.jdom.Namespace;
  * 
  * @author benfortuna
  */
-public class MetaFolder extends AbstractMetaFolder {
+public class MetaFolder extends AbstractMetaFolder<MetaMessage> {
 
     private static final String ELEMENT_FOLDER = "folder";
 
@@ -77,7 +77,7 @@ public class MetaFolder extends AbstractMetaFolder {
      * 
      * @param file the meta folder file
      */
-    public MetaFolder(FolderDelegate delegate) {
+    public MetaFolder(FolderDelegate<MessageDelegate> delegate) {
     	super(delegate);
         binding = new DocumentBinding(getFile(), ELEMENT_FOLDER);
     }
@@ -88,7 +88,7 @@ public class MetaFolder extends AbstractMetaFolder {
      * @param file the meta folder file
      * @param namespace the namespace for the metadata
      */
-    public MetaFolder(final Namespace namespace, FolderDelegate delegate) {
+    public MetaFolder(final Namespace namespace, FolderDelegate<MessageDelegate> delegate) {
     	super(delegate);
         binding = new DocumentBinding(getFile(), namespace, ELEMENT_FOLDER);
     }
@@ -96,30 +96,29 @@ public class MetaFolder extends AbstractMetaFolder {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.FolderDelegate#getParent()
      */
-    public FolderDelegate getParent() {
+    public MetaFolder getParent() {
         return new MetaFolder(getDelegate().getParent());
     }
     
     /* (non-Javadoc)
      * @see net.fortuna.mstor.FolderDelegate#getFolder(java.lang.String)
      */
-    public FolderDelegate getFolder(String name) throws MessagingException {
+    public MetaFolder getFolder(String name) throws MessagingException {
         return new MetaFolder(getDelegate().getFolder(name));
     }
 
     /* (non-Javadoc)
      * @see net.fortuna.mstor.FolderDelegate#list(java.lang.String)
      */
-    public FolderDelegate[] list(String pattern) {
-        List folders = new ArrayList();
+    public MetaFolder[] list(String pattern) {
+        List<MetaFolder> folders = new ArrayList<MetaFolder>();
         
-        FolderDelegate[] delegateList = getDelegate().list(pattern);
+        FolderDelegate<MessageDelegate>[] delegateList = getDelegate().list(pattern);
         for (int i = 0; i < delegateList.length; i++) {
             folders.add(new MetaFolder(delegateList[i]));
         }
         
-        return (FolderDelegate[]) folders.toArray(
-                new FolderDelegate[folders.size()]);
+        return folders.toArray(new MetaFolder[folders.size()]);
     }
     
     /*
@@ -137,10 +136,10 @@ public class MetaFolder extends AbstractMetaFolder {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.FolderDelegate#getMessage(int)
      */
-    public final MessageDelegate getMessage(int messageNumber)
+    public final MetaMessage getMessage(int messageNumber)
         throws DelegateException {
 
-        MessageDelegate md = null;
+        MetaMessage md = null;
         
         for (Iterator i = binding.getDocument().getRootElement().getChildren(
                 MetaMessage.ELEMENT_MESSAGE, binding.getNamespace()).iterator();
@@ -171,8 +170,8 @@ public class MetaFolder extends AbstractMetaFolder {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.data.AbstractFolderDelegate#createMetaMessage(int)
      */
-    protected final MessageDelegate createMessage(int messageNumber) {
-        MessageDelegate delegate = new MetaMessage(messageNumber, this, binding.getNamespace());
+    protected final MetaMessage createMessage(int messageNumber) {
+        MetaMessage delegate = new MetaMessage(messageNumber, this, binding.getNamespace());
         // only add the metadata if message is associated with folder..
         if (messageNumber > 0) {
             addMessage(delegate);
@@ -216,7 +215,10 @@ public class MetaFolder extends AbstractMetaFolder {
      * @param messages
      * @return
      */
-    protected MessageDelegate[] removeMessages(Message[] messages) {
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.connector.mbox.AbstractMetaFolder#removeMessages(javax.mail.Message[])
+     */
+    protected MetaMessage[] removeMessages(Message[] messages) {
         List metas = new ArrayList();
 
         for (Iterator i = binding.getDocument().getRootElement().getChildren(
