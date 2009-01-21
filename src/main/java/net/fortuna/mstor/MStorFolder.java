@@ -52,6 +52,7 @@ import javax.mail.event.FolderEvent;
 
 import net.fortuna.mstor.connector.DelegateException;
 import net.fortuna.mstor.connector.FolderDelegate;
+import net.fortuna.mstor.connector.MessageDelegate;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
@@ -61,7 +62,7 @@ import net.sf.ehcache.Element;
  * 
  * @author Ben Fortuna
  */
-public class MStorFolder extends Folder implements UIDFolder {
+public final class MStorFolder extends Folder implements UIDFolder {
 
     /**
      * Indicates whether this folder is open.
@@ -71,7 +72,7 @@ public class MStorFolder extends Folder implements UIDFolder {
     /**
      * A delegate supporting additional functions not inherently supported by {@link Folder}.
      */
-    private FolderDelegate delegate;
+    private FolderDelegate<MessageDelegate> delegate;
 
     /**
      * A cache for messages.
@@ -86,7 +87,7 @@ public class MStorFolder extends Folder implements UIDFolder {
      * @param store
      * @param file
      */
-    public MStorFolder(final MStorStore store, final FolderDelegate delegate) {
+    public MStorFolder(final MStorStore store, final FolderDelegate<MessageDelegate> delegate) {
         super(store);
         this.mStore = store;
         this.delegate = delegate;
@@ -123,7 +124,7 @@ public class MStorFolder extends Folder implements UIDFolder {
      * 
      * @see javax.mail.Folder#getName()
      */
-    public final String getName() {
+    public String getName() {
         return delegate.getName();
     }
 
@@ -132,7 +133,7 @@ public class MStorFolder extends Folder implements UIDFolder {
      * 
      * @see javax.mail.Folder#getFullName()
      */
-    public final String getFullName() {
+    public String getFullName() {
         return delegate.getFullName();
     }
 
@@ -141,7 +142,7 @@ public class MStorFolder extends Folder implements UIDFolder {
      * 
      * @see javax.mail.Folder#getParent()
      */
-    public final Folder getParent() throws MessagingException {
+    public Folder getParent() throws MessagingException {
         return new MStorFolder(mStore, delegate.getParent());
     }
 
@@ -150,7 +151,7 @@ public class MStorFolder extends Folder implements UIDFolder {
      * 
      * @see javax.mail.Folder#exists()
      */
-    public final boolean exists() throws MessagingException {
+    public boolean exists() throws MessagingException {
         return delegate.exists();
     }
 
@@ -159,18 +160,18 @@ public class MStorFolder extends Folder implements UIDFolder {
      * 
      * @see javax.mail.Folder#list(java.lang.String)
      */
-    public final Folder[] list(final String pattern) throws MessagingException {
+    public Folder[] list(final String pattern) throws MessagingException {
         if ((getType() & HOLDS_FOLDERS) == 0) {
             throw new MessagingException("Invalid folder type");
         }
 
-        List folders = new ArrayList();
+        List<Folder> folders = new ArrayList<Folder>();
 
-        FolderDelegate[] childDelegates = delegate.list(pattern);
+        FolderDelegate<MessageDelegate>[] childDelegates = delegate.list(pattern);
         for (int i = 0; i < childDelegates.length; i++) {
             folders.add(new MStorFolder(mStore, childDelegates[i]));
         }
-        return (Folder[]) folders.toArray(new Folder[folders.size()]);
+        return folders.toArray(new Folder[folders.size()]);
     }
 
     /*
@@ -178,7 +179,7 @@ public class MStorFolder extends Folder implements UIDFolder {
      *
      * @see javax.mail.Folder#getSeparator()
      */
-    public final char getSeparator() throws MessagingException {
+    public char getSeparator() throws MessagingException {
         assertExists();
         return delegate.getSeparator();
     }
@@ -188,7 +189,7 @@ public class MStorFolder extends Folder implements UIDFolder {
      *
      * @see javax.mail.Folder#getType()
      */
-    public final int getType() throws MessagingException {
+    public int getType() throws MessagingException {
         assertExists();
         return delegate.getType();
     }
@@ -198,7 +199,7 @@ public class MStorFolder extends Folder implements UIDFolder {
      *
      * @see javax.mail.Folder#create(int)
      */
-    public final boolean create(final int type) throws MessagingException {
+    public boolean create(final int type) throws MessagingException {
         if (exists()) {
             throw new MessagingException("Folder already exists");
         }
@@ -215,7 +216,7 @@ public class MStorFolder extends Folder implements UIDFolder {
      *
      * @see javax.mail.Folder#hasNewMessages()
      */
-    public final boolean hasNewMessages() throws MessagingException {
+    public boolean hasNewMessages() throws MessagingException {
         // TODO Auto-generated method stub
         return false;
     }
@@ -225,7 +226,7 @@ public class MStorFolder extends Folder implements UIDFolder {
      *
      * @see javax.mail.Folder#getFolder(java.lang.String)
      */
-    public final Folder getFolder(final String name) throws MessagingException {
+    public Folder getFolder(final String name) throws MessagingException {
         return new MStorFolder(mStore, delegate.getFolder(name));
     }
 
@@ -234,7 +235,7 @@ public class MStorFolder extends Folder implements UIDFolder {
      *
      * @see javax.mail.Folder#delete(boolean)
      */
-    public final boolean delete(final boolean recurse)
+    public boolean delete(final boolean recurse)
         throws MessagingException {
         
         assertClosed();
@@ -265,7 +266,7 @@ public class MStorFolder extends Folder implements UIDFolder {
      *
      * @see javax.mail.Folder#renameTo(javax.mail.Folder)
      */
-    public final boolean renameTo(final Folder folder)
+    public boolean renameTo(final Folder folder)
             throws MessagingException {
         
         assertExists();
@@ -283,7 +284,7 @@ public class MStorFolder extends Folder implements UIDFolder {
      *
      * @see javax.mail.Folder#open(int)
      */
-    public final void open(final int mode) throws MessagingException {
+    public void open(final int mode) throws MessagingException {
         assertExists();
         assertClosed();
 
@@ -300,7 +301,7 @@ public class MStorFolder extends Folder implements UIDFolder {
      *
      * @see javax.mail.Folder#close(boolean)
      */
-    public final void close(final boolean expunge) throws MessagingException {
+    public void close(final boolean expunge) throws MessagingException {
         assertOpen();
         if (expunge) {
             expunge();
@@ -321,7 +322,7 @@ public class MStorFolder extends Folder implements UIDFolder {
      *
      * @see javax.mail.Folder#isOpen()
      */
-    public final boolean isOpen() {
+    public boolean isOpen() {
         return open;
     }
 
@@ -330,7 +331,7 @@ public class MStorFolder extends Folder implements UIDFolder {
      *
      * @see javax.mail.Folder#getPermanentFlags()
      */
-    public final Flags getPermanentFlags() {
+    public Flags getPermanentFlags() {
         // TODO Auto-generated method stub
         return null;
     }
@@ -340,7 +341,7 @@ public class MStorFolder extends Folder implements UIDFolder {
      *
      * @see javax.mail.Folder#getMessageCount()
      */
-    public final int getMessageCount() throws MessagingException {
+    public int getMessageCount() throws MessagingException {
         assertExists();
         if ((getType() & HOLDS_MESSAGES) == 0) {
             throw new MessagingException("Invalid folder type");
@@ -359,7 +360,7 @@ public class MStorFolder extends Folder implements UIDFolder {
      *
      * @see javax.mail.Folder#getMessage(int)
      */
-    public final Message getMessage(final int index) throws MessagingException {
+    public Message getMessage(final int index) throws MessagingException {
         assertExists();
         assertOpen();
 
@@ -405,7 +406,7 @@ public class MStorFolder extends Folder implements UIDFolder {
      * upon processing to alleviate memory concerns with large messages. You should ensure the
      * messages specified in this array are referenced elsewhere if you want to retain them.
      */
-    public final void appendMessages(final Message[] messages)
+    public void appendMessages(final Message[] messages)
             throws MessagingException {
         
         assertExists();
@@ -421,7 +422,7 @@ public class MStorFolder extends Folder implements UIDFolder {
      *
      * @see javax.mail.Folder#expunge()
      */
-    public final Message[] expunge() throws MessagingException {
+    public Message[] expunge() throws MessagingException {
         assertExists();
         assertOpen();
 
@@ -431,7 +432,7 @@ public class MStorFolder extends Folder implements UIDFolder {
 
         int count = getDeletedMessageCount();
 
-        List deletedList = new ArrayList();
+        List<Message> deletedList = new ArrayList<Message>();
         for (int i = 1; i <= getMessageCount() && deletedList.size() < count; i++) {
             Message message = getMessage(i);
             if (message.isSet(Flags.Flag.DELETED)) {
@@ -439,8 +440,7 @@ public class MStorFolder extends Folder implements UIDFolder {
             }
         }
 
-        MStorMessage[] deleted = (MStorMessage[]) deletedList
-                .toArray(new MStorMessage[deletedList.size()]);
+        MStorMessage[] deleted = deletedList.toArray(new MStorMessage[deletedList.size()]);
 
         delegate.expunge(deleted);
 
@@ -538,11 +538,11 @@ public class MStorFolder extends Folder implements UIDFolder {
                 throw new MessagingException("Error retrieving UID", uoe);
             }
         }
-        List messages = new ArrayList();
+        List<Message> messages = new ArrayList<Message>();
         for (long uid = start; uid <= lastUid; uid++) {
             messages.add(getMessageByUID(uid));
         }
-        return (Message[]) messages.toArray(new Message[messages.size()]);
+        return messages.toArray(new Message[messages.size()]);
     }
 
     /*
@@ -551,11 +551,11 @@ public class MStorFolder extends Folder implements UIDFolder {
      * @see javax.mail.UIDFolder#getMessagesByUID(long[])
      */
     public Message[] getMessagesByUID(long[] uids) throws MessagingException {
-        List messages = new ArrayList();
+        List<Message> messages = new ArrayList<Message>();
         for (int i = 0; i < uids.length; i++) {
             messages.add(getMessageByUID(uids[i]));
         }
-        return (Message[]) messages.toArray(new Message[messages.size()]);
+        return messages.toArray(new Message[messages.size()]);
     }
 
     /*
@@ -576,7 +576,6 @@ public class MStorFolder extends Folder implements UIDFolder {
      * @see javax.mail.UIDFolder#getUIDValidity()
      */
     public long getUIDValidity() throws MessagingException {
-
         try {
             return delegate.getUidValidity();
         }
