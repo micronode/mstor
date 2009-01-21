@@ -35,14 +35,13 @@
  */
 package net.fortuna.mstor.connector;
 
-import java.io.IOException;
 
 
 /**
  * @author Ben
  *
  */
-public abstract class AbstractFolderDelegate implements FolderDelegate {
+public abstract class AbstractFolderDelegate<T extends MessageDelegate> implements FolderDelegate<T> {
 
     /* (non-Javadoc)
      * @see net.fortuna.mstor.MetaFolder#allocateUid(net.fortuna.mstor.MetaMessage)
@@ -59,7 +58,6 @@ public abstract class AbstractFolderDelegate implements FolderDelegate {
     
     /**
      * @param uid
-     * @throws IOException
      */
     protected abstract void setLastUid(long uid) throws UnsupportedOperationException, DelegateException;
 
@@ -67,5 +65,5 @@ public abstract class AbstractFolderDelegate implements FolderDelegate {
      * @param messageNumber
      * @return
      */
-    protected abstract MessageDelegate createMessage(int messageNumber) throws DelegateException;
+    protected abstract T createMessage(int messageNumber) throws DelegateException;
 }

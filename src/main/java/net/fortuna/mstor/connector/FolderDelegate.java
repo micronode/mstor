@@ -49,7 +49,7 @@ import net.fortuna.mstor.MStorFolder;
  * @author Ben
  *
  */
-public interface FolderDelegate {
+public interface FolderDelegate<T extends MessageDelegate> {
 
     /**
      * @return Returns the name.
@@ -66,7 +66,7 @@ public interface FolderDelegate {
      * Returns the parent folder delegate of this delegate.
      * @return
      */
-    FolderDelegate getParent();
+    FolderDelegate<T> getParent();
     
     /**
      * Indicates whether the folder represented by this delegate exists.
@@ -87,7 +87,7 @@ public interface FolderDelegate {
      * @param pattern
      * @return
      */
-    FolderDelegate[] list(String pattern);
+    FolderDelegate<T>[] list(String pattern);
     
     /**
      * Returns the folder separator for this delegate type.
@@ -108,7 +108,7 @@ public interface FolderDelegate {
      * @param name
      * @return
      */
-    FolderDelegate getFolder(String name) throws MessagingException;
+    FolderDelegate<T> getFolder(String name) throws MessagingException;
     
     /**
      * Delete the folder delegate.
@@ -172,7 +172,7 @@ public interface FolderDelegate {
      * @param messageId
      * @return
      */
-    MessageDelegate getMessage(int messageNumber) throws DelegateException;
+    T getMessage(int messageNumber) throws DelegateException;
 
     /**
      * Retrieves the last allocated message UID for the folder.

@@ -72,7 +72,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
     /**
      * A delegate supporting additional functions not inherently supported by {@link Folder}.
      */
-    private FolderDelegate<MessageDelegate> delegate;
+    private FolderDelegate<? extends MessageDelegate> delegate;
 
     /**
      * A cache for messages.
@@ -87,7 +87,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
      * @param store
      * @param file
      */
-    public MStorFolder(final MStorStore store, final FolderDelegate<MessageDelegate> delegate) {
+    public MStorFolder(final MStorStore store, final FolderDelegate<? extends MessageDelegate> delegate) {
         super(store);
         this.mStore = store;
         this.delegate = delegate;
@@ -167,7 +167,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
 
         List<Folder> folders = new ArrayList<Folder>();
 
-        FolderDelegate<MessageDelegate>[] childDelegates = delegate.list(pattern);
+        FolderDelegate<? extends MessageDelegate>[] childDelegates = delegate.list(pattern);
         for (int i = 0; i < childDelegates.length; i++) {
             folders.add(new MStorFolder(mStore, childDelegates[i]));
         }
