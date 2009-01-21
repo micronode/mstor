@@ -48,7 +48,7 @@ import net.fortuna.mstor.connector.ProtocolConnectorFactory;
  * Implementation of a javamail store for the mstor provider.
  * @author Ben Fortuna
  */
-public class MStorStore extends Store {
+public final class MStorStore extends Store {
 
     public static final String INBOX = "Inbox";
     
@@ -71,7 +71,7 @@ public class MStorStore extends Store {
      * 
      * @see javax.mail.Store#getDefaultFolder()
      */
-    public final Folder getDefaultFolder() throws MessagingException {
+    public Folder getDefaultFolder() throws MessagingException {
         if (!isConnected()) {
             throw new IllegalStateException("Store not connected");
         }
@@ -83,7 +83,7 @@ public class MStorStore extends Store {
      * 
      * @see javax.mail.Store#getFolder(java.lang.String)
      */
-    public final Folder getFolder(final String name) throws MessagingException {
+    public Folder getFolder(final String name) throws MessagingException {
         if (!isConnected()) {
             throw new IllegalStateException("Store not connected");
         }
@@ -95,7 +95,7 @@ public class MStorStore extends Store {
      * 
      * @see javax.mail.Store#getFolder(javax.mail.URLName)
      */
-    public final Folder getFolder(final URLName url) throws MessagingException {
+    public Folder getFolder(final URLName url) throws MessagingException {
         if (!isConnected()) {
             throw new IllegalStateException("Store not connected");
         }
@@ -111,7 +111,7 @@ public class MStorStore extends Store {
     /**
      * Override the superclass method to bypass authentication.
      */
-    protected final boolean protocolConnect(final String host, final int port,
+    protected boolean protocolConnect(final String host, final int port,
             final String user, final String password) throws MessagingException {
         
 //        return protocolHandler.connect(host, port, user, password);
