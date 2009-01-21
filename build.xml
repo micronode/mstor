@@ -6,8 +6,8 @@
 	<property name="project.version" value="0.9.9" />
 
 	<!-- Project paths -->
-	<property name="source.dir" location="source" />
-	<property name="test.source.dir" location="test" />
+	<property name="source.dir" location="src/main/java" />
+	<property name="test.source.dir" location="src/test/java" />
 	<property name="output.dir" location="bin" />
 	<property name="package.dir" location="build" />
 	<property name="package.file" value="mstor.jar" />

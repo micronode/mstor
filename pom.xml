@@ -44,36 +44,8 @@
 		</relocation>
 	</distributionManagement>
  -->
+ 
 	<build>
-		<sourceDirectory>source</sourceDirectory>
-		<testSourceDirectory>test</testSourceDirectory>
-		<resources>
-			<resource>
-				<directory>source</directory>
-				<includes>
-					<include>META-INF/javamail.providers</include>
-					<include>jyaml.yml</include>
-				</includes>
-			</resource>
-			<resource>
-				<directory>source</directory>
-				<includes>
-					<include>overview.html</include>
-				</includes>
-				<filtering>true</filtering>
-			</resource>
-		</resources>
-		<testResources>
-			<testResource>
-				<directory>test</directory>
-				<includes>
-					<include>log4j.properties</include>
-					<include>mstor.properties</include>
-					<include>ehcache.xml</include>
-				</includes>
-			</testResource>
-		</testResources>
-
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -82,6 +54,7 @@
 					<target>1.4</target>
 				</configuration>
 			</plugin>
+			
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
@@ -98,6 +71,7 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clover-plugin</artifactId>
@@ -113,6 +87,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
@@ -253,12 +228,14 @@
 					<siteDirectory>etc/site</siteDirectory>
 				</configuration>
 			</plugin>
+			
 			<plugin>
 				<artifactId>maven-checkstyle-plugin</artifactId>
 				<configuration>
 					<configLocation>etc/checkstyle.xml</configLocation>
 				</configuration>
 			</plugin>
+			
 			<plugin>
 				<artifactId>maven-clover-plugin</artifactId>
 				<configuration>
@@ -267,6 +244,7 @@
 					</licenseLocation>
 				</configuration>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>clirr-maven-plugin</artifactId>
@@ -275,6 +253,7 @@
 					<comparisonVersion>0.9.11</comparisonVersion>
 				</configuration>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-changelog-plugin</artifactId>
