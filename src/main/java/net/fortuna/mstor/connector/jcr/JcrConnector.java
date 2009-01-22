@@ -1,0 +1,234 @@
+/*
+ * $Id$
+ *
+ * Created on 22/01/2009
+ *
+ * Copyright (c) 2009, Ben Fortuna
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *  o Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
+ *
+ *  o Redistributions in binary form must reproduce the above copyright
+ * notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution.
+ *
+ *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+package net.fortuna.mstor.connector.jcr;
+
+import java.util.Properties;
+
+import javax.jcr.Credentials;
+import javax.jcr.LoginException;
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.Repository;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.SimpleCredentials;
+import javax.mail.AuthenticationFailedException;
+import javax.mail.Folder;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.URLName;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import net.fortuna.mstor.MStorFolder;
+import net.fortuna.mstor.MStorStore;
+import net.fortuna.mstor.connector.AbstractProtocolConnector;
+
+import org.jcrom.Jcrom;
+
+/**
+ * @author Ben
+ *
+ */
+public class JcrConnector extends AbstractProtocolConnector {
+
+    private Jcrom jcrom;
+    
+    private Repository repository;
+    
+    private Session session;
+    
+    private javax.mail.Session mailSession;
+    
+    /**
+     * @param url
+     * @param store
+     */
+    public JcrConnector(URLName url, MStorStore store, javax.mail.Session session) {
+        super(url, store);
+        this.mailSession = session;
+        
+        this.jcrom = new Jcrom();
+        jcrom.map(JcrFolder.class);
+        jcrom.map(JcrMessage.class);
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.connector.ProtocolConnector#connect()
+     */
+    public boolean connect() throws AuthenticationFailedException, MessagingException {
+        try {
+            Context context = null;
+            String providerUrl = mailSession.getProperty("mstor.repository.provider.url");
+            if (providerUrl != null) {
+                Properties p = new Properties();
+                p.setProperty(Context.PROVIDER_URL, providerUrl);
+                context = new InitialContext(p);
+            }
+            else {
+                context = new InitialContext();
+            }
+            repository = (Repository) context.lookup(mailSession.getProperty("mstor.repository.name"));
+        }
+        catch (NamingException ne) {
+            throw new MessagingException("Error locating repository", ne);
+        }
+        
+        PasswordAuthentication auth = mailSession.requestPasswordAuthentication(null, 0, "mstor", null, null);
+//        PasswordAuthentication auth = session.getPasswordAuthentication(url);
+        
+        // may be null, in which case the default workspace is used..
+//        String workspaceName = mailSession.getProperty("mstor.repository.workspace");
+            
+        try {
+            if (auth != null) {
+                Credentials credentials = new SimpleCredentials(auth.getUserName(), auth.getPassword().toCharArray());
+                session = repository.login(credentials);
+            }
+            else {
+                // login anonymously..
+                session = repository.login();
+            }
+            return true;
+        }
+        catch (LoginException le) {
+            throw new AuthenticationFailedException(
+                    "Error authenticating user: " + le.getMessage());
+        }
+        catch (RepositoryException re) {
+            throw new MessagingException("Error authenicating user", re);
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.connector.ProtocolConnector#disconnect()
+     */
+    public void disconnect() throws MessagingException {
+        session.logout();
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.connector.ProtocolConnector#getDefaultFolder()
+     */
+    public Folder getDefaultFolder() throws MessagingException {
+        JcrFolder delegate = jcrom.fromNode(JcrFolder.class, getNode());
+        delegate.setConnector(this);
+        if (!delegate.exists()) {
+            delegate.create(Folder.HOLDS_FOLDERS);
+        }
+        return new MStorFolder(store, delegate);
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.connector.ProtocolConnector#getFolder(java.lang.String)
+     */
+    public Folder getFolder(String name) throws MessagingException {
+        return getDefaultFolder().getFolder(name);
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.connector.ProtocolConnector#getFolder(javax.mail.URLName)
+     */
+    public Folder getFolder(URLName url) throws MessagingException {
+        return getDefaultFolder().getFolder(url.getFile());
+    }
+
+    /**
+     * @return the jcrom
+     */
+    Jcrom getJcrom() {
+        return jcrom;
+    }
+
+    /**
+     * @return
+     */
+    Session getSession() {
+        return session;
+    }
+
+    /**
+     * @throws ObjectStoreException
+     */
+    private void assertConnected() throws MessagingException {
+        if (session == null) {
+            throw new MessagingException("Not connected");
+        }
+    }
+    
+    /**
+     * @return
+     * @throws RepositoryException 
+     * @throws PathNotFoundException 
+     * @throws ObjectStoreException 
+     */
+    private Node getNode() throws MessagingException {
+        assertConnected();
+        String path = mailSession.getProperty("mstor.repository.path");
+        if (path != null) {
+            try {
+                try {
+                    return session.getRootNode().getNode(path);
+                }
+                catch (RepositoryException e) {
+                    if (e instanceof PathNotFoundException) {
+                        throw (PathNotFoundException) e;
+                    }
+                    throw new MessagingException("Unexpected error", e);
+                }
+            }
+            catch (PathNotFoundException pnfe) {
+                if ("true".equals(mailSession.getProperty("mstor.repository.create"))) {
+                    try {
+                        session.getRootNode().addNode(path);
+//                        session.save();
+                        return session.getRootNode().getNode(path);
+                    }
+                    catch (RepositoryException e) {
+                        throw new MessagingException("Unexpected error", e);
+                    }
+                }
+            }
+        }
+        try {
+            return session.getRootNode();
+        }
+        catch (RepositoryException e) {
+            throw new MessagingException("Unexpected error", e);
+        }
+    }
+}
