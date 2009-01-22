@@ -109,6 +109,7 @@ public abstract class AbstractMessageDelegate implements MessageDelegate {
      *
      * @see net.fortuna.mstor.MessageDelegate#setHeaders(javax.mail.internet.InternetHeaders)
      */
+    @SuppressWarnings("unchecked")
     public final void setHeaders(final InternetHeaders headers) {
         setHeaders(headers.getAllHeaders());
     }

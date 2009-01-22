@@ -84,13 +84,13 @@ public class UIDFolderTest extends AbstractMStorTest {
     protected void setUp() throws Exception {
         super.setUp();
         
-        List uidFolderList = new ArrayList();
+        List<UIDFolder> uidFolderList = new ArrayList<UIDFolder>();
         Folder[] folders = store.getDefaultFolder().list();
         for (int i = 0; i < folders.length; i++) {
             folders[i].open(Folder.READ_ONLY);
-            uidFolderList.add(folders[i]);
+            uidFolderList.add((UIDFolder) folders[i]);
         }
-        uidFolders = (UIDFolder[]) uidFolderList.toArray(new UIDFolder[uidFolderList.size()]);
+        uidFolders = uidFolderList.toArray(new UIDFolder[uidFolderList.size()]);
     }
 
     /* (non-Javadoc)

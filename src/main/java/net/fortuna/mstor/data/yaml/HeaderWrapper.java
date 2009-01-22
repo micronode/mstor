@@ -48,7 +48,7 @@ public class HeaderWrapper extends DelayedCreationBeanWrapper {
     /**
      * @param type
      */
-    public HeaderWrapper(Class type) {
+    public HeaderWrapper(Class<?> type) {
         super(type);
     }
 

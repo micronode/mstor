@@ -50,13 +50,13 @@ public final class CapabilityHints {
      * faster access.
      */
     public static final String KEY_MBOX_CACHE_BUFFERS = "mstor.mbox.cacheBuffers";
-    
+
     /**
      * A capability hint to enable mozilla mbox compatibility.
      */
     public static final String KEY_MBOX_MOZILLA_COMPATIBILITY = "mstor.mbox.mozillaCompatibility";
 
-    private static final Map HINTS = new HashMap();
+    private static final Map<String, Boolean> HINTS = new HashMap<String, Boolean>();
 
     /**
      * Constructor made private to enforce static nature.
@@ -69,7 +69,7 @@ public final class CapabilityHints {
      * @param value
      */
     public static void setHintEnabled(final String key, final boolean enabled) {
-        HINTS.put(key, Boolean.valueOf(enabled));
+        HINTS.put(key, enabled);
     }
 
     /**
@@ -77,9 +77,9 @@ public final class CapabilityHints {
      * @return
      */
     public static boolean isHintEnabled(final String key) {
-    	if (Configurator.getProperty(key) != null) {
-    		return Boolean.valueOf(Configurator.getProperty(key)).booleanValue();
-    	}
+        if (Configurator.getProperty(key) != null) {
+            return Boolean.valueOf(Configurator.getProperty(key));
+        }
         return Boolean.TRUE.equals(HINTS.get(key));
     }
 }

@@ -3,61 +3,65 @@ package net.fortuna.mstor.data.yaml;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Ben
+ *
+ */
 public class FolderExt {
 
-	private List messages;
-	
-	private long lastUid;
-	
-	private long uidValidity;
+    private List<MessageExt> messages;
 
-	/**
-	 * Default constructor.
-	 */
-	public FolderExt() {
-	    messages = new ArrayList();
-	}
-	
-	/**
-	 * @return the lastUid
-	 */
-	public final long getLastUid() {
-		return lastUid;
-	}
+    private long lastUid;
 
-	/**
-	 * @param lastUid the lastUid to set
-	 */
-	public final void setLastUid(long lastUid) {
-		this.lastUid = lastUid;
-	}
+    private long uidValidity;
 
-	/**
-	 * @return the messages
-	 */
-	public final List getMessages() {
-		return messages;
-	}
+    /**
+     * Default constructor.
+     */
+    public FolderExt() {
+        messages = new ArrayList<MessageExt>();
+    }
 
-	/**
-	 * @param messages the messages to set
-	 */
-	public final void setMessages(List messages) {
-		this.messages = messages;
-	}
+    /**
+     * @return the lastUid
+     */
+    public final long getLastUid() {
+        return lastUid;
+    }
 
-	/**
-	 * @return the uidValidity
-	 */
-	public final long getUidValidity() {
-		return uidValidity;
-	}
+    /**
+     * @param lastUid the lastUid to set
+     */
+    public final void setLastUid(long lastUid) {
+        this.lastUid = lastUid;
+    }
 
-	/**
-	 * @param uidValidity the uidValidity to set
-	 */
-	public final void setUidValidity(long uidValidity) {
-		this.uidValidity = uidValidity;
-	}
-	
+    /**
+     * @return the messages
+     */
+    public final List<MessageExt> getMessages() {
+        return messages;
+    }
+
+    /**
+     * @param messages the messages to set
+     */
+    public final void setMessages(List<MessageExt> messages) {
+        this.messages = messages;
+    }
+
+    /**
+     * @return the uidValidity
+     */
+    public final long getUidValidity() {
+        return uidValidity;
+    }
+
+    /**
+     * @param uidValidity the uidValidity to set
+     */
+    public final void setUidValidity(long uidValidity) {
+        this.uidValidity = uidValidity;
+    }
+
 }

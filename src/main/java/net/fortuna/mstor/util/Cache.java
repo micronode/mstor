@@ -39,12 +39,14 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.mail.Message;
+
 /**
  * Implements a very rudimentary cache.
  * 
  * @author benfortuna
  */
-public class Cache extends LinkedHashMap {
+public class Cache extends LinkedHashMap<String, Message> {
 
     private static final long serialVersionUID = 4000823529559716310L;
 
@@ -120,7 +122,7 @@ public class Cache extends LinkedHashMap {
      * @param m
      * @param maxEntries
      */
-    public Cache(final Map m, final int maxEntries) {
+    public Cache(final Map<String, Message> m, final int maxEntries) {
         super(m);
         this.maxEntries = maxEntries;
     }
@@ -130,7 +132,7 @@ public class Cache extends LinkedHashMap {
      * 
      * @see java.util.LinkedHashMap#removeEldestEntry(java.util.Map.Entry)
      */
-    protected final boolean removeEldestEntry(final Entry entry) {
+    protected final boolean removeEldestEntry(final Entry<String, Message> entry) {
         return size() > maxEntries;
     }
 }

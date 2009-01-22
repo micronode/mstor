@@ -49,7 +49,7 @@ public class FlagsWrapper extends DelayedCreationBeanWrapper {
     /**
      * @param type
      */
-    public FlagsWrapper(Class type) {
+    public FlagsWrapper(Class<?> type) {
         super(type);
     }
 

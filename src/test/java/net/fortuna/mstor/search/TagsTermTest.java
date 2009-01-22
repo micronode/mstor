@@ -105,12 +105,12 @@ public class TagsTermTest extends TestCase {
         store = lifecycle.getStore();
         store.connect(username, password);
         
-        List folderList = new ArrayList();
+        List<String> folderList = new ArrayList<String>();
         Folder[] folders = store.getDefaultFolder().list();
         for (int i = 0; i < folders.length; i++) {
             folderList.add(folders[i].getName());
         }
-        folderNames = (String[]) folderList.toArray(new String[folderList.size()]);
+        folderNames = folderList.toArray(new String[folderList.size()]);
 
 //        inbox = store.getDefaultFolder().getFolder(testFolder);
 //        inbox.open(Folder.READ_WRITE);

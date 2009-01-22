@@ -272,12 +272,13 @@ public class MetaMessage extends AbstractMessageDelegate {
      * 
      * @see net.fortuna.mstor.MetaMessage#getFlags()
      */
+    @SuppressWarnings("unchecked")
     public final Flags getFlags() {
         Flags flags = new Flags();
-        for (Iterator i = binding.getElement(ELEMENT_FLAGS).getChildren().iterator(); i
+        for (Iterator<Element> i = binding.getElement(ELEMENT_FLAGS).getChildren().iterator(); i
                 .hasNext();) {
             
-            Element flagElement = (Element) i.next();
+            Element flagElement = i.next();
             
             Flag flag = getFlag(flagElement.getName());
             if (flag != null) {
@@ -320,12 +321,13 @@ public class MetaMessage extends AbstractMessageDelegate {
      * 
      * @see net.fortuna.mstor.MetaMessage#getHeaders()
      */
+    @SuppressWarnings("unchecked")
     public final InternetHeaders getHeaders() {
         InternetHeaders headers = new InternetHeaders();
 
-        for (Iterator i = binding.getElement(ELEMENT_HEADERS).getChildren().iterator(); i
+        for (Iterator<Element> i = binding.getElement(ELEMENT_HEADERS).getChildren().iterator(); i
                 .hasNext();) {
-            Element header = (Element) i.next();
+            Element header = i.next();
             headers.addHeader(header.getName(), header.getText());
         }
 
@@ -337,11 +339,11 @@ public class MetaMessage extends AbstractMessageDelegate {
      *
      * @see net.fortuna.mstor.MetaMessage#setHeaders(java.util.Enumeration)
      */
-    public final void setHeaders(final Enumeration headers) {
+    public final void setHeaders(final Enumeration<Header> headers) {
         Element headersElement = binding.getElement(ELEMENT_HEADERS);
         headersElement.removeContent();
         while (headers.hasMoreElements()) {
-            Header header = (Header) headers.nextElement();
+            Header header = headers.nextElement();
             try {
                 if (!header.getName().startsWith(MboxFile.FROM__PREFIX)) {
                     headersElement.addContent(new Element(header.getName())

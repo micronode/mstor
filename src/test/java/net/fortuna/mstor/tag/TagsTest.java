@@ -103,7 +103,7 @@ public class TagsTest extends TestCase {
      * Test method for 'net.fortuna.mstor.Tags.iterator()'
      */
     public void testIterator() {
-        Iterator i = tags.iterator();
+        Iterator<String> i = tags.iterator();
         assertTrue(i.hasNext());
         for (; i.hasNext();) {
             LOG.info("Tag: " + i.next());
@@ -148,7 +148,7 @@ public class TagsTest extends TestCase {
      * Test method for 'net.fortuna.mstor.Tags.containsAll(Collection<?>)'
      */
     public void testContainsAll() {
-        Set set = new HashSet();
+        Set<String> set = new HashSet<String>();
         set.add("Friends");
         set.add("Family");
         assertTrue(tags.containsAll(set));
@@ -158,7 +158,7 @@ public class TagsTest extends TestCase {
      * Test method for 'net.fortuna.mstor.Tags.addAll(Collection<? extends String>)'
      */
     public void testAddAll() {
-        Set set = new HashSet();
+        Set<String> set = new HashSet<String>();
         set.add("TestTag 1");
         set.add("TestTag 2");
         set.add("TestTag 3");
@@ -170,7 +170,7 @@ public class TagsTest extends TestCase {
      * Test method for 'net.fortuna.mstor.Tags.retainAll(Collection<?>)'
      */
     public void testRetainAll() {
-        Set set = new HashSet();
+        Set<String> set = new HashSet<String>();
         set.add("Family");
         set.add("Friends");
         tags.retainAll(set);
@@ -183,11 +183,11 @@ public class TagsTest extends TestCase {
      * Test method for 'net.fortuna.mstor.Tags.removeAll(Collection<?>)'
      */
     public void testRemoveAll() {
-        Set set = new HashSet();
+        Set<String> set = new HashSet<String>();
         set.add("Family");
         set.add("Friends");
         tags.removeAll(set);
-        for (Iterator i = set.iterator(); i.hasNext();) {
+        for (Iterator<String> i = set.iterator(); i.hasNext();) {
             String tag = (String) i.next();
             assertFalse(tags.contains(tag));
             assertFalse(Arrays.asList(flags.getUserFlags()).contains(Tags.TAG_PREFIX + tag));

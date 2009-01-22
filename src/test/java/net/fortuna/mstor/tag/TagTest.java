@@ -92,12 +92,12 @@ public class TagTest extends TestCase {
         store = lifecycle.getStore();
         store.connect(username, password);
         
-        List folderList = new ArrayList();
+        List<String> folderList = new ArrayList<String>();
         Folder[] folders = store.getDefaultFolder().list();
         for (int i = 0; i < folders.length; i++) {
             folderList.add(folders[i].getName());
         }
-        folderNames = (String[]) folderList.toArray(new String[folderList.size()]);
+        folderNames = folderList.toArray(new String[folderList.size()]);
     }
     
     /* (non-Javadoc)
@@ -124,7 +124,7 @@ public class TagTest extends TestCase {
         for (int i = 1; i <= folder.getMessageCount(); i++) {
             Message message = folder.getMessage(i);
             LOG.info("Message [" + i + "]: " + message.getSubject());
-            for (Iterator it = Tags.getTags(message).iterator(); it.hasNext();) {
+            for (Iterator<String> it = Tags.getTags(message).iterator(); it.hasNext();) {
                 LOG.info("Tag: " + it.next());
             }
         }

@@ -121,6 +121,7 @@ public class MStorMessageTest extends AbstractMStorTest {
     /**
      * @throws MessagingException
      */
+    @SuppressWarnings("unchecked")
     public void testGetAllHeaders() throws MessagingException {
         for (int n = 0; n < folderNames.length; n++) {
             Folder folder = store.getFolder(folderNames[n]);
@@ -128,8 +129,8 @@ public class MStorMessageTest extends AbstractMStorTest {
 
             for (int i = 1; i < folder.getMessageCount(); i++) {
                 Message message = folder.getMessage(i);
-                for (Enumeration e = message.getAllHeaders(); e.hasMoreElements();) {
-                    Header header = (Header) e.nextElement();
+                for (Enumeration<Header> e = message.getAllHeaders(); e.hasMoreElements();) {
+                    Header header = e.nextElement();
                     assertFalse("From_ line returned as header [" + folder.getFullName() + "]", header.getName()
                             .startsWith("From "));
                 }

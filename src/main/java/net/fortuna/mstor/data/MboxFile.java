@@ -57,7 +57,6 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.CodingErrorAction;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -185,7 +184,7 @@ public class MboxFile {
     /**
      * Tracks all message positions within the mbox file.
      */
-    private long[] messagePositions;
+    private Long[] messagePositions;
 
     /**
      * A cache used to store mapped regions of the mbox file representing message data.
@@ -281,9 +280,9 @@ public class MboxFile {
      * @return a long array
      * @throws IOException thrown when unable to read from the specified file channel
      */
-    private long[] getMessagePositions() throws IOException {
+    private Long[] getMessagePositions() throws IOException {
         if (messagePositions == null) {
-            List posList = new ArrayList();
+            List<Long> posList = new ArrayList<Long>();
 
             // debugging..
             log.debug("Channel size [" + getChannel().size() + "] bytes");
@@ -353,13 +352,7 @@ public class MboxFile {
                 }
             }
 
-            messagePositions = new long[posList.size()];
-
-            int count = 0;
-
-            for (Iterator i = posList.iterator(); i.hasNext(); count++) {
-                messagePositions[count] = ((Long) i.next()).longValue();
-            }
+            messagePositions = posList.toArray(new Long[posList.size()]);
         }
         return messagePositions;
     }
@@ -503,7 +496,7 @@ public class MboxFile {
     
             // update message positions..
             if (messagePositions != null) {
-                long[] newMessagePositions = new long[messagePositions.length + 1];
+                Long[] newMessagePositions = new Long[messagePositions.length + 1];
                 System.arraycopy(messagePositions, 0, newMessagePositions, 0,
                         messagePositions.length);
                 newMessagePositions[newMessagePositions.length - 1] = newMessagePosition;

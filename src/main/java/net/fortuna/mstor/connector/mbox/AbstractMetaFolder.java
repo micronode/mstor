@@ -157,6 +157,7 @@ public abstract class AbstractMetaFolder<T extends MessageDelegate> extends Abst
     /* (non-Javadoc)
      * @see net.fortuna.mstor.FolderDelegate#appendMessages(javax.mail.Message[])
      */
+    @SuppressWarnings("unchecked")
     public final void appendMessages(Message[] messages) throws MessagingException {
         try {
             Date received = new Date();

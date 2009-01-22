@@ -152,10 +152,10 @@ public class YamlMetaMessage extends AbstractMessageDelegate {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.connector.MessageDelegate#setHeaders(java.util.Enumeration)
      */
-    public void setHeaders(Enumeration headers) {
+    public void setHeaders(Enumeration<Header> headers) {
         InternetHeaders iHeaders = new InternetHeaders();
         while (headers.hasMoreElements()) {
-            Header header = (Header) headers.nextElement();
+            Header header = headers.nextElement();
             iHeaders.addHeader(header.getName(), header.getValue());
         }
         messageExt.setInternetHeaders(iHeaders);

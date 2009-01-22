@@ -67,12 +67,12 @@ public class YamlMetaFolder extends AbstractMetaFolder<YamlMetaMessage> {
      * @see net.fortuna.mstor.connector.mbox.AbstractMetaFolder#removeMessages(javax.mail.Message[])
      */
     protected YamlMetaMessage[] removeMessages(Message[] deleted) {
-        List metas = new ArrayList();
+        List<YamlMetaMessage> metas = new ArrayList<YamlMetaMessage>();
 
-        for (Iterator i = folderExt.getMessages().iterator(); i
+        for (Iterator<MessageExt> i = folderExt.getMessages().iterator(); i
                 .hasNext();) {
 
-            MessageExt messageExt = (MessageExt) i.next();
+            MessageExt messageExt = i.next();
             int messageNumber = messageExt.getMessageNumber();
 
             for (int n = 0; n < deleted.length; n++) {
@@ -96,9 +96,9 @@ public class YamlMetaFolder extends AbstractMetaFolder<YamlMetaMessage> {
      * @param delta amount to adjust relevant message numbers by
      */
     private void updateMessageNumbers(final int startIndex, final int delta) {
-        for (Iterator i = folderExt.getMessages().iterator(); i
+        for (Iterator<MessageExt> i = folderExt.getMessages().iterator(); i
                 .hasNext();) {
-            MessageExt messageExt = (MessageExt) i.next();
+            MessageExt messageExt = i.next();
             int messageNumber = messageExt.getMessageNumber();
             if (messageNumber >= startIndex) {
                 messageExt.setMessageNumber(messageNumber + delta);
@@ -183,8 +183,8 @@ public class YamlMetaFolder extends AbstractMetaFolder<YamlMetaMessage> {
     public YamlMetaMessage getMessage(int messageNumber)
             throws DelegateException {
 
-        for (Iterator i = folderExt.getMessages().iterator(); i.hasNext();) {
-            MessageExt messageExt = (MessageExt) i.next();
+        for (Iterator<MessageExt> i = folderExt.getMessages().iterator(); i.hasNext();) {
+            MessageExt messageExt = i.next();
             if (messageExt.getMessageNumber() == messageNumber) {
                 return new YamlMetaMessage(messageExt, this);
             }
@@ -229,7 +229,7 @@ public class YamlMetaFolder extends AbstractMetaFolder<YamlMetaMessage> {
      */
     public YamlMetaFolder[] list(String pattern) {
         FolderDelegate<MessageDelegate>[] folders = getDelegate().list(pattern);
-        List<YamlMetaFolder> folderList = new ArrayList();
+        List<YamlMetaFolder> folderList = new ArrayList<YamlMetaFolder>();
         for (int i = 0; i < folders.length; i++) {
             folderList.add(new YamlMetaFolder(folders[i]));
         }

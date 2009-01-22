@@ -39,6 +39,7 @@ import java.util.Date;
 import java.util.Enumeration;
 
 import javax.mail.Flags;
+import javax.mail.Header;
 import javax.mail.internet.InternetHeaders;
 
 import net.fortuna.mstor.MStorMessage;
@@ -76,7 +77,7 @@ public interface MessageDelegate {
     /**
      * @param headers
      */
-    void setHeaders(Enumeration headers);
+    void setHeaders(Enumeration<Header> headers);
 
     /**
      * @return Returns the flags.

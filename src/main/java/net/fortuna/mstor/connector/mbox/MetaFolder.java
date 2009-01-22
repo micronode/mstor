@@ -136,16 +136,17 @@ public class MetaFolder extends AbstractMetaFolder<MetaMessage> {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.FolderDelegate#getMessage(int)
      */
+    @SuppressWarnings("unchecked")
     public final MetaMessage getMessage(int messageNumber)
         throws DelegateException {
 
         MetaMessage md = null;
         
-        for (Iterator i = binding.getDocument().getRootElement().getChildren(
+        for (Iterator<Element> i = binding.getDocument().getRootElement().getChildren(
                 MetaMessage.ELEMENT_MESSAGE, binding.getNamespace()).iterator();
                 i.hasNext();) {
 
-            Element messageElement = (Element) i.next();
+            Element messageElement = i.next();
             try {
                 if (Integer.parseInt(messageElement.getAttributeValue(
                         MetaMessage.ATTRIBUTE_MESSAGE_NUMBER)) == messageNumber) {
@@ -218,14 +219,15 @@ public class MetaFolder extends AbstractMetaFolder<MetaMessage> {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.connector.mbox.AbstractMetaFolder#removeMessages(javax.mail.Message[])
      */
+    @SuppressWarnings("unchecked")
     protected MetaMessage[] removeMessages(Message[] messages) {
-        List metas = new ArrayList();
+        List<MetaMessage> metas = new ArrayList<MetaMessage>();
 
-        for (Iterator i = binding.getDocument().getRootElement().getChildren(
+        for (Iterator<Element> i = binding.getDocument().getRootElement().getChildren(
                 MetaMessage.ELEMENT_MESSAGE, binding.getNamespace()).iterator(); i
                 .hasNext();) {
 
-            Element messageElement = (Element) i.next();
+            Element messageElement = i.next();
             int messageNumber = Integer
                     .parseInt(messageElement
                             .getAttributeValue(MetaMessage.ATTRIBUTE_MESSAGE_NUMBER));
@@ -240,7 +242,7 @@ public class MetaFolder extends AbstractMetaFolder<MetaMessage> {
                 }
             }
         }
-        return (MetaMessage[]) metas.toArray(new MetaMessage[metas.size()]);
+        return metas.toArray(new MetaMessage[metas.size()]);
     }
 
     /**
@@ -250,11 +252,12 @@ public class MetaFolder extends AbstractMetaFolder<MetaMessage> {
      * @param startIndex anything greater than (or equal to) the start index is affected
      * @param delta amount to adjust relevant message numbers by
      */
+    @SuppressWarnings("unchecked")
     private void updateMessageNumbers(final int startIndex, final int delta) {
-        for (Iterator i = binding.getDocument().getRootElement().getChildren(
+        for (Iterator<Element> i = binding.getDocument().getRootElement().getChildren(
                 MetaMessage.ELEMENT_MESSAGE, binding.getNamespace()).iterator(); i
                 .hasNext();) {
-            Element messageElement = (Element) i.next();
+            Element messageElement = i.next();
             int messageNumber = Integer
                     .parseInt(messageElement
                             .getAttributeValue(MetaMessage.ATTRIBUTE_MESSAGE_NUMBER));

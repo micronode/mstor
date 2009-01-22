@@ -265,10 +265,10 @@ public class RepositoryMessage extends AbstractMessageDelegate {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.MetaMessage#setHeaders(java.util.Enumeration)
      */
-    public void setHeaders(Enumeration headers) {
+    public void setHeaders(Enumeration<Header> headers) {
         try {
             while (headers.hasMoreElements()) {
-                Header header = (Header) headers.nextElement();
+                Header header = headers.nextElement();
                 Node headerNode = node.addNode(NodeType.HEADER.getName());
                 headerNode.setProperty(NodeProperty.NAME.getName(), header.getName());
                 headerNode.setProperty(NodeProperty.VALUE.getName(), header.getValue());
