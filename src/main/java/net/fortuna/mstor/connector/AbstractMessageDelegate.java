@@ -35,8 +35,6 @@
  */
 package net.fortuna.mstor.connector;
 
-import javax.mail.Flags;
-import javax.mail.Flags.Flag;
 import javax.mail.internet.InternetHeaders;
 
 
@@ -45,64 +43,6 @@ import javax.mail.internet.InternetHeaders;
  *
  */
 public abstract class AbstractMessageDelegate implements MessageDelegate {
-
-    /**
-     * @param flagName
-     * @return
-     */
-    protected Flag getFlag(String flagName) {
-        if ("answered".equals(flagName)) {
-            return Flags.Flag.ANSWERED;
-        }
-        else if ("deleted".equalsIgnoreCase(flagName)) {
-            return Flags.Flag.DELETED;
-        }
-        else if ("draft".equalsIgnoreCase(flagName)) {
-            return Flags.Flag.DRAFT;
-        }
-        else if ("flagged".equalsIgnoreCase(flagName)) {
-            return Flags.Flag.FLAGGED;
-        }
-        else if ("recent".equalsIgnoreCase(flagName)) {
-            return Flags.Flag.RECENT;
-        }
-        else if ("seen".equalsIgnoreCase(flagName)) {
-            return Flags.Flag.SEEN;
-        }
-        else if ("user".equalsIgnoreCase(flagName)) {
-            return Flags.Flag.USER;
-        }
-        return null;
-    }
-
-    /**
-     * @param flag
-     * @return
-     */
-    protected String getFlagName(Flag flag) {
-        if (Flags.Flag.ANSWERED.equals(flag)) {
-            return "answered";
-        }
-        else if (Flags.Flag.DELETED.equals(flag)) {
-            return "deleted";
-        }
-        else if (Flags.Flag.DRAFT.equals(flag)) {
-            return "draft";
-        }
-        else if (Flags.Flag.FLAGGED.equals(flag)) {
-            return "flagged";
-        }
-        else if (Flags.Flag.RECENT.equals(flag)) {
-            return "recent";
-        }
-        else if (Flags.Flag.SEEN.equals(flag)) {
-            return "seen";
-        }
-        else if (Flags.Flag.USER.equals(flag)) {
-            return "user";
-        }
-        return null;
-    }
     
     /*
      * (non-Javadoc)

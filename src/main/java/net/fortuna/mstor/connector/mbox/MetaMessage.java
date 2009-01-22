@@ -35,6 +35,9 @@
  */
 package net.fortuna.mstor.connector.mbox;
 
+import static net.fortuna.mstor.util.MessageUtils.getFlag;
+import static net.fortuna.mstor.util.MessageUtils.getFlagName;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;

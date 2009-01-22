@@ -35,6 +35,9 @@
  */
 package net.fortuna.mstor.connector.jcr;
 
+import static net.fortuna.mstor.util.MessageUtils.getFlag;
+import static net.fortuna.mstor.util.MessageUtils.getFlagName;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
