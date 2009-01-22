@@ -35,6 +35,7 @@
  */
 package net.fortuna.mstor;
 
+import javax.mail.NoSuchProviderException;
 import javax.mail.Store;
 
 /**
@@ -55,6 +56,7 @@ public interface StoreLifecycle {
     
     /**
      * @return
+     * @throws NoSuchProviderException 
      */
-    Store getStore();
+    Store getStore() throws NoSuchProviderException;
 }
