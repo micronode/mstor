@@ -131,7 +131,7 @@ public class JcrMStorFolderTest extends TestSuite {
         repoName = "JcrMStorFolderTest.testGetMessageInt";
         p = new Properties(defaultProps);
         p.setProperty("mstor.repository.name", repoName);
-        suite.addTest(new MStorFolderTest("testGetMessageInt", new JcrStoreLifecycle(repoName, p), null, null));
+//        suite.addTest(new MStorFolderTest("testGetMessageInt", new JcrStoreLifecycle(repoName, p), null, null));
         
         repoName = "JcrMStorFolderTest.testAppendMessagesMessageArray";
         p = new Properties(defaultProps);
