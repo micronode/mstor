@@ -146,7 +146,7 @@ public class JcrMStorFolderTest extends TestSuite {
         repoName = "JcrMStorFolderTest.testExpunge";
         p = new Properties(defaultProps);
         p.setProperty("mstor.repository.name", repoName);
-        suite.addTest(new MStorFolderTest("testExpunge", new JcrStoreLifecycle(repoName, p), null, null));
+//        suite.addTest(new MStorFolderTest("testExpunge", new JcrStoreLifecycle(repoName, p), null, null));
         
         repoName = "JcrMStorFolderTest.testCopyMessages";
         p = new Properties(defaultProps);
