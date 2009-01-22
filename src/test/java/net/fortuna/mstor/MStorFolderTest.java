@@ -7,7 +7,6 @@
  */
 package net.fortuna.mstor;
 
-import java.io.File;
 import java.io.IOException;
 
 import javax.mail.Flags;
@@ -47,13 +46,24 @@ public class MStorFolderTest extends AbstractMStorTest {
 //                CapabilityHints.VALUE_MBOX_CACHE_BUFFERS_DISABLED);
 //    }
 
+    private char expectedSeparator;
+    
     /**
      * Default constructor.
      */
-    public MStorFolderTest(String method, StoreLifecycle lifecycle,
-            String username, String password) {
-        
+    public MStorFolderTest(String method, StoreLifecycle lifecycle, String username, String password) {
         super(method, lifecycle, username, password);
+    }
+    
+    /**
+     * @param lifecycle
+     * @param username
+     * @param password
+     * @param expectedSeparator
+     */
+    public MStorFolderTest(StoreLifecycle lifecycle, String username, String password, char expectedSeparator) {
+        super("testGetSeparator", lifecycle, username, password);
+        this.expectedSeparator = expectedSeparator;
     }
     
     /**
@@ -67,8 +77,7 @@ public class MStorFolderTest extends AbstractMStorTest {
      * @throws MessagingException
      */
     public final void testGetSeparator() throws MessagingException {
-        assertEquals(store.getDefaultFolder().getSeparator(),
-                File.separatorChar);
+        assertEquals(expectedSeparator, store.getDefaultFolder().getSeparator());
     }
 
     /**

@@ -68,8 +68,8 @@ public class MboxMStorFolderTest extends TestSuite {
 //            log.info("Sample [" + samples[i] + "]");
             suite.addTest(new MStorFolderTest("testExists",
                     new MboxStoreLifecycle("testExists", p, samples[i]), null, null));
-            suite.addTest(new MStorFolderTest("testGetSeparator",
-                    new MboxStoreLifecycle("testGetSeparator", p, samples[i]), null, null));
+            suite.addTest(new MStorFolderTest(new MboxStoreLifecycle("testGetSeparator", p, samples[i]),
+                    null, null, File.separatorChar));
             suite.addTest(new MStorFolderTest("testGetType",
                     new MboxStoreLifecycle("testGetType", p, samples[i]), null, null));
             suite.addTest(new MStorFolderTest("testCreate",
