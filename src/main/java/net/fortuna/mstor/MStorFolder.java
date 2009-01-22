@@ -122,10 +122,10 @@ public final class MStorFolder extends Folder implements UIDFolder {
     /*
      * (non-Javadoc)
      * 
-     * @see javax.mail.Folder#getName()
+     * @see javax.mail.Folder#getFolderName()
      */
     public String getName() {
-        return delegate.getName();
+        return delegate.getFolderName();
     }
 
     /*

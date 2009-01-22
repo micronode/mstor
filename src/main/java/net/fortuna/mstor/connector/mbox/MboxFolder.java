@@ -117,9 +117,9 @@ public class MboxFolder extends AbstractFolderDelegate<MessageDelegate> {
     }
     
     /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#getName()
+     * @see net.fortuna.mstor.FolderDelegate#getFolderName()
      */
-    public final String getName() {
+    public final String getFolderName() {
         return file.getName();
     }
     

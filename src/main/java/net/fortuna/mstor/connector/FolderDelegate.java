@@ -54,7 +54,7 @@ public interface FolderDelegate<T extends MessageDelegate> {
     /**
      * @return Returns the name.
      */
-    String getName();
+    String getFolderName();
     
     /**
      * Returns the full name of the folder.

@@ -83,10 +83,10 @@ public abstract class AbstractMetaFolder<T extends MessageDelegate> extends Abst
     }
     
     /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#getName()
+     * @see net.fortuna.mstor.FolderDelegate#getFolderName()
      */
-    public final String getName() {
-        return delegate.getName();
+    public final String getFolderName() {
+        return delegate.getFolderName();
     }
 
     /* (non-Javadoc)
