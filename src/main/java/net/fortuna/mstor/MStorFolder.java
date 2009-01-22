@@ -501,7 +501,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
     private void assertExists() throws MessagingException {
         if (!exists()) {
             throw new FolderNotFoundException(this, "Folder [" + getName()
-                    + " does not exist.");
+                    + "] does not exist.");
         }
     }
 
