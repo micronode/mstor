@@ -86,6 +86,15 @@ public abstract class AbstractMStorTest extends TestCase {
         
         List<String> folderList = new ArrayList<String>();
         Folder[] folders = store.getDefaultFolder().list();
+        if (folders.length == 0) {
+            // create dummy folders..
+            for (int i = 0; i < 10; i++) {
+                Folder f = store.getDefaultFolder().getFolder("folder_" + i);
+                f.create(Folder.HOLDS_MESSAGES);
+            }
+            folders = store.getDefaultFolder().list();
+        }
+        
         for (int i = 0; i < folders.length; i++) {
             folderList.add(folders[i].getName());
         }
