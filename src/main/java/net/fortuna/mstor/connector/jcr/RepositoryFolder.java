@@ -35,30 +35,36 @@
  */
 package net.fortuna.mstor.connector.jcr;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Enumeration;
 import java.util.List;
 
+import javax.jcr.ItemExistsException;
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
+import javax.jcr.lock.LockException;
+import javax.jcr.nodetype.ConstraintViolationException;
 import javax.jcr.query.Query;
+import javax.jcr.version.VersionException;
+import javax.mail.Flags;
+import javax.mail.Header;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Part;
 
 import net.fortuna.mstor.connector.AbstractFolderDelegate;
 import net.fortuna.mstor.connector.DelegateException;
-import net.fortuna.mstor.connector.FolderDelegate;
-import net.fortuna.mstor.connector.MessageDelegate;
 import net.fortuna.mstor.connector.jcr.query.GetFolderQueryBuilder;
 import net.fortuna.mstor.connector.jcr.query.GetMessageQueryBuilder;
 import net.fortuna.mstor.connector.jcr.query.ListFoldersQueryBuilder;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -66,7 +72,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Ben
  *
  */
-public class RepositoryFolder extends AbstractFolderDelegate {
+public class RepositoryFolder extends AbstractFolderDelegate<RepositoryMessage> {
     
     private Log log = LogFactory.getLog(RepositoryFolder.class);
     
@@ -104,9 +110,9 @@ public class RepositoryFolder extends AbstractFolderDelegate {
     }
     
     /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#getName()
+     * @see net.fortuna.mstor.FolderDelegate#getFolderName()
      */
-    public String getName() {
+    public String getFolderName() {
         try {
             return node.getProperty(NodeProperty.NAME.getName()).getString();
 //            return node.getName();
@@ -121,11 +127,11 @@ public class RepositoryFolder extends AbstractFolderDelegate {
      * @see net.fortuna.mstor.FolderDelegate#getFullName()
      */
     public String getFullName() {
-        StringBuffer b = new StringBuffer(getName());
-        FolderDelegate parent = getParent();
+        StringBuffer b = new StringBuffer(getFolderName());
+        RepositoryFolder parent = getParent();
         while (parent != null) {
             b.insert(0, getSeparator());
-            b.insert(0, parent.getName());
+            b.insert(0, parent.getFolderName());
             parent = parent.getParent();
         }
         b.insert(0, "/");
@@ -145,7 +151,7 @@ public class RepositoryFolder extends AbstractFolderDelegate {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.FolderDelegate#getParent()
      */
-    public FolderDelegate getParent() {
+    public RepositoryFolder getParent() {
         if (!root) {
             try {
 //                Node parentNode = node.getParent();
@@ -163,7 +169,7 @@ public class RepositoryFolder extends AbstractFolderDelegate {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.FolderDelegate#getFolder(java.lang.String)
      */
-    public FolderDelegate getFolder(String name) throws MessagingException {
+    public RepositoryFolder getFolder(String name) throws MessagingException {
         try {
             Node folderNode = null;
             
@@ -203,8 +209,8 @@ public class RepositoryFolder extends AbstractFolderDelegate {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.FolderDelegate#list(java.lang.String)
      */
-    public FolderDelegate[] list(String pattern) {
-        List folders = new ArrayList();
+    public RepositoryFolder[] list(String pattern) {
+        List<RepositoryFolder> folders = new ArrayList<RepositoryFolder>();
         try {
 //            NodeIterator ni = node.getNodes(NodeNames.FOLDER);
 //            NodeIterator ni = node.getNodes(pattern);
@@ -222,8 +228,7 @@ public class RepositoryFolder extends AbstractFolderDelegate {
         catch (RepositoryException re) {
             log.error("Error listing folders", re);
         }
-        return (FolderDelegate[]) folders.toArray(
-                new FolderDelegate[folders.size()]);
+        return folders.toArray(new RepositoryFolder[folders.size()]);
     }
 
     /* (non-Javadoc)
@@ -336,10 +341,15 @@ public class RepositoryFolder extends AbstractFolderDelegate {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.FolderDelegate#appendMessages(javax.mail.Message[])
      */
+    @SuppressWarnings("unchecked")
     public void appendMessages(Message[] messages) throws MessagingException {
         try {
             for (int i = 0; i < messages.length; i++) {
                 Node messageNode = node.addNode(NodeType.MESSAGE.getName()); //, "nt:file");
+                appendHeaders(messages[i].getAllHeaders(), messageNode);
+                appendPart(messages[i], messageNode);
+                node.save();
+                /*
                 Node contentNode = messageNode.addNode("jcr:content", "nt:resource");
                 contentNode.setProperty("jcr:mimeType", messages[i].getContentType());
 //                contentNode.setProperty("jcr:encoding", arg1);
@@ -349,6 +359,7 @@ public class RepositoryFolder extends AbstractFolderDelegate {
                 contentNode.setProperty("jcr:data", contentIn);
                 contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
                 node.save();
+                */
             }
         }
         catch (RepositoryException re) {
@@ -357,6 +368,86 @@ public class RepositoryFolder extends AbstractFolderDelegate {
         catch (IOException ioe) {
             throw new MessagingException("Error appending messages", ioe);
         }
+    }
+    
+    /**
+     * @param headers
+     * @param node
+     * @throws RepositoryException 
+     * @throws LockException 
+     * @throws ConstraintViolationException 
+     * @throws VersionException 
+     * @throws PathNotFoundException 
+     * @throws ItemExistsException 
+     */
+    private void appendHeaders(Enumeration<Header> headers, Node node) throws RepositoryException {
+        Node headersNode = node.addNode("mstor:headers");
+        while (headers.hasMoreElements()) {
+            Header header = headers.nextElement();
+            Node headerNode = headersNode.addNode("mstor:header");
+            headerNode.setProperty(header.getName(), header.getValue());
+        }
+    }
+    
+    private void appendFlags(Flags flags, Node node) throws RepositoryException {
+        Node flagsNode = node.addNode("mstor:flags");
+        for (int i = 0; i < flags.getSystemFlags().length; i++) {
+//            flagsNode.setProperty(flags.getSystemFlags()[i]., arg1)
+        }
+    }
+    
+    /**
+     * @param part
+     * @param node
+     * @throws RepositoryException 
+     * @throws IOException 
+     * @throws MessagingException 
+     * @throws LockException 
+     * @throws ConstraintViolationException 
+     * @throws VersionException 
+     * @throws PathNotFoundException 
+     * @throws ItemExistsException 
+     */
+    @SuppressWarnings("unchecked")
+    private void appendPart(Part part, Node node) throws RepositoryException, MessagingException, IOException {
+//        Node partNode = null;
+        if (part.isMimeType("message/*")) {
+            Node messageNode = node.addNode(NodeType.MESSAGE.getName()); //, "nt:file");
+            Part message = (Part) part.getContent();
+            appendHeaders(message.getAllHeaders(), messageNode);
+            appendPart(message, messageNode);
+//            node.save();
+        }
+        else if (part.isMimeType("multipart/*")) {
+            Multipart multi = (Multipart) part.getContent();
+            for (int i = 0; i< multi.getCount(); i++) {
+                Node partNode = null;
+                if (Part.ATTACHMENT.equals(multi.getBodyPart(i).getDisposition())) {
+                    partNode = node.addNode("mstor:attachment");
+                }
+                else {
+                    partNode = node.addNode("mstor:part");
+                }
+//              node.save();
+                appendPart(multi.getBodyPart(i), partNode);
+            }
+        }
+        else { //if (part.isMimeType("text/*")) {
+//            partNode = node.addNode("mstor:part");
+            if (StringUtils.isNotEmpty(part.getFileName())) {
+                node.setProperty("mstor:filename", part.getFileName());
+            }
+            Node contentNode = node.addNode("jcr:content", "nt:resource");
+            contentNode.setProperty("jcr:mimeType", part.getContentType());
+//          contentNode.setProperty("jcr:encoding", arg1);
+//            ByteArrayOutputStream contentOut = new ByteArrayOutputStream();
+//            part.writeTo(contentOut);
+//            ByteArrayInputStream contentIn = new ByteArrayInputStream(contentOut.toByteArray());
+            contentNode.setProperty("jcr:data", part.getInputStream());
+            contentNode.setProperty("jcr:lastModified", Calendar.getInstance());
+//            node.save();
+        }
+//        node.save();
     }
     
     /* (non-Javadoc)
@@ -384,7 +475,7 @@ public class RepositoryFolder extends AbstractFolderDelegate {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.data.AbstractFolderDelegate#createMetaMessage(int)
      */
-    protected MessageDelegate createMessage(int messageNumber) throws DelegateException {
+    protected RepositoryMessage createMessage(int messageNumber) throws DelegateException {
         try {
             Node messageNode = node.addNode(NodeType.MESSAGE.getName()); //, "nt:file");
             messageNode.setProperty(NodeProperty.MESSAGE_NUMBER.getName(), messageNumber);
@@ -398,7 +489,7 @@ public class RepositoryFolder extends AbstractFolderDelegate {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.data.AbstractFolderDelegate#getMetaMessage(int)
      */
-    public MessageDelegate getMessage(int messageNumber) throws DelegateException {
+    public RepositoryMessage getMessage(int messageNumber) throws DelegateException {
         try {
             /*
             NodeIterator messageNodes = node.getNodes(NodeNames.MESSAGE);

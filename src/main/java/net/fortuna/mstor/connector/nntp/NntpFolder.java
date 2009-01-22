@@ -191,9 +191,9 @@ public class NntpFolder extends AbstractFolderDelegate<MessageDelegate> {
     }
 
     /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.FolderDelegate#getName()
+     * @see net.fortuna.mstor.connector.FolderDelegate#getFolderName()
      */
-    public String getName() {
+    public String getFolderName() {
         return newsgroupInfo.getNewsgroup();
     }
 
