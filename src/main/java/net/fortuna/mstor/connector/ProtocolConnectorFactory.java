@@ -39,7 +39,7 @@ import javax.mail.Session;
 import javax.mail.URLName;
 
 import net.fortuna.mstor.MStorStore;
-import net.fortuna.mstor.connector.jcr.RepositoryConnector;
+import net.fortuna.mstor.connector.jcr.JcrConnector;
 import net.fortuna.mstor.connector.mbox.MboxConnector;
 
 /**
@@ -56,7 +56,7 @@ public class ProtocolConnectorFactory {
      */
     public ProtocolConnector create(URLName url, MStorStore store, Session session) {
         if (session.getProperty("mstor.repository.name") != null) {
-            return new RepositoryConnector(url, store, session);
+            return new JcrConnector(url, store, session);
         }
         return new MboxConnector(url, store, session);
     }
