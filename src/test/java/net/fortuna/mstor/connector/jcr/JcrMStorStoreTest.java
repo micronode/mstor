@@ -52,31 +52,25 @@ public class JcrMStorStoreTest extends TestSuite {
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
         
+        Properties defaultProps = new Properties();
+        defaultProps.setProperty("mail.store.protocol", "mstor");
+        defaultProps.setProperty("mstor.repository.provider.url", "localhost");
+        defaultProps.setProperty("mstor.repository.path", "mail");
+        defaultProps.setProperty("mstor.repository.create", "true");
+        
         String repoName = "JcrMStorStoreTest.testGetDefaultFolder";
-        Properties p = new Properties();
-        p.setProperty("mail.store.protocol", "mstor");
-        p.setProperty("mstor.repository.provider.url", "localhost");
+        Properties p = new Properties(defaultProps);
         p.setProperty("mstor.repository.name", repoName);
-        p.setProperty("mstor.repository.path", "mail");
-        p.setProperty("mstor.repository.create", "true");
         suite.addTest(new MStorStoreTest("testGetDefaultFolder", new JcrStoreLifecycle(repoName, p), null, null));
         
         repoName = "JcrMStorStoreTest.testGetFolderString";
-        p = new Properties();
-        p.setProperty("mail.store.protocol", "mstor");
-        p.setProperty("mstor.repository.provider.url", "localhost");
+        p = new Properties(defaultProps);
         p.setProperty("mstor.repository.name", repoName);
-        p.setProperty("mstor.repository.path", "mail");
-        p.setProperty("mstor.repository.create", "true");
         suite.addTest(new MStorStoreTest("testGetFolderString", new JcrStoreLifecycle(repoName, p), null, null));
         
         repoName = "JcrMStorStoreTest.testGetFolderURLName";
-        p = new Properties();
-        p.setProperty("mail.store.protocol", "mstor");
-        p.setProperty("mstor.repository.provider.url", "localhost");
+        p = new Properties(defaultProps);
         p.setProperty("mstor.repository.name", repoName);
-        p.setProperty("mstor.repository.path", "mail");
-        p.setProperty("mstor.repository.create", "true");
         suite.addTest(new MStorStoreTest("testGetFolderURLName", new JcrStoreLifecycle(repoName, p), null, null));
         return suite;
     }
