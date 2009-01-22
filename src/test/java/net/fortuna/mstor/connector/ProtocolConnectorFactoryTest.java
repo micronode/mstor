@@ -40,11 +40,9 @@ import java.util.Properties;
 import javax.mail.Session;
 import javax.mail.URLName;
 
-import net.fortuna.mstor.connector.ProtocolConnectorFactory;
-import net.fortuna.mstor.connector.jcr.RepositoryConnector;
-import net.fortuna.mstor.connector.mbox.MboxConnector;
-
 import junit.framework.TestCase;
+import net.fortuna.mstor.connector.jcr.JcrConnector;
+import net.fortuna.mstor.connector.mbox.MboxConnector;
 
 /**
  * @author Ben
@@ -64,7 +62,7 @@ public class ProtocolConnectorFactoryTest extends TestCase {
         p.setProperty("mstor.repository.name", "test");
         assertTrue(ProtocolConnectorFactory.getInstance().create(
                 new URLName("mstor", "localhost", -1, "/tmp/mbox", "test", null),
-                null, Session.getDefaultInstance(p)) instanceof RepositoryConnector);
+                null, Session.getDefaultInstance(p)) instanceof JcrConnector);
     }
 
 }
