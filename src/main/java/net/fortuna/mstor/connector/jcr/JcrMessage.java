@@ -41,8 +41,10 @@ import static net.fortuna.mstor.util.MessageUtils.getFlagName;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,17 +52,23 @@ import javax.mail.Flags;
 import javax.mail.Header;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Part;
 import javax.mail.Flags.Flag;
 import javax.mail.internet.InternetHeaders;
 import javax.mail.internet.MimeMessage;
 
+import net.fortuna.mstor.MStorMessage;
 import net.fortuna.mstor.connector.DelegateException;
 import net.fortuna.mstor.connector.MessageDelegate;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.jcrom.AbstractJcrEntity;
 import org.jcrom.JcrDataProviderImpl;
 import org.jcrom.JcrFile;
 import org.jcrom.JcrDataProvider.TYPE;
+import org.jcrom.annotations.JcrChildNode;
 import org.jcrom.annotations.JcrFileNode;
 import org.jcrom.annotations.JcrProperty;
 
@@ -91,7 +99,21 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
     
     @JcrProperty private Boolean expunged;
     
-    @JcrFileNode private JcrFile file;
+    @JcrFileNode private JcrFile content;
+
+    @JcrChildNode private List<JcrMessage> messages;
+    
+    @JcrFileNode private List<JcrFile> attachments;
+    
+    /**
+     * 
+     */
+    public JcrMessage() {
+        headers = new HashMap<String, String>();
+        flags = new ArrayList<String>();
+        messages = new ArrayList<JcrMessage>();
+        attachments = new ArrayList<JcrFile>();
+    }
     
     /* (non-Javadoc)
      * @see net.fortuna.mstor.connector.MessageDelegate#getFlags()
@@ -190,7 +212,7 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
      * @return
      */
     public InputStream getMessageAsStream() {
-        return file.getDataProvider().getInputStream();
+        return content.getDataProvider().getInputStream();
     }
     
     /* (non-Javadoc)
@@ -260,13 +282,93 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
         ByteArrayOutputStream mout = new ByteArrayOutputStream();
         message.writeTo(mout);
         
-        file = new JcrFile();
-        file.setName("data");
-        file.setDataProvider(new JcrDataProviderImpl(TYPE.BYTES, mout.toByteArray()));
-        file.setMimeType(message.getContentType());
-        file.setLastModified(java.util.Calendar.getInstance());
+        content = new JcrFile();
+        content.setName("data");
+        content.setDataProvider(new JcrDataProviderImpl(TYPE.BYTES, mout.toByteArray()));
+        content.setMimeType(message.getContentType());
+        content.setLastModified(java.util.Calendar.getInstance());
+
+        String messageId = null;
+        
         if (message instanceof MimeMessage) {
-            setName(((MimeMessage) message).getMessageID());
+            MimeMessage mimeMessage = (MimeMessage) message;
+            messageId = mimeMessage.getMessageID();
+            appendAttachments(mimeMessage);
+        }
+
+        if (messageId == null) {
+            String[] uids = message.getHeader("X-UIDL");
+            if (uids != null && uids.length > 0) {
+                messageId = uids[0];
+            }
+        }
+        
+        if (messageId != null) {
+            setName(messageId);
+        }
+        else {
+            setName("message");
+        }
+    }
+    
+    /**
+     * @param part
+     * @throws MessagingException
+     * @throws IOException
+     */
+    @SuppressWarnings("unchecked")
+    private void appendAttachments(Part part) throws MessagingException, IOException {
+        if (part.isMimeType("message/*")) {
+            JcrMessage jcrMessage = new JcrMessage();
+            
+            Message attachedMessage = null;
+            if (part.getContent() instanceof Message) {
+                attachedMessage = (Message) part.getContent();
+            }
+            else {
+                attachedMessage = new MStorMessage(null, (InputStream) part.getContent());
+            }
+            jcrMessage.setFlags(attachedMessage.getFlags());
+            jcrMessage.setHeaders(attachedMessage.getAllHeaders());
+            jcrMessage.setReceived(attachedMessage.getReceivedDate());
+            jcrMessage.setExpunged(attachedMessage.isExpunged());
+            jcrMessage.setMessage(attachedMessage);
+            
+            messages.add(jcrMessage);
+        }
+        else if (part.isMimeType("multipart/*")) {
+            Multipart multi = (Multipart) part.getContent();
+            for (int i = 0; i< multi.getCount(); i++) {
+                appendAttachments(multi.getBodyPart(i));
+            }
+        }
+        else if (Part.ATTACHMENT.equalsIgnoreCase(part.getDisposition())
+                || StringUtils.isNotEmpty(part.getFileName())) {
+            JcrFile attachment = new JcrFile();
+            
+            String name = null;
+            if (StringUtils.isNotEmpty(part.getFileName())) {
+                name = part.getFileName();
+            }
+            else {
+                name = "attachment";
+            }
+            int count = 1;
+            for (JcrFile attach : attachments) {
+                if (attach.getName().equals(name)) {
+                    name += "_" + count++;
+                }
+            }
+
+            attachment.setName(name);
+            
+            ByteArrayOutputStream pout = new ByteArrayOutputStream();
+//            part.writeTo(pout);
+            IOUtils.copy(part.getInputStream(), pout);
+            attachment.setDataProvider(new JcrDataProviderImpl(TYPE.BYTES, pout.toByteArray()));
+            attachment.setMimeType(part.getContentType());
+            attachment.setLastModified(java.util.Calendar.getInstance());
+            attachments.add(attachment);
         }
     }
 }
