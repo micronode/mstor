@@ -125,14 +125,24 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
                 LOG.error("Unexpected error", e);
             }
         }
+        try {
+            saveChanges();
+        }
+        catch (RepositoryException e) {
+            throw new MessagingException("Unexpected error", e);
+        }
     }
 
     /* (non-Javadoc)
      * @see net.fortuna.mstor.connector.FolderDelegate#close()
      */
     public void close() throws MessagingException {
-        // TODO Auto-generated method stub
-        
+      try {
+          saveChanges();
+      }
+      catch (RepositoryException e) {
+          throw new MessagingException("Unexpected error", e);
+      }
     }
 
     /* (non-Javadoc)
