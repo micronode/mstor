@@ -103,6 +103,8 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
 
     @JcrChildNode private List<JcrMessage> messages;
     
+    @JcrFileNode private JcrFile body;
+    
     @JcrFileNode private List<JcrFile> attachments;
     
     /**
@@ -293,6 +295,7 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
         if (message instanceof MimeMessage) {
             MimeMessage mimeMessage = (MimeMessage) message;
             messageId = mimeMessage.getMessageID();
+            appendBody(mimeMessage);
             appendAttachments(mimeMessage);
         }
 
@@ -316,8 +319,46 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
      * @throws MessagingException
      * @throws IOException
      */
+    private void appendBody(final Part part) throws MessagingException, IOException {
+        if (part.isMimeType("text/html")) {
+            body = createBody(part);
+        }
+        else if (part.isMimeType("text/plain") && body == null) {
+            body = createBody(part);
+        }
+        else if (part.isMimeType("multipart/*")) {
+            Multipart multi = (Multipart) part.getContent();
+            for (int i = 0; i < multi.getCount(); i++) {
+                appendBody(multi.getBodyPart(i));
+            }
+        }
+    }
+    
+    /**
+     * @param part
+     * @return
+     * @throws IOException
+     * @throws MessagingException
+     */
+    JcrFile createBody(Part part) throws IOException, MessagingException {
+        JcrFile body = new JcrFile();
+        body.setName("part");
+//        body.setDataProvider(new JcrDataProviderImpl(TYPE.BYTES, ((String) primaryBodyPart.getContent()).getBytes()));
+        ByteArrayOutputStream pout = new ByteArrayOutputStream();
+        IOUtils.copy(part.getInputStream(), pout);
+        body.setDataProvider(new JcrDataProviderImpl(TYPE.BYTES, pout.toByteArray()));
+        body.setMimeType(part.getContentType());
+        body.setLastModified(java.util.Calendar.getInstance());
+        return body;
+    }
+    
+    /**
+     * @param part
+     * @throws MessagingException
+     * @throws IOException
+     */
     @SuppressWarnings("unchecked")
-    private void appendAttachments(Part part) throws MessagingException, IOException {
+    private void appendAttachments(final Part part) throws MessagingException, IOException {
         if (part.isMimeType("message/*")) {
             JcrMessage jcrMessage = new JcrMessage();
             
@@ -338,7 +379,7 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
         }
         else if (part.isMimeType("multipart/*")) {
             Multipart multi = (Multipart) part.getContent();
-            for (int i = 0; i< multi.getCount(); i++) {
+            for (int i = 0; i < multi.getCount(); i++) {
                 appendAttachments(multi.getBodyPart(i));
             }
         }
@@ -349,15 +390,32 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
             String name = null;
             if (StringUtils.isNotEmpty(part.getFileName())) {
                 name = part.getFileName();
+                for (JcrFile attach : attachments) {
+                    if (attach.getName().equals(name)) {
+                        // file already exists assume it's the same and we don't need
+                        // to save it again..
+                        return;
+                    }
+                }
             }
             else {
-                name = "attachment";
+                String[] contentId = part.getHeader("Content-Id");
+                if (contentId != null && contentId.length > 0) {
+                    name = contentId[0];
+                }
+                else {
+                    name = "attachment";
+                }
             }
-            int count = 1;
+            
+            int count = 0;
             for (JcrFile attach : attachments) {
                 if (attach.getName().equals(name)) {
-                    name += "_" + count++;
+                    count++;
                 }
+            }
+            if (count > 0) {
+                name += "_" + count;
             }
 
             attachment.setName(name);
