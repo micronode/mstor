@@ -282,7 +282,6 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
             retVal.setParent(this);
 //            folders.add(retVal);
         }
-        retVal.setConnector(connector);
         return retVal;
     }
     
@@ -376,7 +375,7 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
     public FolderDelegate<JcrMessage>[] list(String pattern) {
         List<JcrFolder> folders = getFolderDao().findAll(connector.getJcrom().getPath(this) + "/folders");
         for (JcrFolder folder : folders) {
-            folder.setConnector(connector);
+            folder.setParent(this);
         }
         return folders.toArray(new JcrFolder[folders.size()]);
     }
@@ -451,6 +450,16 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
      */
     void setConnector(JcrConnector connector) {
         this.connector = connector;
+    }
+    
+    /**
+     * @return
+     */
+    private JcrConnector getConnector() {
+        if (connector == null && parent != null) {
+            return parent.getConnector();
+        }
+        return connector;
     }
     
     /**
