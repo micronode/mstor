@@ -47,29 +47,11 @@ import org.jcrom.dao.AbstractJcrDAO;
 public class JcrFolderDao extends AbstractJcrDAO<JcrFolder> {
 
     /**
-     * @param jcrom
-     */
-    public JcrFolderDao(Jcrom jcrom) {
-        super(JcrFolder.class, jcrom);
-    }
-
-    /**
-     * @param entityClass
      * @param session
      * @param jcrom
      */
     public JcrFolderDao(Session session, Jcrom jcrom) {
         super(JcrFolder.class, session, jcrom);
-    }
-
-    /**
-     * @param entityClass
-     * @param session
-     * @param jcrom
-     * @param mixinTypes
-     */
-    public JcrFolderDao(Session session, Jcrom jcrom, String[] mixinTypes) {
-        super(JcrFolder.class, session, jcrom, mixinTypes);
     }
 
 }
