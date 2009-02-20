@@ -62,6 +62,38 @@ public class JcrMessageDao extends AbstractJcrDAO<JcrMessage> {
      * @return
      */
     public List<JcrMessage> findByMessageNumber(String path, int messageNumber) {
-        return super.findByXPath(path + "/*[@messageNumber=" + messageNumber + "]", "*", -1);
+        return super.findByXPath("/jcr:root" + path + "/*[@messageNumber=" + messageNumber + "]", "*", -1);
+    }
+
+    /**
+     * @param path
+     * @param messageId
+     * @return
+     */
+    public List<JcrMessage> findByMessageId(String path, String messageId) {
+        /*
+        List<JcrMessage> messages = findByHeader(path, "Message-ID", messageId);
+        if (messages.isEmpty()) {
+            // try fallback message id..
+            messages = findByHeader(path, "Message-Id", messageId);
+        }
+        if (messages.isEmpty()) {
+            // try fallback message id..
+            messages = findByHeader(path, "X-UIDL", messageId);
+        }
+        return messages;
+        */
+        return super.findByXPath("/jcr:root" + path + "/*[@messageId='" + messageId + "']", "*", -1);
+    }
+    
+    /**
+     * @param path
+     * @param name
+     * @param value
+     * @return
+     */
+    public List<JcrMessage> findByHeader(String path, String name, String value) {
+        // parent axis not supported in jackrabbit.. hopefully will be soon.
+        return super.findByXPath("/jcr:root" + path + "/*/headers[@" + name + "='" + value + "']/..", "*", -1);
     }
 }
