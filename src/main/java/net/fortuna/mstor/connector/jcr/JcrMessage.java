@@ -61,6 +61,7 @@ import javax.mail.internet.MimeMessage;
 import net.fortuna.mstor.MStorMessage;
 import net.fortuna.mstor.connector.DelegateException;
 import net.fortuna.mstor.connector.MessageDelegate;
+import net.fortuna.mstor.util.MessageUtils;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -84,6 +85,8 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
     private static final long serialVersionUID = 3832397825180707796L;
     
     @JcrProperty private Integer messageNumber;
+    
+    @JcrProperty private String messageId;
 
     @JcrProperty private Map<String, String> headers;
 
@@ -221,6 +224,7 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
      * @see net.fortuna.mstor.connector.MessageDelegate#setFlags(javax.mail.Flags)
      */
     public void setFlags(Flags flags) {
+        this.flags.clear();
         for (Flag flag : flags.getSystemFlags()) {
             this.flags.add(getFlagName(flag));
         }
@@ -248,6 +252,7 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
      * @see net.fortuna.mstor.connector.MessageDelegate#setHeaders(java.util.Enumeration)
      */
     public void setHeaders(Enumeration<Header> headers) {
+        this.headers.clear();
         while (headers.hasMoreElements()) {
             Header header = headers.nextElement();
             this.headers.put(header.getName(), header.getValue());
@@ -290,27 +295,20 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
         content.setMimeType(message.getContentType());
         content.setLastModified(java.util.Calendar.getInstance());
 
-        String messageId = null;
-        
-        if (message instanceof MimeMessage) {
-            MimeMessage mimeMessage = (MimeMessage) message;
-            messageId = mimeMessage.getMessageID();
-            appendBody(mimeMessage);
-            appendAttachments(mimeMessage);
-        }
-
-        if (messageId == null) {
-            String[] uids = message.getHeader("X-UIDL");
-            if (uids != null && uids.length > 0) {
-                messageId = uids[0];
-            }
-        }
-        
+        messageId = MessageUtils.getMessageId(message);
         if (messageId != null) {
             setName(messageId);
         }
         else {
             setName("message");
+        }
+        
+        if (message instanceof MimeMessage) {
+            MimeMessage mimeMessage = (MimeMessage) message;
+            messages.clear();
+            attachments.clear();
+            appendBody(mimeMessage);
+            appendAttachments(mimeMessage);
         }
     }
     
