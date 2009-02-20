@@ -36,7 +36,10 @@
 package net.fortuna.mstor.util;
 
 import javax.mail.Flags;
+import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.Flags.Flag;
+import javax.mail.internet.MimeMessage;
 
 /**
  * @author Ben
@@ -108,4 +111,25 @@ public final class MessageUtils {
         return null;
     }
 
+    /**
+     * Returns an appropriate message identifier for the specified message.
+     * @param message
+     * @return
+     * @throws MessagingException
+     */
+    public static String getMessageId(Message message) throws MessagingException {
+        String messageId = null;
+        if (message instanceof MimeMessage) {
+            MimeMessage mimeMessage = (MimeMessage) message;
+            messageId = mimeMessage.getMessageID();
+        }
+        
+        if (messageId == null) {
+            String[] uids = message.getHeader("X-UIDL");
+            if (uids != null && uids.length > 0) {
+                messageId = uids[0];
+            }
+        }
+        return messageId;
+    }
 }
