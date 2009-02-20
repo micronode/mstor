@@ -35,6 +35,8 @@
  */
 package net.fortuna.mstor.connector.jcr;
 
+import java.util.List;
+
 import javax.jcr.Session;
 
 import org.jcrom.Jcrom;
@@ -54,4 +56,21 @@ public class JcrFolderDao extends AbstractJcrDAO<JcrFolder> {
         super(JcrFolder.class, session, jcrom);
     }
 
+    /**
+     * @param path
+     * @param name
+     * @return
+     */
+    public List<JcrFolder> findByName(String path, String name) {
+        return super.findByXPath("/jcr:root" + path + "/*[@folderName='" + name + "']", "*", -1);
+    }
+    
+    /**
+     * @param path
+     * @param pattern
+     * @return
+     */
+    public List<JcrFolder> findByPattern(String path, String pattern) {
+        return super.findByXPath("/jcr:root" + path + "/*[jcr:like(@folderName, '" + pattern + "')]", "*", -1);
+    }
 }
