@@ -49,6 +49,7 @@ import javax.mail.MessagingException;
 import net.fortuna.mstor.connector.DelegateException;
 import net.fortuna.mstor.connector.FolderDelegate;
 import net.fortuna.mstor.connector.MessageDelegate;
+import net.fortuna.mstor.util.MessageUtils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -114,15 +115,34 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
     public void appendMessages(Message[] messages) throws MessagingException {
         for (Message message : messages) {
             try {
-                JcrMessage jcrMessage = new JcrMessage();
-                jcrMessage.setMessageNumber((int) getMessageDao().getSize(connector.getJcrom().getPath(this) + "/messages") + 1);
+                JcrMessage jcrMessage = null;
+                boolean update = false;
+                
+                String messageId = MessageUtils.getMessageId(message);
+                if (messageId != null) {
+                    List<JcrMessage> jcrMessages = getMessageDao().findByMessageId(connector.getJcrom().getPath(this) + "/messages", messageId);
+                    if (jcrMessages.size() > 0) {
+                        jcrMessage = jcrMessages.get(0);
+                        update = true;
+                    }
+                }
+                
+                if (jcrMessage == null) {
+                    jcrMessage = new JcrMessage();
+                    jcrMessage.setMessageNumber((int) getMessageDao().getSize(connector.getJcrom().getPath(this) + "/messages") + 1);
+                }
                 jcrMessage.setFlags(message.getFlags());
                 jcrMessage.setHeaders(message.getAllHeaders());
                 jcrMessage.setReceived(message.getReceivedDate());
                 jcrMessage.setExpunged(message.isExpunged());
                 jcrMessage.setMessage(message);
 //                this.messages.add(jcrMessage);
-                getMessageDao().create(connector.getJcrom().getPath(this) + "/messages", jcrMessage);
+                if (update) {
+                    getMessageDao().update(jcrMessage);
+                }
+                else {
+                    getMessageDao().create(connector.getJcrom().getPath(this) + "/messages", jcrMessage);
+                }
             }
             catch (IOException e) {
                 LOG.error("Unexpected error", e);
