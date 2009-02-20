@@ -85,6 +85,10 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
     
     private JcrConnector connector;
     
+    private JcrFolderDao folderDao;
+    
+    private JcrMessageDao messageDao;
+    
     /**
      * 
      */
@@ -108,19 +112,17 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
      */
     @SuppressWarnings("unchecked")
     public void appendMessages(Message[] messages) throws MessagingException {
-        JcrMessageDao dao = new JcrMessageDao(connector.getSession(), connector.getJcrom());
-
         for (Message message : messages) {
             try {
                 JcrMessage jcrMessage = new JcrMessage();
-                jcrMessage.setMessageNumber((int) dao.getSize(connector.getJcrom().getPath(this) + "/messages") + 1);
+                jcrMessage.setMessageNumber((int) getMessageDao().getSize(connector.getJcrom().getPath(this) + "/messages") + 1);
                 jcrMessage.setFlags(message.getFlags());
                 jcrMessage.setHeaders(message.getAllHeaders());
                 jcrMessage.setReceived(message.getReceivedDate());
                 jcrMessage.setExpunged(message.isExpunged());
                 jcrMessage.setMessage(message);
 //                this.messages.add(jcrMessage);
-                dao.create(connector.getJcrom().getPath(this) + "/messages", jcrMessage);
+                getMessageDao().create(connector.getJcrom().getPath(this) + "/messages", jcrMessage);
             }
             catch (IOException e) {
                 LOG.error("Unexpected error", e);
@@ -156,8 +158,7 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
         if (parent != null) {
 //            try {
 //                connector.getJcrom().addNode(parent.getNode(), this);
-                JcrFolderDao dao = new JcrFolderDao(connector.getSession(), connector.getJcrom());
-                dao.create(connector.getJcrom().getPath(parent) + "/folders", this);
+            getFolderDao().create(connector.getJcrom().getPath(parent) + "/folders", this);
 //            }
 //            catch (RepositoryException e) {
 //                throw new MessagingException("Error initialising folder", e);
@@ -203,8 +204,7 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
      */
     public boolean delete() {
 //        return parent.folders.remove(this);
-        JcrFolderDao dao = new JcrFolderDao(connector.getSession(), connector.getJcrom());
-        dao.remove(connector.getJcrom().getPath(this));
+        getFolderDao().remove(connector.getJcrom().getPath(this));
         return true;
     }
 
@@ -226,14 +226,12 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
      * @see net.fortuna.mstor.connector.FolderDelegate#expunge(javax.mail.Message[])
      */
     public void expunge(Message[] deleted) throws MessagingException {
-        JcrMessageDao dao = new JcrMessageDao(connector.getSession(), connector.getJcrom());
-        
 //        for (JcrMessage jcrMessage : messages) {
             for (Message message : deleted) {
 //                if (jcrMessage.getMessageNumber() == message.getMessageNumber()) {
 //                    jcrMessage.setExpunged(true);
 //                }
-                List<JcrMessage> messages = dao.findByMessageNumber(connector.getJcrom().getPath(this) + "/messages",
+                List<JcrMessage> messages = getMessageDao().findByMessageNumber(connector.getJcrom().getPath(this) + "/messages",
                         message.getMessageNumber());
                 for (JcrMessage jcrMessage : messages) {
                     jcrMessage.setExpunged(true);
@@ -248,8 +246,7 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
     public FolderDelegate<JcrMessage> getFolder(String name) throws MessagingException {
         JcrFolder retVal = null;
 
-        JcrFolderDao dao = new JcrFolderDao(connector.getSession(), connector.getJcrom());
-        List<JcrFolder> folders = dao.findAll(connector.getJcrom().getPath(this) + "/folders");
+        List<JcrFolder> folders = getFolderDao().findAll(connector.getJcrom().getPath(this) + "/folders");
         for (JcrFolder folder : folders) {
             if (folder.getName().equals(name)) {
                 retVal = folder;
@@ -295,8 +292,7 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
      * @see net.fortuna.mstor.connector.FolderDelegate#getMessage(int)
      */
     public JcrMessage getMessage(int messageNumber) throws DelegateException {
-        JcrMessageDao dao = new JcrMessageDao(connector.getSession(), connector.getJcrom());
-        List<JcrMessage> messages = dao.findByMessageNumber(connector.getJcrom().getPath(this) + "/messages",
+        List<JcrMessage> messages = getMessageDao().findByMessageNumber(connector.getJcrom().getPath(this) + "/messages",
                 messageNumber);
         
 //        for (JcrMessage message : messages) {
@@ -314,8 +310,7 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
      * @see net.fortuna.mstor.connector.FolderDelegate#getMessageAsStream(int)
      */
     public InputStream getMessageAsStream(int index) throws IOException {
-        JcrMessageDao dao = new JcrMessageDao(connector.getSession(), connector.getJcrom());
-        List<JcrMessage> messages = dao.findAll(connector.getJcrom().getPath(this) + "/messages");
+        List<JcrMessage> messages = getMessageDao().findAll(connector.getJcrom().getPath(this) + "/messages");
         return messages.get(index).getMessageAsStream();
     }
 
@@ -324,8 +319,7 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
      */
     public int getMessageCount() throws MessagingException {
 //        return messages.size();
-        JcrMessageDao dao = new JcrMessageDao(connector.getSession(), connector.getJcrom());
-        return (int) dao.getSize(connector.getJcrom().getPath(this) + "/messages");
+        return (int) getMessageDao().getSize(connector.getJcrom().getPath(this) + "/messages");
     }
 
     /* (non-Javadoc)
@@ -360,8 +354,7 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
      * @see net.fortuna.mstor.connector.FolderDelegate#list(java.lang.String)
      */
     public FolderDelegate<JcrMessage>[] list(String pattern) {
-        JcrFolderDao dao = new JcrFolderDao(connector.getSession(), connector.getJcrom());
-        List<JcrFolder> folders = dao.findAll(connector.getJcrom().getPath(this) + "/folders");
+        List<JcrFolder> folders = getFolderDao().findAll(connector.getJcrom().getPath(this) + "/folders");
         return folders.toArray(new JcrFolder[folders.size()]);
     }
 
@@ -402,6 +395,34 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
         return null;
     }
 
+    /**
+     * @return
+     */
+    private JcrFolderDao getFolderDao() {
+        if (folderDao == null) {
+            synchronized (this) {
+                if (folderDao == null) {
+                    folderDao = new JcrFolderDao(connector.getSession(), connector.getJcrom());
+                }
+            }
+        }
+        return folderDao;
+    }
+    
+    /**
+     * @return
+     */
+    private JcrMessageDao getMessageDao() {
+        if (messageDao == null) {
+            synchronized (this) {
+                if (messageDao == null) {
+                    messageDao = new JcrMessageDao(connector.getSession(), connector.getJcrom());
+                }
+            }
+        }
+        return messageDao;
+    }
+    
     /**
      * @param connector the connector to set
      */
