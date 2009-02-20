@@ -49,27 +49,11 @@ import org.jcrom.dao.AbstractJcrDAO;
 public class JcrMessageDao extends AbstractJcrDAO<JcrMessage> {
 
     /**
-     * @param jcrom
-     */
-    public JcrMessageDao(Jcrom jcrom) {
-        super(JcrMessage.class, jcrom);
-    }
-
-    /**
      * @param session
      * @param jcrom
      */
     public JcrMessageDao(Session session, Jcrom jcrom) {
-        super(JcrMessage.class, session, jcrom);
-    }
-
-    /**
-     * @param session
-     * @param jcrom
-     * @param mixinTypes
-     */
-    public JcrMessageDao(Session session, Jcrom jcrom, String[] mixinTypes) {
-        super(JcrMessage.class, session, jcrom, mixinTypes);
+        super(JcrMessage.class, session, jcrom, new String[] {"mix:versionable"});
     }
 
     /**
@@ -78,6 +62,6 @@ public class JcrMessageDao extends AbstractJcrDAO<JcrMessage> {
      * @return
      */
     public List<JcrMessage> findByMessageNumber(String path, int messageNumber) {
-        return super.findByXPath(path = "/*[@messageNumber=" + messageNumber + "]", "*", -1);
+        return super.findByXPath(path + "/*[@messageNumber=" + messageNumber + "]", "*", -1);
     }
 }
