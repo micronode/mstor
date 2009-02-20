@@ -375,6 +375,9 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
      */
     public FolderDelegate<JcrMessage>[] list(String pattern) {
         List<JcrFolder> folders = getFolderDao().findAll(connector.getJcrom().getPath(this) + "/folders");
+        for (JcrFolder folder : folders) {
+            folder.setConnector(connector);
+        }
         return folders.toArray(new JcrFolder[folders.size()]);
     }
 
