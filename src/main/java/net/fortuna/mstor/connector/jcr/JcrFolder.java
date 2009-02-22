@@ -164,7 +164,8 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
           saveChanges();
       }
       catch (RepositoryException e) {
-          throw new MessagingException("Unexpected error", e);
+//          throw new MessagingException("Unexpected error", e);
+          LOG.error("Unexpected error", e);
       }
     }
 
@@ -333,8 +334,12 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
      * @see net.fortuna.mstor.connector.FolderDelegate#getMessageAsStream(int)
      */
     public InputStream getMessageAsStream(int index) throws IOException {
-        List<JcrMessage> messages = getMessageDao().findAll(getConnector().getJcrom().getPath(this) + "/messages");
-        return messages.get(index - 1).getMessageAsStream();
+        List<JcrMessage> messages = getMessageDao().findAll(getConnector().getJcrom().getPath(this) + "/messages",
+                index - 1, 1);
+        if (!messages.isEmpty()) {
+            return messages.get(0).getMessageAsStream();
+        }
+        return null;
     }
 
     /* (non-Javadoc)
