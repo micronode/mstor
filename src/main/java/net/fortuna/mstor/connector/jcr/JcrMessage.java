@@ -441,7 +441,6 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
     /**
      * @return the inReplyTo
      */
-    @SuppressWarnings("unchecked")
     public final JcrMessage getInReplyTo() {
         return inReplyTo;
     }

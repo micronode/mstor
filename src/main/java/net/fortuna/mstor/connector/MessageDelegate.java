@@ -148,7 +148,7 @@ public interface MessageDelegate {
      * @return
      * @throws UnsupportedOperationException
      */
-    <M extends MessageDelegate> M getInReplyTo() throws UnsupportedOperationException;
+    MessageDelegate getInReplyTo() throws UnsupportedOperationException;
     
     /**
      * @return

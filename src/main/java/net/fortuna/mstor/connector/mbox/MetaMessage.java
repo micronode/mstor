@@ -400,7 +400,7 @@ public class MetaMessage extends AbstractMessageDelegate {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.connector.MessageDelegate#getInReplyTo()
      */
-    public <M extends MessageDelegate> M getInReplyTo() throws UnsupportedOperationException {
+    public MessageDelegate getInReplyTo() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Message references not supported");
     }
     
