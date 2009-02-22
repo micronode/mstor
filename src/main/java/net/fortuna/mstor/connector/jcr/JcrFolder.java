@@ -51,6 +51,7 @@ import net.fortuna.mstor.connector.FolderDelegate;
 import net.fortuna.mstor.connector.MessageDelegate;
 import net.fortuna.mstor.util.MessageUtils;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jcrom.AbstractJcrEntity;
@@ -130,12 +131,32 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
                 if (jcrMessage == null) {
                     jcrMessage = new JcrMessage();
                     jcrMessage.setMessageNumber((int) getMessageDao().getSize(getConnector().getJcrom().getPath(this) + "/messages") + 1);
+                    allocateUid(jcrMessage);
                 }
                 jcrMessage.setFlags(message.getFlags());
                 jcrMessage.setHeaders(message.getAllHeaders());
                 jcrMessage.setReceived(message.getReceivedDate());
                 jcrMessage.setExpunged(message.isExpunged());
                 jcrMessage.setMessage(message);
+                
+                String[] inReplyTo = message.getHeader("In-Reply-To");
+                if (!ArrayUtils.isEmpty(inReplyTo)) {
+                    List<JcrMessage> inReplyToMessages = getMessageDao().findByMessageId(getConnector().getJcrom().getPath(getRootFolder()) + "/", inReplyTo[0]);
+                    if (!inReplyToMessages.isEmpty()) {
+                        jcrMessage.setInReplyTo(inReplyToMessages.get(0));
+                    }
+                }
+                
+                String[] references = message.getHeader("References");
+                if (!ArrayUtils.isEmpty(references)) {
+                    for (String referenced : references[0].split(",")) {
+                        List<JcrMessage> referencedMessages = getMessageDao().findByMessageId(getConnector().getJcrom().getPath(getRootFolder()) + "/", referenced.trim());
+                        if (!referencedMessages.isEmpty()) {
+                            jcrMessage.getReferences().addAll(referencedMessages);
+                        }
+                    }
+                }
+                
 //                this.messages.add(jcrMessage);
                 if (update) {
                     getMessageDao().update(jcrMessage);
@@ -312,6 +333,15 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
         return lastUid;
     }
 
+    /**
+     * @param message
+     */
+    private void allocateUid(JcrMessage message) {
+        long uid = getLastUid() + 1;
+        message.setUid(uid);
+        lastUid = uid;
+    }
+    
     /* (non-Javadoc)
      * @see net.fortuna.mstor.connector.FolderDelegate#getMessage(int)
      */
@@ -452,6 +482,17 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
             }
         }
         return messageDao;
+    }
+    
+    /**
+     * @return
+     */
+    private FolderDelegate<JcrMessage> getRootFolder() {
+        FolderDelegate<JcrMessage> root = this;
+        while (root.getParent() != null) {
+            root = root.getParent();
+        }
+        return root;
     }
     
     /**
