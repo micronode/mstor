@@ -72,6 +72,7 @@ import org.jcrom.JcrDataProvider.TYPE;
 import org.jcrom.annotations.JcrChildNode;
 import org.jcrom.annotations.JcrFileNode;
 import org.jcrom.annotations.JcrProperty;
+import org.jcrom.annotations.JcrReference;
 
 /**
  * @author Ben
@@ -110,6 +111,10 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
     
     @JcrFileNode(lazy=true) private List<JcrFile> attachments;
     
+    @JcrReference(byPath=true) private JcrMessage inReplyTo;
+    
+    @JcrReference(byPath=true) private List<JcrMessage> references;
+    
     /**
      * 
      */
@@ -118,6 +123,7 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
         flags = new ArrayList<String>();
         messages = new ArrayList<JcrMessage>();
         attachments = new ArrayList<JcrFile>();
+        references = new ArrayList<JcrMessage>();
     }
     
     /* (non-Javadoc)
@@ -253,6 +259,10 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
      */
     public void setHeaders(Enumeration<Header> headers) {
         this.headers.clear();
+        // clear references..
+        inReplyTo = null;
+        getReferences().clear();
+        
         while (headers.hasMoreElements()) {
             Header header = headers.nextElement();
             this.headers.put(header.getName(), header.getValue());
@@ -426,5 +436,27 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
             attachment.setLastModified(java.util.Calendar.getInstance());
             attachments.add(attachment);
         }
+    }
+
+    /**
+     * @return the inReplyTo
+     */
+    @SuppressWarnings("unchecked")
+    public final JcrMessage getInReplyTo() {
+        return inReplyTo;
+    }
+
+    /**
+     * @param inReplyTo the inReplyTo to set
+     */
+    public final void setInReplyTo(JcrMessage inReplyTo) {
+        this.inReplyTo = inReplyTo;
+    }
+
+    /**
+     * @return the references
+     */
+    public final List<JcrMessage> getReferences() {
+        return references;
     }
 }

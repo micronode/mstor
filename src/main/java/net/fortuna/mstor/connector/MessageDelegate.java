@@ -37,6 +37,7 @@ package net.fortuna.mstor.connector;
 
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.List;
 
 import javax.mail.Flags;
 import javax.mail.Header;
@@ -143,6 +144,18 @@ public interface MessageDelegate {
      */
     void setUid(long uid);
 
+    /**
+     * @return
+     * @throws UnsupportedOperationException
+     */
+    <M extends MessageDelegate> M getInReplyTo() throws UnsupportedOperationException;
+    
+    /**
+     * @return
+     * @throws UnsupportedOperationException
+     */
+    List<? extends MessageDelegate> getReferences() throws UnsupportedOperationException;
+    
     /**
      * Persist unsaved changes.
      */

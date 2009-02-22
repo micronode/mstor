@@ -43,6 +43,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
 import javax.mail.Flags;
@@ -52,6 +53,7 @@ import javax.mail.internet.InternetHeaders;
 
 import net.fortuna.mstor.connector.AbstractMessageDelegate;
 import net.fortuna.mstor.connector.DelegateException;
+import net.fortuna.mstor.connector.MessageDelegate;
 import net.fortuna.mstor.data.MboxFile;
 import net.fortuna.mstor.data.xml.ElementBinding;
 
@@ -393,5 +395,19 @@ public class MetaMessage extends AbstractMessageDelegate {
      */
     public void setUid(long uid) {
         getElement().setAttribute(ATTRIBUTE_UID, String.valueOf(uid));
+    }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.connector.MessageDelegate#getInReplyTo()
+     */
+    public <M extends MessageDelegate> M getInReplyTo() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Message references not supported");
+    }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.connector.MessageDelegate#getReferences()
+     */
+    public List<? extends MessageDelegate> getReferences() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Message references not supported");
     }
 }

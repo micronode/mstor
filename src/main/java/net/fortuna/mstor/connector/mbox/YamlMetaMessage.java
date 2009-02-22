@@ -37,6 +37,7 @@ package net.fortuna.mstor.connector.mbox;
 
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.List;
 
 import javax.mail.Flags;
 import javax.mail.Header;
@@ -44,6 +45,7 @@ import javax.mail.internet.InternetHeaders;
 
 import net.fortuna.mstor.connector.AbstractMessageDelegate;
 import net.fortuna.mstor.connector.DelegateException;
+import net.fortuna.mstor.connector.MessageDelegate;
 import net.fortuna.mstor.data.yaml.MessageExt;
 
 /**
@@ -180,6 +182,20 @@ public class YamlMetaMessage extends AbstractMessageDelegate {
      */
     public void setUid(long uid) {
         messageExt.setUid(uid);
+    }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.connector.MessageDelegate#getInReplyTo()
+     */
+    public <M extends MessageDelegate> M getInReplyTo() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Message references not supported");
+    }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.connector.MessageDelegate#getReferences()
+     */
+    public List<? extends MessageDelegate> getReferences() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Message references not supported");
     }
 
 }

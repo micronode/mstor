@@ -41,6 +41,7 @@ import static net.fortuna.mstor.util.MessageUtils.getFlagName;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -53,6 +54,7 @@ import javax.mail.internet.InternetHeaders;
 
 import net.fortuna.mstor.connector.AbstractMessageDelegate;
 import net.fortuna.mstor.connector.DelegateException;
+import net.fortuna.mstor.connector.MessageDelegate;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -320,6 +322,20 @@ public class RepositoryMessage extends AbstractMessageDelegate {
         catch (RepositoryException re) {
             log.error("Error setting UID", re);
         }
+    }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.connector.MessageDelegate#getInReplyTo()
+     */
+    public <M extends MessageDelegate> M getInReplyTo() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Message references not supported");
+    }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.connector.MessageDelegate#getReferences()
+     */
+    public List<? extends MessageDelegate> getReferences() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Message references not supported");
     }
     
     /* (non-Javadoc)
