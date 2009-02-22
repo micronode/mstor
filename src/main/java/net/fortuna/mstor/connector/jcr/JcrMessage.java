@@ -102,13 +102,13 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
     
     @JcrProperty private Boolean expunged;
     
-    @JcrFileNode private JcrFile content;
+    @JcrFileNode(lazy=true) private JcrFile content;
 
-    @JcrChildNode private List<JcrMessage> messages;
+    @JcrChildNode(lazy=true) private List<JcrMessage> messages;
     
-    @JcrFileNode private JcrFile body;
+    @JcrFileNode(lazy=true) private JcrFile body;
     
-    @JcrFileNode private List<JcrFile> attachments;
+    @JcrFileNode(lazy=true) private List<JcrFile> attachments;
     
     /**
      * 
