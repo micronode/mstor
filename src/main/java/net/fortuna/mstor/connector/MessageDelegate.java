@@ -35,6 +35,7 @@
  */
 package net.fortuna.mstor.connector;
 
+import java.io.InputStream;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
@@ -155,6 +156,11 @@ public interface MessageDelegate {
      * @throws UnsupportedOperationException
      */
     List<? extends MessageDelegate> getReferences() throws UnsupportedOperationException;
+    
+    /**
+     * @return
+     */
+    InputStream getInputStream();
     
     /**
      * Persist unsaved changes.
