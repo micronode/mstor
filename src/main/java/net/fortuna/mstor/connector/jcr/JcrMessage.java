@@ -115,6 +115,8 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
     
     @JcrReference(byPath=true) private List<JcrMessage> references;
     
+    private JcrMessageDao messageDao;
+    
     /**
      * 
      */
@@ -200,8 +202,9 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
      * @see net.fortuna.mstor.connector.MessageDelegate#saveChanges()
      */
     public void saveChanges() throws DelegateException {
-        // TODO Auto-generated method stub
-
+        if (messageDao != null) {
+            messageDao.update(this);
+        }
     }
 
     /**
@@ -222,7 +225,7 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
      * @param folder
      * @return
      */
-    public InputStream getMessageAsStream() {
+    public InputStream getInputStream() {
         return content.getDataProvider().getInputStream();
     }
     
@@ -457,5 +460,12 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
      */
     public final List<JcrMessage> getReferences() {
         return references;
+    }
+
+    /**
+     * @param messageDao the messageDao to set
+     */
+    final void setMessageDao(JcrMessageDao messageDao) {
+        this.messageDao = messageDao;
     }
 }

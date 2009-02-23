@@ -62,7 +62,7 @@ public class JcrMessageDao extends AbstractJcrDAO<JcrMessage> {
      * @return
      */
     public List<JcrMessage> findByMessageNumber(String path, int messageNumber) {
-        return super.findByXPath("/jcr:root" + path + "/*[@messageNumber=" + messageNumber + "]", "*", -1);
+        return updateDao(super.findByXPath("/jcr:root" + path + "/*[@messageNumber=" + messageNumber + "]", "*", -1));
     }
 
     /**
@@ -83,7 +83,7 @@ public class JcrMessageDao extends AbstractJcrDAO<JcrMessage> {
         }
         return messages;
         */
-        return super.findByXPath("/jcr:root" + path + "/*[@messageId='" + messageId + "']", "*", -1);
+        return updateDao(super.findByXPath("/jcr:root" + path + "/*[@messageId='" + messageId + "']", "*", -1));
     }
     
     /**
@@ -94,6 +94,18 @@ public class JcrMessageDao extends AbstractJcrDAO<JcrMessage> {
      */
     public List<JcrMessage> findByHeader(String path, String name, String value) {
         // parent axis not supported in jackrabbit.. hopefully will be soon.
-        return super.findByXPath("/jcr:root" + path + "/*/headers[@" + name + "='" + value + "']/..", "*", -1);
+        return updateDao(super.findByXPath("/jcr:root" + path + "/*/headers[@" + name + "='" + value + "']/..", "*", -1));
+    }
+    
+    /**
+     * @param messages
+     * @return
+     */
+    private List<JcrMessage> updateDao(List<JcrMessage> messages) {
+        // store reference to DAO for saveChanges() support..
+        for (JcrMessage message : messages) {
+            message.setMessageDao(this);
+        }
+        return messages;
     }
 }
