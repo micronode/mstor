@@ -38,8 +38,10 @@ package net.fortuna.mstor;
 
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.List;
 
 import javax.mail.Flags;
 import javax.mail.Folder;
@@ -126,6 +128,13 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
     }
     
     /**
+     * @param delegate
+     */
+    public MStorMessage(MessageDelegate delegate) {
+        this(null, null, delegate.getMessageNumber(), delegate);
+    }
+    
+    /**
      * @param folder
      * @param in
      * @param msgnum
@@ -135,7 +144,12 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
             final int msgnum, MessageDelegate delegate) {
         
         super(folder, msgnum);
-        this.in = in;
+        if (in != null) {
+            this.in = in;
+        }
+        else {
+            this.in = delegate.getInputStream();
+        }
         this.delegate = delegate;
         tags = new Tags(flags);
         
@@ -529,5 +543,26 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
             }
         }
         return -1;
+    }
+    
+    /**
+     * @return
+     */
+    public MStorMessage getInReplyTo() {
+        if (delegate.getInReplyTo() != null) {
+            return new MStorMessage(delegate.getInReplyTo());
+        }
+        return null;
+    }
+    
+    /**
+     * @return
+     */
+    public List<MStorMessage> getReferences() {
+        List<MStorMessage> references = new ArrayList<MStorMessage>();
+        for (MessageDelegate delegateRef : delegate.getReferences()) {
+            references.add(new MStorMessage(delegateRef));
+        }
+        return references;
     }
 }
