@@ -45,6 +45,7 @@ import javax.jcr.RepositoryException;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Flags.Flag;
 
 import net.fortuna.mstor.connector.DelegateException;
 import net.fortuna.mstor.connector.FolderDelegate;
@@ -91,12 +92,15 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
     
     private JcrMessageDao messageDao;
     
+    private int messageCount;
+    
     /**
      * 
      */
     public JcrFolder() {
 //        this.folders = new ArrayList<JcrFolder>();
 //        this.messages = new ArrayList<JcrMessage>();
+        messageCount = -1;
     }
     
     /* (non-Javadoc)
@@ -177,6 +181,9 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
         catch (RepositoryException e) {
             throw new MessagingException("Unexpected error", e);
         }
+        
+        // reset cached message count..
+        messageCount = -1;
     }
 
     /* (non-Javadoc)
@@ -282,6 +289,9 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
                 }
             }
 //        }
+            
+        // reset cached message count..
+        messageCount = -1;
     }
 
     /* (non-Javadoc)
@@ -382,9 +392,19 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
      */
     public int getMessageCount() throws MessagingException {
 //        return messages.size();
-        return (int) getMessageDao().getSize(getConnector().getJcrom().getPath(this) + "/messages");
+        if (messageCount < 0) {
+            messageCount = (int) getMessageDao().getSize(getConnector().getJcrom().getPath(this) + "/messages");
+        }
+        return messageCount;
     }
 
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.connector.FolderDelegate#getDeletedMessageCount()
+     */
+    public int getDeletedMessageCount() throws MessagingException, UnsupportedOperationException {
+        return getMessageDao().findByFlag(getConnector().getJcrom().getPath(this) + "/messages", Flag.DELETED).size();
+    }
+    
     /* (non-Javadoc)
      * @see net.fortuna.mstor.connector.FolderDelegate#getParent()
      */

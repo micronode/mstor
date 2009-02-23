@@ -35,6 +35,8 @@
  */
 package net.fortuna.mstor.connector;
 
+import javax.mail.MessagingException;
+
 
 
 /**
@@ -42,7 +44,7 @@ package net.fortuna.mstor.connector;
  *
  */
 public abstract class AbstractFolderDelegate<T extends MessageDelegate> implements FolderDelegate<T> {
-
+    
     /* (non-Javadoc)
      * @see net.fortuna.mstor.MetaFolder#allocateUid(net.fortuna.mstor.MetaMessage)
      */
@@ -66,4 +68,11 @@ public abstract class AbstractFolderDelegate<T extends MessageDelegate> implemen
      * @return
      */
     protected abstract T createMessage(int messageNumber) throws DelegateException;
+
+    /* (non-Javadoc)
+     * @see net.fortuna.mstor.connector.FolderDelegate#getDeletedMessageCount()
+     */
+    public int getDeletedMessageCount() throws MessagingException, UnsupportedOperationException {
+        throw new UnsupportedOperationException("Overriding implementation not supported");
+    }
 }

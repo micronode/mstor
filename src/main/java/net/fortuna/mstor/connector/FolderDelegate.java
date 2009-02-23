@@ -143,6 +143,13 @@ public interface FolderDelegate<T extends MessageDelegate> {
     int getMessageCount() throws MessagingException;
     
     /**
+     * Optional support for more efficient implementation.
+     * @return
+     * @throws MessagingException
+     */
+    int getDeletedMessageCount() throws MessagingException, UnsupportedOperationException;
+    
+    /**
      * Returns an input stream from which to read the specified message.
      * @param index
      * @return

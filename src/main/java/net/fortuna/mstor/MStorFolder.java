@@ -50,6 +50,9 @@ import javax.mail.UIDFolder;
 import javax.mail.event.ConnectionEvent;
 import javax.mail.event.FolderEvent;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import net.fortuna.mstor.connector.DelegateException;
 import net.fortuna.mstor.connector.FolderDelegate;
 import net.fortuna.mstor.connector.MessageDelegate;
@@ -64,6 +67,8 @@ import net.sf.ehcache.Element;
  */
 public final class MStorFolder extends Folder implements UIDFolder {
 
+    private static final Log LOG = LogFactory.getLog(MStorFolder.class);
+    
     /**
      * Indicates whether this folder is open.
      */
@@ -355,6 +360,17 @@ public final class MStorFolder extends Folder implements UIDFolder {
         }
     }
 
+    @Override
+    public synchronized int getDeletedMessageCount() throws MessagingException {
+        try {
+            return delegate.getDeletedMessageCount();
+        }
+        catch (UnsupportedOperationException e) {
+            LOG.debug(e.getMessage());
+        }
+        return super.getDeletedMessageCount();
+    }
+    
     /*
      * (non-Javadoc)
      *
@@ -382,9 +398,15 @@ public final class MStorFolder extends Folder implements UIDFolder {
         if (message == null) {
             try {
                 // javamail uses 1-based indexing for messages..
-                message = new MStorMessage(this,
-                        delegate.getMessageAsStream(index), index,
-                        delegate.getMessage(index));
+                MessageDelegate messageDelegate = delegate.getMessage(index);
+                if (messageDelegate.getInputStream() != null) {
+                    message = new MStorMessage(this, messageDelegate.getInputStream(),
+                            index, messageDelegate);
+                }
+                else {
+                    message = new MStorMessage(this, delegate.getMessageAsStream(index),
+                            index, messageDelegate);
+                }
 
                 getMessageCache().put(new Element(index, message));
             }
