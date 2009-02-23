@@ -374,7 +374,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
 
         Message message = null;
         
-        Element cacheElement = getMessageCache().get(new Integer(index));
+        Element cacheElement = getMessageCache().get(index);
         if (cacheElement != null) {
             message = (Message) cacheElement.getValue();
         }
@@ -386,7 +386,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
                         delegate.getMessageAsStream(index), index,
                         delegate.getMessage(index));
 
-                getMessageCache().put(new Element(new Integer(index), message));
+                getMessageCache().put(new Element(index, message));
             }
             catch (IOException ioe) {
                 throw new MessagingException("Error ocurred reading message ["
