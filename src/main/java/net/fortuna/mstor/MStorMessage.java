@@ -504,7 +504,7 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
      * @throws MessagingException
      */
     private void updateFlags() throws MessagingException {
-        if (delegate != null) {
+        if (delegate != null && !flags.equals(delegate.getFlags())) {
             try {
                 delegate.setFlags(flags);
             }
