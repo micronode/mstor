@@ -38,6 +38,9 @@ package net.fortuna.mstor.connector.jcr;
 import java.util.List;
 
 import javax.jcr.Session;
+import javax.mail.Flags.Flag;
+
+import net.fortuna.mstor.util.MessageUtils;
 
 import org.jcrom.Jcrom;
 import org.jcrom.dao.AbstractJcrDAO;
@@ -96,7 +99,16 @@ public class JcrMessageDao extends AbstractJcrDAO<JcrMessage> {
         // parent axis not supported in jackrabbit.. hopefully will be soon.
         return updateDao(super.findByXPath("/jcr:root" + path + "/*/headers[@" + name + "='" + value + "']/..", "*", -1));
     }
-    
+
+    /**
+     * @param path
+     * @param flag
+     * @return
+     */
+    public List<JcrMessage> findByFlag(String path, Flag flag) {
+        return updateDao(super.findByXPath("/jcr:root" + path + "/*[jcr:like(@flags, '" + MessageUtils.getFlagName(flag) + "')]", "*", -1));
+    }
+
     /**
      * @param messages
      * @return
