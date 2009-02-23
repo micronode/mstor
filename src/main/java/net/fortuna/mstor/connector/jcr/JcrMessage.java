@@ -111,9 +111,9 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
     
     @JcrFileNode(lazy=true) private List<JcrFile> attachments;
     
-    @JcrReference(byPath=true) private JcrMessage inReplyTo;
+    @JcrReference(byPath=true, lazy=true) private JcrMessage inReplyTo;
     
-    @JcrReference(byPath=true) private List<JcrMessage> references;
+    @JcrReference(byPath=true, lazy=true) private List<JcrMessage> references;
     
     private JcrMessageDao messageDao;
     
@@ -203,7 +203,8 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
      */
     public void saveChanges() throws DelegateException {
         if (messageDao != null) {
-            messageDao.update(this);
+            // XXX: currently only flags needs updating so don't update children..
+            messageDao.update(this, "none", -1);
         }
     }
 
