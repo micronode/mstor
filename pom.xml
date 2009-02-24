@@ -185,6 +185,11 @@
 			<artifactId>commons-io</artifactId>
 			<version>1.4</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.jackrabbit</groupId>
+			<artifactId>jackrabbit-jcr-rmi</artifactId>
+			<version>1.5.0</version>
+		</dependency>
 	</dependencies>
 
 	<repositories>

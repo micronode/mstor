@@ -35,8 +35,6 @@
  */
 package net.fortuna.mstor.connector.jcr;
 
-import java.util.Properties;
-
 import javax.jcr.Credentials;
 import javax.jcr.LoginException;
 import javax.jcr.Node;
@@ -58,6 +56,8 @@ import net.fortuna.mstor.MStorFolder;
 import net.fortuna.mstor.MStorStore;
 import net.fortuna.mstor.connector.AbstractProtocolConnector;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.jackrabbit.rmi.client.ClientRepositoryFactory;
 import org.jcrom.Jcrom;
 
 /**
@@ -91,21 +91,23 @@ public class JcrConnector extends AbstractProtocolConnector {
      * @see net.fortuna.mstor.connector.ProtocolConnector#connect()
      */
     public boolean connect() throws AuthenticationFailedException, MessagingException {
-        try {
-            Context context = null;
-            String providerUrl = mailSession.getProperty("mstor.repository.provider.url");
-            if (providerUrl != null) {
-                Properties p = new Properties();
-                p.setProperty(Context.PROVIDER_URL, providerUrl);
-                context = new InitialContext(p);
+        if (StringUtils.isEmpty(mailSession.getProperty("mstor.repository.provider.url"))) {
+            try {
+                Context context = new InitialContext();
+                repository = (Repository) context.lookup(mailSession.getProperty("mstor.repository.name"));
             }
-            else {
-                context = new InitialContext();
+            catch (NamingException ne) {
+                throw new MessagingException("Error locating repository", ne);
             }
-            repository = (Repository) context.lookup(mailSession.getProperty("mstor.repository.name"));
         }
-        catch (NamingException ne) {
-            throw new MessagingException("Error locating repository", ne);
+        else {
+            try {
+                ClientRepositoryFactory factory = new ClientRepositoryFactory();
+                repository = factory.getRepository(mailSession.getProperty("mstor.repository.provider.url") + "/" + mailSession.getProperty("mstor.repository.name"));
+            }
+            catch (Exception e) {
+                throw new MessagingException("Error locating repository", e);
+            }
         }
         
         PasswordAuthentication auth = mailSession.requestPasswordAuthentication(null, 0, "mstor", null, null);
