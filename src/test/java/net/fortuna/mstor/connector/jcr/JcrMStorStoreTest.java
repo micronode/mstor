@@ -35,6 +35,7 @@
  */
 package net.fortuna.mstor.connector.jcr;
 
+import java.io.File;
 import java.util.Properties;
 
 import junit.framework.TestSuite;
@@ -54,24 +55,29 @@ public class JcrMStorStoreTest extends TestSuite {
         
         Properties defaultProps = new Properties();
         defaultProps.setProperty("mail.store.protocol", "mstor");
-        defaultProps.setProperty("mstor.repository.provider.url", "localhost");
+//        defaultProps.setProperty("mstor.repository.provider.url", "localhost");
         defaultProps.setProperty("mstor.repository.path", "mail");
         defaultProps.setProperty("mstor.repository.create", "true");
+        
+        File initMboxDir = new File("etc/samples/mailboxes/MboxFile");
+//        File initMboxDir = new File("D:/Documents and Settings/Ben/Application Data/Thunderbird/Profiles/1rhojdz0.default/Mail/pop.gmail.com");
+//        File initMboxDir = new File("D:/Documents and Settings/Ben/Application Data/Thunderbird/Profiles/1rhojdz0.default/Mail/pop.hotpop.com");
+//        File initMboxDir = new File("D:/Documents and Settings/Ben/Application Data/Thunderbird/Profiles/1rhojdz0.default/Mail/mail.internode.on.net");
         
         String repoName = "JcrMStorStoreTest.testGetDefaultFolder";
         Properties p = new Properties(defaultProps);
         p.setProperty("mstor.repository.name", repoName);
-        suite.addTest(new MStorStoreTest("testGetDefaultFolder", new JcrStoreLifecycle(repoName, p), null, null));
+        suite.addTest(new MStorStoreTest("testGetDefaultFolder", new JcrStoreLifecycle(repoName, p, initMboxDir), null, null));
         
-        repoName = "JcrMStorStoreTest.testGetFolderString";
-        p = new Properties(defaultProps);
-        p.setProperty("mstor.repository.name", repoName);
-        suite.addTest(new MStorStoreTest("testGetFolderString", new JcrStoreLifecycle(repoName, p), null, null));
-        
-        repoName = "JcrMStorStoreTest.testGetFolderURLName";
-        p = new Properties(defaultProps);
-        p.setProperty("mstor.repository.name", repoName);
-        suite.addTest(new MStorStoreTest("testGetFolderURLName", new JcrStoreLifecycle(repoName, p), null, null));
+//        repoName = "JcrMStorStoreTest.testGetFolderString";
+//        p = new Properties(defaultProps);
+//        p.setProperty("mstor.repository.name", repoName);
+//        suite.addTest(new MStorStoreTest("testGetFolderString", new JcrStoreLifecycle(repoName, p, initMboxDir), null, null));
+//        
+//        repoName = "JcrMStorStoreTest.testGetFolderURLName";
+//        p = new Properties(defaultProps);
+//        p.setProperty("mstor.repository.name", repoName);
+//        suite.addTest(new MStorStoreTest("testGetFolderURLName", new JcrStoreLifecycle(repoName, p, initMboxDir), null, null));
         return suite;
     }
 }

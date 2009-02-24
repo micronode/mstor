@@ -35,6 +35,7 @@
  */
 package net.fortuna.mstor.connector.jcr;
 
+import java.io.File;
 import java.util.Properties;
 
 import junit.framework.TestSuite;
@@ -54,44 +55,47 @@ public class JcrMStorFolderTest extends TestSuite {
         
         Properties defaultProps = new Properties();
         defaultProps.setProperty("mail.store.protocol", "mstor");
-        defaultProps.setProperty("mstor.repository.provider.url", "localhost");
+//        defaultProps.setProperty("mstor.repository.provider.url", "localhost");
         defaultProps.setProperty("mstor.repository.path", "mail");
         defaultProps.setProperty("mstor.repository.create", "true");
+        
+        File initMboxDir = new File("etc/samples/mailboxes/MboxFile");
+//        File initMboxDir = new File("D:/Documents and Settings/Ben/Application Data/Thunderbird/Profiles/1rhojdz0.default/Mail/mail.internode.on.net");
         
         String repoName = "JcrMStorFolderTest.testExists";
         Properties p = new Properties(defaultProps);
         p.setProperty("mstor.repository.name", repoName);
-        suite.addTest(new MStorFolderTest("testExists", new JcrStoreLifecycle(repoName, p), null, null));
+        suite.addTest(new MStorFolderTest("testExists", new JcrStoreLifecycle(repoName, p, initMboxDir), null, null));
         
         repoName = "JcrMStorFolderTest.testGetSeparator";
         p = new Properties(defaultProps);
         p.setProperty("mstor.repository.name", repoName);
-        suite.addTest(new MStorFolderTest(new JcrStoreLifecycle(repoName, p), null, null, '/'));
+        suite.addTest(new MStorFolderTest(new JcrStoreLifecycle(repoName, p, initMboxDir), null, null, '/'));
         
         repoName = "JcrMStorFolderTest.testGetType";
         p = new Properties(defaultProps);
         p.setProperty("mstor.repository.name", repoName);
-        suite.addTest(new MStorFolderTest("testGetType", new JcrStoreLifecycle(repoName, p), null, null));
+        suite.addTest(new MStorFolderTest("testGetType", new JcrStoreLifecycle(repoName, p, initMboxDir), null, null));
         
         repoName = "JcrMStorFolderTest.testCreate";
         p = new Properties(defaultProps);
         p.setProperty("mstor.repository.name", repoName);
-        suite.addTest(new MStorFolderTest("testCreate", new JcrStoreLifecycle(repoName, p), null, null));
+        suite.addTest(new MStorFolderTest("testCreate", new JcrStoreLifecycle(repoName, p, initMboxDir), null, null));
         
         repoName = "JcrMStorFolderTest.testDelete";
         p = new Properties(defaultProps);
         p.setProperty("mstor.repository.name", repoName);
-        suite.addTest(new MStorFolderTest("testDelete", new JcrStoreLifecycle(repoName, p), null, null));
+        suite.addTest(new MStorFolderTest("testDelete", new JcrStoreLifecycle(repoName, p, initMboxDir), null, null));
         
         repoName = "JcrMStorFolderTest.testOpen";
         p = new Properties(defaultProps);
         p.setProperty("mstor.repository.name", repoName);
-        suite.addTest(new MStorFolderTest("testOpen", new JcrStoreLifecycle(repoName, p), null, null));
+        suite.addTest(new MStorFolderTest("testOpen", new JcrStoreLifecycle(repoName, p, initMboxDir), null, null));
         
         repoName = "JcrMStorFolderTest.testClose";
         p = new Properties(defaultProps);
         p.setProperty("mstor.repository.name", repoName);
-        suite.addTest(new MStorFolderTest("testClose", new JcrStoreLifecycle(repoName, p), null, null));
+        suite.addTest(new MStorFolderTest("testClose", new JcrStoreLifecycle(repoName, p, initMboxDir), null, null));
         
         repoName = "JcrMStorFolderTest.testCloseExpunge";
         p = new Properties(defaultProps);
@@ -116,17 +120,17 @@ public class JcrMStorFolderTest extends TestSuite {
         repoName = "JcrMStorFolderTest.testListString";
         p = new Properties(defaultProps);
         p.setProperty("mstor.repository.name", repoName);
-        suite.addTest(new MStorFolderTest("testListString", new JcrStoreLifecycle(repoName, p), null, null));
+        suite.addTest(new MStorFolderTest("testListString", new JcrStoreLifecycle(repoName, p, initMboxDir), null, null));
         
         repoName = "JcrMStorFolderTest.testGetFolderString";
         p = new Properties(defaultProps);
         p.setProperty("mstor.repository.name", repoName);
-        suite.addTest(new MStorFolderTest("testGetFolderString", new JcrStoreLifecycle(repoName, p), null, null));
+        suite.addTest(new MStorFolderTest("testGetFolderString", new JcrStoreLifecycle(repoName, p, initMboxDir), null, null));
         
         repoName = "JcrMStorFolderTest.testRenameToFolder";
         p = new Properties(defaultProps);
         p.setProperty("mstor.repository.name", repoName);
-        suite.addTest(new MStorFolderTest("testRenameToFolder", new JcrStoreLifecycle(repoName, p), null, null));
+        suite.addTest(new MStorFolderTest("testRenameToFolder", new JcrStoreLifecycle(repoName, p, initMboxDir), null, null));
         
         repoName = "JcrMStorFolderTest.testGetMessageInt";
         p = new Properties(defaultProps);
@@ -136,12 +140,12 @@ public class JcrMStorFolderTest extends TestSuite {
         repoName = "JcrMStorFolderTest.testAppendMessagesMessageArray";
         p = new Properties(defaultProps);
         p.setProperty("mstor.repository.name", repoName);
-        suite.addTest(new MStorFolderTest("testAppendMessagesMessageArray", new JcrStoreLifecycle(repoName, p), null, null));
+        suite.addTest(new MStorFolderTest("testAppendMessagesMessageArray", new JcrStoreLifecycle(repoName, p, initMboxDir), null, null));
         
         repoName = "JcrMStorFolderTest.testAppendToClosedFolder";
         p = new Properties(defaultProps);
         p.setProperty("mstor.repository.name", repoName);
-        suite.addTest(new MStorFolderTest("testAppendToClosedFolder", new JcrStoreLifecycle(repoName, p), null, null));
+        suite.addTest(new MStorFolderTest("testAppendToClosedFolder", new JcrStoreLifecycle(repoName, p, initMboxDir), null, null));
         
         repoName = "JcrMStorFolderTest.testExpunge";
         p = new Properties(defaultProps);
@@ -151,12 +155,12 @@ public class JcrMStorFolderTest extends TestSuite {
         repoName = "JcrMStorFolderTest.testCopyMessages";
         p = new Properties(defaultProps);
         p.setProperty("mstor.repository.name", repoName);
-        suite.addTest(new MStorFolderTest("testCopyMessages", new JcrStoreLifecycle(repoName, p), null, null));
+        suite.addTest(new MStorFolderTest("testCopyMessages", new JcrStoreLifecycle(repoName, p, initMboxDir), null, null));
         
         repoName = "JcrMStorFolderTest.testParseMultipart";
         p = new Properties(defaultProps);
         p.setProperty("mstor.repository.name", repoName);
-        suite.addTest(new MStorFolderTest("testParseMultipart", new JcrStoreLifecycle(repoName, p), null, null));
+        suite.addTest(new MStorFolderTest("testParseMultipart", new JcrStoreLifecycle(repoName, p, initMboxDir), null, null));
         
         return suite;
     }
