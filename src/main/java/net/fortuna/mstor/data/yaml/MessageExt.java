@@ -121,7 +121,7 @@ public class MessageExt {
      * @param flags the flags to set
      */
     public final void setFlags(Flags flags) {
-        this.flags = flags;
+        this.flags = new Flags(flags);
     }
 
     /**
