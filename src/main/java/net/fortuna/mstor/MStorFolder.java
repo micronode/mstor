@@ -399,7 +399,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
             try {
                 // javamail uses 1-based indexing for messages..
                 MessageDelegate messageDelegate = delegate.getMessage(index);
-                if (messageDelegate.getInputStream() != null) {
+                if (messageDelegate != null && messageDelegate.getInputStream() != null) {
                     message = new MStorMessage(this, messageDelegate.getInputStream(),
                             index, messageDelegate);
                 }
