@@ -37,25 +37,51 @@ public class MboxFileTest extends TestCase {
 
     private MboxFile mbox;
 
+    private BufferStrategy bufferStrategy;
+    
+    private boolean cacheEnabled;
+    
+    private boolean relaxedParsingEnabled;
+    
     /**
      * @param method
      */
     public MboxFileTest(String method, String filename) {
-        super(method);
+        this(method, filename, null, false, false);
+    }
+    
+    /**
+     * @param method
+     * @param filename
+     * @param relaxedParsingEnabled
+     */
+    public MboxFileTest(String method, String filename, boolean relaxedParsingEnabled) {
+        this(method, filename, null, false, relaxedParsingEnabled);
         this.filename = filename;
     }
 
+    /**
+     * @param method
+     * @param filename
+     * @param bufferStrategy
+     * @param cacheEnabled
+     */
+    public MboxFileTest(String method, String filename, BufferStrategy bufferStrategy,
+            boolean cacheEnabled) {
+        this(method, filename, bufferStrategy, cacheEnabled, false);
+    }
+    
     /**
      * @param bufferStrategy
      * @param cacheStrategy
      */
     public MboxFileTest(String method, String filename, BufferStrategy bufferStrategy,
-            boolean cacheEnabled) {
+            boolean cacheEnabled, boolean relaxedParsingEnabled) {
         super(method);
         this.filename = filename;
-        System.setProperty(MboxFile.KEY_BUFFER_STRATEGY, bufferStrategy.getName());
-        CapabilityHints.setHintEnabled(CapabilityHints.KEY_MBOX_CACHE_BUFFERS,
-                cacheEnabled);
+        this.bufferStrategy = bufferStrategy;
+        this.cacheEnabled = cacheEnabled;
+        this.relaxedParsingEnabled = relaxedParsingEnabled;
     }
 
     /*
@@ -66,6 +92,12 @@ public class MboxFileTest extends TestCase {
         // File f = new File("etc/samples/mailboxes/MboxFile/Inbox");
         testFile = createTestHierarchy(new File(filename));
         mbox = new MboxFile(testFile, MboxFile.READ_WRITE);
+        
+        if (bufferStrategy != null) {
+            System.setProperty(MboxFile.KEY_BUFFER_STRATEGY, bufferStrategy.getName());
+        }
+        CapabilityHints.setHintEnabled(CapabilityHints.KEY_MBOX_CACHE_BUFFERS, cacheEnabled);
+        CapabilityHints.setHintEnabled(CapabilityHints.KEY_MBOX_RELAXED_PARSING, relaxedParsingEnabled);
     }
 
     /**
@@ -98,13 +130,23 @@ public class MboxFileTest extends TestCase {
             assertEquals(1, mbox.getMessageCount());
         }
         else if (testFile.getName().equals("imagined.mbox")) {
-            assertEquals(223, mbox.getMessageCount());
+            if (relaxedParsingEnabled) {
+                assertEquals(293, mbox.getMessageCount());
+            }
+            else {
+                assertEquals(223, mbox.getMessageCount());
+            }
         }
         else if (testFile.getName().equals("parseexception.mbox")) {
             assertEquals(1, mbox.getMessageCount());
         }
         else if (testFile.getName().equals("samples.mbx")) {
-            assertEquals(2, mbox.getMessageCount());
+            if (relaxedParsingEnabled) {
+                assertEquals(4, mbox.getMessageCount());
+            }
+            else {
+                assertEquals(2, mbox.getMessageCount());
+            }
         }
         else if (testFile.getName().equals("subject-0x1f.mbox")) {
             assertEquals(1, mbox.getMessageCount());
@@ -123,6 +165,14 @@ public class MboxFileTest extends TestCase {
         }
         else if (testFile.getAbsolutePath().endsWith("pop.hotpop.com/Inbox")) {
             assertEquals(178, mbox.getMessageCount());
+        }
+        else if (testFile.getName().equals("error.mbox")) {
+            if (relaxedParsingEnabled) {
+                assertEquals(3, mbox.getMessageCount());
+            }
+            else {
+                assertEquals(2, mbox.getMessageCount());
+            }
         }
 
 //        log.info("Message count: " + mbox.getMessageCount());
@@ -212,6 +262,7 @@ public class MboxFileTest extends TestCase {
                     true));
             suite.addTest(new MboxFileTest("testGetMessageCount", testFiles[i]
                     .getPath()));
+            suite.addTest(new MboxFileTest("testGetMessageCount", testFiles[i].getPath(), true));
             suite
                     .addTest(new MboxFileTest("testPurge", testFiles[i]
                             .getPath()));
