@@ -144,7 +144,9 @@ public class MboxFile {
      */
 //    private static final Pattern FROM__LINE_PATTERN = Pattern.compile("[\\n\\n|\\r\\n\\r\\n]" + FROM__PREFIX + ".*$",
 //            Pattern.MULTILINE);
-    static final Pattern FROM__LINE_PATTERN = Pattern.compile("(\\A|\\n{2}|(\\r\\n){2})^From .*$", Pattern.MULTILINE);
+    private static final Pattern FROM__LINE_PATTERN = Pattern.compile("(\\A|\\n{2}|(\\r\\n){2})^From .*$", Pattern.MULTILINE);
+    
+    private static final Pattern RELAXED_FROM__LINE_PATTERN = Pattern.compile("^From .*$", Pattern.MULTILINE);
 
     private static final int DEFAULT_BUFFER_SIZE = 8192;
 
@@ -313,7 +315,13 @@ public class MboxFile {
 
             for (;;) {
                 // Matcher matcher = fromPattern.matcher(buffer.asCharBuffer());
-                Matcher matcher = FROM__LINE_PATTERN.matcher(cs);
+                Matcher matcher = null;
+                if (CapabilityHints.isHintEnabled(CapabilityHints.KEY_MBOX_RELAXED_PARSING)) {
+                    matcher = RELAXED_FROM__LINE_PATTERN.matcher(cs);
+                }
+                else {
+                    matcher = FROM__LINE_PATTERN.matcher(cs);
+                }
 
                 while (matcher.find()) {
                     // debugging..

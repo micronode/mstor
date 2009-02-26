@@ -56,6 +56,11 @@ public final class CapabilityHints {
      */
     public static final String KEY_MBOX_MOZILLA_COMPATIBILITY = "mstor.mbox.mozillaCompatibility";
 
+    /**
+     * A capability hint to enable relaxed mbox parsing.
+     */
+    public static final String KEY_MBOX_RELAXED_PARSING = "mstor.mbox.parsing.relaxed";
+
     private static final Map<String, Boolean> HINTS = new HashMap<String, Boolean>();
 
     /**
