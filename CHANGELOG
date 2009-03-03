@@ -2,6 +2,19 @@
  mstor - Changes
 =================
 
+ See the changelog report for further details:
+
+ 	http://m2.modularity.net.au/projects/mstor/changelog.html
+
+==
+
+0.9.12:
+
+ - Updated to use Java 5 features (Java 5 is now minimum required JVM)
+ 
+ - Refactored directory structure to default Maven layout
+ 
+ 
 0.9.11:
 
  - Refactored architecture for improved extensibility
