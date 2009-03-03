@@ -11,10 +11,7 @@
 	<artifactId>mstor</artifactId>
 	<name>mstor</name>
 	<version>0.9.12-SNAPSHOT</version>
-	<description>
-		A JavaMail local store provider based on the mbox email storage
-		format
-	</description>
+	<description>A JavaMail provider for persistent email storage.</description>
 	<url>http://mstor.sourceforge.net</url>
 	<issueManagement>
 		<system>SourceForge.net</system>
@@ -269,6 +266,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-changelog-plugin</artifactId>
+				<version>2.1</version>
 				<reportSets>
 					<reportSet>
 						<id>changelog</id>
@@ -276,10 +274,10 @@
 							<type>tag</type>
 							<tags>
 								<tag implementation="java.lang.String">
-									mstor-0_9_10
+									mstor-0_9_11
 								</tag>
 								<tag implementation="java.lang.String">
-									mstor-0_9_11
+									mstor-0_9_12
 								</tag>
 							</tags>
 						</configuration>
