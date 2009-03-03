@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<parent>
 		<artifactId>modularity-parent</artifactId>
@@ -10,7 +9,7 @@
 	<groupId>net.fortuna.mstor</groupId>
 	<artifactId>mstor</artifactId>
 	<name>mstor</name>
-	<version>0.9.12-SNAPSHOT</version>
+	<version>0.9.12</version>
 	<description>A JavaMail provider for persistent email storage.</description>
 	<url>http://mstor.sourceforge.net</url>
 	<issueManagement>
@@ -29,7 +28,8 @@
 		<connection>scm:cvs:pserver:anonymous:@mstor.cvs.sourceforge.net:/cvsroot/mstor:mstor</connection>
 		<developerConnection>scm:cvs:ext:fortuna@mstor.cvs.sourceforge.net:/cvsroot/mstor:mstor</developerConnection>
 		<url>http://mstor.cvs.sourceforge.net/mstor/mstor</url>
-	</scm>
+	  <tag>mstor-0_9_12</tag>
+  </scm>
 	<!--
 	<distributionManagement>
 		<relocation>
