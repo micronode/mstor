@@ -93,33 +93,8 @@ public class MboxFile {
      * @author Ben
      *
      */
-    public static final class BufferStrategy extends org.apache.commons.lang.enums.Enum {
-        
-        /**
-         * 
-         */
-        private static final long serialVersionUID = -8365766175291020044L;
-
-        public static final BufferStrategy DEFAULT = new BufferStrategy("default");
-        
-        public static final BufferStrategy MAPPED = new BufferStrategy("mapped");
-        
-        public static final BufferStrategy DIRECT = new BufferStrategy("direct");
-        
-        /**
-         * @param name
-         */
-        private BufferStrategy(String name) {
-            super(name);
-        }
-        
-        /**
-         * @param name
-         * @return
-         */
-        public static BufferStrategy getBufferStrategy(String name) {
-            return (BufferStrategy) getEnum(BufferStrategy.class, name);
-        }
+    public enum BufferStrategy {
+        DEFAULT, MAPPED, DIRECT;
     }
     
     public static final String READ_ONLY = "r";
@@ -243,19 +218,23 @@ public class MboxFile {
      * @return a ByteBuffer containing up to <em>size</em> bytes starting at the specified
      *         position in the file.
      */
-    private ByteBuffer read(final long position, final int size)
-            throws IOException {
+    private ByteBuffer read(final long position, final int size) throws IOException {
 
         ByteBuffer buffer = null;
         try {
-            if (BufferStrategy.MAPPED.equals(BufferStrategy.getBufferStrategy(Configurator.getProperty(KEY_BUFFER_STRATEGY)))) {
+            BufferStrategy bufferStrategy = null;
+            if (Configurator.getProperty(KEY_BUFFER_STRATEGY) != null) {
+                bufferStrategy = BufferStrategy.valueOf(Configurator.getProperty(KEY_BUFFER_STRATEGY).toUpperCase());
+            }
+            
+            if (BufferStrategy.MAPPED.equals(bufferStrategy)) {
                 buffer = getChannel().map(FileChannel.MapMode.READ_ONLY, position, size);
             }
             else {
-                if (BufferStrategy.DIRECT.equals(BufferStrategy.getBufferStrategy(Configurator.getProperty(KEY_BUFFER_STRATEGY)))) {
+                if (BufferStrategy.DIRECT.equals(bufferStrategy)) {
                     buffer = ByteBuffer.allocateDirect(size);
                 }
-                else if (BufferStrategy.DEFAULT.equals(BufferStrategy.getBufferStrategy(Configurator.getProperty(KEY_BUFFER_STRATEGY)))) {
+                else if (BufferStrategy.DEFAULT.equals(bufferStrategy) || bufferStrategy == null) {
                     buffer = ByteBuffer.allocate(size);
                 }
                 else {

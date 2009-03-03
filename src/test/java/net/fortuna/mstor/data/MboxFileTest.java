@@ -94,7 +94,7 @@ public class MboxFileTest extends TestCase {
         mbox = new MboxFile(testFile, MboxFile.READ_WRITE);
         
         if (bufferStrategy != null) {
-            System.setProperty(MboxFile.KEY_BUFFER_STRATEGY, bufferStrategy.getName());
+            System.setProperty(MboxFile.KEY_BUFFER_STRATEGY, bufferStrategy.toString());
         }
         CapabilityHints.setHintEnabled(CapabilityHints.KEY_MBOX_CACHE_BUFFERS, cacheEnabled);
         CapabilityHints.setHintEnabled(CapabilityHints.KEY_MBOX_RELAXED_PARSING, relaxedParsingEnabled);
