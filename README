@@ -2,7 +2,7 @@
  mstor - Release Notes
 =======================
 
- mstor is a local store provider for JavaMail. mstor builds on the mbox format and
+ Mstor is a JavaMail provider for persistent email storage. mstor builds on the mbox format and
  provides the following benefits:
 
  * implemented using Java "New I/O" (java.nio.*) to (theoretically) provide better
@@ -26,18 +26,27 @@
  How to build
 ==============
  
+ Using Maven:
+
+ If you have downloaded the source distribution, you should be able to package a JAR
+ file simply by running maven in the root directory. e.g:
+ 
+   C:\Libs\mstor-0.9.12-src\>mvn package
+
+
+ Using Ant:
+ 
  If you have downloaded the source distribution, you should be able to package a JAR
  file simply by running ant in the root directory. e.g:
  
-   C:\Libs\mstor-0.9.6-src\>ant
+   C:\Libs\mstor-0.9.12-src\>ant
  
  If for some reason you would like to override the default build classpath, I would
  suggest creating a "build.properties" file (see the provided sample) in the root directory
  and add overridden properties to this. You can also override properties via Java system
  properties (e.g. -Dproject.classpath="..."). You shouldn't need to modify the "build.xml" at all,
  so if you do find a need let me know and I'll try to rectify this.
-
-
+ 
 ===================
  System Properties
 ===================
@@ -45,10 +54,10 @@
  A number of system properties may be specified in order to configure the operation
  of mstor to suit your purpose. These are as follows:
  
-  - mstor.metadata={default|enabled|disabled}
+  - mstor.mbox.metadataStrategy={none|xml|yaml}
   
   enables mstor-specific metadata to provide full JavaMail
-  functionality and performance enhancement. Default value is equivalent to enabled.
+  functionality and performance enhancement. Default value is equivalent to xml.
   
   - mstor.mbox.encoding (specifies the file encoding used to read the mbox file.
   Default value: "ISO-8859-1").
@@ -149,3 +158,4 @@
  will be operating on all available messages - effectively overriding the
  cache mechanism. The method itself is not that memory intensive, but parsing
  message data for all messages in the array may be.
+ 
