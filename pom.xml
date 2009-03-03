@@ -9,7 +9,7 @@
 	<groupId>net.fortuna.mstor</groupId>
 	<artifactId>mstor</artifactId>
 	<name>mstor</name>
-	<version>0.9.12</version>
+	<version>0.9.13-SNAPSHOT</version>
 	<description>A JavaMail provider for persistent email storage.</description>
 	<url>http://mstor.sourceforge.net</url>
 	<issueManagement>
@@ -28,7 +28,6 @@
 		<connection>scm:cvs:pserver:anonymous:@mstor.cvs.sourceforge.net:/cvsroot/mstor:mstor</connection>
 		<developerConnection>scm:cvs:ext:fortuna@mstor.cvs.sourceforge.net:/cvsroot/mstor:mstor</developerConnection>
 		<url>http://mstor.cvs.sourceforge.net/mstor/mstor</url>
-	  <tag>mstor-0_9_12</tag>
   </scm>
 	<!--
 	<distributionManagement>
