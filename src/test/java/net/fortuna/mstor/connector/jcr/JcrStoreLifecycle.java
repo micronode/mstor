@@ -19,6 +19,7 @@ import javax.naming.InitialContext;
 
 import net.fortuna.mstor.StoreLifecycle;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -88,7 +89,7 @@ public class JcrStoreLifecycle implements StoreLifecycle {
         context = new InitialContext(env);
 
         File testDir = new File(BASE_TEST_DIR, repoName);
-//        FileUtils.deleteQuietly(testDir);
+        FileUtils.deleteQuietly(testDir);
         RegistryHelper.registerRepository(context, repoName,
                 "src/test/resources/repository.xml", testDir.getAbsolutePath(),
                 false);
