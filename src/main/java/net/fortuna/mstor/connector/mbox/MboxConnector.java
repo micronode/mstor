@@ -73,33 +73,8 @@ public class MboxConnector extends AbstractProtocolConnector {
      * @author Ben
      *
      */
-    public static final class MetadataStrategy extends org.apache.commons.lang.enums.Enum {
-        
-        /**
-         * 
-         */
-        private static final long serialVersionUID = -4714029713605392662L;
-
-        public static final MetadataStrategy XML = new MetadataStrategy("xml");
-        
-        public static final MetadataStrategy YAML = new MetadataStrategy("yaml");
-
-        public static final MetadataStrategy NONE = new MetadataStrategy("none");
-        
-        /**
-         * @param name
-         */
-        private MetadataStrategy(String name) {
-            super(name);
-        }
-        
-        /**
-         * @param name
-         * @return
-         */
-        public static MetadataStrategy getMetadataStrategy(String name) {
-            return (MetadataStrategy) getEnum(MetadataStrategy.class, name);
-        }
+    public enum MetadataStrategy {
+        XML, YAML, NONE;
     }
 
     private MetadataStrategy metadataStrategy;
@@ -111,8 +86,11 @@ public class MboxConnector extends AbstractProtocolConnector {
         super(url, store);
 //        this.session = session;
         
-        metadataStrategy = MetadataStrategy.getMetadataStrategy(session.getProperties().getProperty(KEY_METADATA_STRATEGY,
-                Configurator.getProperty(KEY_METADATA_STRATEGY)));
+        if (session.getProperties().getProperty(KEY_METADATA_STRATEGY,
+                Configurator.getProperty(KEY_METADATA_STRATEGY)) != null) {
+            metadataStrategy = MetadataStrategy.valueOf(session.getProperties().getProperty(KEY_METADATA_STRATEGY,
+                    Configurator.getProperty(KEY_METADATA_STRATEGY)).toUpperCase());
+        }
     }
 
     /* (non-Javadoc)

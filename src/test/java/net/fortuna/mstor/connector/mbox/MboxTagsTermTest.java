@@ -59,7 +59,7 @@ public class MboxTagsTermTest extends TestSuite {
         TestSuite suite = new TestSuite(MboxTagsTermTest.class.getSimpleName());
         
         Properties p = new Properties();
-        p.setProperty(MboxConnector.KEY_METADATA_STRATEGY, MetadataStrategy.YAML.getName());
+        p.setProperty(MboxConnector.KEY_METADATA_STRATEGY, MetadataStrategy.YAML.toString());
         
         File[] samples = new File("etc/samples/mailboxes").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
         //File[] samples = new File[] {new File("etc/samples/mailboxes/samples.mbx")};
