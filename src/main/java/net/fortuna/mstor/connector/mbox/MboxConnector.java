@@ -59,7 +59,7 @@ import net.fortuna.mstor.util.Configurator;
  * however it may be disabled by specifying the following session property:
  * 
  * <pre>
- * mstor.meta.enabled = false
+ * mstor.mbox.metadataStrategy = none
  * </pre>
  * 
  * @author Ben
