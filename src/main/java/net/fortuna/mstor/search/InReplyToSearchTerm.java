@@ -1,7 +1,4 @@
 /*
- * $Id$
- *
- * Created on 22/02/2009
  *
  * Copyright (c) 2009, Ben Fortuna
  * All rights reserved.
@@ -45,6 +42,13 @@ import net.fortuna.mstor.MStorMessage;
 
 /**
  * @author Ben
+ * 
+ * <pre>
+ * $Id$
+ *
+ * Created on 22/02/2009
+ * </pre>
+ * 
  *
  */
 public class InReplyToSearchTerm extends SearchTerm {

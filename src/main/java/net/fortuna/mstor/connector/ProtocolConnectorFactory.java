@@ -1,9 +1,5 @@
-/*
- * $Id$
- *
- * Created on 05/08/2007
- *
- * Copyright (c) 2007, Ben Fortuna
+/**
+ * Copyright (c) 2009, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,7 +20,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -44,6 +40,13 @@ import net.fortuna.mstor.connector.mbox.MboxConnector;
 
 /**
  * @author Ben
+ * 
+ * <pre>
+ * $Id$
+ *
+ * Created on 05/08/2007
+ * </pre>
+ * 
  *
  */
 public class ProtocolConnectorFactory {

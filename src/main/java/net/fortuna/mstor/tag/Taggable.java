@@ -1,9 +1,5 @@
-/*
- * $Id$
- *
- * Created on 23/05/2006
- *
- * Copyright (c) 2006, Ben Fortuna
+/**
+ * Copyright (c) 2009, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,6 +37,13 @@ import javax.mail.MessagingException;
  * Implementors support tagging.
  *
  * @author Ben Fortuna
+ * 
+ * <pre>
+ * $Id$
+ *
+ * Created on 23/05/2006
+ * </pre>
+ * 
  */
 public interface Taggable {
 

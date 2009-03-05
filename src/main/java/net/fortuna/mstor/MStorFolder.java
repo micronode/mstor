@@ -1,11 +1,5 @@
-/*
- * $Id$
- *
- * Created: [6/07/2004]
- *
- * Contributors: Paul Legato - fix for expunge() method
- *
- * Copyright (c) 2004, Ben Fortuna
+/**
+ * Copyright (c) 2009, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -64,6 +58,15 @@ import net.sf.ehcache.Element;
  * A folder implementation for the mstor javamail provider.
  * 
  * @author Ben Fortuna
+ * 
+ * <pre>
+ * $Id$
+ *
+ * Created: [6/07/2004]
+ *
+ * Contributors: Paul Legato - fix for expunge() method
+ * </pre>
+ * 
  */
 public final class MStorFolder extends Folder implements UIDFolder {
 

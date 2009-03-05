@@ -1,7 +1,4 @@
 /*
- * $Id$
- *
- * Created on 22/01/2009
  *
  * Copyright (c) 2009, Ben Fortuna
  * All rights reserved.
@@ -76,6 +73,13 @@ import org.jcrom.annotations.JcrReference;
 
 /**
  * @author Ben
+ * 
+ * <pre>
+ * $Id$
+ *
+ * Created on 22/01/2009
+ * </pre>
+ * 
  *
  */
 public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {

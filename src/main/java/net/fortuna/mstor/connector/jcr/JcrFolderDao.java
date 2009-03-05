@@ -1,7 +1,4 @@
 /*
- * $Id$
- *
- * Created on 18/02/2009
  *
  * Copyright (c) 2009, Ben Fortuna
  * All rights reserved.
@@ -44,6 +41,13 @@ import org.jcrom.dao.AbstractJcrDAO;
 
 /**
  * @author Ben
+ * 
+ * <pre>
+ * $Id$
+ *
+ * Created on 18/02/2009
+ * </pre>
+ * 
  *
  */
 public class JcrFolderDao extends AbstractJcrDAO<JcrFolder> {

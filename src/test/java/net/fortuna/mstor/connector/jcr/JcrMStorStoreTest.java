@@ -1,7 +1,4 @@
 /*
- * $Id$
- *
- * Created on 22/01/2009
  *
  * Copyright (c) 2009, Ben Fortuna
  * All rights reserved.
@@ -43,6 +40,13 @@ import net.fortuna.mstor.MStorStoreTest;
 
 /**
  * @author Ben
+ * 
+ * <pre>
+ * $Id$
+ *
+ * Created on 22/01/2009
+ * </pre>
+ * 
  *
  */
 public class JcrMStorStoreTest extends TestSuite {

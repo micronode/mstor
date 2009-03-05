@@ -1,9 +1,5 @@
-/*
- * $Id$
- *
- * Created: 18/08/2004
- *
- * Copyright (c) 2004, Ben Fortuna
+/**
+ * Copyright (c) 2009, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,6 +51,13 @@ import org.jdom.Namespace;
  * A JDOM-based implementation of a meta folder.
  * 
  * @author benfortuna
+ * 
+ * <pre>
+ * $Id$
+ *
+ * Created: 18/08/2004
+ * </pre>
+ * 
  */
 public class MetaFolder extends AbstractMetaFolder<MetaMessage> {
 

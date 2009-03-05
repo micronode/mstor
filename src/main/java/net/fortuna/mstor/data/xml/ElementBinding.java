@@ -1,9 +1,5 @@
-/*
- * $Id$
- *
- * Created on 6/05/2006
- *
- * Copyright (c) 2005, Ben Fortuna
+/**
+ * Copyright (c) 2009, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,6 +36,13 @@ import org.jdom.Namespace;
 
 /**
  * @author Ben Fortuna
+ * 
+ * <pre>
+ * $Id$
+ *
+ * Created on 6/05/2006
+ * </pre>
+ * 
  */
 public class ElementBinding extends XmlBinding {
 

@@ -1,9 +1,5 @@
-/*
- * $Id$
- *
- * Created on 15/05/2006
- *
- * Copyright (c) 2005, Ben Fortuna
+/**
+ * Copyright (c) 2009, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -45,6 +41,13 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 
 /**
  * @author Ben Fortuna
+ * 
+ * <pre>
+ * $Id$
+ *
+ * Created on 15/05/2006
+ * </pre>
+ * 
  */
 public final class SearchTerms {
 

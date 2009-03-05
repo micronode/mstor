@@ -1,13 +1,5 @@
-/*
- * $Id$
- *
- * Created: [6/07/2004]
- *
- * Contributors: Paul Legato - fix for purge() method,
- *  Michael G. Kaiser - add/strip of ">" characters from message content
- *  matching "From_" pattern (appendMessage()/getMessage())
- *
- * Copyright (c) 2005, Ben Fortuna
+/**
+ * Copyright (c) 2009, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -81,6 +73,17 @@ import org.apache.commons.logging.LogFactory;
  * If no encoding system property is specified the default file encoding will be used.
  *
  * @author Ben Fortuna
+ * 
+ * <pre>
+ * $Id$
+ *
+ * Created: [6/07/2004]
+ *
+ * Contributors: Paul Legato - fix for purge() method,
+ *  Michael G. Kaiser - add/strip of ">" characters from message content
+ *  matching "From_" pattern (appendMessage()/getMessage())
+ *  </pre>
+ * 
  */
 public class MboxFile {
 

@@ -1,9 +1,5 @@
-/*
- * $Id$
- *
- * Created: [8/07/2004]
- *
- * Copyright (c) 2004, Ben Fortuna
+/**
+ * Copyright (c) 2009, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -45,6 +41,13 @@ import javax.mail.Message;
  * Implements a very rudimentary cache.
  * 
  * @author benfortuna
+ * 
+ * <pre>
+ * $Id$
+ *
+ * Created: [8/07/2004]
+ * </pre>
+ * 
  */
 public class Cache extends LinkedHashMap<String, Message> {
 

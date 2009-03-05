@@ -1,7 +1,4 @@
 /*
- * $Id$
- *
- * Created on 22/01/2009
  *
  * Copyright (c) 2009, Ben Fortuna
  * All rights reserved.
@@ -43,6 +40,13 @@ import javax.mail.internet.MimeMessage;
 
 /**
  * @author Ben
+ * 
+ * <pre>
+ * $Id$
+ *
+ * Created on 22/01/2009
+ * </pre>
+ * 
  *
  */
 public final class MessageUtils {

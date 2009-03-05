@@ -1,9 +1,5 @@
-/*
- * $Id$
- *
- * Created: [7/07/2004]
- *
- * Copyright (c) 2004, Ben Fortuna
+/**
+ * Copyright (c) 2009, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -46,7 +42,15 @@ import net.fortuna.mstor.connector.ProtocolConnectorFactory;
 
 /**
  * Implementation of a javamail store for the mstor provider.
+ * 
  * @author Ben Fortuna
+ *
+ * <pre>
+ * $Id$
+ *
+ * Created: [7/07/2004]
+ * </pre>
+ * 
  */
 public final class MStorStore extends Store {
 

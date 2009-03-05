@@ -1,9 +1,5 @@
-/*
- * $Id$
- *
- * Created on 06/02/2008
- *
- * Copyright (c) 2008, Ben Fortuna
+/**
+ * Copyright (c) 2009, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -43,7 +39,15 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Provides configuration properties specified either as system properties
  * or in an mstor.properties configuration file.
+ * 
  * @author Ben
+ * 
+ * <pre>
+ * $Id$
+ *
+ * Created on 06/02/2008
+ * </pre>
+ * 
  *
  */
 public final class Configurator {

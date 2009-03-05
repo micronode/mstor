@@ -1,9 +1,5 @@
-/*
- * $Id$
- *
- * Created on 8/06/2006
- *
- * Copyright (c) 2006, Ben Fortuna
+/**
+ * Copyright (c) 2009, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -42,6 +38,13 @@ import java.util.Map;
  * A set of keys used to enable capability features.
  * 
  * @author Ben Fortuna
+ * 
+ * <pre>
+ * $Id$
+ *
+ * Created on 8/06/2006
+ * </pre>
+ * 
  */
 public final class CapabilityHints {
 

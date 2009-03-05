@@ -1,9 +1,5 @@
-/*
- * $Id$
- *
- * Created on 10/04/2005
- *
- * Copyright (c) 2005, Ben Fortuna
+/**
+ * Copyright (c) 2009, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -44,6 +40,13 @@ import java.util.Arrays;
  * escaping any "From_" patterns in the body of the message.
  *
  * @author Ben Fortuna
+ * 
+ * <pre>
+ * $Id$
+ *
+ * Created on 10/04/2005
+ * </pre>
+ * 
  */
 public final class MboxEncoder {
 
