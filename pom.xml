@@ -8,6 +8,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.fortuna.mstor</groupId>
 	<artifactId>mstor</artifactId>
+	<packaging>bundle</packaging>
 	<name>mstor</name>
 	<version>0.9.13-SNAPSHOT</version>
 	<description>A JavaMail provider for persistent email storage.</description>
@@ -75,6 +76,18 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			
+			<plugin>   
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Export-Package>net.fortuna.mstor.*</Export-Package>
+						<Import-Package>javax.mail*,org.apache.commons.logging,net.sf.ehcache,*;resolution:=optional</Import-Package>
+					</instructions>
+				</configuration>
 			</plugin>
 			
 			<plugin>
