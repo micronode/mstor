@@ -53,11 +53,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.fortuna.mstor.util.CacheAdapter;
 import net.fortuna.mstor.util.CapabilityHints;
 import net.fortuna.mstor.util.Configurator;
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Element;
+import net.fortuna.mstor.util.EhCacheAdapter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -166,6 +165,11 @@ public class MboxFile {
      */
     private Long[] messagePositions;
 
+    /**
+     * An adapter for the cache for buffers
+     */
+    private CacheAdapter cacheAdapter;
+    
     /**
      * A cache used to store mapped regions of the mbox file representing message data.
      */
@@ -356,17 +360,6 @@ public class MboxFile {
         return getMessagePositions().length;
     }
 
-    /**
-     * Returns the message cache.
-     */
-    private Cache getMessageCache() {
-        CacheManager manager = CacheManager.create();
-        String cacheName = "mstor.mbox." + file.getAbsolutePath().hashCode();
-        if (manager.getCache(cacheName) == null) {
-            manager.addCache(cacheName);
-        }
-        return manager.getCache(cacheName);
-    }
 
     /**
      * Opens an input stream to the specified message data.
@@ -380,10 +373,7 @@ public class MboxFile {
         ByteBuffer buffer = null;
         
         if (CapabilityHints.isHintEnabled(CapabilityHints.KEY_MBOX_CACHE_BUFFERS)) {
-            Element cacheElement = getMessageCache().get(new Integer(index));
-            if (cacheElement != null) {
-                buffer = (ByteBuffer) cacheElement.getObjectValue();
-            }
+            buffer = retrieveBufferFromCache(index);
         }
 
         if (buffer == null) {
@@ -402,7 +392,7 @@ public class MboxFile {
             
             if (CapabilityHints.isHintEnabled(CapabilityHints.KEY_MBOX_CACHE_BUFFERS)) {
                 // add buffer to cache..
-                getMessageCache().put(new Element(new Integer(index), buffer));
+                putBufferInCache(index,buffer);
             }
             
             // adjust position to exclude the From_ line..
@@ -495,7 +485,7 @@ public class MboxFile {
         }
         
         // clear cache..
-        getMessageCache().removeAll();
+        clearBufferCache();
     }
 
     /**
@@ -644,5 +634,28 @@ public class MboxFile {
         }
 
         return false;
+    }
+    
+    private void putBufferInCache(int index, ByteBuffer buffer) {
+        getCacheAdapter().putObjectIntoCache(index, buffer);
+    }
+    
+    private void clearBufferCache() {
+        getCacheAdapter().clearCache();
+    }
+    
+    private ByteBuffer retrieveBufferFromCache(int index) {
+        return (ByteBuffer)getCacheAdapter().retrieveObjectFromCache(index);
+    }
+        
+    private CacheAdapter getCacheAdapter() {
+        if (cacheAdapter == null) {
+            if (System.getProperty("mstor.cache.disabled", "false").equals("true")) {
+                this.cacheAdapter = new CacheAdapter();
+            } else {
+                this.cacheAdapter = new EhCacheAdapter("mstor.mbox." + file.getAbsolutePath().hashCode());
+            }
+        }
+        return cacheAdapter;
     }
 }

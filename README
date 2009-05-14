@@ -77,6 +77,15 @@
   to cache these buffers in memory. This option may improve performance in reading
   messages, but will increase memory usage. Default value is equivalent to disabled.
   
+  - mstor.cache.disabled={false|true}
+  
+  a value of 'true' turns of the caching functionality. In most cases this setting
+  will lead to drastic performance degradation, especially if your application 
+  reads the same message multiple times. There are cases though, when you only need
+  to read a single message only once. If this is the case, this setting may 
+  drastically reduce the memory consumption. Apart from that setting this property
+  to 'true' will allow you to exclude ehcache from the list of jars you need to
+  ship with your application.
  
 ==========
  Metadata
@@ -159,3 +168,6 @@
  cache mechanism. The method itself is not that memory intensive, but parsing
  message data for all messages in the array may be.
  
+ In some cases you might even consider turning the cache off altogether.
+ See the description of the 'mstor.cache.disabled' system property for
+ more details.

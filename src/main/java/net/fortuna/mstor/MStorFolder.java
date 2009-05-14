@@ -50,9 +50,8 @@ import org.apache.commons.logging.LogFactory;
 import net.fortuna.mstor.connector.DelegateException;
 import net.fortuna.mstor.connector.FolderDelegate;
 import net.fortuna.mstor.connector.MessageDelegate;
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Element;
+import net.fortuna.mstor.util.CacheAdapter;
+import net.fortuna.mstor.util.EhCacheAdapter;
 
 /**
  * A folder implementation for the mstor javamail provider.
@@ -81,6 +80,11 @@ public final class MStorFolder extends Folder implements UIDFolder {
      * A delegate supporting additional functions not inherently supported by {@link Folder}.
      */
     private FolderDelegate<? extends MessageDelegate> delegate;
+    
+    /**
+     * An adapter for the cache for messages
+     */
+    private CacheAdapter cacheAdapter;
 
     /**
      * A cache for messages.
@@ -316,7 +320,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
         }
 
         // clear cache..
-        getMessageCache().removeAll();
+        clearMessageCache();
         
         // mark as closed and notify listeners even if not successfully closed..
         open = false;
@@ -392,11 +396,8 @@ public final class MStorFolder extends Folder implements UIDFolder {
         }
 
         Message message = null;
-        
-        Element cacheElement = getMessageCache().get(index);
-        if (cacheElement != null) {
-            message = (Message) cacheElement.getValue();
-        }
+    
+        message = retrieveMessageFromCache(index);
 
         if (message == null) {
             try {
@@ -410,8 +411,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
                     message = new MStorMessage(this, delegate.getMessageAsStream(index),
                             index, messageDelegate);
                 }
-
-                getMessageCache().put(new Element(index, message));
+                putMessageIntoCache(index,message);
             }
             catch (IOException ioe) {
                 throw new MessagingException("Error ocurred reading message ["
@@ -425,6 +425,10 @@ public final class MStorFolder extends Folder implements UIDFolder {
 
         return message;
     }
+
+    
+
+    
 
     /**
      * Appends the specified messages to this folder. NOTE: The specified message array is destroyed
@@ -478,21 +482,9 @@ public final class MStorFolder extends Folder implements UIDFolder {
         
         // reset cache..
 //        messageCache = null;
-        getMessageCache().removeAll();
+        clearMessageCache();
 
         return deleted;
-    }
-
-    /**
-     * @return Returns the messageCache.
-     */
-    private Cache getMessageCache() {
-        CacheManager manager = CacheManager.create();
-        String cacheName = "mstor.folder." + getFullName().hashCode();
-        if (manager.getCache(cacheName) == null) {
-            manager.addCache(cacheName);
-        }
-        return manager.getCache(cacheName);
     }
 
     /**
@@ -608,5 +600,28 @@ public final class MStorFolder extends Folder implements UIDFolder {
             throw new MessagingException(
                     "An error occurred retrieving UID validity", uoe);
         }
+    }
+    
+    private void clearMessageCache() {
+        getCacheAdapter().clearCache();
+    }
+    
+    private Message retrieveMessageFromCache(int index) {
+        return (Message)getCacheAdapter().retrieveObjectFromCache(index);
+    }
+    
+    private void putMessageIntoCache(int index, Message message) {
+        getCacheAdapter().putObjectIntoCache(index, message);
+    }
+    
+    private CacheAdapter getCacheAdapter() {
+        if (cacheAdapter == null) {
+            if (System.getProperty("mstor.cache.disabled", "false").equals("true")) {
+                this.cacheAdapter = new CacheAdapter();
+            } else {
+                this.cacheAdapter = new EhCacheAdapter("mstor.folder." + getFullName().hashCode());
+            }
+        }
+        return cacheAdapter;
     }
 }

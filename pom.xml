@@ -85,7 +85,7 @@
 				<configuration>
 					<instructions>
 						<Export-Package>net.fortuna.mstor.*</Export-Package>
-						<Import-Package>javax.mail*,org.apache.commons.logging,net.sf.ehcache,*;resolution:=optional</Import-Package>
+						<Import-Package>javax.mail*,org.apache.commons.logging,*;resolution:=optional</Import-Package>
 					</instructions>
 				</configuration>
 			</plugin>
