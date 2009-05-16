@@ -322,7 +322,7 @@ public class MboxFile {
 //                    else {
 //                        posList.add(new Long(offset + matcher.start())); // + fromPrefixOffset));
 //                    }
-                    posList.add(new Long(offset + matcher.start())); // + fromPrefixOffset));
+                    posList.add(Long.valueOf(offset + matcher.start())); // + fromPrefixOffset));
                 }
 
                 // if (offset + cb.limit() >= getChannel().size()) {

@@ -69,7 +69,7 @@ public class EhCacheAdapter extends CacheAdapter {
     
     @Override
     public void putObjectIntoCache(int index, Object object) {
-        getMessageCache().put(new Element(new Integer(index), object));
+        getMessageCache().put(new Element(Integer.valueOf(index), object));
     }
     
     private Cache getMessageCache() {
