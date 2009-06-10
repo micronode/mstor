@@ -31,8 +31,6 @@
  */
 package net.fortuna.mstor.connector;
 
-import java.io.InputStream;
-
 import javax.mail.internet.InternetHeaders;
 
 
@@ -57,12 +55,5 @@ public abstract class AbstractMessageDelegate implements MessageDelegate {
     @SuppressWarnings("unchecked")
     public final void setHeaders(final InternetHeaders headers) {
         setHeaders(headers.getAllHeaders());
-    }
-    
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#getInputStream()
-     */
-    public InputStream getInputStream() {
-        return null;
     }
 }

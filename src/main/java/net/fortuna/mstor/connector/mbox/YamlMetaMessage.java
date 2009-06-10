@@ -31,6 +31,7 @@
  */
 package net.fortuna.mstor.connector.mbox;
 
+import java.io.InputStream;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
@@ -199,6 +200,14 @@ public class YamlMetaMessage extends AbstractMessageDelegate {
      */
     public List<? extends MessageDelegate> getReferences() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Message references not supported");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public InputStream getInputStream() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

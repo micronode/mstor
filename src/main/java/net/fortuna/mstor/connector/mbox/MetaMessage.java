@@ -34,6 +34,7 @@ package net.fortuna.mstor.connector.mbox;
 import static net.fortuna.mstor.util.MessageUtils.getFlag;
 import static net.fortuna.mstor.util.MessageUtils.getFlagName;
 
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -412,5 +413,13 @@ public class MetaMessage extends AbstractMessageDelegate {
      */
     public List<? extends MessageDelegate> getReferences() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Message references not supported");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public InputStream getInputStream() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }
