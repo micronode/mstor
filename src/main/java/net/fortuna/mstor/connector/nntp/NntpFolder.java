@@ -237,7 +237,7 @@ public class NntpFolder extends AbstractFolderDelegate<MessageDelegate> {
      */
     public FolderDelegate<MessageDelegate>[] list(String pattern) {
         // TODO Auto-generated method stub
-        return null;
+        return new FolderDelegate[0];
     }
 
     /* (non-Javadoc)

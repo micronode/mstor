@@ -82,7 +82,7 @@ public class MessageAppender {
 
     private CharsetEncoder encoder;
 
-    private DateFormat from_DateFormat = new SimpleDateFormat(FROM__DATE_PATTERN, Locale.US);
+    private final DateFormat from_DateFormat = new SimpleDateFormat(FROM__DATE_PATTERN, Locale.US);
     {
         from_DateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
@@ -139,13 +139,13 @@ public class MessageAppender {
             log.debug("Appending message [" + decoded + "]");
         }
 
-        if (!hasFrom_Line(decoded)) {
+        if (!hasFromLine(decoded)) {
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("No From_ line found - inserting..");
             }
             
-            channel.write(encoder.encode(CharBuffer.wrap(createFrom_Line())), channel.size());
+            channel.write(encoder.encode(CharBuffer.wrap(createFromLine())), channel.size());
             // encoder.encode(CharBuffer.wrap(DEFAULT_FROM__LINE), buffer,
             // false);
         }
@@ -167,14 +167,14 @@ public class MessageAppender {
      * @param message a CharSequence representing a message
      * @return true if a "From_" line is found, otherwise false
      */
-    private boolean hasFrom_Line(final CharSequence message) {
+    private boolean hasFromLine(final CharSequence message) {
         return MESSAGE_WITH_FROM__LINE_PATTERN.matcher(message).matches();
     }
     
     /**
      * @return
      */
-    private String createFrom_Line() throws IOException {
+    private String createFromLine() throws IOException {
         StringBuffer from_Line = new StringBuffer();
         
         // if not first message add required newlines..
