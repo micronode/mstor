@@ -45,9 +45,8 @@ import org.apache.commons.io.FileUtils;
 /**
  * @author Ben
  * 
- * <pre>
+ *         <pre>
  * $Id$
- *
  * Created on 01/03/2008
  * </pre>
  * 
@@ -63,66 +62,55 @@ public class MboxStoreLifecycle implements StoreLifecycle {
     private Store store;
 
     /**
+     * @param name
      * @param sessionProps
-     * @param storeUrl
+     * @param testFile
      */
-    public MboxStoreLifecycle(String name, Properties sessionProps,
-            File testFile) {
+    public MboxStoreLifecycle(String name, Properties sessionProps, File testFile) {
         this.sessionProps = sessionProps;
         this.testFile = testFile;
 
         if (testFile != null) {
-            testDir = new File(System.getProperty("java.io.tmpdir"), "mstor_test"
-                    + File.separator + name + File.separator + testFile.getName());
-        }
-        else {
-            testDir = new File(System.getProperty("java.io.tmpdir"), "mstor_test"
-                    + File.separator + name);
+            testDir = new File(System.getProperty("java.io.tmpdir"), "mstor_test" + File.separator + name
+                    + File.separator + testFile.getName());
+        } else {
+            testDir = new File(System.getProperty("java.io.tmpdir"), "mstor_test" + File.separator + name);
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.StoreLifecycle#getStore()
+    /**
+     * {@inheritDoc}
      */
     public Store getStore() {
         return store;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.StoreLifecycle#shutdown()
+    /**
+     * {@inheritDoc}
      */
     public void shutdown() throws Exception {
         FileUtils.deleteDirectory(testDir);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.StoreLifecycle#startup()
+    /**
+     * {@inheritDoc}
      */
     public void startup() throws Exception {
         // make sure test directory is clean..
         FileUtils.deleteDirectory(testDir);
-        
+
         if (testFile != null) {
             if (testFile.isDirectory()) {
                 FileUtils.copyDirectory(testFile, testDir);
-            }
-            else {
+            } else {
                 FileUtils.copyFileToDirectory(testFile, testDir);
             }
-        }
-        else {
+        } else {
             testDir.mkdirs();
         }
 
         Session session = Session.getInstance(sessionProps);
-        store = session.getStore(new URLName("mstor:"
-                + testDir.getAbsolutePath()));
+        store = session.getStore(new URLName("mstor:" + testDir.getAbsolutePath()));
     }
 
 }

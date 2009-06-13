@@ -34,7 +34,7 @@ package net.fortuna.mstor.connector.mbox;
 import java.util.Properties;
 
 import junit.framework.TestSuite;
-import net.fortuna.mstor.MessedUpCacheTestCase;
+import net.fortuna.mstor.MessedUpCacheTest;
 
 /**
  * @author Ben
@@ -56,7 +56,7 @@ public class MboxMessedUpCacheIntegrationTest extends TestSuite {
         TestSuite suite = new TestSuite(MboxMessedUpCacheIntegrationTest.class.getSimpleName());
         
         Properties p = new Properties();
-        suite.addTest(new MessedUpCacheTestCase("testMessedUpCache",
+        suite.addTest(new MessedUpCacheTest("testMessedUpCache",
                 new MboxStoreLifecycle("testMessedUpCache", p, null), null, null));
         
 //        File[] samples = new File("etc/samples/mailboxes").listFiles(

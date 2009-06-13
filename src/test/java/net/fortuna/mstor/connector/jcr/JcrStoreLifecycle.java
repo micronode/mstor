@@ -77,6 +77,7 @@ public class JcrStoreLifecycle implements StoreLifecycle {
     /**
      * @param name
      * @param props
+     * @param initMboxFile
      */
     public JcrStoreLifecycle(String name, Properties props, File initMboxFile) {
         this.repoName = name;
@@ -84,9 +85,8 @@ public class JcrStoreLifecycle implements StoreLifecycle {
         this.initMboxFile = initMboxFile;
     }
     
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.mstor.StoreLifecycle#getStore()
+    /**
+     * {@inheritDoc}
      */
     public Store getStore() throws NoSuchProviderException {
         Session session = Session.getInstance(defaultProps, new Authenticator() {
@@ -98,17 +98,15 @@ public class JcrStoreLifecycle implements StoreLifecycle {
         return session.getStore();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.mstor.StoreLifecycle#shutdown()
+    /**
+     * {@inheritDoc}
      */
     public void shutdown() throws Exception {
         RegistryHelper.unregisterRepository(context, repoName);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.mstor.StoreLifecycle#startup()
+    /**
+     * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
     public void startup() throws Exception {
@@ -148,7 +146,10 @@ public class JcrStoreLifecycle implements StoreLifecycle {
                     LOG.info("Appending messages: " + i + " - " + (end));
                     start = System.currentTimeMillis();
                     folder.appendMessages(initFolder.getMessages(i, end));
-                    LOG.info((1f / ((System.currentTimeMillis() - start) / (1000 * interval))) + " message(s)/s. Est. completion: " + DurationFormatUtils.formatDurationHMS((((System.currentTimeMillis() - init) / end) * (initFolder.getMessageCount() - end))));
+                    LOG.info((1f / ((System.currentTimeMillis() - start) / (1000 * interval)))
+                            + " message(s)/s. Est. completion: "
+                            + DurationFormatUtils.formatDurationHMS((((System.currentTimeMillis() - init) / end)
+                                    * (initFolder.getMessageCount() - end))));
                     i += interval;
                 }
                 folder.close(false);

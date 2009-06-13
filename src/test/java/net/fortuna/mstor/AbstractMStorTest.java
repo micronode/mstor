@@ -31,7 +31,6 @@
  */
 package net.fortuna.mstor;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,10 +63,6 @@ public abstract class AbstractMStorTest extends TestCase {
     
     protected String[] folderNames;
 
-    /**
-     * @param source
-     * @throws IOException
-     */
     public AbstractMStorTest(String method, StoreLifecycle lifecycle,
             String username, String password) {
         

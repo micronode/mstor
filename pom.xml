@@ -50,7 +50,7 @@
 				<configuration>
 					<excludes>
 						<exclude>**/AbstractMStorTest.java</exclude>
-						<exclude>**/MessedUpCacheTestCase.java</exclude>
+						<exclude>**/MessedUpCacheTest.java</exclude>
 						<exclude>**/MStorStoreTest.java</exclude>
 						<exclude>**/MStorFolderTest.java</exclude>
 						<exclude>**/MStorMessageTest.java</exclude>

@@ -45,7 +45,7 @@ import javax.mail.internet.MimeMessage;
  * @author Ben
  *
  */
-public class MessedUpCacheTestCase extends AbstractMStorTest {
+public class MessedUpCacheTest extends AbstractMStorTest {
     
     private static Random random;
 
@@ -55,7 +55,7 @@ public class MessedUpCacheTestCase extends AbstractMStorTest {
      * @param username
      * @param password
      */
-    public MessedUpCacheTestCase(String method, StoreLifecycle lifecycle,
+    public MessedUpCacheTest(String method, StoreLifecycle lifecycle,
             String username, String password) {
         
         super(method, lifecycle, username, password);
