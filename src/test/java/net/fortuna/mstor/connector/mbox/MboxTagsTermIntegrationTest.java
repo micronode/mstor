@@ -37,7 +37,7 @@ import java.util.Properties;
 
 import junit.framework.TestSuite;
 import net.fortuna.mstor.connector.mbox.MboxConnector.MetadataStrategy;
-import net.fortuna.mstor.tag.TagTest;
+import net.fortuna.mstor.search.TagsTermTest;
 
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.NotFileFilter;
@@ -53,26 +53,27 @@ import org.apache.commons.io.filefilter.NotFileFilter;
  * 
  *
  */
-public class MboxTagTest extends TestSuite {
+public class MboxTagsTermIntegrationTest extends TestSuite {
 
     /**
      * @return
      */
     public static TestSuite suite() {
-        TestSuite suite = new TestSuite(MboxTagTest.class.getSimpleName());
+        TestSuite suite = new TestSuite(MboxTagsTermIntegrationTest.class.getSimpleName());
         
         Properties p = new Properties();
         p.setProperty(MboxConnector.KEY_METADATA_STRATEGY, MetadataStrategy.YAML.toString());
         
-        File[] samples = new File("etc/samples/mailboxes").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
+        File[] samples = new File("etc/samples/mailboxes").listFiles(
+                (FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
         //File[] samples = new File[] {new File("etc/samples/mailboxes/samples.mbx")};
 
         for (int i = 0; i < samples.length; i++) {
 //            log.info("Sample [" + samples[i] + "]");
-            suite.addTest(new TagTest("testTagMessage",
+            suite.addTest(new TagsTermTest("testTagMessage",
                     new MboxStoreLifecycle("testTagMessage", p, samples[i]), null, null));
-            suite.addTest(new TagTest("testUntagMessage",
-                    new MboxStoreLifecycle("testUntagMessage", p, samples[i]), null, null));
+            suite.addTest(new TagsTermTest("testXStreamTagTerm",
+                    new MboxStoreLifecycle("testXStreamTagTerm", p, samples[i]), null, null));
         }
         return suite;
     }

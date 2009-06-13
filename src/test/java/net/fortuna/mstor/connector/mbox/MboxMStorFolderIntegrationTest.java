@@ -53,18 +53,19 @@ import org.apache.commons.io.filefilter.NotFileFilter;
  * 
  *
  */
-public class MboxMStorFolderTest extends TestSuite {
+public class MboxMStorFolderIntegrationTest extends TestSuite {
 
     /**
      * @return
      */
     public static TestSuite suite() {
-        TestSuite suite = new TestSuite(MboxMStorFolderTest.class.getSimpleName());
+        TestSuite suite = new TestSuite(MboxMStorFolderIntegrationTest.class.getSimpleName());
         
         Properties p = new Properties();
         p.setProperty(MboxConnector.KEY_METADATA_STRATEGY, MetadataStrategy.YAML.toString());
         
-        File[] samples = new File("etc/samples/mailboxes").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
+        File[] samples = new File("etc/samples/mailboxes").listFiles(
+                (FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
         //File[] samples = new File[] {new File("etc/samples/mailboxes/samples.mbx")};
 
         for (int i = 0; i < samples.length; i++) {

@@ -36,8 +36,8 @@ import java.io.FileFilter;
 import java.util.Properties;
 
 import junit.framework.TestSuite;
-import net.fortuna.mstor.UIDFolderTest;
 import net.fortuna.mstor.connector.mbox.MboxConnector.MetadataStrategy;
+import net.fortuna.mstor.tag.TagTest;
 
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.NotFileFilter;
@@ -53,32 +53,27 @@ import org.apache.commons.io.filefilter.NotFileFilter;
  * 
  *
  */
-public class MboxUIDFolderTest extends TestSuite {
+public class MboxTagIntegrationTest extends TestSuite {
 
     /**
      * @return
      */
     public static TestSuite suite() {
-        TestSuite suite = new TestSuite(MboxUIDFolderTest.class.getSimpleName());
+        TestSuite suite = new TestSuite(MboxTagIntegrationTest.class.getSimpleName());
         
         Properties p = new Properties();
         p.setProperty(MboxConnector.KEY_METADATA_STRATEGY, MetadataStrategy.YAML.toString());
         
-        File[] samples = new File("etc/samples/mailboxes").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
+        File[] samples = new File("etc/samples/mailboxes").listFiles(
+                (FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
         //File[] samples = new File[] {new File("etc/samples/mailboxes/samples.mbx")};
 
         for (int i = 0; i < samples.length; i++) {
 //            log.info("Sample [" + samples[i] + "]");
-            suite.addTest(new UIDFolderTest("testGetMessageByUID",
-                    new MboxStoreLifecycle("testGetMessageByUID", p, samples[i]), null, null));
-            suite.addTest(new UIDFolderTest("testGetMessagesByUIDArray",
-                    new MboxStoreLifecycle("testGetMessagesByUIDArray", p, samples[i]), null, null));
-            suite.addTest(new UIDFolderTest("testGetMessagesByUIDlonglong",
-                    new MboxStoreLifecycle("testGetMessagesByUIDlonglong", p, samples[i]), null, null));
-            suite.addTest(new UIDFolderTest("testGetUID",
-                    new MboxStoreLifecycle("testGetUID", p, samples[i]), null, null));
-            suite.addTest(new UIDFolderTest("testGetUIDValidity",
-                    new MboxStoreLifecycle("testGetUIDValidity", p, samples[i]), null, null));
+            suite.addTest(new TagTest("testTagMessage",
+                    new MboxStoreLifecycle("testTagMessage", p, samples[i]), null, null));
+            suite.addTest(new TagTest("testUntagMessage",
+                    new MboxStoreLifecycle("testUntagMessage", p, samples[i]), null, null));
         }
         return suite;
     }

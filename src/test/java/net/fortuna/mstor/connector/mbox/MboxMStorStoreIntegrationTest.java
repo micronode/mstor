@@ -29,62 +29,52 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.mstor;
+package net.fortuna.mstor.connector.mbox;
 
-import java.io.IOException;
+import java.io.File;
+import java.io.FileFilter;
+import java.util.Properties;
+
+import org.apache.commons.io.filefilter.DirectoryFileFilter;
+import org.apache.commons.io.filefilter.NotFileFilter;
 
 import junit.framework.TestSuite;
-import net.fortuna.mstor.connector.ProtocolConnectorFactoryTest;
-import net.fortuna.mstor.connector.mbox.MboxMStorFolderTest;
-import net.fortuna.mstor.connector.mbox.MboxMStorMessageTest;
-import net.fortuna.mstor.connector.mbox.MboxMStorStoreTest;
-import net.fortuna.mstor.connector.mbox.MboxTagTest;
-import net.fortuna.mstor.connector.mbox.MboxTagsTermTest;
-import net.fortuna.mstor.connector.mbox.MboxUIDFolderTest;
-import net.fortuna.mstor.data.MboxEncoderTest;
-import net.fortuna.mstor.data.MboxFileTest;
-import net.fortuna.mstor.data.MessageInputStreamTest;
-import net.fortuna.mstor.tag.TagsTest;
+import net.fortuna.mstor.MStorStoreTest;
 
 /**
- * A suite of all unit tests.
- * 
- * @author Ben Fortuna
+ * @author Ben
  * 
  * <pre>
  * $Id$
  *
- * Created on 14/05/2006
+ * Created on 01/03/2008
  * </pre>
  * 
+ *
  */
-public class AllTests extends TestSuite {
+public class MboxMStorStoreIntegrationTest extends TestSuite {
 
     /**
-     * @return a suit of unit tests.
+     * @return
      */
-    public static TestSuite suite() throws IOException {
-        TestSuite suite = new TestSuite();
-
-        // handlers..
-        suite.addTestSuite(ProtocolConnectorFactoryTest.class);
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite(MboxMStorStoreIntegrationTest.class.getSimpleName());
         
-        // mbox connector..
-        suite.addTest(MboxMStorStoreTest.suite());
-        suite.addTest(MboxMStorFolderTest.suite());
-        suite.addTest(MboxMStorMessageTest.suite());
-        suite.addTest(MboxUIDFolderTest.suite());
+        Properties p = new Properties();
+        
+        File[] samples = new File("etc/samples/mailboxes").listFiles(
+                (FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
+        //File[] samples = new File[] {new File("etc/samples/mailboxes/samples.mbx")};
 
-        // mbox..
-        suite.addTestSuite(MboxEncoderTest.class);
-        suite.addTest(MboxFileTest.suite());
-        suite.addTest(MessageInputStreamTest.suite());
-
-        // tags..
-        suite.addTestSuite(TagsTest.class);
-        suite.addTest(MboxTagTest.suite());
-        suite.addTest(MboxTagsTermTest.suite());
-
+        for (int i = 0; i < samples.length; i++) {
+//            log.info("Sample [" + samples[i] + "]");
+            suite.addTest(new MStorStoreTest("testGetDefaultFolder",
+                    new MboxStoreLifecycle("testGetDefaultFolder", p, samples[i]), null, null));
+            suite.addTest(new MStorStoreTest("testGetFolderString",
+                    new MboxStoreLifecycle("testGetFolderString", p, samples[i]), null, null));
+            suite.addTest(new MStorStoreTest("testGetFolderURLName",
+                    new MboxStoreLifecycle("testGetFolderURLName", p, samples[i]), null, null));
+        }
         return suite;
     }
 }

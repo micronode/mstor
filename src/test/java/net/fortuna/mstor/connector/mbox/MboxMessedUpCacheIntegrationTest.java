@@ -31,15 +31,10 @@
  */
 package net.fortuna.mstor.connector.mbox;
 
-import java.io.File;
-import java.io.FileFilter;
 import java.util.Properties;
 
-import org.apache.commons.io.filefilter.DirectoryFileFilter;
-import org.apache.commons.io.filefilter.NotFileFilter;
-
 import junit.framework.TestSuite;
-import net.fortuna.mstor.MStorStoreTest;
+import net.fortuna.mstor.MessedUpCacheTestCase;
 
 /**
  * @author Ben
@@ -52,28 +47,27 @@ import net.fortuna.mstor.MStorStoreTest;
  * 
  *
  */
-public class MboxMStorStoreTest extends TestSuite {
+public class MboxMessedUpCacheIntegrationTest extends TestSuite {
 
     /**
      * @return
      */
     public static TestSuite suite() {
-        TestSuite suite = new TestSuite(MboxMStorStoreTest.class.getSimpleName());
+        TestSuite suite = new TestSuite(MboxMessedUpCacheIntegrationTest.class.getSimpleName());
         
         Properties p = new Properties();
+        suite.addTest(new MessedUpCacheTestCase("testMessedUpCache",
+                new MboxStoreLifecycle("testMessedUpCache", p, null), null, null));
         
-        File[] samples = new File("etc/samples/mailboxes").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
+//        File[] samples = new File("etc/samples/mailboxes").listFiles(
+//            (FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
         //File[] samples = new File[] {new File("etc/samples/mailboxes/samples.mbx")};
 
-        for (int i = 0; i < samples.length; i++) {
+//        for (int i = 0; i < samples.length; i++) {
 //            log.info("Sample [" + samples[i] + "]");
-            suite.addTest(new MStorStoreTest("testGetDefaultFolder",
-                    new MboxStoreLifecycle("testGetDefaultFolder", p, samples[i]), null, null));
-            suite.addTest(new MStorStoreTest("testGetFolderString",
-                    new MboxStoreLifecycle("testGetFolderString", p, samples[i]), null, null));
-            suite.addTest(new MStorStoreTest("testGetFolderURLName",
-                    new MboxStoreLifecycle("testGetFolderURLName", p, samples[i]), null, null));
-        }
+//            suite.addTest(new MessedUpCacheTestCase("testMessedUpCache",
+//                    new MboxStoreLifecycle("testMessedUpCache", p, samples[i]), null, null));
+//        }
         return suite;
     }
 }

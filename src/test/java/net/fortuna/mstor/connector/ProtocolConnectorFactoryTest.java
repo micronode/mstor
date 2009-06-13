@@ -43,29 +43,29 @@ import net.fortuna.mstor.connector.mbox.MboxConnector;
 /**
  * @author Ben
  * 
- * <pre>
+ *         <pre>
  * $Id$
- *
  * Created on 08/10/2007
  * </pre>
  * 
- *
+ * 
  */
 public class ProtocolConnectorFactoryTest extends TestCase {
 
     /**
-     * Test method for {@link net.fortuna.mstor.connector.ProtocolConnectorFactory#create(javax.mail.URLName, net.fortuna.mstor.MStorStore, javax.mail.Session)}.
+     * Test method for {@link ProtocolConnectorFactory#create(URLName, net.fortuna.mstor.MStorStore, Session)}.
      */
     public void testCreate() {
         Properties p = new Properties();
-        assertTrue(ProtocolConnectorFactory.getInstance().create(
-                new URLName("mstor", null, -1, "/tmp/mbox", null, null),
-                null, Session.getDefaultInstance(p)) instanceof MboxConnector);
         
+        URLName urlName = new URLName("mstor", null, -1, "/tmp/mbox", null, null);
+        assertTrue(ProtocolConnectorFactory.getInstance().create(urlName, null, Session.getDefaultInstance(p))
+                instanceof MboxConnector);
+
+        urlName = new URLName("mstor", "localhost", -1, "/tmp/mbox", "test", null);
         p.setProperty("mstor.repository.name", "test");
-        assertTrue(ProtocolConnectorFactory.getInstance().create(
-                new URLName("mstor", "localhost", -1, "/tmp/mbox", "test", null),
-                null, Session.getDefaultInstance(p)) instanceof JcrConnector);
+        assertTrue(ProtocolConnectorFactory.getInstance().create(urlName, null, Session.getDefaultInstance(p))
+                instanceof JcrConnector);
     }
 
 }

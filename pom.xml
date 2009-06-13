@@ -49,7 +49,6 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<excludes>
-						<exclude>**/AllTests.java</exclude>
 						<exclude>**/AbstractMStorTest.java</exclude>
 						<exclude>**/MessedUpCacheTestCase.java</exclude>
 						<exclude>**/MStorStoreTest.java</exclude>
@@ -58,9 +57,35 @@
 						<exclude>**/UIDFolderTest.java</exclude>
 						<exclude>**/TagsTermTest.java</exclude>
 						<exclude>**/TagTest.java</exclude>
+                        <exclude>**/*IntegrationTest.java</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
+            
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>failsafe-maven-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>**/*IntegrationTest.java</include>
+                    </includes>
+                    <forkMode>pertest</forkMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>verify</id>
+                        <goals>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
