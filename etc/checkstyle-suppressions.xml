@@ -5,7 +5,7 @@
     "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
 
 <suppressions>
-    <suppress checks="JavadocType" files=".*Test.java" />
-    <suppress checks="JavadocMethod" files=".*Test.java" />
-    <suppress checks="JavadocVariable" files=".*Test.java" />
+    <suppress checks="JavadocType" files=".*(Test|Lifecycle).java" />
+    <suppress checks="JavadocMethod" files=".*(Test|Lifecycle).java" />
+    <suppress checks="JavadocVariable" files=".*(Test|Lifecycle).java" />
 </suppressions>
