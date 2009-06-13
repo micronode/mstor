@@ -48,13 +48,19 @@ import net.fortuna.mstor.MStorStore;
  */
 public abstract class AbstractProtocolConnector implements ProtocolConnector {
     
+    /**
+     * The URL location of the store.
+     */
     protected URLName url;
     
+    /**
+     * The store instance.
+     */
     protected MStorStore store;
 
     /**
-     * @param url
-     * @param store
+     * @param url a store URL location
+     * @param store a store instance
      */
     public AbstractProtocolConnector(URLName url, MStorStore store) {
         this.url = url;

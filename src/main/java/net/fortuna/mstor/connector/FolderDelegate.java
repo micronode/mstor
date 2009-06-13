@@ -34,15 +34,13 @@ package net.fortuna.mstor.connector;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 
-import net.fortuna.mstor.MStorFolder;
-
 /**
- * Implementors support delegation of specific functions from {@link MStorFolder}.
+ * Implementors support delegation of specific functions from {@link net.fortuna.mstor.MStorFolder}.
  * 
+ * @param <T> the type of message delegate supported
  * @author Ben
  * 
  * <pre>
@@ -61,118 +59,117 @@ public interface FolderDelegate<T extends MessageDelegate> {
     String getFolderName();
     
     /**
-     * Returns the full name of the folder.
-     * @return 
+     * @return the full name of the folder.
      */
     String getFullName();
 
     /**
-     * Returns the parent folder delegate of this delegate.
-     * @return
+     * @return the parent folder delegate of this delegate.
      */
     FolderDelegate<T> getParent();
     
     /**
      * Indicates whether the folder represented by this delegate exists.
-     * @return
+     * @return true if the folder exists, otherwise false
      */
     boolean exists();
     
     /**
-     * Returns the type of folder this delegate represents.
-     * @return
-     * @see Folder#HOLDS_FOLDERS
-     * @see Folder#HOLDS_MESSAGES
+     * @return the type of folder this delegate represents.
+     * @see javax.mail.Folder#HOLDS_FOLDERS
+     * @see javax.mail.Folder#HOLDS_MESSAGES
      */
     int getType();
     
     /**
      * Returns a list of child folder delegates matching the specified pattern.
-     * @param pattern
-     * @return
+     * @param pattern a pattern to match folders against
+     * @return a list of folder delegates
      */
     FolderDelegate<T>[] list(String pattern);
     
     /**
-     * Returns the folder separator for this delegate type.
-     * @return
+     * @return the folder separator for this delegate type.
      */
     char getSeparator();
     
     /**
      * Initialise the delegate based on the specified folder type.
-     * @param type
-     * @return
-     * @throws MessagingException
+     * @param type a folder type
+     * @return true if the delegate is created, otherwise false
+     * @throws MessagingException where an unexpected error occurs creating the delegate
      */
     boolean create(final int type) throws MessagingException;
     
     /**
      * Returns a child folder delegate with the specified name.
-     * @param name
-     * @return
+     * @param name a folder name
+     * @return the folder delegate with the specified name, or null if the folder doesn't exist
+     * @throws MessagingException where an unexpected error occurs retrieving the folder
      */
     FolderDelegate<T> getFolder(String name) throws MessagingException;
     
     /**
      * Delete the folder delegate.
-     * @return
+     * @return true if the delegate is deleted, otherwise false
      */
     boolean delete();
     
     /**
      * Rename the folder delegate.
-     * @param name
-     * @return
+     * @param name the new folder name
+     * @return true if the folder is renamed, otherwise false
      */
     boolean renameTo(String name);
     
     /**
      * Open the folder delegate.
-     * @param mode
+     * @param mode the mode to open the folder
+     * @see javax.mail.Folder#READ_ONLY
+     * @see javax.mail.Folder#READ_WRITE
      */
     void open(final int mode);
     
     /**
      * Close the folder delegate.
-     * @throws MessagingException
+     * @throws MessagingException where an unexpected error occurs closing the folder
      */
     void close() throws MessagingException;
     
     /**
      * Returns the number of messages in the folder delegate.
-     * @return
-     * @throws MessagingException
+     * @return the total message count
+     * @throws MessagingException where an unexpected error occurs retrieving the message count
      */
     int getMessageCount() throws MessagingException;
     
     /**
      * Optional support for more efficient implementation.
-     * @return
-     * @throws MessagingException
+     * @return the total deleted message count
+     * @throws MessagingException where an unexpected error occurs
+     * @throws UnsupportedOperationException if this method is not supported by the folder implementation
      */
     int getDeletedMessageCount() throws MessagingException, UnsupportedOperationException;
     
     /**
      * Returns an input stream from which to read the specified message.
-     * @param index
-     * @return
-     * @throws IOException
+     * @param index the index of the message to return
+     * @return an input stream for the specified message
+     * @throws IOException where an error occurs
      */
     InputStream getMessageAsStream(int index) throws IOException;
     
     /**
      * Append the specified messages to this delegate.
-     * @param messages
-     * @throws MessagingException
+     * @param messages an array of messages to append to the folder
+     * @throws MessagingException where an error occurs appending the messages
      */
     void appendMessages(Message[] messages) throws MessagingException;
     
     /**
      * Permanently delete the specified messages from this delegate.
-     * @param deleted
-     * @return
-     * @throws MessagingException
+     * @param deleted an array of deleted messages to expunge
+     * @throws MessagingException where an error occurs expunging the messages
      */
     void expunge(Message[] deleted) throws MessagingException;
 
@@ -180,39 +177,44 @@ public interface FolderDelegate<T extends MessageDelegate> {
      * Returns message delegate corresponding to the specified message id. If no delegate exists a
      * new Message delegate is created.
      * 
-     * @param messageId
-     * @return
+     * @param messageNumber the message number of the message to retrieve
+     * @return the message with the specified message number, or null if the messages doesn't exist
+     * @throws DelegateException where an error occurs retrieving the message
      */
     T getMessage(int messageNumber) throws DelegateException;
 
     /**
      * Retrieves the last allocated message UID for the folder.
      * 
-     * @return
+     * @return the latest UID for the folder
+     * @throws UnsupportedOperationException if this method is not supported by the folder implementation
      */
     long getLastUid() throws UnsupportedOperationException;
 
     /**
      * Allocates a new message UID for the folder.
      * 
-     * @return
+     * @param message the message to allocate a UID value to
+     * @return the allocated UID for the specified message
+     * @throws DelegateException where an error occurs allocating a UID
+     * @throws UnsupportedOperationException if this method is not supported by the folder implementation
      */
-    long allocateUid(MessageDelegate message)
-        throws UnsupportedOperationException, DelegateException;
+    long allocateUid(MessageDelegate message) throws UnsupportedOperationException, DelegateException;
 
     /**
      * Returns the UID validity associated with the metadata. If no UID validity exist a new value
      * is initialised.
      * 
      * @return a long representation of the UID validity
+     * @throws UnsupportedOperationException if this method is not supported by the folder implementation
+     * @throws MessagingException if an error occurs retrieving the validity value
      */
-    long getUidValidity() throws UnsupportedOperationException,
-        MessagingException;
+    long getUidValidity() throws UnsupportedOperationException, MessagingException;
     
     /**
      * Returns the last modification timestamp of this folder.
-     * @return
-     * @throws UnsupportedOperationException
+     * @return a timestamp as a long value
+     * @throws UnsupportedOperationException if this method is not supported by the folder implementation
      */
     long getLastModified() throws UnsupportedOperationException;
 }

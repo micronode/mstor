@@ -58,22 +58,22 @@ public class DelegateException extends Exception {
     }
 
     /**
-     * @param message
+     * @param message an error message
      */
     public DelegateException(String message) {
         super(message);
     }
 
     /**
-     * @param cause
+     * @param cause the cause of this exception
      */
     public DelegateException(Throwable cause) {
         super(cause);
     }
 
     /**
-     * @param message
-     * @param cause
+     * @param message an error message
+     * @param cause the cause of this exception
      */
     public DelegateException(String message, Throwable cause) {
         super(message, cause);

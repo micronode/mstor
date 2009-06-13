@@ -52,34 +52,34 @@ import javax.mail.URLName;
 public interface ProtocolConnector {
 
     /**
-     * @return
-     * @throws AuthenticationFailedException
-     * @throws MessagingException
+     * @return true if connection succeeded, otherwise false
+     * @throws AuthenticationFailedException where connection authentication fails
+     * @throws MessagingException where an error occurs connecting
      */
     boolean connect() throws AuthenticationFailedException, MessagingException;
     
     /**
-     * @throws MessagingException
+     * @throws MessagingException where an error occurs disconnecting
      */
     void disconnect() throws MessagingException;
     
     /**
-     * @return
-     * @throws MessagingException
+     * @return the default folder for the connector implementation
+     * @throws MessagingException where an error occurs retrieving the default folder
      */
     Folder getDefaultFolder() throws MessagingException;
     
     /**
-     * @param name
-     * @return
-     * @throws MessagingException
+     * @param name the name of the folder to retrieve
+     * @return the folder with the specified name, or null if such a folder doesn't exist
+     * @throws MessagingException where an error occurs retrieving the folder
      */
     Folder getFolder(String name) throws MessagingException;
     
     /**
-     * @param url
-     * @return
-     * @throws MessagingException
+     * @param url a folder URL
+     * @return the folder at the specified URL, or null if such a folder doesn't exist
+     * @throws MessagingException where an error occurs retrieving the folder
      */
     Folder getFolder(URLName url) throws MessagingException;
 }

@@ -47,10 +47,8 @@ import javax.mail.internet.InternetHeaders;
  */
 public abstract class AbstractMessageDelegate implements MessageDelegate {
     
-    /*
-     * (non-Javadoc)
-     *
-     * @see net.fortuna.mstor.MessageDelegate#setHeaders(javax.mail.internet.InternetHeaders)
+    /**
+     * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
     public final void setHeaders(final InternetHeaders headers) {

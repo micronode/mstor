@@ -40,10 +40,8 @@ import javax.mail.Flags;
 import javax.mail.Header;
 import javax.mail.internet.InternetHeaders;
 
-import net.fortuna.mstor.MStorMessage;
-
 /**
- * Implementors support delegation of specific functions from {@link MStorMessage}.
+ * Implementors support delegation of specific functions from {@link net.fortuna.mstor.MStorMessage}.
  * 
  * @author Ben
  * 
@@ -81,7 +79,7 @@ public interface MessageDelegate {
     void setHeaders(InternetHeaders headers);
 
     /**
-     * @param headers
+     * @param headers an enumeration of headers to attach to the message
      */
     void setHeaders(Enumeration<Header> headers);
 
@@ -145,29 +143,30 @@ public interface MessageDelegate {
     /**
      * Sets the UID associated with the message.
      *
-     * @param uid
+     * @param uid a UID value to associate with the message
      */
     void setUid(long uid);
 
     /**
-     * @return
-     * @throws UnsupportedOperationException
+     * @return a message to which this is a reply to
+     * @throws UnsupportedOperationException if this method is not supported by the message implementation
      */
     MessageDelegate getInReplyTo() throws UnsupportedOperationException;
     
     /**
-     * @return
-     * @throws UnsupportedOperationException
+     * @return a list of messages related to this one
+     * @throws UnsupportedOperationException if this method is not supported by the message implementation
      */
     List<? extends MessageDelegate> getReferences() throws UnsupportedOperationException;
     
     /**
-     * @return
+     * @return an input stream for message data
      */
     InputStream getInputStream();
     
     /**
      * Persist unsaved changes.
+     * @throws DelegateException where an error occurs saving changes in the message
      */
     void saveChanges() throws DelegateException;
 }

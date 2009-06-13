@@ -54,8 +54,10 @@ public class ProtocolConnectorFactory {
     private static ProtocolConnectorFactory instance = new ProtocolConnectorFactory();
     
     /**
-     * @param url
-     * @return
+     * @param url a URL location of a connector-specific store
+     * @param store a store instance to associate with the connector
+     * @param session a session instance to associate with the connector
+     * @return a new implementation-specific connector for the specified URL
      */
     public ProtocolConnector create(URLName url, MStorStore store, Session session) {
         if (session.getProperty("mstor.repository.name") != null) {
