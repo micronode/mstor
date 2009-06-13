@@ -84,16 +84,15 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
     private Tags tags;
 
     /**
-     * @param arg0
+     * @param session the session associated with the message
      */
     public MStorMessage(final Session session) {
         this(session, null);
     }
 
     /**
-     * @param arg0
-     * @param arg1
-     * @throws javax.mail.MessagingException
+     * @param session the session associated with the message
+     * @param in an input stream to read message data from
      */
     public MStorMessage(final Session session, final InputStream in) {
         super(session);
@@ -102,8 +101,8 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
     }
 
     /**
-     * @param arg0
-     * @throws javax.mail.MessagingException
+     * @param m a message instance to duplicate
+     * @throws MessagingException where an unexpected error occurs duplicating the specified message
      */
     public MStorMessage(final MimeMessage m) throws MessagingException {
         super(m);
@@ -111,17 +110,17 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
     }
 
     /**
-     * @param arg0
-     * @param arg1
+     * @param folder the folder associated with the message
+     * @param msgnum the message number of the message in the specified folder
      */
     public MStorMessage(final Folder folder, final int msgnum) {
         this(folder, null, msgnum);
     }
 
     /**
-     * @param folder
-     * @param in
-     * @param msgnum
+     * @param folder the folder associated with the message
+     * @param in an input stream to read message data from
+     * @param msgnum the message number of the message in the specified folder
      */
     public MStorMessage(final Folder folder, final InputStream in,
             final int msgnum) {
@@ -130,17 +129,17 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
     }
     
     /**
-     * @param delegate
+     * @param delegate a delegate providing implementation-specific message functionality
      */
     public MStorMessage(MessageDelegate delegate) {
         this(null, null, delegate.getMessageNumber(), delegate);
     }
     
     /**
-     * @param folder
-     * @param in
-     * @param msgnum
-     * @param delegate
+     * @param folder the folder associated with the message
+     * @param in an input stream to read message data from
+     * @param msgnum the message number of the message in the specified folder
+     * @param delegate a delegate providing implementation-specific message functionality
      */
     public MStorMessage(final Folder folder, final InputStream in,
             final int msgnum, MessageDelegate delegate) {
@@ -168,11 +167,11 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
     }
 
     /**
-     * @param arg0
-     * @param arg1
-     * @param arg2
-     * @param arg3
-     * @throws javax.mail.MessagingException
+     * @param folder the folder associated with the message
+     * @param headers headers for the message instance
+     * @param content message data
+     * @param msgnum the message number of the message in the specified folder
+     * @throws MessagingException where an unexpected error occurs
      */
     public MStorMessage(final Folder folder, final InternetHeaders headers,
             final byte[] content, final int msgnum) throws MessagingException {
@@ -193,8 +192,8 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
         }
     }
 
-    /* (non-Javadoc)
-     * @see javax.mail.internet.MimeMessage#getAllHeaderLines()
+    /**
+     * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
     public Enumeration<String> getAllHeaderLines() throws MessagingException {
@@ -206,8 +205,8 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
         return (Enumeration<String>) super.getAllHeaderLines();
     }
 
-    /* (non-Javadoc)
-     * @see javax.mail.internet.MimeMessage#getAllHeaders()
+    /**
+     * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
     public Enumeration<Header> getAllHeaders() throws MessagingException {
@@ -219,8 +218,8 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
         return (Enumeration<Header>) super.getAllHeaders();
     }
 
-    /* (non-Javadoc)
-     * @see javax.mail.internet.MimeMessage#getHeader(java.lang.String, java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public String getHeader(final String name, final String delimiter)
             throws MessagingException {
@@ -233,8 +232,8 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
         return super.getHeader(name, delimiter);
     }
 
-    /* (non-Javadoc)
-     * @see javax.mail.internet.MimeMessage#getHeader(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public String[] getHeader(final String name)
             throws MessagingException {
@@ -247,8 +246,8 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
         return super.getHeader(name);
     }
 
-    /* (non-Javadoc)
-     * @see javax.mail.internet.MimeMessage#getMatchingHeaderLines(java.lang.String[])
+    /**
+     * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
     public Enumeration<String> getMatchingHeaderLines(final String[] names)
@@ -262,8 +261,8 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
         return (Enumeration<String>) super.getMatchingHeaderLines(names);
     }
 
-    /* (non-Javadoc)
-     * @see javax.mail.internet.MimeMessage#getMatchingHeaders(java.lang.String[])
+    /**
+     * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
     public Enumeration<Header> getMatchingHeaders(final String[] names)
@@ -277,8 +276,8 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
         return (Enumeration<Header>) super.getMatchingHeaders(names);
     }
 
-    /* (non-Javadoc)
-     * @see javax.mail.internet.MimeMessage#getNonMatchingHeaderLines(java.lang.String[])
+    /**
+     * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
     public Enumeration<String> getNonMatchingHeaderLines(final String[] names)
@@ -292,8 +291,8 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
         return (Enumeration<String>) super.getNonMatchingHeaderLines(names);
     }
 
-    /* (non-Javadoc)
-     * @see javax.mail.internet.MimeMessage#getNonMatchingHeaders(java.lang.String[])
+    /**
+     * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
     public Enumeration<Header> getNonMatchingHeaders(final String[] names)
@@ -308,8 +307,7 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
     }
 
     /**
-     * @return
-     * @throws MessagingException
+     * {@inheritDoc}
      */
     private InternetHeaders getHeaders() throws MessagingException {
         if (delegate != null) {
@@ -323,20 +321,16 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
         return null;
     }
     
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.mail.internet.MimeMessage#getContentStream()
+    /**
+     * {@inheritDoc}
      */
     protected InputStream getContentStream() throws MessagingException {
         checkParse();
         return super.getContentStream();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.mail.Message#setExpunged(boolean)
+    /**
+     * {@inheritDoc}
      */
     protected void setExpunged(final boolean expunged) {
         if (delegate != null) {
@@ -350,10 +344,8 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
         super.setExpunged(expunged);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.mail.internet.MimeMessage#getReceivedDate()
+    /**
+     * {@inheritDoc}
      */
     public Date getReceivedDate() throws MessagingException {
         if (delegate != null) {
@@ -367,10 +359,8 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
         return super.getReceivedDate();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.mail.internet.MimeMessage#setFlags(javax.mail.Flags, boolean)
+    /**
+     * {@inheritDoc}
      */
     public synchronized void setFlags(final Flags flags, final boolean set)
             throws MessagingException {
@@ -379,10 +369,8 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
         updateFlags();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.mail.Message#setFlag(javax.mail.Flags.Flag, boolean)
+    /**
+     * {@inheritDoc}
      */
     public void setFlag(final Flag flag, final boolean set)
             throws MessagingException {
@@ -392,10 +380,8 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
         updateFlags();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.mail.Part#setHeader(java.lang.String, java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public void setHeader(final String s, final String s1)
             throws MessagingException {
@@ -406,10 +392,8 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
         updateHeaders(false);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.mail.Part#addHeader(java.lang.String, java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public void addHeader(final String s, final String s1)
             throws MessagingException {
@@ -418,20 +402,16 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
         updateHeaders(false);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.mail.Part#removeHeader(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public void removeHeader(final String s) throws MessagingException {
         super.removeHeader(s);
         updateHeaders(false);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.mail.internet.MimePart#addHeaderLine(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public void addHeaderLine(final String s) throws MessagingException {
         super.addHeaderLine(s);
@@ -439,7 +419,8 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
     }
 
     /**
-     * @param tag
+     * @param tag a message tag
+     * @throws MessagingException where an error occurs updating tags
      */
     public void addTag(final String tag) throws MessagingException {
         // Flags flags = new Flags();
@@ -450,8 +431,8 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
     }
 
     /**
-     * @param tag
-     * @throws MessagingException
+     * @param tag a message tag
+     * @throws MessagingException where an error occurs updating tags
      */
     public void removeTag(final String tag) throws MessagingException {
         // Flags flags = new Flags();
@@ -464,6 +445,7 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
 
     /**
      * Attempts to save metadata after calling <code>saveChanges</code> in the superclass.
+     * @throws MessagingException where an error occurs in the delegate save
      */
     public void saveChanges() throws MessagingException {
         super.saveChanges();
@@ -480,6 +462,7 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
 
     /**
      * Attempts to update headers in metadata after updating headers in superclass.
+     * @throws MessagingException where an error occurs in the delegate update
      */
     protected void updateHeaders() throws MessagingException {
         updateHeaders(true);
@@ -487,6 +470,7 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
     
     /**
      * Attempts to update headers in metadata after updating headers in superclass.
+     * @throws MessagingException where an error occurs in the delegate update
      */
     private void updateHeaders(boolean includeDefaults) throws MessagingException {
         if (includeDefaults) {
@@ -525,6 +509,7 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
      * instance will not affect this message.
      *
      * @return Returns the tags.
+     * @throws MessagingException where an error occurs retrieving flags
      */
     public Tags getTags() throws MessagingException {
         return new Tags(getFlags());
@@ -548,7 +533,7 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
     }
     
     /**
-     * @return
+     * @return a message instance such that this message is a reply to it 
      */
     public MStorMessage getInReplyTo() {
         if (delegate.getInReplyTo() != null) {
@@ -558,7 +543,7 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
     }
     
     /**
-     * @return
+     * @return a list of message instances related to this message
      */
     public List<MStorMessage> getReferences() {
         List<MStorMessage> references = new ArrayList<MStorMessage>();

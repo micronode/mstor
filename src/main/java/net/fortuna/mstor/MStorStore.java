@@ -54,6 +54,9 @@ import net.fortuna.mstor.connector.ProtocolConnectorFactory;
  */
 public final class MStorStore extends Store {
 
+    /**
+     * The default inbox folder name.
+     */
     public static final String INBOX = "Inbox";
     
     private ProtocolConnector protocolHandler;
@@ -61,8 +64,8 @@ public final class MStorStore extends Store {
     /**
      * Constructor.
      * 
-     * @param session
-     * @param url
+     * @param session the session associated with the store
+     * @param url a store location URL
      */
     public MStorStore(final Session session, final URLName url) {
         super(session, url);
@@ -70,10 +73,8 @@ public final class MStorStore extends Store {
                 url, this, session);
     }
     
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.mail.Store#getDefaultFolder()
+    /**
+     * {@inheritDoc}
      */
     public Folder getDefaultFolder() throws MessagingException {
         if (!isConnected()) {
@@ -82,10 +83,8 @@ public final class MStorStore extends Store {
         return protocolHandler.getDefaultFolder();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.mail.Store#getFolder(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public Folder getFolder(final String name) throws MessagingException {
         if (!isConnected()) {
@@ -94,10 +93,8 @@ public final class MStorStore extends Store {
         return protocolHandler.getFolder(name);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.mail.Store#getFolder(javax.mail.URLName)
+    /**
+     * {@inheritDoc}
      */
     public Folder getFolder(final URLName url) throws MessagingException {
         if (!isConnected()) {
@@ -106,14 +103,8 @@ public final class MStorStore extends Store {
         return protocolHandler.getFolder(url);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see javax.mail.Service#protocolConnect(java.lang.String, int, java.lang.String,
-     *      java.lang.String)
-     */
     /**
-     * Override the superclass method to bypass authentication.
+     * {@inheritDoc}
      */
     protected boolean protocolConnect(final String host, final int port,
             final String user, final String password) throws MessagingException {
@@ -123,8 +114,7 @@ public final class MStorStore extends Store {
     }
 
     /**
-     * Close all open folders to release resources.
-     * @see javax.mail.Service#close()
+     * {@inheritDoc}
      */
     public synchronized void close() throws MessagingException {
         Folder[] folders = getDefaultFolder().list();
