@@ -48,6 +48,7 @@ import net.fortuna.mstor.connector.MessageDelegate;
 /**
  * Base implementation of a meta folder.
  * 
+ * @param <T> message delegate type
  * @author benfortuna
  * 
  * <pre>
@@ -78,43 +79,43 @@ public abstract class AbstractMetaFolder<T extends MessageDelegate> extends Abst
         this.delegate = delegate;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#getType()
+    /**
+     * {@inheritDoc}
      */
     public final int getType() {
         return delegate.getType();
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#getFolderName()
+    /**
+     * {@inheritDoc}
      */
     public final String getFolderName() {
         return delegate.getFolderName();
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#getFullName()
+    /**
+     * {@inheritDoc}
      */
     public final String getFullName() {
         return delegate.getFullName();
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#exists()
+    /**
+     * {@inheritDoc}
      */
     public final boolean exists() {
         return delegate.exists();
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#delete()
+    /**
+     * {@inheritDoc}
      */
     public final boolean delete() {
         return delegate.delete() && file.delete();
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#renameTo(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public final boolean renameTo(String name) {
         return delegate.renameTo(name)
@@ -122,43 +123,43 @@ public abstract class AbstractMetaFolder<T extends MessageDelegate> extends Abst
                     new File(file.getParent(), name + getFileExtension())));
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#open(int)
+    /**
+     * {@inheritDoc}
      */
     public final void open(int mode) {
         delegate.open(mode);
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#close()
+    /**
+     * {@inheritDoc}
      */
     public final void close() throws MessagingException {
         delegate.close();
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#getSeparator()
+    /**
+     * {@inheritDoc}
      */
     public final char getSeparator() {
         return delegate.getSeparator();
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#getMessageCount()
+    /**
+     * {@inheritDoc}
      */
     public final int getMessageCount() throws MessagingException {
         return delegate.getMessageCount();
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#getMessageAsStream(int)
+    /**
+     * {@inheritDoc}
      */
     public final InputStream getMessageAsStream(int index) throws IOException {
         return delegate.getMessageAsStream(index);
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#appendMessages(javax.mail.Message[])
+    /**
+     * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
     public final void appendMessages(Message[] messages) throws MessagingException {
@@ -179,15 +180,15 @@ public abstract class AbstractMetaFolder<T extends MessageDelegate> extends Abst
         }
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#create(int)
+    /**
+     * {@inheritDoc}
      */
     public final boolean create(int type) throws MessagingException {
         return delegate.create(type);
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#expunge(javax.mail.Message[])
+    /**
+     * {@inheritDoc}
      */
     public final void expunge(Message[] deleted) throws MessagingException {
         delegate.expunge(deleted);
@@ -244,8 +245,8 @@ public abstract class AbstractMetaFolder<T extends MessageDelegate> extends Abst
         return new File(delegate.getFullName() + getFileExtension());
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#getLastModified()
+    /**
+     * {@inheritDoc}
      */
     public final long getLastModified() throws UnsupportedOperationException {
         return delegate.getLastModified();

@@ -96,15 +96,13 @@ public class YamlMetaFolder extends AbstractMetaFolder<YamlMetaMessage> {
     protected YamlMetaMessage[] removeMessages(Message[] deleted) {
         List<YamlMetaMessage> metas = new ArrayList<YamlMetaMessage>();
 
-        for (Iterator<MessageExt> i = folderExt.getMessages().iterator(); i
-                .hasNext();) {
+        for (MessageExt messageExt : folderExt.getMessages()) {
 
-            MessageExt messageExt = i.next();
             int messageNumber = messageExt.getMessageNumber();
 
             for (int n = 0; n < deleted.length; n++) {
                 if (deleted[n].getMessageNumber() == messageNumber) {
-                    i.remove();
+                    folderExt.getMessages().remove(messageExt);
                     metas.add(new YamlMetaMessage(messageExt, this));
                     updateMessageNumbers(messageNumber, -1);
                     break;
