@@ -83,19 +83,15 @@ public class YamlMetaFolder extends AbstractMetaFolder<YamlMetaMessage> {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.connector.mbox.AbstractMetaFolder#getFileExtension()
+    /**
+     * {@inheritDoc}
      */
     protected String getFileExtension() {
         return FILE_EXTENSION;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.connector.mbox.AbstractMetaFolder#removeMessages(javax.mail.Message[])
+    /**
+     * {@inheritDoc}
      */
     protected YamlMetaMessage[] removeMessages(Message[] deleted) {
         List<YamlMetaMessage> metas = new ArrayList<YamlMetaMessage>();
@@ -137,10 +133,8 @@ public class YamlMetaFolder extends AbstractMetaFolder<YamlMetaMessage> {
         }
     }
     
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.connector.mbox.AbstractMetaFolder#save()
+    /**
+     * {@inheritDoc}
      */
     protected void save() throws DelegateException {
 //        FileOutputStream fout = null;
@@ -162,10 +156,8 @@ public class YamlMetaFolder extends AbstractMetaFolder<YamlMetaMessage> {
 //        }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.connector.AbstractFolderDelegate#createMessage(int)
+    /**
+     * {@inheritDoc}
      */
     protected YamlMetaMessage createMessage(int messageNumber) throws DelegateException {
         MessageExt messageExt = new MessageExt(messageNumber);
@@ -178,38 +170,30 @@ public class YamlMetaFolder extends AbstractMetaFolder<YamlMetaMessage> {
         return delegate;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.connector.AbstractFolderDelegate#setLastUid(long)
+    /**
+     * {@inheritDoc}
      */
     protected void setLastUid(long uid) throws UnsupportedOperationException,
             DelegateException {
         folderExt.setLastUid(uid);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.connector.FolderDelegate#getFolder(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public YamlMetaFolder getFolder(String name) throws MessagingException {
         return new YamlMetaFolder(getDelegate().getFolder(name));
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.connector.FolderDelegate#getLastUid()
+    /**
+     * {@inheritDoc}
      */
     public long getLastUid() throws UnsupportedOperationException {
         return folderExt.getLastUid();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.connector.FolderDelegate#getMessage(int)
+    /**
+     * {@inheritDoc}
      */
     public YamlMetaMessage getMessage(int messageNumber)
             throws DelegateException {
@@ -227,19 +211,15 @@ public class YamlMetaFolder extends AbstractMetaFolder<YamlMetaMessage> {
         return newMessage;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.connector.FolderDelegate#getParent()
+    /**
+     * {@inheritDoc}
      */
     public YamlMetaFolder getParent() {
         return new YamlMetaFolder(getDelegate().getParent());
     }
     
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.connector.FolderDelegate#getUidValidity()
+    /**
+     * {@inheritDoc}
      */
     public long getUidValidity() throws UnsupportedOperationException,
             MessagingException {
@@ -255,8 +235,8 @@ public class YamlMetaFolder extends AbstractMetaFolder<YamlMetaMessage> {
         return folderExt.getUidValidity();
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.FolderDelegate#list(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public YamlMetaFolder[] list(String pattern) {
         FolderDelegate<MessageDelegate>[] folders = getDelegate().list(pattern);

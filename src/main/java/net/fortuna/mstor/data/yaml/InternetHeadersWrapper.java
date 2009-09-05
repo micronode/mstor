@@ -61,17 +61,20 @@ public class InternetHeadersWrapper extends DelayedCreationBeanWrapper {
         super(type);
     }
 
-    /* (non-Javadoc)
-     * @see org.ho.yaml.wrapper.DelayedCreationBeanWrapper#getPropertyNames()
+    /**
+     * {@inheritDoc}
      */
     public String[] getPropertyNames() {
         return new String[] {"headers"};
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Object getProperty(Object obj, String name) {
         if ("headers".equals(name)) {
-            Enumeration headersEnum = ((InternetHeaders) obj).getAllHeaders();
-            List headers = new ArrayList();
+            Enumeration<Header> headersEnum = ((InternetHeaders) obj).getAllHeaders();
+            List<Header> headers = new ArrayList<Header>();
             while (headersEnum.hasMoreElements()) {
                 headers.add(headersEnum.nextElement());
             }
@@ -80,10 +83,13 @@ public class InternetHeadersWrapper extends DelayedCreationBeanWrapper {
         return super.getProperty(obj, name);
     }
     
+    /**
+     * {@inheritDoc}
+     */
     protected Object createObject() {
         InternetHeaders internetHeaders = new InternetHeaders();
-        for (Iterator i = ((List) values.get("headers")).iterator(); i.hasNext();) {
-            Header header = (Header) i.next();
+        for (Iterator<Header> i = ((List<Header>) values.get("headers")).iterator(); i.hasNext();) {
+            Header header = i.next();
             internetHeaders.setHeader(header.getName(), header.getValue());
         }
         return internetHeaders;

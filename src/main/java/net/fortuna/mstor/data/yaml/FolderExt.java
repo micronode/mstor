@@ -31,8 +31,8 @@
  */
 package net.fortuna.mstor.data.yaml;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author Ben
@@ -50,7 +50,7 @@ public class FolderExt {
      * Default constructor.
      */
     public FolderExt() {
-        messages = new ArrayList<MessageExt>();
+        messages = new CopyOnWriteArrayList<MessageExt>();
     }
 
     /**

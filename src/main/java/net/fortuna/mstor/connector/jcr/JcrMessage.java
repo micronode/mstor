@@ -132,8 +132,8 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
         references = new ArrayList<JcrMessage>();
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#getFlags()
+    /**
+     * {@inheritDoc}
      */
     public Flags getFlags() {
         Flags retVal = new Flags();
@@ -149,15 +149,15 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
         return retVal;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#getForwarded()
+    /**
+     * {@inheritDoc}
      */
     public Date getForwarded() {
         return forwarded;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#getHeaders()
+    /**
+     * {@inheritDoc}
      */
     public InternetHeaders getHeaders() {
         InternetHeaders retVal = new InternetHeaders();
@@ -167,43 +167,43 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
         return retVal;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#getMessageNumber()
+    /**
+     * {@inheritDoc}
      */
     public int getMessageNumber() {
         return messageNumber;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#getReceived()
+    /**
+     * {@inheritDoc}
      */
     public Date getReceived() {
         return received;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#getReplied()
+    /**
+     * {@inheritDoc}
      */
     public Date getReplied() {
         return replied;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#getUid()
+    /**
+     * {@inheritDoc}
      */
     public long getUid() {
         return uid;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#isExpunged()
+    /**
+     * {@inheritDoc}
      */
     public boolean isExpunged() {
         return expunged;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#saveChanges()
+    /**
+     * {@inheritDoc}
      */
     public void saveChanges() throws DelegateException {
         if (messageDao != null) {
@@ -219,8 +219,8 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
         this.messageNumber = messageNumber;
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#setExpunged(boolean)
+    /**
+     * {@inheritDoc}
      */
     public void setExpunged(boolean expunged) {
         this.expunged = expunged;
@@ -234,8 +234,8 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
         return content.getDataProvider().getInputStream();
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#setFlags(javax.mail.Flags)
+    /**
+     * {@inheritDoc}
      */
     public void setFlags(Flags flags) {
         this.flags.clear();
@@ -247,23 +247,23 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
         }
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#setForwarded(java.util.Date)
+    /**
+     * {@inheritDoc}
      */
     public void setForwarded(Date forwarded) {
         this.forwarded = forwarded;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#setHeaders(javax.mail.internet.InternetHeaders)
+    /**
+     * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
     public void setHeaders(InternetHeaders headers) {
         setHeaders(headers.getAllHeaders());
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#setHeaders(java.util.Enumeration)
+    /**
+     * {@inheritDoc}
      */
     public void setHeaders(Enumeration<Header> headers) {
         this.headers.clear();
@@ -277,22 +277,22 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
         }
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#setReceived(java.util.Date)
+    /**
+     * {@inheritDoc}
      */
     public void setReceived(Date received) {
         this.received = received;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#setReplied(java.util.Date)
+    /**
+     * {@inheritDoc}
      */
     public void setReplied(Date replied) {
         this.replied = replied;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#setUid(long)
+    /**
+     * {@inheritDoc}
      */
     public void setUid(long uid) {
         this.uid = uid;

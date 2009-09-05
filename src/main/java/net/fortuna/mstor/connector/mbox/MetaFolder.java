@@ -96,22 +96,22 @@ public class MetaFolder extends AbstractMetaFolder<MetaMessage> {
         binding = new DocumentBinding(getFile(), namespace, ELEMENT_FOLDER);
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#getParent()
+    /**
+     * {@inheritDoc}
      */
     public MetaFolder getParent() {
         return new MetaFolder(getDelegate().getParent());
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#getFolder(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public MetaFolder getFolder(String name) throws MessagingException {
         return new MetaFolder(getDelegate().getFolder(name));
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#list(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public MetaFolder[] list(String pattern) {
         List<MetaFolder> folders = new ArrayList<MetaFolder>();
@@ -136,8 +136,8 @@ public class MetaFolder extends AbstractMetaFolder<MetaMessage> {
     }
     */
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#getMessage(int)
+    /**
+     * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
     public final MetaMessage getMessage(int messageNumber)
@@ -171,8 +171,8 @@ public class MetaFolder extends AbstractMetaFolder<MetaMessage> {
         return md;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.data.AbstractFolderDelegate#createMetaMessage(int)
+    /**
+     * {@inheritDoc}
      */
     protected final MetaMessage createMessage(int messageNumber) {
         MetaMessage delegate = new MetaMessage(messageNumber, this, binding.getNamespace());
@@ -216,11 +216,7 @@ public class MetaFolder extends AbstractMetaFolder<MetaMessage> {
     */
 
     /**
-     * @param messages
-     * @return
-     */
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.mbox.AbstractMetaFolder#removeMessages(javax.mail.Message[])
+     * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
     protected MetaMessage[] removeMessages(Message[] messages) {
@@ -288,16 +284,16 @@ public class MetaFolder extends AbstractMetaFolder<MetaMessage> {
         return lastUidElement;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#getLastUid()
+    /**
+     * {@inheritDoc}
      */
     public final long getLastUid() {
         Element lastUidElement = getLastUidElement();
         return Long.parseLong(lastUidElement.getText());
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#getUidValidity()
+    /**
+     * {@inheritDoc}
      */
     public final long getUidValidity() throws UnsupportedOperationException,
         MessagingException {
@@ -320,8 +316,8 @@ public class MetaFolder extends AbstractMetaFolder<MetaMessage> {
         return Long.parseLong(uidValidityElement.getText());
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.delegate.AbstractFolderDelegate#setLastUid(long)
+    /**
+     * {@inheritDoc}
      */
     protected final void setLastUid(long uid) throws DelegateException {
         Element lastUidElement = getLastUidElement();
@@ -329,15 +325,15 @@ public class MetaFolder extends AbstractMetaFolder<MetaMessage> {
         save();
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.mbox.AbstractMetaFolder#getFileExtension()
+    /**
+     * {@inheritDoc}
      */
     protected String getFileExtension() {
     	return FILE_EXTENSION;
     }
     
     /**
-     * @throws DelegateException
+     * {@inheritDoc}
      */
     public final void save() throws DelegateException {
         try {

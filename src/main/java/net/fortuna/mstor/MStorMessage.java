@@ -34,6 +34,7 @@ package net.fortuna.mstor;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
@@ -550,6 +551,6 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
         for (MessageDelegate delegateRef : delegate.getReferences()) {
             references.add(new MStorMessage(delegateRef));
         }
-        return references;
+        return Collections.unmodifiableList(references);
     }
 }

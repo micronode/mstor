@@ -72,9 +72,6 @@ public class MboxFolder extends AbstractFolderDelegate<MessageDelegate> {
 
     private static final FileFilter SUBFOLDER_FILTER = new FileFilter() {
         
-        /* (non-Javadoc)
-         * @see java.io.FileFilter#accept(java.io.File)
-         */
         public boolean accept(File pathname) {
             if (pathname.getName().endsWith(MetaFolder.FILE_EXTENSION)
                     || pathname.getName().endsWith(YamlMetaFolder.FILE_EXTENSION)) {
@@ -100,7 +97,7 @@ public class MboxFolder extends AbstractFolderDelegate<MessageDelegate> {
     private int type;
     
     /**
-     * @param file
+     * @param file an mbox data file
      */
     public MboxFolder(File file) {
         this.file = file;
@@ -113,36 +110,35 @@ public class MboxFolder extends AbstractFolderDelegate<MessageDelegate> {
     }
     
     /**
-     * @return
+     * {@inheritDoc}
      */
     public final int getType() {
         return type;
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#getFolderName()
+    /**
+     * {@inheritDoc}
      */
     public final String getFolderName() {
         return file.getName();
     }
     
     /**
-     * @return
+     * {@inheritDoc}
      */
     public final String getFullName() {
         return file.getPath();
     }
     
     /**
-     * @return
+     * {@inheritDoc}
      */
     public final FolderDelegate<MessageDelegate> getParent() {
         return new MboxFolder(file.getParentFile());
     }
     
     /**
-     * @param name
-     * @return
+     * {@inheritDoc}
      */
     public final FolderDelegate<MessageDelegate> getFolder(final String name) {
         File file = null;
@@ -169,11 +165,7 @@ public class MboxFolder extends AbstractFolderDelegate<MessageDelegate> {
     }
     
     /**
-     * @param pattern
-     * @return
-     */
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.FolderDelegate#list(java.lang.String)
+     * {@inheritDoc}
      */
     public final FolderDelegate<MessageDelegate>[] list(final String pattern) {
         List<MboxFolder> folders = new ArrayList<MboxFolder>();
@@ -194,29 +186,28 @@ public class MboxFolder extends AbstractFolderDelegate<MessageDelegate> {
     }
     
     /**
-     * @return
+     * {@inheritDoc}
      */
     public final boolean exists() {
         return file.exists();
     }
     
     /**
-     * @return
+     * {@inheritDoc}
      */
     public final boolean delete() {
         return file.delete();
     }
     
     /**
-     * @param name
-     * @return
+     * {@inheritDoc}
      */
     public final boolean renameTo(String name) {
         return file.renameTo(new File(file.getParent(), name));
     }
     
     /**
-     * @param mode
+     * {@inheritDoc}
      */
     public final void open(final int mode) {
         if ((getType() & Folder.HOLDS_MESSAGES) > 0) {
@@ -230,7 +221,7 @@ public class MboxFolder extends AbstractFolderDelegate<MessageDelegate> {
     }
     
     /**
-     * @param expunge
+     * {@inheritDoc}
      */
     public final void close() throws MessagingException {
         try {
@@ -245,15 +236,14 @@ public class MboxFolder extends AbstractFolderDelegate<MessageDelegate> {
     }
     
     /**
-     * @return
-     * @throws MessagingException
+     * {@inheritDoc}
      */
     public final char getSeparator() {
         return File.separatorChar;
     }
     
     /**
-     * @return
+     * {@inheritDoc}
      */
     public final int getMessageCount() throws MessagingException {
         try {
@@ -264,15 +254,15 @@ public class MboxFolder extends AbstractFolderDelegate<MessageDelegate> {
         }
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#getMessageAsStream(int)
+    /**
+     * {@inheritDoc}
      */
     public final InputStream getMessageAsStream(int index) throws IOException {
         return mbox.getMessageAsStream(index - 1);
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#appendMessages(javax.mail.Message[])
+    /**
+     * {@inheritDoc}
      */
     public final void appendMessages(Message[] messages) throws MessagingException {
         ByteArrayOutputStream out = new ByteArrayOutputStream(
@@ -323,8 +313,7 @@ public class MboxFolder extends AbstractFolderDelegate<MessageDelegate> {
     }
     
     /**
-     * @param type
-     * @return
+     * {@inheritDoc}
      */
     public final boolean create(final int type) throws MessagingException {
 
@@ -356,8 +345,8 @@ public class MboxFolder extends AbstractFolderDelegate<MessageDelegate> {
         return created;
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#expunge(javax.mail.Message[])
+    /**
+     * {@inheritDoc}
      */
     public final void expunge(Message[] deleted) throws MessagingException {
         
@@ -385,48 +374,48 @@ public class MboxFolder extends AbstractFolderDelegate<MessageDelegate> {
         }
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.delegate.AbstractFolderDelegate#createMessage(int)
+    /**
+     * {@inheritDoc}
      */
     protected MessageDelegate createMessage(int messageNumber) throws DelegateException {
         // TODO Auto-generated method stub
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.delegate.AbstractFolderDelegate#getMessage(int)
+    /**
+     * {@inheritDoc}
      */
     public MessageDelegate getMessage(int messageNumber) throws DelegateException {
         // TODO Auto-generated method stub
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.delegate.AbstractFolderDelegate#setLastUid(long)
+    /**
+     * {@inheritDoc}
      */
     protected void setLastUid(long uid) throws UnsupportedOperationException {
         throw new UnsupportedOperationException(
                 "Mbox format does not support UID folders");
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#getLastUid()
+    /**
+     * {@inheritDoc}
      */
     public long getLastUid() throws UnsupportedOperationException {
         throw new UnsupportedOperationException(
                 "Mbox format does not support UID folders");
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#getUidValidity()
+    /**
+     * {@inheritDoc}
      */
     public long getUidValidity() throws UnsupportedOperationException {
         throw new UnsupportedOperationException(
                 "Mbox format does not support UID folders");
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.FolderDelegate#getLastModified()
+    /**
+     * {@inheritDoc}
      */
     public long getLastModified() throws UnsupportedOperationException {
         return file.lastModified();
