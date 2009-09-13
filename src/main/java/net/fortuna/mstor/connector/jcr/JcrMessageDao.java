@@ -113,10 +113,6 @@ public class JcrMessageDao extends AbstractJcrDAO<JcrMessage> {
         return updateDao(super.findByXPath("/jcr:root" + path + "/*[jcr:like(@flags, '" + MessageUtils.getFlagName(flag) + "')]", "*", -1));
     }
 
-    /**
-     * @param messages
-     * @return
-     */
     private List<JcrMessage> updateDao(List<JcrMessage> messages) {
         // store reference to DAO for saveChanges() support..
         for (JcrMessage message : messages) {

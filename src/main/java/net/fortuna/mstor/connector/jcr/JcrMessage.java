@@ -84,9 +84,6 @@ import org.jcrom.annotations.JcrReference;
  */
 public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 3832397825180707796L;
     
     @JcrProperty private Integer messageNumber;
@@ -330,11 +327,6 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
         }
     }
     
-    /**
-     * @param part
-     * @throws MessagingException
-     * @throws IOException
-     */
     private void appendBody(final Part part) throws MessagingException, IOException {
         if (part.isMimeType("text/html")) {
             body = createBody(part);
@@ -368,11 +360,6 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
         return body;
     }
     
-    /**
-     * @param part
-     * @throws MessagingException
-     * @throws IOException
-     */
     @SuppressWarnings("unchecked")
     private void appendAttachments(final Part part) throws MessagingException, IOException {
         if (part.isMimeType("message/*")) {

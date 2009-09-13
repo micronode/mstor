@@ -98,10 +98,8 @@ public class MessageInputStream extends InputStream {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.io.InputStream#read()
+    /**
+     * {@inheritDoc}
      */
     public final int read() throws IOException {
         if (!buffer.hasRemaining()) {
@@ -110,10 +108,8 @@ public class MessageInputStream extends InputStream {
         return buffer.get();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.io.InputStream#read(byte[], int, int)
+    /**
+     * {@inheritDoc}
      */
     public final int read(final byte[] bytes, final int offset,
             final int length) throws IOException {

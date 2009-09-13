@@ -145,10 +145,8 @@ public class MetaMessage extends AbstractMessageDelegate {
         return binding.getElement();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.MetaMessage#getMessageNumber()
+    /**
+     * {@inheritDoc}
      */
     public final int getMessageNumber() {
         try {
@@ -160,10 +158,8 @@ public class MetaMessage extends AbstractMessageDelegate {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.MetaMessage#getReceived()
+    /**
+     * {@inheritDoc}
      */
     public final Date getReceived() {
         String received = binding.getElement(ELEMENT_RECEIVED).getText();
@@ -178,10 +174,8 @@ public class MetaMessage extends AbstractMessageDelegate {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.MetaMessage#setReceived(java.util.Date)
+    /**
+     * {@inheritDoc}
      */
     public final void setReceived(final Date date) {
         Element received = binding.getElement(ELEMENT_RECEIVED);
@@ -190,10 +184,8 @@ public class MetaMessage extends AbstractMessageDelegate {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.MetaMessage#getForwarded()
+    /**
+     * {@inheritDoc}
      */
     public final Date getForwarded() {
         String forwarded = binding.getElement(ELEMENT_FORWARDED).getText();
@@ -208,10 +200,8 @@ public class MetaMessage extends AbstractMessageDelegate {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.MetaMessage#setForwarded(java.util.Date)
+    /**
+     * {@inheritDoc}
      */
     public final void setForwarded(final Date date) {
         Element forwarded = binding.getElement(ELEMENT_FORWARDED);
@@ -220,10 +210,8 @@ public class MetaMessage extends AbstractMessageDelegate {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.MetaMessage#getReplied()
+    /**
+     * {@inheritDoc}
      */
     public final Date getReplied() {
         String replied = binding.getElement(ELEMENT_REPLIED).getText();
@@ -238,10 +226,8 @@ public class MetaMessage extends AbstractMessageDelegate {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.MetaMessage#setReplied(java.util.Date)
+    /**
+     * {@inheritDoc}
      */
     public final void setReplied(final Date date) {
         Element replied = binding.getElement(ELEMENT_REPLIED);
@@ -250,10 +236,8 @@ public class MetaMessage extends AbstractMessageDelegate {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.MetaMessage#isExpunged()
+    /**
+     * {@inheritDoc}
      */
     public final boolean isExpunged() {
         Element expunged = binding.getElement(ELEMENT_EXPUNGED);
@@ -266,20 +250,16 @@ public class MetaMessage extends AbstractMessageDelegate {
         return false;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.MetaMessage#setExpunged(boolean)
+    /**
+     * {@inheritDoc}
      */
     public final void setExpunged(final boolean flag) {
         Element expunged = binding.getElement(ELEMENT_EXPUNGED);
         expunged.setText(String.valueOf(flag));
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.MetaMessage#getFlags()
+    /**
+     * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
     public final Flags getFlags() {
@@ -301,10 +281,8 @@ public class MetaMessage extends AbstractMessageDelegate {
         return flags;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.MetaMessage#setFlags(javax.mail.Flags)
+    /**
+     * {@inheritDoc}
      */
     public final void setFlags(final Flags flags) {
         Element flagsElement = binding.getElement(ELEMENT_FLAGS);
@@ -325,10 +303,8 @@ public class MetaMessage extends AbstractMessageDelegate {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.MetaMessage#getHeaders()
+    /**
+     * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
     public final InternetHeaders getHeaders() {
@@ -343,10 +319,8 @@ public class MetaMessage extends AbstractMessageDelegate {
         return headers;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see net.fortuna.mstor.MetaMessage#setHeaders(java.util.Enumeration)
+    /**
+     * {@inheritDoc}
      */
     public final void setHeaders(final Enumeration<Header> headers) {
         Element headersElement = binding.getElement(ELEMENT_HEADERS);
@@ -376,40 +350,36 @@ public class MetaMessage extends AbstractMessageDelegate {
         }
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.MessageDelegate#saveChanges()
+    /**
+     * {@inheritDoc}
      */
     public void saveChanges() throws DelegateException {
         metaFolder.save();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.MetaMessage#getUid()
+    /**
+     * {@inheritDoc}
      */
     public long getUid() {
         return Long.parseLong(getElement().getAttributeValue(ATTRIBUTE_UID));
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.mstor.MetaMessage#setUid(long)
+    /**
+     * {@inheritDoc}
      */
     public void setUid(long uid) {
         getElement().setAttribute(ATTRIBUTE_UID, String.valueOf(uid));
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#getInReplyTo()
+    /**
+     * {@inheritDoc}
      */
     public MessageDelegate getInReplyTo() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Message references not supported");
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#getReferences()
+    /**
+     * {@inheritDoc}
      */
     public List<? extends MessageDelegate> getReferences() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Message references not supported");

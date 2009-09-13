@@ -71,92 +71,92 @@ public class YamlMetaMessage extends AbstractMessageDelegate {
         this.folder = folder;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#getFlags()
+    /**
+     * {@inheritDoc}
      */
     public Flags getFlags() {
         return messageExt.getFlags();
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#getForwarded()
+    /**
+     * {@inheritDoc}
      */
     public Date getForwarded() {
         return messageExt.getForwarded();
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#getHeaders()
+    /**
+     * {@inheritDoc}
      */
     public InternetHeaders getHeaders() {
         return messageExt.getInternetHeaders();
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#getMessageNumber()
+    /**
+     * {@inheritDoc}
      */
     public int getMessageNumber() {
         return messageExt.getMessageNumber();
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#getReceived()
+    /**
+     * {@inheritDoc}
      */
     public Date getReceived() {
         return messageExt.getReceived();
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#getReplied()
+    /**
+     * {@inheritDoc}
      */
     public Date getReplied() {
         return messageExt.getReplied();
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#getUid()
+    /**
+     * {@inheritDoc}
      */
     public long getUid() {
         return messageExt.getUid();
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#isExpunged()
+    /**
+     * {@inheritDoc}
      */
     public boolean isExpunged() {
         return messageExt.isExpunged();
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#saveChanges()
+    /**
+     * {@inheritDoc}
      */
     public void saveChanges() throws DelegateException {
         folder.save();
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#setExpunged(boolean)
+    /**
+     * {@inheritDoc}
      */
     public void setExpunged(boolean expunged) {
         messageExt.setExpunged(expunged);
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#setFlags(javax.mail.Flags)
+    /**
+     * {@inheritDoc}
      */
     public void setFlags(Flags flags) {
         messageExt.setFlags(flags);
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#setForwarded(java.util.Date)
+    /**
+     * {@inheritDoc}
      */
     public void setForwarded(Date forwarded) {
         messageExt.setForwarded(forwarded);
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#setHeaders(java.util.Enumeration)
+    /**
+     * {@inheritDoc}
      */
     public void setHeaders(Enumeration<Header> headers) {
         InternetHeaders iHeaders = new InternetHeaders();
@@ -167,36 +167,36 @@ public class YamlMetaMessage extends AbstractMessageDelegate {
         messageExt.setInternetHeaders(iHeaders);
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#setReceived(java.util.Date)
+    /**
+     * {@inheritDoc}
      */
     public void setReceived(Date received) {
         messageExt.setReceived(received);
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#setReplied(java.util.Date)
+    /**
+     * {@inheritDoc}
      */
     public void setReplied(Date replied) {
         messageExt.setReplied(replied);
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#setUid(long)
+    /**
+     * {@inheritDoc}
      */
     public void setUid(long uid) {
         messageExt.setUid(uid);
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#getInReplyTo()
+    /**
+     * {@inheritDoc}
      */
     public MessageDelegate getInReplyTo() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Message references not supported");
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.MessageDelegate#getReferences()
+    /**
+     * {@inheritDoc}
      */
     public List<? extends MessageDelegate> getReferences() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("Message references not supported");

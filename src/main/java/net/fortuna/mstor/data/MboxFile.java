@@ -92,15 +92,35 @@ public class MboxFile {
     public static final String KEY_BUFFER_STRATEGY = "mstor.mbox.bufferStrategy";
 
     /**
-     * @author Ben
+     * Strategy for I/O buffers.
      *
      */
     public enum BufferStrategy {
-        DEFAULT, MAPPED, DIRECT;
+        
+        /**
+         * Default strategy used in Java nio.
+         */
+        DEFAULT, 
+        
+        /**
+         * Map buffers.
+         */
+        MAPPED, 
+        
+        /**
+         * Use direct buffers.
+         */
+        DIRECT;
     }
     
+    /**
+     * Indicates a file should be opened for reading only.
+     */
     public static final String READ_ONLY = "r";
 
+    /**
+     * Indicates a file should be opened for reading and writing.
+     */
     public static final String READ_WRITE = "rw";
 
     private static final String TEMP_FILE_EXTENSION = ".tmp";
@@ -176,14 +196,16 @@ public class MboxFile {
 //    private Cache messageCache;
 
     /**
-     * Constructor.
+     * @param file a reference to an mbox data file
+     * @throws FileNotFoundException where the specified file doesn't exist
      */
     public MboxFile(final File file) throws FileNotFoundException {
         this(file, READ_ONLY);
     }
 
     /**
-     * Constructor.
+     * @param file a reference to an mbox data file
+     * @param mode the mode used to open the file
      */
     public MboxFile(final File file, final String mode) {
         this.file = file;
@@ -355,6 +377,7 @@ public class MboxFile {
      * Returns the total number of messages in the mbox file.
      *
      * @return an int
+     * @throws IOException where an error occurs reading messages
      */
     public final int getMessageCount() throws IOException {
         return getMessagePositions().length;
@@ -366,6 +389,7 @@ public class MboxFile {
      *
      * @param index the index of the message to open a stream to
      * @return an input stream
+     * @throws IOException where an error occurs reading the message
      */
     public final InputStream getMessageAsStream(final int index)
             throws IOException {
@@ -436,6 +460,7 @@ public class MboxFile {
      *
      * @param index the index of the message to retrieve
      * @return a byte array
+     * @throws IOException where an error occurs reading the message
      */
     public final byte[] getMessage(final int index) throws IOException {
         /*
@@ -464,6 +489,7 @@ public class MboxFile {
      * Appends the specified message (represented by a CharSequence) to the mbox file.
      *
      * @param message
+     * @throws IOException where an error occurs writing the message data
      */
     public final void appendMessage(final byte[] message) throws IOException {
 //        long newMessagePosition = getChannel().size();
@@ -492,6 +518,7 @@ public class MboxFile {
      * Purge the specified messages from the file.
      *
      * @param msgnums the indices of the messages to purge
+     * @throws IOException where an error occurs updating the data file
      */
     public final void purge(final int[] msgnums) throws IOException {
         // create a new mailbox file..
@@ -585,7 +612,7 @@ public class MboxFile {
     /**
      * Close the mbox file and release any system resources.
      *
-     * @throws IOException
+     * @throws IOException where an error occurs closing the data file
      */
     public final void close() throws IOException {
 //        if (messageCache != null) {
@@ -605,6 +632,8 @@ public class MboxFile {
      * Indicates whether the specified file appears to be a valid mbox file. Note that this method
      * does not check the entire file for validity, but rather checks the first line for indication
      * that this is an mbox file.
+     * @param file an mbox file reference
+     * @return true if the specified file is a valid mbox file
      */
     public static boolean isValid(final File file) {
         BufferedReader reader = null;

@@ -91,8 +91,8 @@ public class JcrConnector extends AbstractProtocolConnector {
         jcrom.map(JcrMessage.class);
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.ProtocolConnector#connect()
+    /**
+     * {@inheritDoc}
      */
     public boolean connect() throws AuthenticationFailedException, MessagingException {
         if (StringUtils.isEmpty(mailSession.getProperty("mstor.repository.provider.url"))) {
@@ -140,15 +140,15 @@ public class JcrConnector extends AbstractProtocolConnector {
         }
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.ProtocolConnector#disconnect()
+    /**
+     * {@inheritDoc}
      */
     public void disconnect() throws MessagingException {
         session.logout();
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.ProtocolConnector#getDefaultFolder()
+    /**
+     * {@inheritDoc}
      */
     public Folder getDefaultFolder() throws MessagingException {
         JcrFolder delegate = jcrom.fromNode(JcrFolder.class, getNode());
@@ -159,22 +159,22 @@ public class JcrConnector extends AbstractProtocolConnector {
         return new MStorFolder(store, delegate);
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.ProtocolConnector#getFolder(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public Folder getFolder(String name) throws MessagingException {
         return getDefaultFolder().getFolder(name);
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.ProtocolConnector#getFolder(javax.mail.URLName)
+    /**
+     * {@inheritDoc}
      */
     public Folder getFolder(URLName url) throws MessagingException {
         return getDefaultFolder().getFolder(url.getFile());
     }
 
     /**
-     * @return the jcrom
+     * @return the jcrom instance
      */
     Jcrom getJcrom() {
         return jcrom;
@@ -187,21 +187,12 @@ public class JcrConnector extends AbstractProtocolConnector {
         return session;
     }
 
-    /**
-     * @throws ObjectStoreException
-     */
     private void assertConnected() throws MessagingException {
         if (session == null) {
             throw new MessagingException("Not connected");
         }
     }
     
-    /**
-     * @return
-     * @throws RepositoryException 
-     * @throws PathNotFoundException 
-     * @throws ObjectStoreException 
-     */
     private Node getNode() throws MessagingException {
         assertConnected();
         String path = mailSession.getProperty("mstor.repository.path");

@@ -107,8 +107,8 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
         messageCount = -1;
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.FolderDelegate#allocateUid(net.fortuna.mstor.connector.MessageDelegate)
+    /**
+     * {@inheritDoc}
      */
     public synchronized long allocateUid(MessageDelegate message) throws UnsupportedOperationException, DelegateException {
         Long uid = lastUid + 1;
@@ -117,8 +117,8 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
         return uid;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.FolderDelegate#appendMessages(javax.mail.Message[])
+    /**
+     * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
     public void appendMessages(Message[] messages) throws MessagingException {
@@ -190,8 +190,8 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
         messageCount = -1;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.FolderDelegate#close()
+    /**
+     * {@inheritDoc}
      */
     public void close() throws MessagingException {
       try {
@@ -203,8 +203,8 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
       }
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.FolderDelegate#create(int)
+    /**
+     * {@inheritDoc}
      */
     public boolean create(int type) throws MessagingException {
         this.type = type;
@@ -254,8 +254,8 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
         return true;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.FolderDelegate#delete()
+    /**
+     * {@inheritDoc}
      */
     public boolean delete() {
 //        return parent.folders.remove(this);
@@ -263,8 +263,8 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
         return true;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.FolderDelegate#exists()
+    /**
+     * {@inheritDoc}
      */
     public boolean exists() {
         try {
@@ -277,8 +277,8 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
         return false;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.FolderDelegate#expunge(javax.mail.Message[])
+    /**
+     * {@inheritDoc}
      */
     public void expunge(Message[] deleted) throws MessagingException {
 //        for (JcrMessage jcrMessage : messages) {
@@ -298,8 +298,8 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
         messageCount = -1;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.FolderDelegate#getFolder(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public FolderDelegate<JcrMessage> getFolder(String name) throws MessagingException {
         JcrFolder retVal = null;
@@ -327,23 +327,23 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
         return retVal;
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.FolderDelegate#getFullName()
+    /**
+     * {@inheritDoc}
      */
     public String getFullName() {
         return getConnector().getJcrom().getPath(this);
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.FolderDelegate#getLastModified()
+    /**
+     * {@inheritDoc}
      */
     public long getLastModified() throws UnsupportedOperationException {
         // TODO Auto-generated method stub
         return 0;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.FolderDelegate#getLastUid()
+    /**
+     * {@inheritDoc}
      */
     public long getLastUid() throws UnsupportedOperationException {
         if (lastUid == null) {
@@ -352,17 +352,14 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
         return lastUid;
     }
 
-    /**
-     * @param message
-     */
     private void allocateUid(JcrMessage message) {
         long uid = getLastUid() + 1;
         message.setUid(uid);
         lastUid = uid;
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.FolderDelegate#getMessage(int)
+    /**
+     * {@inheritDoc}
      */
     public JcrMessage getMessage(int messageNumber) throws DelegateException {
         List<JcrMessage> messages = getMessageDao().findByMessageNumber(getConnector().getJcrom().getPath(this) + "/messages",
@@ -379,8 +376,8 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.FolderDelegate#getMessageAsStream(int)
+    /**
+     * {@inheritDoc}
      */
     public InputStream getMessageAsStream(int index) throws IOException {
         List<JcrMessage> messages = getMessageDao().findAll(getConnector().getJcrom().getPath(this) + "/messages",
@@ -391,8 +388,8 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.FolderDelegate#getMessageCount()
+    /**
+     * {@inheritDoc}
      */
     public int getMessageCount() throws MessagingException {
 //        return messages.size();
@@ -402,43 +399,43 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
         return messageCount;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.FolderDelegate#getDeletedMessageCount()
+    /**
+     * {@inheritDoc}
      */
     public int getDeletedMessageCount() throws MessagingException, UnsupportedOperationException {
         return getMessageDao().findByFlag(getConnector().getJcrom().getPath(this) + "/messages", Flag.DELETED).size();
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.FolderDelegate#getParent()
+    /**
+     * {@inheritDoc}
      */
     public FolderDelegate<JcrMessage> getParent() {
         return parent;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.FolderDelegate#getSeparator()
+    /**
+     * {@inheritDoc}
      */
     public char getSeparator() {
         return '/';
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.FolderDelegate#getType()
+    /**
+     * {@inheritDoc}
      */
     public int getType() {
         return type;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.FolderDelegate#getUidValidity()
+    /**
+     * {@inheritDoc}
      */
     public long getUidValidity() throws UnsupportedOperationException, MessagingException {
         return uidValidity;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.FolderDelegate#list(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public FolderDelegate<JcrMessage>[] list(String pattern) {
         List<JcrFolder> folders = getFolderDao().findByPattern(getConnector().getJcrom().getPath(this) + "/folders", pattern);
@@ -448,16 +445,16 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
         return folders.toArray(new JcrFolder[folders.size()]);
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.FolderDelegate#open(int)
+    /**
+     * {@inheritDoc}
      */
     public void open(int mode) {
         // TODO Auto-generated method stub
         
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.FolderDelegate#renameTo(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public boolean renameTo(String name) {
         this.folderName = name;
@@ -471,12 +468,6 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
         return folderName;
     }
 
-    /**
-     * @return
-     * @throws PathNotFoundException
-     * @throws JcrMappingException
-     * @throws RepositoryException
-     */
     private Node getNode() throws PathNotFoundException, JcrMappingException, RepositoryException {
         String path = getConnector().getJcrom().getPath(this);
         if (path != null) {
@@ -485,9 +476,6 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
         return null;
     }
 
-    /**
-     * @return
-     */
     private JcrFolderDao getFolderDao() {
         if (folderDao == null) {
             synchronized (this) {
@@ -499,9 +487,6 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
         return folderDao;
     }
     
-    /**
-     * @return
-     */
     private JcrMessageDao getMessageDao() {
         if (messageDao == null) {
             synchronized (this) {
@@ -513,9 +498,6 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
         return messageDao;
     }
     
-    /**
-     * @return
-     */
     private FolderDelegate<JcrMessage> getRootFolder() {
         FolderDelegate<JcrMessage> root = this;
         while (root.getParent() != null) {
@@ -531,9 +513,6 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
         this.connector = connector;
     }
     
-    /**
-     * @return
-     */
     private JcrConnector getConnector() {
         if (connector == null && parent != null) {
             return parent.getConnector();
@@ -541,12 +520,6 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
         return connector;
     }
     
-    /**
-     * @throws RepositoryException 
-     * @throws PathNotFoundException 
-     * @throws JcrMappingException 
-     * 
-     */
     private void saveChanges() throws JcrMappingException, PathNotFoundException, RepositoryException {
 //        getConnector().getJcrom().updateNode(getNode(), this);
 //        getNode().save();

@@ -96,30 +96,30 @@ public class MboxConnector extends AbstractProtocolConnector {
         }
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.connector.ProtocolConnector#connect()
+    /**
+     * {@inheritDoc}
      */
     public boolean connect() throws AuthenticationFailedException, MessagingException {
         // Authentication not supported..
         return true;
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.ProtocolHandler#disconnect()
+    /**
+     * {@inheritDoc}
      */
     public void disconnect() throws MessagingException {
         // No cleanup required..
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.ProtocolHandler#getDefaultFolder()
+    /**
+     * {@inheritDoc}
      */
     public Folder getDefaultFolder() throws MessagingException {
         return getFolder("");
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.ProtocolHandler#getFolder(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public Folder getFolder(String name) throws MessagingException {
 
@@ -142,8 +142,8 @@ public class MboxConnector extends AbstractProtocolConnector {
         throw new IllegalArgumentException("Unrecognised metadata strategy: " + metadataStrategy);
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.mstor.ProtocolHandler#getFolder(javax.mail.URLName)
+    /**
+     * {@inheritDoc}
      */
     public Folder getFolder(URLName url) throws MessagingException {
         return getFolder(url.getFile());

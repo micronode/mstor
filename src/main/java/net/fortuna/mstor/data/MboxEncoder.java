@@ -63,9 +63,9 @@ public final class MboxEncoder {
     }
 
     /**
-     * @param bytes
-     * @return
-     * @throws IOException
+     * @param bytes raw data to encode
+     * @return an mbox-encoded data array
+     * @throws IOException where an error occurs generating encoded data
      */
     public static byte[] encode(final byte[] bytes) throws IOException {
         byte[] buffer = new byte[FROM__PATTERN.length];

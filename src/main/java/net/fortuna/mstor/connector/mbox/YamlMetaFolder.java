@@ -55,6 +55,9 @@ import org.ho.yaml.YamlDecoder;
  */
 public class YamlMetaFolder extends AbstractMetaFolder<YamlMetaMessage> {
 
+    /**
+     * YAML file extension.
+     */
     public static final String FILE_EXTENSION = ".yml";
 
     private FolderExt folderExt;
