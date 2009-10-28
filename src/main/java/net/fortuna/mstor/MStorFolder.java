@@ -34,6 +34,11 @@ package net.fortuna.mstor;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.Executors;
 
 import javax.mail.Flags;
 import javax.mail.Folder;
@@ -71,6 +76,8 @@ public final class MStorFolder extends Folder implements UIDFolder {
 
     private static final Log LOG = LogFactory.getLog(MStorFolder.class);
     
+    private static final String INVALID_FOLDER_TYPE_MESSAGE = "Invalid folder type";
+    
     /**
      * Indicates whether this folder is open.
      */
@@ -82,7 +89,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
     private FolderDelegate<? extends MessageDelegate> delegate;
     
     /**
-     * An adapter for the cache for messages
+     * An adapter for the cache for messages.
      */
     private CacheAdapter cacheAdapter;
 
@@ -164,12 +171,12 @@ public final class MStorFolder extends Folder implements UIDFolder {
      */
     public Folder[] list(final String pattern) throws MessagingException {
         if ((getType() & HOLDS_FOLDERS) == 0) {
-            throw new MessagingException("Invalid folder type");
+            throw new MessagingException(INVALID_FOLDER_TYPE_MESSAGE);
         }
 
-        List<Folder> folders = new ArrayList<Folder>();
+        final List<Folder> folders = new ArrayList<Folder>();
 
-        FolderDelegate<? extends MessageDelegate>[] childDelegates = delegate.list(pattern);
+        final FolderDelegate<? extends MessageDelegate>[] childDelegates = delegate.list(pattern);
         for (int i = 0; i < childDelegates.length; i++) {
             folders.add(new MStorFolder(mStore, childDelegates[i]));
         }
@@ -200,7 +207,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
             throw new MessagingException("Folder already exists");
         }
 
-        boolean created = delegate.create(type);
+        final boolean created = delegate.create(type);
         if (created) {
             notifyFolderListeners(FolderEvent.CREATED);
         }
@@ -225,26 +232,47 @@ public final class MStorFolder extends Folder implements UIDFolder {
     /**
      * {@inheritDoc}
      */
-    public boolean delete(final boolean recurse)
-        throws MessagingException {
-        
+    public boolean delete(final boolean recurse) throws MessagingException {
         assertClosed();
 
+        boolean deleted = false;
         if ((getType() & HOLDS_FOLDERS) > 0) {
             if (recurse) {
-                Folder[] subfolders = list();
+                final CompletionService<Boolean> processor = new ExecutorCompletionService<Boolean>(
+                        Executors.newCachedThreadPool());
+                
+                final Folder[] subfolders = list();
                 for (int i = 0; i < subfolders.length; i++) {
-                    subfolders[i].delete(recurse);
+//                    subfolders[i].delete(recurse);
+                    processor.submit(new DeleteFolderCommand(subfolders[i], recurse));
+                }
+                
+                deleted = true;
+                for (int i = 0; i < subfolders.length; i++) {
+                    try {
+                        if (!processor.take().get()) {
+                            deleted = false;
+                        }
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
                 }
             }
             else if (list().length > 0) {
                 // cannot delete if has subfolders..
-                return false;
+                deleted = false;
             }
         }
 
-        // attempt to delete the directory/file..
-        boolean deleted = delegate.delete();
+        if (deleted) {
+            // attempt to delete the directory/file..
+            deleted = delegate.delete();
+        }
+
         if (deleted) {
             notifyFolderListeners(FolderEvent.DELETED);
         }
@@ -260,7 +288,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
         assertExists();
         assertClosed();
 
-        boolean renamed = delegate.renameTo(folder.getName());
+        final boolean renamed = delegate.renameTo(folder.getName());
         if (renamed) {
             notifyFolderRenamedListeners(folder);
         }
@@ -322,7 +350,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
     public int getMessageCount() throws MessagingException {
         assertExists();
         if ((getType() & HOLDS_MESSAGES) == 0) {
-            throw new MessagingException("Invalid folder type");
+            throw new MessagingException(INVALID_FOLDER_TYPE_MESSAGE);
         }
 
         if (!isOpen()) {
@@ -359,7 +387,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
         }
 
         if ((getType() & HOLDS_MESSAGES) == 0) {
-            throw new MessagingException("Invalid folder type");
+            throw new MessagingException(INVALID_FOLDER_TYPE_MESSAGE);
         }
 
         Message message = null;
@@ -369,7 +397,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
         if (message == null) {
             try {
                 // javamail uses 1-based indexing for messages..
-                MessageDelegate messageDelegate = delegate.getMessage(index);
+                final MessageDelegate messageDelegate = delegate.getMessage(index);
                 if (messageDelegate != null && messageDelegate.getInputStream() != null) {
                     message = new MStorMessage(this, messageDelegate.getInputStream(),
                             index, messageDelegate);
@@ -392,10 +420,6 @@ public final class MStorFolder extends Folder implements UIDFolder {
 
         return message;
     }
-
-    
-
-    
 
     /**
      * Appends the specified messages to this folder. NOTE: The specified message array is destroyed
@@ -425,17 +449,17 @@ public final class MStorFolder extends Folder implements UIDFolder {
             throw new MessagingException("Folder is read-only");
         }
 
-        int count = getDeletedMessageCount();
+        final int count = getDeletedMessageCount();
 
-        List<Message> deletedList = new ArrayList<Message>();
+        final List<Message> deletedList = new ArrayList<Message>();
         for (int i = 1; i <= getMessageCount() && deletedList.size() < count; i++) {
-            Message message = getMessage(i);
+            final Message message = getMessage(i);
             if (message.isSet(Flags.Flag.DELETED)) {
                 deletedList.add(message);
             }
         }
 
-        MStorMessage[] deleted = deletedList.toArray(new MStorMessage[deletedList.size()]);
+        final MStorMessage[] deleted = deletedList.toArray(new MStorMessage[deletedList.size()]);
 
         delegate.expunge(deleted);
 
@@ -493,7 +517,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
      */
     public Message getMessageByUID(long uid) throws MessagingException {
         for (int i = 1; i <= getMessageCount(); i++) {
-            MStorMessage message = (MStorMessage) getMessage(i);
+            final MStorMessage message = (MStorMessage) getMessage(i);
             if (message.getUid() == uid) {
                 return message;
             }
@@ -517,7 +541,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
                 throw new MessagingException("Error retrieving UID", uoe);
             }
         }
-        List<Message> messages = new ArrayList<Message>();
+        final List<Message> messages = new ArrayList<Message>();
         for (long uid = start; uid <= lastUid; uid++) {
             messages.add(getMessageByUID(uid));
         }
@@ -528,7 +552,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
      * {@inheritDoc}
      */
     public Message[] getMessagesByUID(long[] uids) throws MessagingException {
-        List<Message> messages = new ArrayList<Message>();
+        final List<Message> messages = new ArrayList<Message>();
         for (int i = 0; i < uids.length; i++) {
             messages.add(getMessageByUID(uids[i]));
         }
@@ -579,5 +603,24 @@ public final class MStorFolder extends Folder implements UIDFolder {
             }
         }
         return cacheAdapter;
+    }
+    
+    private static class DeleteFolderCommand implements Callable<Boolean> {
+        
+        private final Folder folder;
+        
+        private final boolean recurse;
+        
+        public DeleteFolderCommand(Folder folder, boolean recurse) {
+            this.folder = folder;
+            this.recurse = recurse;
+        }
+        
+        /**
+         * {@inheritDoc}
+         */
+        public Boolean call() throws Exception {
+            return folder.delete(recurse);
+        }
     }
 }
