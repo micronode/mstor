@@ -28,21 +28,8 @@
 			</includes>
 		</fileSet>
 		<fileSet>
-			<directory>source</directory>
-			<outputDirectory>source</outputDirectory>
-			<includes>
-				<include>**/*.java</include>
-				<include>**/package.html</include>
-				<include>META-INF/javamail.providers</include>
-			</includes>
-		</fileSet>
-		<fileSet>
-			<directory>test</directory>
-			<outputDirectory>test</outputDirectory>
-			<includes>
-				<include>**/*.java</include>
-				<include>log4j.properties</include>
-			</includes>
+			<directory>src</directory>
+			<outputDirectory>src</outputDirectory>
 		</fileSet>
 		<fileSet>
 			<directory>target/site/apidocs</directory>
