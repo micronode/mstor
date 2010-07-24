@@ -60,7 +60,7 @@ class InReplyToTermFactory extends AbstractFactory {
             message = value
         }
         else {
-            message = attributes.remove('message')
+            message = attributes['message']
         }
         InReplyToSearchTerm result = new InReplyToSearchTerm(message)
         return result;

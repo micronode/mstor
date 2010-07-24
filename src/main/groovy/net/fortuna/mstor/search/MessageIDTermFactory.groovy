@@ -57,7 +57,7 @@ class MessageIDTermFactory extends AbstractFactory {
             pattern = value
         }
         else {
-            pattern = attributes.remove('pattern')
+            pattern = attributes['pattern']
         }
         MessageIDTerm result = new MessageIDTerm(pattern)
         return result;

@@ -60,7 +60,7 @@ class ReferencesTermFactory extends AbstractFactory {
             message = value
         }
         else {
-            message = attributes.remove('message')
+            message = attributes['message']
         }
         ReferencesSearchTerm result = new ReferencesSearchTerm(message)
         return result;

@@ -59,7 +59,7 @@ class SizeTermFactory extends AbstractFactory {
             size = value
         }
         else {
-            size = attributes.remove('size')
+            size = attributes['size']
         }
         SizeTerm result = new SizeTerm(comparison, size)
         return result;

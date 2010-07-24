@@ -57,7 +57,7 @@ class MessageNumberTermFactory extends AbstractFactory {
             messageNum = value
         }
         else {
-            messageNum = attributes.remove('messageNumber')
+            messageNum = attributes['messageNumber']
         }
         MessageNumberTerm result = new MessageNumberTerm(messageNum)
         return result;

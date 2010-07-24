@@ -57,7 +57,7 @@ class BodyTermFactory extends AbstractFactory {
             pattern = value
         }
         else {
-            pattern = attributes.remove('pattern')
+            pattern = attributes['pattern']
         }
         BodyTerm result = new BodyTerm(pattern)
         return result;

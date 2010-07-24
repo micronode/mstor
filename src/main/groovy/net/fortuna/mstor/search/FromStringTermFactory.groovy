@@ -58,7 +58,7 @@ class FromStringTermFactory extends AbstractFactory {
             pattern = value
         }
         else {
-            pattern = attributes.remove('pattern')
+            pattern = attributes['pattern']
         }
         FromStringTerm result = new FromStringTerm(pattern);
         return result

@@ -61,7 +61,7 @@ class FlagTermFactory extends AbstractFactory {
             flags = value
         }
         else {
-            flags = attributes.remove('flags')
+            flags = attributes['flags']
         }
         FlagTerm result = new FlagTerm(flags, set)
         return result;

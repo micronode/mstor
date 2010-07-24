@@ -58,8 +58,8 @@ class HeaderTermFactory extends AbstractFactory {
             result = value
         }
         else {
-            String header = attributes.remove('header')
-            String pattern = attributes.remove('pattern')
+            String header = attributes['header']
+            String pattern = attributes['pattern']
             result = new HeaderTerm(header, pattern)
         }
         return result;

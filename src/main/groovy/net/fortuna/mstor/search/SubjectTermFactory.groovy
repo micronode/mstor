@@ -57,7 +57,7 @@ class SubjectTermFactory extends AbstractFactory {
             pattern = value
         }
         else {
-            pattern = attributes.remove('pattern')
+            pattern = attributes['pattern']
         }
         SubjectTerm result = new SubjectTerm(pattern)
         return result;

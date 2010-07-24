@@ -61,7 +61,7 @@ class RecipientStringTermFactory extends AbstractFactory {
             result = value
         }
         else {
-            pattern = attributes.remove('pattern')
+            pattern = attributes['pattern']
         }
         RecipientStringTerm result = new RecipientStringTerm(type, pattern)
         return result;

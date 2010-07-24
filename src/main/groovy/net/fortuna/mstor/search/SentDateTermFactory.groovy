@@ -58,7 +58,7 @@ class SentDateTermFactory extends AbstractFactory {
             date = value
         }
         else {
-            date = attributes.remove('date')
+            date = attributes['date']
         }
         SentDateTerm result = new SentDateTerm(comparison, date)
         return result;

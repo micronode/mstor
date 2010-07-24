@@ -58,7 +58,7 @@ class ReceivedDateTermFactory extends AbstractFactory {
             date = value
         }
         else {
-            date = attributes.remove('date')
+            date = attributes['date']
         }
         ReceivedDateTerm result = new ReceivedDateTerm(comparison, date)
         return result;
