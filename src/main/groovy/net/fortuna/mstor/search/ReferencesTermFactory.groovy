@@ -55,14 +55,14 @@ class ReferencesTermFactory extends AbstractFactory {
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
             throws InstantiationException, IllegalAccessException {
 
-        ReferencesSearchTerm result
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, ReferencesSearchTerm)) {
-            result = value
+        MStorMessage message
+        if (FactoryBuilderSupport.checkValueIsType(value, name, MStorMessage)) {
+            message = value
         }
         else {
-            MStorMessage message = attributes.remove('message')
-            result = new ReferencesSearchTerm(message)
+            message = attributes.remove('message')
         }
+        ReferencesSearchTerm result = new ReferencesSearchTerm(message)
         return result;
     }
 }

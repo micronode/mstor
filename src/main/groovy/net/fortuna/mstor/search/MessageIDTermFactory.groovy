@@ -52,14 +52,14 @@ class MessageIDTermFactory extends AbstractFactory {
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
             throws InstantiationException, IllegalAccessException {
 
-        MessageIDTerm result
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, MessageIDTerm)) {
-            result = value
+        String pattern
+        if (FactoryBuilderSupport.checkValueIsType(value, name, String)) {
+            pattern = value
         }
         else {
-            String pattern = attributes.remove('pattern')
-            result = new MessageIDTerm(pattern)
+            pattern = attributes.remove('pattern')
         }
+        MessageIDTerm result = new MessageIDTerm(pattern)
         return result;
     }
 

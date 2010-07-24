@@ -53,14 +53,14 @@ class SentDateTermFactory extends AbstractFactory {
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
             throws InstantiationException, IllegalAccessException {
 
-        SentDateTerm result
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, SentDateTerm)) {
-            result = value
+        Date date
+        if (FactoryBuilderSupport.checkValueIsType(value, name, Date)) {
+            date = value
         }
         else {
-            Date date = attributes.remove('date')
-            result = new SentDateTerm(comparison, date)
+            date = attributes.remove('date')
         }
+        SentDateTerm result = new SentDateTerm(comparison, date)
         return result;
     }
 }

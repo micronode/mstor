@@ -52,14 +52,14 @@ class MessageNumberTermFactory extends AbstractFactory {
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
             throws InstantiationException, IllegalAccessException {
 
-        MessageNumberTerm result
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, MessageNumberTerm)) {
-            result = value
+        int messageNum
+        if (FactoryBuilderSupport.checkValueIsType(value, name, Integer)) {
+            messageNum = value
         }
         else {
-            int messageNum = attributes.remove('messageNumber')
-            result = new MessageNumberTerm(messageNum)
+            messageNum = attributes.remove('messageNumber')
         }
+        MessageNumberTerm result = new MessageNumberTerm(messageNum)
         return result;
     }
 }

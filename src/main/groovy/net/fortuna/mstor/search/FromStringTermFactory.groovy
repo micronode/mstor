@@ -53,14 +53,14 @@ class FromStringTermFactory extends AbstractFactory {
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
             throws InstantiationException, IllegalAccessException {
 
-        FromStringTerm result
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, FromStringTerm)) {
-            result = value
+        String pattern
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, String)) {
+            pattern = value
         }
         else {
-            String pattern = attributes.remove('pattern')
-            result = new FromStringTerm(pattern);
+            pattern = attributes.remove('pattern')
         }
+        FromStringTerm result = new FromStringTerm(pattern);
         return result
     }
 

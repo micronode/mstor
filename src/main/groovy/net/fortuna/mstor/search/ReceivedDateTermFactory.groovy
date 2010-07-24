@@ -53,14 +53,14 @@ class ReceivedDateTermFactory extends AbstractFactory {
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
             throws InstantiationException, IllegalAccessException {
 
-        ReceivedDateTerm result
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, ReceivedDateTerm)) {
-            result = value
+        Date date
+        if (FactoryBuilderSupport.checkValueIsType(value, name, Date)) {
+            date = value
         }
         else {
-            Date date = attributes.remove('date')
-            result = new ReceivedDateTerm(comparison, date)
+            date = attributes.remove('date')
         }
+        ReceivedDateTerm result = new ReceivedDateTerm(comparison, date)
         return result;
     }
 }

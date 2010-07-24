@@ -45,47 +45,61 @@ import static org.junit.Assert.*;
 
 class SearchTermBuilderTest {
 
+    def addressString = 'test@example.com'
+    def address = new InternetAddress(addressString)
+
     @Test
     void testBuildFromTerm() {
-        def addressString = 'test@example.com'
-        def address = new InternetAddress(addressString)
         FromTerm term = new SearchTermBuilder().from(address)
         assert term.address == address
         
         term = new SearchTermBuilder().from(addressString)
         assert term.address == address
 
-//        Message message = [from: address] as Message
-//        assert term.match(message)
+        Message message = [from: address] as Message
+        assert term.match(message)
     }
 
     @Test    
     void testBuildToTerm() {
-        def address = new InternetAddress('test@example.com')
         RecipientTerm term = new SearchTermBuilder().to(address)
         assert term.recipientType == RecipientType.TO
+        assert term.address == address
+        
+        term = new SearchTermBuilder().to(addressString)
+        assert term.address == address
     }
 
     @Test    
     void testBuildCcTerm() {
-        def address = new InternetAddress('test@example.com')
         RecipientTerm term = new SearchTermBuilder().cc(address)
         assert term.recipientType == RecipientType.CC
+        assert term.address == address
+        
+        term = new SearchTermBuilder().cc(addressString)
+        assert term.address == address
     }
 
     @Test    
     void testBuildBccTerm() {
-        def address = new InternetAddress('test@example.com')
         RecipientTerm term = new SearchTermBuilder().bcc(address)
         assert term.recipientType == RecipientType.BCC
+        assert term.address == address
+        
+        term = new SearchTermBuilder().bcc(addressString)
+        assert term.address == address
     }
     
     @Test
     void testBuildAndTerm() {
-        def address = new InternetAddress('test@example.com')
         def term = new SearchTermBuilder().and() {
             to(address)
-            cc(address)
+            subjectContains('test')
         }
+        Message message = [from: address, subject: 'This is a test'] as Message
+        assert term.match(message)
+        
+        message = [from: address, subject: 'This is a tset'] as Message
+        assert !term.match(message)
     }
 }

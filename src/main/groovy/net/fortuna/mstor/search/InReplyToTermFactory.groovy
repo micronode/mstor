@@ -55,14 +55,14 @@ class InReplyToTermFactory extends AbstractFactory {
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
             throws InstantiationException, IllegalAccessException {
 
-        InReplyToSearchTerm result
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, InReplyToSearchTerm)) {
-            result = value
+        MStorMessage message
+        if (FactoryBuilderSupport.checkValueIsType(value, name, MStorMessage)) {
+            message = value
         }
         else {
-            MStorMessage message = attributes.remove('message')
-            result = new InReplyToSearchTerm(message)
+            message = attributes.remove('message')
         }
+        InReplyToSearchTerm result = new InReplyToSearchTerm(message)
         return result;
     }
 }

@@ -56,14 +56,14 @@ class FlagTermFactory extends AbstractFactory {
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
             throws InstantiationException, IllegalAccessException {
 
-        FlagTerm result
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, FlagTerm)) {
-            result = value
+        Flags flags
+        if (FactoryBuilderSupport.checkValueIsType(value, name, Flags)) {
+            flags = value
         }
         else {
-            Flags flags = attributes.remove('flags')
-            result = new FlagTerm(flags, set)
+            flags = attributes.remove('flags')
         }
+        FlagTerm result = new FlagTerm(flags, set)
         return result;
     }
 }

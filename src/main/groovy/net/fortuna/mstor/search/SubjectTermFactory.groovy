@@ -52,14 +52,14 @@ class SubjectTermFactory extends AbstractFactory {
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
             throws InstantiationException, IllegalAccessException {
 
-        SubjectTerm result
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, SubjectTerm)) {
-            result = value
+        String pattern
+        if (FactoryBuilderSupport.checkValueIsType(value, name, String)) {
+            pattern = value
         }
         else {
-            String pattern = attributes.remove('pattern')
-            result = new SubjectTerm(pattern)
+            pattern = attributes.remove('pattern')
         }
+        SubjectTerm result = new SubjectTerm(pattern)
         return result;
     }
 

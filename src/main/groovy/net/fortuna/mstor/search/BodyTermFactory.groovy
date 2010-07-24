@@ -52,14 +52,14 @@ class BodyTermFactory extends AbstractFactory {
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
             throws InstantiationException, IllegalAccessException {
 
-        BodyTerm result
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, BodyTerm)) {
-            result = value
+        String pattern
+        if (FactoryBuilderSupport.checkValueIsType(value, name, String)) {
+            pattern = value
         }
         else {
-            String pattern = attributes.remove('pattern')
-            result = new BodyTerm(pattern)
+            pattern = attributes.remove('pattern')
         }
+        BodyTerm result = new BodyTerm(pattern)
         return result;
     }
 

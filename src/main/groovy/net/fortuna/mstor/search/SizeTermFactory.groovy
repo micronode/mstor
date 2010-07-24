@@ -54,14 +54,14 @@ class SizeTermFactory extends AbstractFactory {
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
             throws InstantiationException, IllegalAccessException {
 
-        SizeTerm result
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, SizeTerm)) {
-            result = value
+        int size
+        if (FactoryBuilderSupport.checkValueIsType(value, name, Integer)) {
+            size = value
         }
         else {
-            int size = attributes.remove('size')
-            result = new SizeTerm(comparison, size)
+            size = attributes.remove('size')
         }
+        SizeTerm result = new SizeTerm(comparison, size)
         return result;
     }
 }

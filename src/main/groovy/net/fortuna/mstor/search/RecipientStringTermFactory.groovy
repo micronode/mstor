@@ -56,14 +56,14 @@ class RecipientStringTermFactory extends AbstractFactory {
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
             throws InstantiationException, IllegalAccessException {
 
-        RecipientStringTerm result
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, RecipientStringTerm)) {
+        String pattern
+        if (FactoryBuilderSupport.checkValueIsType(value, name, String)) {
             result = value
         }
         else {
-            String pattern = attributes.remove('pattern')
-            result = new RecipientStringTerm(type, pattern)
+            pattern = attributes.remove('pattern')
         }
+        RecipientStringTerm result = new RecipientStringTerm(type, pattern)
         return result;
     }
 
