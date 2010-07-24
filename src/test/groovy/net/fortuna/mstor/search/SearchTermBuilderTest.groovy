@@ -8,8 +8,6 @@ import javax.mail.search.FromTerm;
 import javax.mail.search.RecipientTerm;
 import javax.mail.internet.InternetAddress;
 
-import net.fortuna.mstor.search.AndTermFactory.AndTermEx;
-
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -54,7 +52,7 @@ class SearchTermBuilderTest {
     @Test
     void testBuildAndTerm() {
         def address = new InternetAddress('test@example.com')
-        AndTermEx term = new SearchTermBuilder().and() {
+        def term = new SearchTermBuilder().and() {
             to(address)
             cc(address)
         }
