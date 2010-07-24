@@ -56,7 +56,7 @@ class SearchTermBuilderTest {
         term = new SearchTermBuilder().from(addressString)
         assert term.address == address
 
-        Message message = [from: address] as Message
+        Message message = { [address] as Address[] } as Message
         assert term.match(message)
     }
 
@@ -93,13 +93,13 @@ class SearchTermBuilderTest {
     @Test
     void testBuildAndTerm() {
         def term = new SearchTermBuilder().and() {
-            to(address)
+            from(address)
             subjectContains('test')
         }
-        Message message = [from: address, subject: 'This is a test'] as Message
+        Message message = [getFrom:{ [address] as Address[] }, getSubject:{ 'This is a test' }] as Message
         assert term.match(message)
         
-        message = [from: address, subject: 'This is a tset'] as Message
+        message = [getFrom: {[address] as Address[]}, getSubject: {'This is a tset'}] as Message
         assert !term.match(message)
     }
 }
