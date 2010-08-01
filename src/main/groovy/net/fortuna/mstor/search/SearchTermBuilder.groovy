@@ -42,7 +42,11 @@ import groovy.util.FactoryBuilderSupport;
  */
 class SearchTermBuilder extends FactoryBuilderSupport {
 
-    SearchTermBuilder() {
+    SearchTermBuilder(boolean init = true) {
+        super(init)
+    }
+    
+    def registerTerms() {
         registerFactory 'from', new FromTermFactory()
         registerFactory 'fromContains', new FromStringTermFactory()
         registerFactory 'to', new RecipientTermFactory(type: RecipientType.TO)
