@@ -3,6 +3,7 @@ package net.fortuna.mstor
 
 import java.util.Map;
 
+import javax.mail.Message.RecipientType;
 import javax.mail.internet.InternetAddress;
 
 import groovy.util.AbstractFactory;
@@ -10,6 +11,8 @@ import groovy.util.FactoryBuilderSupport;
 
 class InternetAddressFactory extends AbstractFactory {
 
+    RecipientType type
+    
     @Override
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
             throws InstantiationException, IllegalAccessException {
@@ -30,5 +33,13 @@ class InternetAddressFactory extends AbstractFactory {
         }
         return address;
     }
-
+            
+    public void setParent(FactoryBuilderSupport builder, Object parent, Object child) {
+        if (type) {
+            parent.addRecipient type, child
+        }
+        else {
+            parent.from = child
+        }
+    }
 }
