@@ -186,16 +186,16 @@ public class MboxFileTest extends TestCase {
         else if (testFile.getName().equals("received-0xc.mbox")) {
             assertEquals(1, mbox.getMessageCount());
         }
-        else if (testFile.getAbsolutePath().endsWith("mail.internode.on.net/Inbox")) {
+        else if (testFile.getAbsolutePath().endsWith("mail.internode.on.net" + File.separator + "Inbox")) {
             assertEquals(28, mbox.getMessageCount());
         }
-        else if (testFile.getAbsolutePath().endsWith("mail.modularity.net.au/Inbox")) {
+        else if (testFile.getAbsolutePath().endsWith("mail.modularity.net.au" + File.separator + "Inbox")) {
             assertEquals(139, mbox.getMessageCount());
         }
-        else if (testFile.getAbsolutePath().endsWith("pop.gmail.com/Inbox")) {
+        else if (testFile.getAbsolutePath().endsWith("pop.gmail.com" + File.separator + "Inbox")) {
             assertEquals(1240, mbox.getMessageCount());
         }
-        else if (testFile.getAbsolutePath().endsWith("pop.hotpop.com/Inbox")) {
+        else if (testFile.getAbsolutePath().endsWith("pop.hotpop.com" + File.separator + "Inbox")) {
             assertEquals(178, mbox.getMessageCount());
         }
         else if (testFile.getName().equals("error.mbox")) {
@@ -205,6 +205,12 @@ public class MboxFileTest extends TestCase {
             else {
                 assertEquals(2, mbox.getMessageCount());
             }
+        }
+        else if (testFile.getAbsolutePath().endsWith("in.BOX" + File.separator + "in.BOX")) {
+            assertEquals(4, mbox.getMessageCount());
+        }
+        else if (testFile.getAbsolutePath().endsWith("NEWBO2.BOX" + File.separator + "NEWBO2.BOX")) {
+            assertEquals(1, mbox.getMessageCount());
         }
 
 //        log.info("Message count: " + mbox.getMessageCount());
@@ -271,7 +277,14 @@ public class MboxFileTest extends TestCase {
         TestSuite suite = new TestSuite(MboxFileTest.class.getSimpleName());
         
 //        suite.addTest(new MboxFileTest("testGetMessageCount", "/tmp/Inbox"));
-        File[] testFiles = new File("etc/samples/mailboxes")
+        suite.addTest(new MboxFileTest("testGetMessageCount", 
+        		"etc/samples/mailboxes/foxmail/in.BOX", 
+        		BufferStrategy.DEFAULT, false, true));
+        suite.addTest(new MboxFileTest("testGetMessageCount", 
+        		"etc/samples/mailboxes/foxmail/NEWBO2.BOX", 
+        		BufferStrategy.DEFAULT, false, true));
+        
+		File[] testFiles = new File("etc/samples/mailboxes")
                 .listFiles((FileFilter) new NotFileFilter(
                         DirectoryFileFilter.INSTANCE));
         for (int i = 0; i < testFiles.length; i++) {

@@ -143,8 +143,21 @@ public class MboxFile {
 //            Pattern.MULTILINE);
     private static final Pattern FROM__LINE_PATTERN = Pattern.compile("(\\A|\\n{2}|(\\r\\n){2})^From .*$", Pattern.MULTILINE);
     
-    private static final Pattern RELAXED_FROM__LINE_PATTERN = Pattern.compile("^From .*$", Pattern.MULTILINE);
-
+//    private static final Pattern RELAXED_FROM__LINE_PATTERN = Pattern.compile("^From .*$", Pattern.MULTILINE);
+    /*
+     * this differs from the FROM__LINE_PATTERN in that it supports
+     *  - files where there is no blank line before the FROM_ line 
+     *  - foxmail files
+     *  - old outlook express .mbx files
+     */
+    private static final Pattern RELAXED_FROM__LINE_PATTERN = 
+    	Pattern.compile("^(" +                                          // at the beginning of a line begins either a
+    			"From .*" +                                             // normal From_ line 
+    			")|(" +                                                 // or
+    			"\\u0010\\u0010\\u0010\\u0010\\u0010\\u0010\\u0010" +   // 7 0x10 bytes 
+    			"\\u0011\\u0011\\u0011\\u0011\\u0011\\u0011\\u0053" +   // 6 0x11 bytes and an 'S' (0x53) (a foxmail signature)
+    			")$", Pattern.MULTILINE);                               // all of this up to the end of the line
+    
     private static final int DEFAULT_BUFFER_SIZE = 8192;
 
     // Charset and decoder for ISO-8859-15
