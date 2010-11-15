@@ -34,6 +34,7 @@ package net.fortuna.mstor.connector.jcr;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.List;
 
 import javax.jcr.Node;
@@ -122,6 +123,8 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
      */
     @SuppressWarnings("unchecked")
     public void appendMessages(Message[] messages) throws MessagingException {
+    	final Date defaultReceivedDate = new Date();
+    	
         for (Message message : messages) {
             try {
                 JcrMessage jcrMessage = null;
@@ -143,7 +146,12 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
                 }
                 jcrMessage.setFlags(message.getFlags());
                 jcrMessage.setHeaders(message.getAllHeaders());
-                jcrMessage.setReceived(message.getReceivedDate());
+                if (message.getReceivedDate() != null) {
+                    jcrMessage.setReceived(message.getReceivedDate());
+                }
+                else {
+                    jcrMessage.setReceived(defaultReceivedDate);
+                }
                 jcrMessage.setExpunged(message.isExpunged());
                 jcrMessage.setMessage(message);
                 
