@@ -424,7 +424,10 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
      * {@inheritDoc}
      */
     public int getType() {
-        return type;
+    	if (type != null) {
+            return type;
+    	}
+    	return -1;
     }
 
     /**
