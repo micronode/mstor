@@ -41,6 +41,8 @@ import java.nio.charset.CharsetDecoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.fortuna.mstor.util.Configurator;
+
 /**
  * @author Ben
  * 
@@ -68,8 +70,7 @@ public class MessageInputStream extends InputStream {
      * @param buffer
      */
     public MessageInputStream(final ByteBuffer b) throws CharacterCodingException {
-        this(b, Charset.forName(System.getProperty(
-            "mstor.mbox.encoding", "ISO-8859-1")));
+        this(b, Charset.forName(Configurator.getProperty("mstor.mbox.encoding", "ISO-8859-1")));
     }
     
     /**

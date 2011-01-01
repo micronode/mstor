@@ -56,6 +56,7 @@ import net.fortuna.mstor.connector.DelegateException;
 import net.fortuna.mstor.connector.FolderDelegate;
 import net.fortuna.mstor.connector.MessageDelegate;
 import net.fortuna.mstor.util.CacheAdapter;
+import net.fortuna.mstor.util.Configurator;
 import net.fortuna.mstor.util.EhCacheAdapter;
 
 /**
@@ -596,7 +597,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
     
     private CacheAdapter getCacheAdapter() {
         if (cacheAdapter == null) {
-            if (System.getProperty("mstor.cache.disabled", "false").equals("true")) {
+            if (Configurator.getProperty("mstor.cache.disabled", "false").equals("true")) {
                 this.cacheAdapter = new CacheAdapter();
             } else {
                 this.cacheAdapter = new EhCacheAdapter("mstor.folder." + getFullName().hashCode());

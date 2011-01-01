@@ -46,6 +46,8 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
 
+import net.fortuna.mstor.util.Configurator;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -93,7 +95,7 @@ public class MessageAppender {
      * @param channel
      */
     public MessageAppender(FileChannel channel) {
-        this(channel, Charset.forName(System.getProperty("mstor.mbox.encoding", "ISO-8859-1")));
+        this(channel, Charset.forName(Configurator.getProperty("mstor.mbox.encoding", "ISO-8859-1")));
     }
     
     /**
