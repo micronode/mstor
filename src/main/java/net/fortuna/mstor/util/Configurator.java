@@ -58,7 +58,7 @@ public final class Configurator {
     
     static {
         try {
-            CONFIG.load(Configurator.class.getResourceAsStream("/mstor.properties"));
+            CONFIG.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("mstor.properties"));
         }
         catch (Exception e) {
             LOG.info("mstor.properties not found.");
