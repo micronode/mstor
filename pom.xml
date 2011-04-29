@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>modularity-parent</artifactId>
 		<groupId>net.modularity</groupId>
-		<version>1.0.10-SNAPSHOT</version>
+		<version>1.0.11-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.fortuna.mstor</groupId>
@@ -247,7 +247,6 @@
         <dependency>
             <groupId>org.spockframework</groupId>
             <artifactId>spock-core</artifactId>
-            <version>0.5-groovy-1.7</version>
             <scope>test</scope>
         </dependency>
         <dependency>
