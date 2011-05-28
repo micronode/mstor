@@ -147,11 +147,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>1.1.1</version>
-		</dependency>
-		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
 			<version>2.4</version>
@@ -176,16 +171,6 @@
 			<artifactId>mail</artifactId>
 			<version>1.4</version>
 		</dependency>
-		<dependency>
-			<groupId>javax.jcr</groupId>
-			<artifactId>jcr</artifactId>
-			<version>2.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jcrom</groupId>
-			<artifactId>jcrom</artifactId>
-			<version>1.3.2</version>
-		</dependency>
 		<!-- -->
 		<dependency>
 			<groupId>org.jyaml</groupId>
@@ -193,18 +178,27 @@
 			<version>1.3</version>
 		</dependency>
 		<!-- -->
+		
+        <dependency>
+            <groupId>javax.jcr</groupId>
+            <artifactId>jcr</artifactId>
+            <version>2.0</version>
+        </dependency>
 		<dependency>
 			<groupId>org.apache.jackrabbit</groupId>
 			<artifactId>jackrabbit-core</artifactId>
-			<version>2.1.0</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.5.8</version>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.jackrabbit</groupId>
+            <artifactId>jackrabbit-jcr-rmi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jcrom</groupId>
+            <artifactId>jcrom</artifactId>
+            <version>1.3.2</version>
+        </dependency>
+		
 		<!--
 			<dependency>
 			<groupId>net.sf.jsr107cache</groupId>
@@ -229,11 +223,6 @@
 			<version>1.4</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.jackrabbit</groupId>
-			<artifactId>jackrabbit-jcr-rmi</artifactId>
-			<version>2.1.0</version>
-		</dependency>
-		<dependency>
 			<groupId>org.codehaus.groovy</groupId>
 			<artifactId>groovy-all</artifactId>
 		</dependency>
@@ -249,6 +238,39 @@
             <artifactId>spock-core</artifactId>
             <scope>test</scope>
         </dependency>
+        
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jul-to-slf4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- 
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+         -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>0.9.28</version>
+            <scope>test</scope>
+        </dependency>
+        
         <dependency>
             <groupId>org.mnode.juicer</groupId>
             <artifactId>juicer</artifactId>
