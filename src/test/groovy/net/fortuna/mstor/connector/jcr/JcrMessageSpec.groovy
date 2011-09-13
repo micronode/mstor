@@ -100,10 +100,10 @@ class JcrMessageSpec extends Specification {
 		}
 		inbox.open(Folder.READ_WRITE)
 		
-		MimeMessage message = new MimeMessage(mailSession)
+		MimeMessage message = [mailSession]
 		message.subject = 'Test message'
 		message.text = 'This is a test message'
-		message.flags = new Flags(Flag.DELETED)
+		message.flags = [Flag.DELETED]
 		inbox.appendMessages([message] as Message[])
 		
 		expect:
