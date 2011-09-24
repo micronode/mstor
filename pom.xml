@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>modularity-parent</artifactId>
 		<groupId>net.modularity</groupId>
-		<version>1.0.11-SNAPSHOT</version>
+		<version>1.0.11</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.fortuna.mstor</groupId>
@@ -30,18 +30,17 @@
 		<developerConnection>scm:hg:ssh://fortuna@mstor.hg.sourceforge.net/hgroot/mstor/mstor</developerConnection>
 		<url>http://mstor.hg.sourceforge.net/hgweb/mstor/mstor/</url>
   </scm>
-	<!--
+
 	<distributionManagement>
 		<relocation>
-			<groupId>net.fortuna.mstor</groupId>
+			<groupId>org.mnode.mstor</groupId>
 			<artifactId>mstor</artifactId>
-			<version>0.9.11</version>
+			<version>0.9.13</version>
 			<message>
-				Updated group id to conform with maven standards
+				Changed group id for upload to Maven central
 			</message>
 		</relocation>
 	</distributionManagement>
-	-->
 	
 	<build>
 		<plugins>
