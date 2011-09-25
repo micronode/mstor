@@ -10,7 +10,7 @@
 	<artifactId>mstor</artifactId>
 	<packaging>bundle</packaging>
 	<name>mstor</name>
-	<version>0.9.13</version>
+	<version>0.9.14-SNAPSHOT</version>
 	<description>A JavaMail provider for persistent email storage.</description>
 	<url>http://mstor.sourceforge.net</url>
 	<issueManagement>
