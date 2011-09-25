@@ -276,7 +276,7 @@
         <dependency>
             <groupId>org.mnode.juicer</groupId>
             <artifactId>juicer</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>0.9</version>
             <scope>test</scope>
         </dependency>
 	</dependencies>
