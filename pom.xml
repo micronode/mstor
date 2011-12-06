@@ -121,33 +121,33 @@
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
-			<version>2.4</version>
+			<version>[2.4,)</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-net</groupId>
 			<artifactId>commons-net</artifactId>
-			<version>1.4.1</version>
+			<version>[1.4.1,)</version>
 		</dependency>
 		<dependency>
 			<groupId>jdom</groupId>
 			<artifactId>jdom</artifactId>
-			<version>1.0</version>
+			<version>[1.0,)</version>
 		</dependency>
 		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>
 			<artifactId>xstream</artifactId>
-			<version>1.2.2</version>
+			<version>[1.2.2,)</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
-			<version>1.4</version>
+			<version>[1.4,)</version>
 		</dependency>
 		<!-- -->
 		<dependency>
 			<groupId>org.jyaml</groupId>
 			<artifactId>jyaml</artifactId>
-			<version>1.3</version>
+			<version>[1.3,)</version>
 		</dependency>
 		<!-- -->
 		
@@ -180,19 +180,18 @@
 		-->
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>
-			<artifactId>ehcache</artifactId>
-			<version>1.4.1</version>
+			<artifactId>ehcache-core</artifactId>
+			<version>[1.7.0,)</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.5</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>1.4</version>
+			<version>[1.4,)</version>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.groovy</groupId>
@@ -201,7 +200,7 @@
 		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib</artifactId>
-			<version>2.2</version>
+			<version>[2.2,)</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
@@ -227,7 +226,7 @@
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
-            <version>1.1.1</version>
+            <version>[1.1.1,)</version>
             <scope>provided</scope>
         </dependency>
         <!-- 
@@ -240,14 +239,14 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>0.9.28</version>
+            <version>[0.9.28,)</version>
             <scope>test</scope>
         </dependency>
         
         <dependency>
             <groupId>org.mnode.juicer</groupId>
             <artifactId>juicer</artifactId>
-            <version>0.9</version>
+            <version>[0.9,)</version>
             <scope>test</scope>
         </dependency>
 	</dependencies>
