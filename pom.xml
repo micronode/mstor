@@ -141,7 +141,7 @@
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
-			<version>[1.4,)</version>
+			<version>1.4</version>
 		</dependency>
 		<!-- -->
 		<dependency>
@@ -246,7 +246,7 @@
         <dependency>
             <groupId>org.mnode.juicer</groupId>
             <artifactId>juicer</artifactId>
-            <version>[0.9,)</version>
+            <version>0.9</version>
             <scope>test</scope>
         </dependency>
 	</dependencies>
