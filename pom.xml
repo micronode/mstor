@@ -20,15 +20,15 @@
 	<inceptionYear>2004</inceptionYear>
 	<licenses>
 		<license>
-			<name>mstor License</name>
-			<url>LICENSE</url>
+            <name>${pom.name} - License</name>
+			<url>${scm.url}/raw-file/tip/LICENSE</url>
 		</license>
 	</licenses>
 
 	<scm>
 		<connection>scm:hg:http://mstor.hg.sourceforge.net:8000/hgroot/mstor/mstor</connection>
 		<developerConnection>scm:hg:ssh://fortuna@mstor.hg.sourceforge.net/hgroot/mstor/mstor</developerConnection>
-		<url>http://mstor.hg.sourceforge.net/hgweb/mstor/mstor/</url>
+		<url>http://mstor.hg.sourceforge.net/hgweb/mstor/mstor</url>
   </scm>
 	
 	<build>
