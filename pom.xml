@@ -77,6 +77,15 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>codenarc-maven-plugin</artifactId>
+                <version>0.17-1</version>
+                <configuration>
+                   <sourceDirectory>src/main/groovy</sourceDirectory>
+                </configuration>
+            </plugin>
             
             <plugin>
               <artifactId>maven-jar-plugin</artifactId>
