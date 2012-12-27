@@ -45,12 +45,12 @@ import java.util.List;
 import java.util.Map;
 
 import javax.mail.Flags;
+import javax.mail.Flags.Flag;
 import javax.mail.Header;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
-import javax.mail.Flags.Flag;
 import javax.mail.internet.InternetHeaders;
 import javax.mail.internet.MimeMessage;
 
@@ -64,7 +64,6 @@ import org.apache.commons.lang.StringUtils;
 import org.jcrom.AbstractJcrEntity;
 import org.jcrom.JcrDataProviderImpl;
 import org.jcrom.JcrFile;
-import org.jcrom.JcrDataProvider.TYPE;
 import org.jcrom.annotations.JcrChildNode;
 import org.jcrom.annotations.JcrFileNode;
 import org.jcrom.annotations.JcrProperty;
@@ -305,7 +304,7 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
         
         content = new JcrFile();
         content.setName("data");
-        content.setDataProvider(new JcrDataProviderImpl(TYPE.BYTES, mout.toByteArray()));
+        content.setDataProvider(new JcrDataProviderImpl(mout.toByteArray()));
         content.setMimeType(message.getContentType());
         content.setLastModified(java.util.Calendar.getInstance());
 
@@ -353,7 +352,7 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
 //        body.setDataProvider(new JcrDataProviderImpl(TYPE.BYTES, ((String) primaryBodyPart.getContent()).getBytes()));
         ByteArrayOutputStream pout = new ByteArrayOutputStream();
         IOUtils.copy(part.getInputStream(), pout);
-        body.setDataProvider(new JcrDataProviderImpl(TYPE.BYTES, pout.toByteArray()));
+        body.setDataProvider(new JcrDataProviderImpl(pout.toByteArray()));
         body.setMimeType(part.getContentType());
         body.setLastModified(java.util.Calendar.getInstance());
         return body;
@@ -425,7 +424,7 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
             ByteArrayOutputStream pout = new ByteArrayOutputStream();
 //            part.writeTo(pout);
             IOUtils.copy(part.getInputStream(), pout);
-            attachment.setDataProvider(new JcrDataProviderImpl(TYPE.BYTES, pout.toByteArray()));
+            attachment.setDataProvider(new JcrDataProviderImpl(pout.toByteArray()));
             attachment.setMimeType(part.getContentType());
             attachment.setLastModified(java.util.Calendar.getInstance());
             attachments.add(attachment);
