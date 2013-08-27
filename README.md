@@ -22,9 +22,9 @@
  in the CHANGELOG.
 
 
-==============
+--------------
  How to build
-==============
+--------------
  
  Using Maven:
 
@@ -47,9 +47,9 @@
  properties (e.g. -Dproject.classpath="..."). You shouldn't need to modify the "build.xml" at all,
  so if you do find a need let me know and I'll try to rectify this.
  
-===================
+-------------------
  System Properties
-===================
+-------------------
 
  A number of system properties may be specified in order to configure the operation
  of mstor to suit your purpose. These are as follows:
@@ -87,9 +87,9 @@
   to 'true' will allow you to exclude ehcache from the list of jars you need to
   ship with your application.
  
-==========
+----------
  Metadata
-==========
+----------
 
  By default mstor provides the ability to extend the standard JavaMail features
  through the use of metadata. This metadata is stored in an XML-based document
@@ -112,9 +112,9 @@
  	p.setProperty("mstor.metadata", "disabled");
  	Session session = Session.getDefaultInstance(p);
 ```
-====================
+--------------------
  Mbox File Encoding
-====================
+--------------------
 
  The mbox format is essentially a concatenation of RFC822 (or RFC2822) messages
  with an additional "From_" line inserted at the start of each message. Instances
@@ -135,9 +135,9 @@
      `-Dmstor.mbox.encoding=<some_encoding>`
  
 
-==================
+------------------
  OutOfMemoryError
-==================
+------------------
 
  You may encounter errors when trying to load a large mailbox into memory all
  at once. Here are some pointers to help avoid this problem:
