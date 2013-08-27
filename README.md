@@ -54,15 +54,15 @@
  A number of system properties may be specified in order to configure the operation
  of mstor to suit your purpose. These are as follows:
  
-  - mstor.mbox.metadataStrategy={none|xml|yaml}
+  - `mstor.mbox.metadataStrategy={none|xml|yaml}`
   
   enables mstor-specific metadata to provide full JavaMail
   functionality and performance enhancement. Default value is equivalent to xml.
   
-  - mstor.mbox.encoding (specifies the file encoding used to read the mbox file.
+  - `mstor.mbox.encoding` (specifies the file encoding used to read the mbox file.
   Default value: "ISO-8859-1").
   
-  - mstor.mbox.bufferStrategy={default|mapped|direct}
+  - `mstor.mbox.bufferStrategy={default|mapped|direct}`
   
   specifies whether to use java.nio maps to read
   messages from the mbox file. This may improve performance for reading, however
@@ -70,14 +70,14 @@
   maps when you plan to modify the underlying mbox file. Default value is equivalent
   to non-direct buffers.
   
-  - mstor.mbox.cacheBuffers={default|enabled|disabled}
+  - `mstor.mbox.cacheBuffers={default|enabled|disabled}`
   
   message data from an mbox file is read into a buffer
   prior to returning the underlying data stream. This property specifies whether
   to cache these buffers in memory. This option may improve performance in reading
   messages, but will increase memory usage. Default value is equivalent to disabled.
   
-  - mstor.cache.disabled={false|true}
+  - `mstor.cache.disabled={false|true}`
   
   a value of 'true' turns of the caching functionality. In most cases this setting
   will lead to drastic performance degradation, especially if your application 
@@ -104,14 +104,14 @@
  If you decide not to use mstor's metadata feature, you can disable it by
  specifying the following session property:
  
- 	mstor.metadata=disabled
+ 	`mstor.metadata=disabled`
  	
  e.g.
- 
+```
  	Properties p = new Properties();
  	p.setProperty("mstor.metadata", "disabled");
  	Session session = Session.getDefaultInstance(p);
-
+```
 ====================
  Mbox File Encoding
 ====================
@@ -132,7 +132,7 @@
  It is possible however, to override the mbox file encoding used by specifying the
  following system property:
  
-     -Dmstor.mbox.encoding=<some_encoding>
+     `-Dmstor.mbox.encoding=<some_encoding>`
  
 
 ==================
