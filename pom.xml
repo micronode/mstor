@@ -25,9 +25,9 @@
 	</licenses>
 
 	<scm>
-		<connection>scm:hg:http://mstor.hg.sourceforge.net:8000/hgroot/mstor/mstor</connection>
-		<developerConnection>scm:hg:ssh://fortuna@mstor.hg.sourceforge.net/hgroot/mstor/mstor</developerConnection>
-		<url>http://mstor.hg.sourceforge.net/hgweb/mstor/mstor</url>
+		<connection>scm:git:https://github.com/benfortuna/mstor.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com:benfortuna/mstor.git</developerConnection>
+		<url>https://github.com/benfortuna/mstor</url>
   </scm>
 	
 	<build>
