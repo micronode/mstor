@@ -61,7 +61,7 @@ class NotTermFactory extends AbstractFactory {
         parent.setTerm(child)
     }
     
-    class NotTermEx {
+    static class NotTermEx {
         def termEx
         @Delegate NotTerm term
         
