@@ -4,6 +4,9 @@ apply plugin: 'groovy'
 apply plugin: 'pmd'
 apply plugin: 'findbugs'
 
+findbugs.ignoreFailures = true
+pmd.ignoreFailures = true
+
 repositories {
   mavenCentral()
   maven {
