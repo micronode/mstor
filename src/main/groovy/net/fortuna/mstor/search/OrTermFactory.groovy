@@ -62,6 +62,9 @@ class OrTermFactory extends AbstractFactory {
     }
     
     static class OrTermEx {
+		
+		private static final long serialVersionUID = 1L
+
         def termsEx = []
         @Delegate OrTerm term
         

@@ -114,7 +114,7 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
     
     @JcrReference(byPath=true, lazy=true) private List<JcrMessage> references;
     
-    private JcrMessageDao messageDao;
+    private transient JcrMessageDao messageDao;
     
     /**
      * 
@@ -148,7 +148,7 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
      * {@inheritDoc}
      */
     public Date getForwarded() {
-        return forwarded;
+        return (Date) forwarded.clone();
     }
 
     /**
@@ -173,14 +173,14 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
      * {@inheritDoc}
      */
     public Date getReceived() {
-        return received;
+        return (Date) received.clone();
     }
 
     /**
      * {@inheritDoc}
      */
     public Date getReplied() {
-        return replied;
+        return (Date) replied.clone();
     }
 
     /**
@@ -246,7 +246,7 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
      * {@inheritDoc}
      */
     public void setForwarded(Date forwarded) {
-        this.forwarded = forwarded;
+        this.forwarded = (Date) forwarded.clone();
     }
 
     /**
@@ -276,14 +276,14 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
      * {@inheritDoc}
      */
     public void setReceived(Date received) {
-        this.received = received;
+        this.received = (Date) received.clone();
     }
 
     /**
      * {@inheritDoc}
      */
     public void setReplied(Date replied) {
-        this.replied = replied;
+        this.replied = (Date) replied.clone();
     }
 
     /**

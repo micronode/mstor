@@ -40,6 +40,7 @@ import javax.swing.JSplitPane;
 
 import groovy.util.AbstractFactory;
 import groovy.util.FactoryBuilderSupport;
+import groovyjarjarasm.asm.commons.SerialVersionUIDAdder;
 
 /**
  * @author Ben
@@ -71,6 +72,9 @@ class AndTermFactory extends AbstractFactory {
     }
     
     static class AndTermEx {
+		
+		private static final long serialVersionUID = 1L
+		
         def termsEx = []
         @Delegate AndTerm term
         

@@ -32,6 +32,7 @@
 package net.fortuna.mstor;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import javax.mail.Flags;
 import javax.mail.Folder;
@@ -424,7 +425,7 @@ public class MStorFolderTest extends AbstractMStorTest {
     
             Message[] expunged = folder.expunge();
     
-            log.info("Expunged [" + expunged + "]");
+            log.info("Expunged [" + Arrays.toString(expunged) + "]");
             assertEquals(1, expunged.length);
         }
     }

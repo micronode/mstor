@@ -62,6 +62,9 @@ class NotTermFactory extends AbstractFactory {
     }
     
     static class NotTermEx {
+		
+		private static final long serialVersionUID = 1L
+
         def termEx
         @Delegate NotTerm term
         
