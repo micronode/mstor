@@ -1,14 +1,12 @@
 apply plugin: 'eclipse'
 apply plugin: 'groovy'
 //apply plugin: 'checkstyle'
-apply plugin: 'pmd'
 apply plugin: 'findbugs'
+apply plugin: 'pmd'
 apply plugin: 'codenarc'
 apply plugin: 'osgi'
 
-findbugs.ignoreFailures = true
-pmd.ignoreFailures = true
-codenarc.ignoreFailures = true
+[findbugs, pmd, codenarc]*.ignoreFailures = true
 
 repositories {
   mavenCentral()
