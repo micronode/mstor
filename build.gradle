@@ -3,9 +3,12 @@ apply plugin: 'groovy'
 //apply plugin: 'checkstyle'
 apply plugin: 'pmd'
 apply plugin: 'findbugs'
+apply plugin: 'codenarc'
+apply plugin: 'osgi'
 
 findbugs.ignoreFailures = true
 pmd.ignoreFailures = true
+codenarc.ignoreFailures = true
 
 repositories {
   mavenCentral()
@@ -65,6 +68,6 @@ test {
   exclude '**/*IntegrationTest.class'	
 }
 
-task integrationTest(type: Test, dependsOn: 'test') << {
+task integrationTest(type: Test, dependsOn: 'test') {
   include '**/*IntegrationTest.class'
 }
