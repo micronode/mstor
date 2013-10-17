@@ -92,9 +92,9 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
     
     private JcrConnector connector;
     
-    private JcrFolderDao folderDao;
+    private volatile JcrFolderDao folderDao;
     
-    private JcrMessageDao messageDao;
+    private volatile JcrMessageDao messageDao;
     
     private int messageCount;
     

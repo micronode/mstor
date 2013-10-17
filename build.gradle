@@ -3,7 +3,7 @@ apply plugin: 'groovy'
 //apply plugin: 'checkstyle'
 apply plugin: 'pmd'
 apply plugin: 'findbugs'
-        
+
 repositories {
   mavenCentral()
   maven {
