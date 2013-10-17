@@ -32,7 +32,6 @@
 package net.fortuna.mstor;
 
 import java.io.InputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -40,11 +39,11 @@ import java.util.Enumeration;
 import java.util.List;
 
 import javax.mail.Flags;
+import javax.mail.Flags.Flag;
 import javax.mail.Folder;
 import javax.mail.Header;
 import javax.mail.MessagingException;
 import javax.mail.Session;
-import javax.mail.Flags.Flag;
 import javax.mail.internet.InternetHeaders;
 import javax.mail.internet.MimeMessage;
 
@@ -67,9 +66,7 @@ import org.apache.commons.logging.LogFactory;
  * </pre>
  * 
  */
-public final class MStorMessage extends MimeMessage implements Serializable, Taggable {
-
-    private static final long serialVersionUID = 6413532435324648022L;
+public final class MStorMessage extends MimeMessage implements Taggable {
 
     private Log log = LogFactory.getLog(MStorMessage.class);
 
