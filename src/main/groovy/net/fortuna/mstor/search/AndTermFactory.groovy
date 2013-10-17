@@ -70,7 +70,7 @@ class AndTermFactory extends AbstractFactory {
         parent.addTerm(child)
     }
     
-    class AndTermEx {
+    static class AndTermEx {
         def termsEx = []
         @Delegate AndTerm term
         
