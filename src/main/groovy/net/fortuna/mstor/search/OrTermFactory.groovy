@@ -61,7 +61,7 @@ class OrTermFactory extends AbstractFactory {
         parent.addTerm(child)
     }
     
-    class OrTermEx {
+    static class OrTermEx {
         def termsEx = []
         @Delegate OrTerm term
         
