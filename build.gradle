@@ -6,7 +6,7 @@ apply plugin: 'pmd'
 //apply plugin: 'codenarc'
 apply plugin: 'osgi'
 
-[findbugs, pmd, codenarc]*.ignoreFailures = true
+[findbugs, pmd]*.ignoreFailures = true
 checkstyle {
   ignoreFailures = true
   configFile = 'http://svn.mnode.org/base/mnode-parent/trunk/mnode-tools/src/main/resources/checkstyle/mnode_checks.xml'
