@@ -1,12 +1,17 @@
 apply plugin: 'eclipse'
 apply plugin: 'groovy'
-//apply plugin: 'checkstyle'
+apply plugin: 'checkstyle'
 apply plugin: 'findbugs'
 apply plugin: 'pmd'
-apply plugin: 'codenarc'
+//apply plugin: 'codenarc'
 apply plugin: 'osgi'
 
 [findbugs, pmd, codenarc]*.ignoreFailures = true
+checkstyle {
+  ignoreFailures = true
+  configFile = 'http://svn.mnode.org/base/mnode-parent/trunk/mnode-tools/src/main/resources/checkstyle/mnode_checks.xml'
+  configProperties = ['checkstyle.suppressions.file':'http://svn.mnode.org/base/mnode-parent/trunk/mnode-tools/src/main/resources/checkstyle/default-suppressions.xml']
+}
 
 repositories {
   mavenCentral()
