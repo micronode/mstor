@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE suppressions PUBLIC
+    "-//Puppy Crawl//DTD Suppressions 1.1//EN"
+    "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
+
+<suppressions>
+    <suppress checks="JavadocType" files=".*Test.java" />
+    <suppress checks="JavadocMethod" files=".*Test.java" />
+    <suppress checks="MagicNumber" files=".*Test.java" />
+    <suppress checks="ArrayTrailingComma" files=".*Test.java" />
+    <suppress checks="ClassDataAbstractionCoupling" files=".*Test.java" />
+    <suppress checks="FinalLocalVariable" files=".*Test.java" />
+    <suppress checks="ClassFanOutComplexity" files=".*Test.java" />
+    <suppress checks="WhitespaceAfter" files=".*Test.java" />
+    <suppress checks="NoWhitespaceAfter" files=".*Test.java" />
+    <suppress checks="NoWhitespaceBefore" files=".*Test.java" />
+    <suppress checks="WhitespaceAround" files=".*Test.java" />
+</suppressions>
