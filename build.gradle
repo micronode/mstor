@@ -67,6 +67,6 @@ test {
   exclude '**/*IntegrationTest.class'	
 }
 
-task integrationTest(type: Test, dependsOn: 'test') {
+task integrationTest(type: Test, dependsOn: 'test') << {
   include '**/*IntegrationTest.class'
 }
