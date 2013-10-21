@@ -32,6 +32,7 @@
 package net.fortuna.mstor;
 
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -66,7 +67,7 @@ import org.apache.commons.logging.LogFactory;
  * </pre>
  * 
  */
-public final class MStorMessage extends MimeMessage implements Taggable {
+public final class MStorMessage extends MimeMessage implements Serializable, Taggable {
 
     private Log log = LogFactory.getLog(MStorMessage.class);
 
