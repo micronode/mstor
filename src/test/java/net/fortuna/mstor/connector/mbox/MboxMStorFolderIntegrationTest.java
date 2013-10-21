@@ -36,6 +36,8 @@ import java.io.FileFilter;
 import java.util.Properties;
 
 import junit.framework.TestSuite;
+import org.junit.runner.RunWith;
+import org.junit.runners.AllTests;
 import net.fortuna.mstor.MStorFolderTest;
 import net.fortuna.mstor.connector.mbox.MboxConnector.MetadataStrategy;
 
@@ -53,6 +55,7 @@ import org.apache.commons.io.filefilter.NotFileFilter;
  * 
  *
  */
+@RunWith(AllTests.class)
 public class MboxMStorFolderIntegrationTest extends TestSuite {
 
     /**
