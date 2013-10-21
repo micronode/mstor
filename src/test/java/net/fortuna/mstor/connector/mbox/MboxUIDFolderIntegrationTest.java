@@ -56,7 +56,7 @@ import org.apache.commons.io.filefilter.NotFileFilter;
  *
  */
 @RunWith(AllTests.class)
-public class MboxUIDFolderIntegrationTest extends TestSuite {
+public class MboxUIDFolderIntegrationTest {
 
     /**
      * @return
