@@ -35,6 +35,8 @@ import java.io.File;
 import java.util.Properties;
 
 import junit.framework.TestSuite;
+import org.junit.runner.RunWith;
+import org.junit.runners.AllTests;
 import net.fortuna.mstor.MStorStoreTest;
 
 /**
@@ -48,6 +50,7 @@ import net.fortuna.mstor.MStorStoreTest;
  * 
  *
  */
+@RunWith(AllTests.class)
 public class JcrMStorStoreIntegrationTest extends TestSuite {
 
     /**
