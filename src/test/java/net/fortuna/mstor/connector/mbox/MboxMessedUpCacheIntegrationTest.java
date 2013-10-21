@@ -50,7 +50,7 @@ import net.fortuna.mstor.MessedUpCacheTest;
  *
  */
 @RunWith(AllTests.class)
-public class MboxMessedUpCacheIntegrationTest extends TestSuite {
+public class MboxMessedUpCacheIntegrationTest {
 
     /**
      * @return
