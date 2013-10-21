@@ -56,7 +56,7 @@ import org.apache.commons.io.filefilter.NotFileFilter;
  *
  */
 @RunWith(AllTests.class)
-public class MboxMStorFolderIntegrationTest extends TestSuite {
+public class MboxMStorFolderIntegrationTest {
 
     /**
      * @return
