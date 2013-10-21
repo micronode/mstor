@@ -35,6 +35,8 @@ import java.io.File;
 import java.util.Properties;
 
 import junit.framework.TestSuite;
+import org.junit.runner.RunWith;
+import org.junit.runners.AllTests;
 import net.fortuna.mstor.MStorFolderTest;
 
 /**
@@ -48,7 +50,8 @@ import net.fortuna.mstor.MStorFolderTest;
  * 
  *
  */
-public class JcrMStorFolderIntegrationTest extends TestSuite {
+@RunWith(AllTests.class)
+public class JcrMStorFolderIntegrationTest {
 
     /**
      * @return
