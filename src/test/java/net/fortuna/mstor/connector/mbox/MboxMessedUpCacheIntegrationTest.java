@@ -34,6 +34,8 @@ package net.fortuna.mstor.connector.mbox;
 import java.util.Properties;
 
 import junit.framework.TestSuite;
+import org.junit.runner.RunWith;
+import org.junit.runners.AllTests;
 import net.fortuna.mstor.MessedUpCacheTest;
 
 /**
@@ -47,6 +49,7 @@ import net.fortuna.mstor.MessedUpCacheTest;
  * 
  *
  */
+@RunWith(AllTests.class)
 public class MboxMessedUpCacheIntegrationTest extends TestSuite {
 
     /**
