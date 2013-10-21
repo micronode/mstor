@@ -55,7 +55,7 @@ import net.fortuna.mstor.MStorStoreTest;
  *
  */
 @RunWith(AllTests.class)
-public class MboxMStorStoreIntegrationTest extends TestSuite {
+public class MboxMStorStoreIntegrationTest {
 
     /**
      * @return
