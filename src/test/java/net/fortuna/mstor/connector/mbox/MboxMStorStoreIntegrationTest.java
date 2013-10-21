@@ -39,6 +39,8 @@ import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.NotFileFilter;
 
 import junit.framework.TestSuite;
+import org.junit.runner.RunWith;
+import org.junit.runners.AllTests;
 import net.fortuna.mstor.MStorStoreTest;
 
 /**
@@ -52,6 +54,7 @@ import net.fortuna.mstor.MStorStoreTest;
  * 
  *
  */
+@RunWith(AllTests.class)
 public class MboxMStorStoreIntegrationTest extends TestSuite {
 
     /**
