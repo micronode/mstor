@@ -178,8 +178,8 @@ public final class MStorFolder extends Folder implements UIDFolder {
         final List<Folder> folders = new ArrayList<Folder>();
 
         final FolderDelegate<? extends MessageDelegate>[] childDelegates = delegate.list(pattern);
-        for (int i = 0; i < childDelegates.length; i++) {
-            folders.add(new MStorFolder(mStore, childDelegates[i]));
+        for (FolderDelegate<? extends MessageDelegate> childDelegate : childDelegates) {
+            folders.add(new MStorFolder(mStore, childDelegate));
         }
         return folders.toArray(new Folder[folders.size()]);
     }
@@ -243,13 +243,13 @@ public final class MStorFolder extends Folder implements UIDFolder {
                         Executors.newCachedThreadPool());
                 
                 final Folder[] subfolders = list();
-                for (int i = 0; i < subfolders.length; i++) {
+                for (Folder subfolder : subfolders) {
 //                    subfolders[i].delete(recurse);
-                    processor.submit(new DeleteFolderCommand(subfolders[i], recurse));
+                    processor.submit(new DeleteFolderCommand(subfolder, recurse));
                 }
                 
                 deleted = true;
-                for (int i = 0; i < subfolders.length; i++) {
+                for (Folder subfolder : subfolders) {
                     try {
                         if (!processor.take().get()) {
                             deleted = false;
@@ -391,7 +391,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
             throw new MessagingException(INVALID_FOLDER_TYPE_MESSAGE);
         }
 
-        Message message = null;
+        Message message;
     
         message = retrieveMessageFromCache(index);
 
@@ -464,8 +464,8 @@ public final class MStorFolder extends Folder implements UIDFolder {
 
         delegate.expunge(deleted);
 
-        for (int i = 0; i < deleted.length; i++) {
-            deleted[i].setExpunged(true);
+        for (MStorMessage aDeleted : deleted) {
+            aDeleted.setExpunged(true);
         }
 
         // notify listeners..
@@ -554,8 +554,8 @@ public final class MStorFolder extends Folder implements UIDFolder {
      */
     public Message[] getMessagesByUID(long[] uids) throws MessagingException {
         final List<Message> messages = new ArrayList<Message>();
-        for (int i = 0; i < uids.length; i++) {
-            messages.add(getMessageByUID(uids[i]));
+        for (long uid : uids) {
+            messages.add(getMessageByUID(uid));
         }
         return messages.toArray(new Message[messages.size()]);
     }

@@ -70,14 +70,14 @@ import net.fortuna.mstor.util.Configurator;
  */
 public class MboxConnector extends AbstractProtocolConnector {
 
-    public static final String KEY_METADATA_STRATEGY = "mstor.mbox.metadataStrategy";
+    static final String KEY_METADATA_STRATEGY = "mstor.mbox.metadataStrategy";
 
     /**
      * @author Ben
      *
      */
     public enum MetadataStrategy {
-        XML, YAML, NONE;
+        XML, YAML, NONE
     }
 
     private MetadataStrategy metadataStrategy;

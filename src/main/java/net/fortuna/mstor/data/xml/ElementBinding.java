@@ -46,7 +46,7 @@ import org.jdom.Namespace;
  */
 public class ElementBinding extends XmlBinding {
 
-    protected Element element;
+    private Element element;
 
     /**
      * Default constructor.

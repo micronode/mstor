@@ -37,12 +37,7 @@ import static net.fortuna.mstor.util.MessageUtils.getFlagName;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.mail.Flags;
 import javax.mail.Flags.Flag;
@@ -237,9 +232,7 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
         for (Flag flag : flags.getSystemFlags()) {
             this.flags.add(getFlagName(flag));
         }
-        for (String flag : flags.getUserFlags()) {
-            this.flags.add(flag);
-        }
+        Collections.addAll(this.flags, flags.getUserFlags());
     }
 
     /**
@@ -363,7 +356,7 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
         if (part.isMimeType("message/*")) {
             JcrMessage jcrMessage = new JcrMessage();
             
-            Message attachedMessage = null;
+            Message attachedMessage;
             if (part.getContent() instanceof Message) {
                 attachedMessage = (Message) part.getContent();
             }
@@ -388,7 +381,7 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
                 || StringUtils.isNotEmpty(part.getFileName())) {
             JcrFile attachment = new JcrFile();
             
-            String name = null;
+            String name;
             if (StringUtils.isNotEmpty(part.getFileName())) {
                 name = part.getFileName();
                 for (JcrFile attach : attachments) {

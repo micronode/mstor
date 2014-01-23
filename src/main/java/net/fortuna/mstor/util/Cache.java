@@ -49,7 +49,7 @@ import javax.mail.Message;
  * </pre>
  * 
  */
-public class Cache extends LinkedHashMap<String, Message> {
+class Cache extends LinkedHashMap<String, Message> {
 
     private static final long serialVersionUID = 4000823529559716310L;
 

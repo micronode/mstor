@@ -39,7 +39,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -242,7 +241,7 @@ public class MetaMessage extends AbstractMessageDelegate {
     public final boolean isExpunged() {
         Element expunged = binding.getElement(ELEMENT_EXPUNGED);
         try {
-            return Boolean.valueOf(expunged.getText()).booleanValue();
+            return Boolean.valueOf(expunged.getText());
         }
         catch (Exception e) {
             log.warn("Invalid expunged value [" + expunged.getText() + "]");
@@ -264,16 +263,12 @@ public class MetaMessage extends AbstractMessageDelegate {
     @SuppressWarnings("unchecked")
     public final Flags getFlags() {
         Flags flags = new Flags();
-        for (Iterator<Element> i = binding.getElement(ELEMENT_FLAGS).getChildren().iterator(); i
-                .hasNext();) {
-            
-            Element flagElement = i.next();
-            
+        for (Element flagElement : (Iterable<Element>) binding.getElement(ELEMENT_FLAGS).getChildren()) {
+
             Flag flag = getFlag(flagElement.getName());
             if (flag != null) {
                 flags.add(flag);
-            }
-            else {
+            } else {
                 // user flag..
                 flags.add(flagElement.getName().replaceAll(SPACE_SUBSTITUTE, " "));
             }
@@ -310,9 +305,7 @@ public class MetaMessage extends AbstractMessageDelegate {
     public final InternetHeaders getHeaders() {
         InternetHeaders headers = new InternetHeaders();
 
-        for (Iterator<Element> i = binding.getElement(ELEMENT_HEADERS).getChildren().iterator(); i
-                .hasNext();) {
-            Element header = i.next();
+        for (Element header : (Iterable<Element>) binding.getElement(ELEMENT_HEADERS).getChildren()) {
             headers.addHeader(header.getName(), header.getText());
         }
 

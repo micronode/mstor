@@ -69,7 +69,7 @@ public class ProtocolConnectorFactory {
     /**
      * @return the instance
      */
-    public static final ProtocolConnectorFactory getInstance() {
+    public static ProtocolConnectorFactory getInstance() {
         return instance;
     }
 }

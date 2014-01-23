@@ -89,7 +89,7 @@ public class MboxFile {
     /**
      * A capability hint to indicate the preferred strategy for reading mbox files into a buffer.
      */
-    public static final String KEY_BUFFER_STRATEGY = "mstor.mbox.bufferStrategy";
+    static final String KEY_BUFFER_STRATEGY = "mstor.mbox.bufferStrategy";
 
     /**
      * Strategy for I/O buffers.
@@ -110,7 +110,7 @@ public class MboxFile {
         /**
          * Use direct buffers.
          */
-        DIRECT;
+        DIRECT
     }
     
     /**
@@ -182,7 +182,7 @@ public class MboxFile {
     /**
      * Used primarily to provide information about the mbox file.
      */
-    private File file;
+    private final File file;
 
     private String mode;
 
@@ -357,7 +357,7 @@ public class MboxFile {
 //                    else {
 //                        posList.add(new Long(offset + matcher.start())); // + fromPrefixOffset));
 //                    }
-                    posList.add(Long.valueOf(offset + matcher.start())); // + fromPrefixOffset));
+                    posList.add(offset + matcher.start()); // + fromPrefixOffset));
                 }
 
                 // if (offset + cb.limit() >= getChannel().size()) {
@@ -547,8 +547,8 @@ public class MboxFile {
         synchronized (file) {
             
             loop: for (int i = 0; i < getMessagePositions().length; i++) {
-                for (int j = 0; j < msgnums.length; j++) {
-                    if (msgnums[j] == i) {
+                for (int msgnum : msgnums) {
+                    if (msgnum == i) {
                         // don't save message to file if in purge list..
                         continue loop;
                     }

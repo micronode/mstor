@@ -60,8 +60,7 @@ public class EhCacheAdapter extends CacheAdapter {
         Element cacheElement = getMessageCache().get(index);
         
         if (cacheElement != null) {
-            Message message = (Message) cacheElement.getValue();
-            return message;
+            return cacheElement.getValue();
         } else {
             return null;
         }
@@ -69,7 +68,7 @@ public class EhCacheAdapter extends CacheAdapter {
     
     @Override
     public void putObjectIntoCache(int index, Object object) {
-        getMessageCache().put(new Element(Integer.valueOf(index), object));
+        getMessageCache().put(new Element(index, object));
     }
     
     private Cache getMessageCache() {

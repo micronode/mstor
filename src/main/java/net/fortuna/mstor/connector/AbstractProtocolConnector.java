@@ -62,7 +62,7 @@ public abstract class AbstractProtocolConnector implements ProtocolConnector {
      * @param url a store URL location
      * @param store a store instance
      */
-    public AbstractProtocolConnector(URLName url, MStorStore store) {
+    protected AbstractProtocolConnector(URLName url, MStorStore store) {
         this.url = url;
         this.store = store;
     }

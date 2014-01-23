@@ -117,8 +117,8 @@ public class MetaFolder extends AbstractMetaFolder<MetaMessage> {
         List<MetaFolder> folders = new ArrayList<MetaFolder>();
         
         FolderDelegate<MessageDelegate>[] delegateList = getDelegate().list(pattern);
-        for (int i = 0; i < delegateList.length; i++) {
-            folders.add(new MetaFolder(delegateList[i]));
+        for (FolderDelegate<MessageDelegate> aDelegateList : delegateList) {
+            folders.add(new MetaFolder(aDelegateList));
         }
         
         return folders.toArray(new MetaFolder[folders.size()]);
@@ -144,21 +144,18 @@ public class MetaFolder extends AbstractMetaFolder<MetaMessage> {
         throws DelegateException {
 
         MetaMessage md = null;
-        
-        for (Iterator<Element> i = binding.getDocument().getRootElement().getChildren(
-                MetaMessage.ELEMENT_MESSAGE, binding.getNamespace()).iterator();
-                i.hasNext();) {
 
-            Element messageElement = i.next();
+        for (Element messageElement : (Iterable<Element>) binding.getDocument().getRootElement().getChildren(
+                MetaMessage.ELEMENT_MESSAGE, binding.getNamespace())) {
+
             try {
                 if (Integer.parseInt(messageElement.getAttributeValue(
                         MetaMessage.ATTRIBUTE_MESSAGE_NUMBER)) == messageNumber) {
-                    
+
                     md = new MetaMessage(messageElement, this, binding.getNamespace());
                     break;
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 throw new DelegateException("Caught exception parsing message number", e);
             }
         }
@@ -231,8 +228,8 @@ public class MetaFolder extends AbstractMetaFolder<MetaMessage> {
                     .parseInt(messageElement
                             .getAttributeValue(MetaMessage.ATTRIBUTE_MESSAGE_NUMBER));
 
-            for (int n = 0; n < messages.length; n++) {
-                if (messages[n].getMessageNumber() == messageNumber) {
+            for (Message message : messages) {
+                if (message.getMessageNumber() == messageNumber) {
                     i.remove();
                     metas.add(new MetaMessage(messageElement, this,
                             binding.getNamespace()));
@@ -253,17 +250,15 @@ public class MetaFolder extends AbstractMetaFolder<MetaMessage> {
      */
     @SuppressWarnings("unchecked")
     private void updateMessageNumbers(final int startIndex, final int delta) {
-        for (Iterator<Element> i = binding.getDocument().getRootElement().getChildren(
-                MetaMessage.ELEMENT_MESSAGE, binding.getNamespace()).iterator(); i
-                .hasNext();) {
-            Element messageElement = i.next();
+        for (Element messageElement : (Iterable<Element>) binding.getDocument().getRootElement().getChildren(
+                MetaMessage.ELEMENT_MESSAGE, binding.getNamespace())) {
             int messageNumber = Integer
                     .parseInt(messageElement
                             .getAttributeValue(MetaMessage.ATTRIBUTE_MESSAGE_NUMBER));
             if (messageNumber >= startIndex) {
                 messageElement.setAttribute(
                         MetaMessage.ATTRIBUTE_MESSAGE_NUMBER, String
-                                .valueOf(messageNumber + delta));
+                        .valueOf(messageNumber + delta));
             }
         }
     }

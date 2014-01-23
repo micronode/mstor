@@ -74,7 +74,7 @@ public abstract class AbstractMetaFolder<T extends MessageDelegate> extends Abst
      * 
      * @param file the meta folder file
      */
-    public AbstractMetaFolder(FolderDelegate<MessageDelegate> delegate) {
+    AbstractMetaFolder(FolderDelegate<MessageDelegate> delegate) {
         this.file = getMetaFile(delegate);
         this.delegate = delegate;
     }
@@ -165,11 +165,11 @@ public abstract class AbstractMetaFolder<T extends MessageDelegate> extends Abst
     public final void appendMessages(Message[] messages) throws MessagingException {
         try {
             Date received = new Date();
-            for (int i = 0; i < messages.length; i++) {
-                T md = getMessage(messages[i].getMessageNumber());
+            for (Message message : messages) {
+                T md = getMessage(message.getMessageNumber());
                 md.setReceived(received);
-                md.setFlags(messages[i].getFlags());
-                md.setHeaders(messages[i].getAllHeaders());
+                md.setFlags(message.getFlags());
+                md.setHeaders(message.getAllHeaders());
                 allocateUid(md);
             }
             delegate.appendMessages(messages);

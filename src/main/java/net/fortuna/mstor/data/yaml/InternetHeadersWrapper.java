@@ -88,8 +88,7 @@ public class InternetHeadersWrapper extends DelayedCreationBeanWrapper {
      */
     protected Object createObject() {
         InternetHeaders internetHeaders = new InternetHeaders();
-        for (Iterator<Header> i = ((List<Header>) values.get("headers")).iterator(); i.hasNext();) {
-            Header header = i.next();
+        for (Header header : ((List<Header>) values.get("headers"))) {
             internetHeaders.setHeader(header.getName(), header.getValue());
         }
         return internetHeaders;

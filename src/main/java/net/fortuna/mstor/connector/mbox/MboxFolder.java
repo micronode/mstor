@@ -66,7 +66,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class MboxFolder extends AbstractFolderDelegate<MessageDelegate> {
 
-    static final String DIR_EXTENSION = ".sbd";
+    private static final String DIR_EXTENSION = ".sbd";
 
     private static final int DEFAULT_BUFFER_SIZE = 1024;
 
@@ -141,7 +141,7 @@ public class MboxFolder extends AbstractFolderDelegate<MessageDelegate> {
      * {@inheritDoc}
      */
     public final FolderDelegate<MessageDelegate> getFolder(final String name) {
-        File file = null;
+        File file;
 
         // if path is absolute don't use relative file..
         if (name.startsWith("/")) {
@@ -170,7 +170,7 @@ public class MboxFolder extends AbstractFolderDelegate<MessageDelegate> {
     public final FolderDelegate<MessageDelegate>[] list(final String pattern) {
         List<MboxFolder> folders = new ArrayList<MboxFolder>();
 
-        File[] files = null;
+        File[] files;
         if (file.isDirectory()) {
             files = file.listFiles(SUBFOLDER_FILTER);
         }
@@ -322,7 +322,7 @@ public class MboxFolder extends AbstractFolderDelegate<MessageDelegate> {
             log.debug("Creating folder [" + file.getAbsolutePath() + "]");
         }
 
-        boolean created = false;
+        boolean created;
         if ((type & Folder.HOLDS_MESSAGES) > 0) {
             this.type = type;
 

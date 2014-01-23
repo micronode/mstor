@@ -66,12 +66,12 @@ public class FlagsWrapper extends DelayedCreationBeanWrapper {
     protected Object createObject() {
         Flags flags = (Flags) createPrototype();
         Flag[] systemFlags = (Flag[]) values.get("systemFlags");
-        for (int i = 0; i < systemFlags.length; i++) {
-            flags.add(systemFlags[i]);
+        for (Flag systemFlag : systemFlags) {
+            flags.add(systemFlag);
         }
         String[] userFlags = (String[]) values.get("userFlags");
-        for (int i = 0; i < userFlags.length; i++) {
-            flags.add(userFlags[i]);
+        for (String userFlag : userFlags) {
+            flags.add(userFlag);
         }
         return flags;
     }

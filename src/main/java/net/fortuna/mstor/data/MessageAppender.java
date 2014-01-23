@@ -177,7 +177,7 @@ public class MessageAppender {
      * @return
      */
     private String createFromLine() throws IOException {
-        StringBuffer from_Line = new StringBuffer();
+        StringBuilder from_Line = new StringBuilder();
         
         // if not first message add required newlines..
         if (channel.size() > 0) {

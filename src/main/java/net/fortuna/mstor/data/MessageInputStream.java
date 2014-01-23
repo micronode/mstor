@@ -62,8 +62,6 @@ public class MessageInputStream extends InputStream {
 //    static final Pattern FROM__LINE_PATTERN = Pattern.compile("[\\n{2}|(\\r\\n){2}]^From .*$\\s*^", Pattern.MULTILINE);
     static final Pattern FROM__LINE_PATTERN = Pattern.compile("(\\A|\\n{2}|(\\r\\n){2})^From .*$\\s*^", Pattern.MULTILINE);
 
-    private CharsetDecoder decoder;
-
     private ByteBuffer buffer;
 
     /**
@@ -80,7 +78,7 @@ public class MessageInputStream extends InputStream {
      */
     public MessageInputStream(final ByteBuffer b, Charset charset) throws CharacterCodingException {
         this.buffer = b;
-        decoder = charset.newDecoder();
+        CharsetDecoder decoder = charset.newDecoder();
         
         // adjust position to exclude the From_ line..
         Matcher matcher = FROM__LINE_PATTERN.matcher(decoder.decode(buffer));

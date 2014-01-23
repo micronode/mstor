@@ -34,7 +34,6 @@ package net.fortuna.mstor.connector.mbox;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.mail.Flags;
@@ -74,7 +73,7 @@ public class YamlMetaFolder extends AbstractMetaFolder<YamlMetaMessage> {
         try {
 //            folderExt = (FolderExt) yamlConfig.loadType(getFile(), FolderExt.class);
             decoder = new YamlDecoder(new FileInputStream(getFile()));
-            folderExt = (FolderExt) decoder.readObjectOfType(FolderExt.class);
+            folderExt = decoder.readObjectOfType(FolderExt.class);
         }
         catch (IOException ioe) {
             folderExt = new FolderExt();
@@ -103,8 +102,8 @@ public class YamlMetaFolder extends AbstractMetaFolder<YamlMetaMessage> {
 
             int messageNumber = messageExt.getMessageNumber();
 
-            for (int n = 0; n < deleted.length; n++) {
-                if (deleted[n].getMessageNumber() == messageNumber) {
+            for (Message aDeleted : deleted) {
+                if (aDeleted.getMessageNumber() == messageNumber) {
                     folderExt.getMessages().remove(messageExt);
                     metas.add(new YamlMetaMessage(messageExt, this));
                     updateMessageNumbers(messageNumber, -1);
@@ -112,7 +111,7 @@ public class YamlMetaFolder extends AbstractMetaFolder<YamlMetaMessage> {
                 }
             }
         }
-        return (YamlMetaMessage[]) metas.toArray(new YamlMetaMessage[metas.size()]);
+        return metas.toArray(new YamlMetaMessage[metas.size()]);
     }
 
 
@@ -124,9 +123,7 @@ public class YamlMetaFolder extends AbstractMetaFolder<YamlMetaMessage> {
      * @param delta amount to adjust relevant message numbers by
      */
     private void updateMessageNumbers(final int startIndex, final int delta) {
-        for (Iterator<MessageExt> i = folderExt.getMessages().iterator(); i
-                .hasNext();) {
-            MessageExt messageExt = i.next();
+        for (MessageExt messageExt : folderExt.getMessages()) {
             int messageNumber = messageExt.getMessageNumber();
             if (messageNumber >= startIndex) {
                 messageExt.setMessageNumber(messageNumber + delta);
@@ -199,8 +196,7 @@ public class YamlMetaFolder extends AbstractMetaFolder<YamlMetaMessage> {
     public YamlMetaMessage getMessage(int messageNumber)
             throws DelegateException {
 
-        for (Iterator<MessageExt> i = folderExt.getMessages().iterator(); i.hasNext();) {
-            MessageExt messageExt = i.next();
+        for (MessageExt messageExt : folderExt.getMessages()) {
             if (messageExt.getMessageNumber() == messageNumber) {
                 return new YamlMetaMessage(messageExt, this);
             }
@@ -242,8 +238,8 @@ public class YamlMetaFolder extends AbstractMetaFolder<YamlMetaMessage> {
     public YamlMetaFolder[] list(String pattern) {
         FolderDelegate<MessageDelegate>[] folders = getDelegate().list(pattern);
         List<YamlMetaFolder> folderList = new ArrayList<YamlMetaFolder>();
-        for (int i = 0; i < folders.length; i++) {
-            folderList.add(new YamlMetaFolder(folders[i]));
+        for (FolderDelegate<MessageDelegate> folder : folders) {
+            folderList.add(new YamlMetaFolder(folder));
         }
         return folderList.toArray(new YamlMetaFolder[folderList.size()]);
     }

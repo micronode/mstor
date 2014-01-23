@@ -81,8 +81,8 @@ public class Tags implements Set<String>, Serializable {
     public final int size() {
         int tagCount = 0;
         String[] userFlags = flags.getUserFlags();
-        for (int i = 0; i < userFlags.length; i++) {
-            if (userFlags[i].startsWith(TAG_PREFIX)) {
+        for (String userFlag : userFlags) {
+            if (userFlag.startsWith(TAG_PREFIX)) {
                 tagCount++;
             }
         }
@@ -107,8 +107,8 @@ public class Tags implements Set<String>, Serializable {
         if (tag instanceof String) {
             String flag = TAG_PREFIX + tag;
             String[] userFlags = flags.getUserFlags();
-            for (int i = 0; i < userFlags.length; i++) {
-                if (userFlags[i].equals(flag)) {
+            for (String userFlag : userFlags) {
+                if (userFlag.equals(flag)) {
                     return true;
                 }
             }
@@ -122,9 +122,9 @@ public class Tags implements Set<String>, Serializable {
     private Set<String> getTagSet() {
         Set<String> tags = new HashSet<String>();
         String[] userFlags = flags.getUserFlags();
-        for (int i = 0; i < userFlags.length; i++) {
-            if (userFlags[i].startsWith(TAG_PREFIX)) {
-                tags.add(userFlags[i].split(TAG_PREFIX)[1]);
+        for (String userFlag : userFlags) {
+            if (userFlag.startsWith(TAG_PREFIX)) {
+                tags.add(userFlag.split(TAG_PREFIX)[1]);
             }
         }
         return tags;
@@ -151,10 +151,10 @@ public class Tags implements Set<String>, Serializable {
     /* (non-Javadoc)
      * @see java.util.Set#toArray(T[])
      */
-    public final <T extends Object> T[] toArray(T[] a) {
+    public final <T> T[] toArray(T[] a) {
         return getTagSet().toArray(a);
-    };
-    
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -188,8 +188,8 @@ public class Tags implements Set<String>, Serializable {
      * @see java.util.Set#containsAll(java.util.Collection)
      */
     public final boolean containsAll(final Collection<?> arg0) {
-        for (Iterator<?> i = arg0.iterator(); i.hasNext();) {
-            if (!contains(i.next())) {
+        for (Object anArg0 : arg0) {
+            if (!contains(anArg0)) {
                 return false;
             }
         }
@@ -202,8 +202,8 @@ public class Tags implements Set<String>, Serializable {
      * @see java.util.Set#addAll(java.util.Collection)
      */
     public final boolean addAll(final Collection<? extends String> arg0) {
-        for (Iterator<? extends String> i = arg0.iterator(); i.hasNext();) {
-            if (!add(i.next())) {
+        for (String anArg0 : arg0) {
+            if (!add(anArg0)) {
                 return false;
             }
         }
@@ -216,8 +216,7 @@ public class Tags implements Set<String>, Serializable {
      * @see java.util.Set#retainAll(java.util.Collection)
      */
     public final boolean retainAll(final Collection<?> arg0) {
-        for (Iterator<?> i = iterator(); i.hasNext();) {
-            String tag = (String) i.next();
+        for (String tag : this) {
             if (!arg0.contains(tag) && !remove(tag)) {
                 return false;
             }
@@ -231,8 +230,8 @@ public class Tags implements Set<String>, Serializable {
      * @see java.util.Set#removeAll(java.util.Collection)
      */
     public final boolean removeAll(final Collection<?> arg0) {
-        for (Iterator<?> i = arg0.iterator(); i.hasNext();) {
-            if (!remove(i.next())) {
+        for (Object anArg0 : arg0) {
+            if (!remove(anArg0)) {
                 return false;
             }
         }
@@ -245,8 +244,8 @@ public class Tags implements Set<String>, Serializable {
      * @see java.util.Set#clear()
      */
     public final void clear() {
-        for (Iterator<String> i = iterator(); i.hasNext();) {
-            remove(i.next());
+        for (String s : this) {
+            remove(s);
         }
     }
 

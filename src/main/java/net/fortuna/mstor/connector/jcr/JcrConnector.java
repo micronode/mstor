@@ -70,9 +70,7 @@ import org.jcrom.Jcrom;
 public class JcrConnector extends AbstractProtocolConnector {
 
     private Jcrom jcrom;
-    
-    private Repository repository;
-    
+
     private Session session;
     
     private javax.mail.Session mailSession;
@@ -94,6 +92,8 @@ public class JcrConnector extends AbstractProtocolConnector {
      * {@inheritDoc}
      */
     public boolean connect() throws AuthenticationFailedException, MessagingException {
+        Repository repository;
+
         if (StringUtils.isEmpty(mailSession.getProperty("mstor.repository.provider.url"))) {
             try {
                 Context context = new InitialContext();
