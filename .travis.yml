@@ -13,8 +13,10 @@ jdk:
   - openjdk8
 env:
   - GRADLE_OPTS="-Xmx512m -XX:MaxPermSize=256m"
+before_script:
+  - sudo keytool -import -alias sonar -keystore $JAVA_HOME/jre/lib/security/cacerts -file sonar_cert.pem -storepass changeit -noprompt
 script:
-  - ./gradlew build jacocoTestReport
+  - ./gradlew build jacocoTestReport sonarqube
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 deploy:
