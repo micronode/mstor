@@ -1,3 +1,7 @@
+plugins {
+    id "org.sonarqube" version "1.2"
+}
+
 apply plugin: 'eclipse'
 apply plugin: 'groovy'
 apply plugin: 'checkstyle'
