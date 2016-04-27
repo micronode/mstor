@@ -25,3 +25,6 @@ deploy:
   on:
     branch: master
     jdk: oraclejdk8
+addons:
+  hosts:
+    - travis-ci
