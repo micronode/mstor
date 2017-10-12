@@ -228,8 +228,8 @@ bintray {
     key = bintray_key
     pkg {
         repo = 'maven'
-        name = 'ical4j'
-        userOrg = 'ical4j'
+        name = 'mstor'
+        userOrg = 'fortuna'
         licenses = ['BSD']
         vcsUrl = 'https://github.com/benfortuna/mstor.git'
         version {
