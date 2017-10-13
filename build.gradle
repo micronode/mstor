@@ -1,3 +1,20 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath group: 'pl.allegro.tech.build', name: 'axion-release-plugin', version: '1.7.1'
+    }
+}
+
+plugins {
+    id "nebula.provided-base" version "3.0.3"
+    id "com.jfrog.bintray" version "1.7.3"
+}
+
+apply plugin: 'java'
+apply plugin: 'java-library'
 apply plugin: 'eclipse'
 apply plugin: 'groovy'
 apply plugin: 'checkstyle'
@@ -5,6 +22,12 @@ apply plugin: 'findbugs'
 apply plugin: 'pmd'
 //apply plugin: 'codenarc'
 apply plugin: 'osgi'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'jacoco'
+apply plugin: 'signing'
+apply plugin: 'pl.allegro.tech.build.axion-release'
+apply plugin: 'nebula.optional-base'
 
 [checkstyle, findbugs, pmd]*.ignoreFailures = true
 checkstyle.configProperties = ['checkstyle.suppressions.file': "${project.projectDir}/config/checkstyle/default-suppressions.xml"]
@@ -16,13 +39,68 @@ repositories {
     }
 }
 
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
+}
+
+javadoc {
+    if (JavaVersion.current().isJava8Compatible()) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+    }
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+    archives jar
+    archives javadocJar
+    archives sourcesJar
+}
+
+signing {
+    required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
+    sign configurations.archives
+}
+
+scmVersion {
+    tag {
+        prefix = 'mstor'
+    }
+    versionCreator 'versionWithBranch'
+    branchVersionCreator = [
+        'master': 'simple'
+    ]
+}
+version = scmVersion.version
+
 ext {
-    groovyVersion = '2.1.7'
+    groovyVersion = '2.4.3'
     slf4jVersion = '1.7.5'
     jackrabbitVersion = '2.7.1'
     spockVersion = '0.7-groovy-2.0'
     logbackVersion = '1.0.6'
     junitVersion = '4.11'
+    
+    isReleaseVersion = !version.endsWith("SNAPSHOT")
+
+    // sonatype credentials
+    sonatype_username = project.hasProperty('sonatype_username') ? project.getProperty('sonatype_username') : ''
+    sonatype_password = project.hasProperty('sonatype_password') ? project.getProperty('sonatype_password') : ''
+
+    // bintray credentials
+    bintray_user = project.hasProperty('bintray_user') ? project.getProperty('bintray_user') : ''
+    bintray_key = project.hasProperty('bintray_key') ? project.getProperty('bintray_key') : ''
 }
 
 dependencies {
@@ -69,6 +147,107 @@ test {
     exclude '**/*IntegrationTest.class'
 }
 
-task integrationTest(type: Test, dependsOn: 'test') << {
+task integrationTest(type: Test, dependsOn: 'test') doLast {
     include '**/*IntegrationTest.class'
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+            // artefact management
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: sonatype_username, password: sonatype_password)
+            }
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
+                authentication(userName: sonatype_username, password: sonatype_password)
+            }
+            // maven project model
+            pom.project {
+                name project.name
+                packaging 'jar'
+                description project.description
+                url 'http://basepatterns.org'
+                // source code management
+                scm {
+                    url 'https://github.com/benfortuna/mstor'
+                    connection 'scm:git@github.com:benfortuna/mstor.git'
+                    developerConnection 'scm:git@github.com:benfortuna/mstor.git'
+                }
+                // open source license
+                licenses {
+                    license {
+                        name 'mstor - License'
+                        url 'https://raw.githubusercontent.com/benfortuna/mstore/master/LICENSE'
+                        distribution 'repo'
+                    }
+                }
+                // contributors
+                developers {
+                    developer {
+                        id 'fortuna'
+                        name 'Ben Fortuna'
+                    }
+                }
+            }
+        }
+    }
+}
+
+publishing {
+    publications {
+        mavenArtifacts(MavenPublication) {
+            from components.java
+            artifact javadocJar
+            artifact sourcesJar
+            pom.withXml {
+                asNode().appendNode('name', project.name)
+                asNode().appendNode('description', project.description)
+                asNode().appendNode('url', 'http://basepatterns.org')
+
+                def scmNode = asNode().appendNode('scm')
+                scmNode.appendNode('url', 'https://github.com/benfortuna/mstor')
+                scmNode.appendNode('connection', 'scm:git@github.com:benfortuna/mstor.git')
+                scmNode.appendNode('developerConnection', 'scm:git@github.com:benfortuns/mstor.git')
+
+                def licenseNode = asNode().appendNode('licenses').appendNode('license')
+                licenseNode.appendNode('name', 'mstor - License')
+                licenseNode.appendNode('url', 'https://raw.githubusercontent.com/benfortuna/mstor/master/LICENSE')
+                licenseNode.appendNode('distribution', 'repo')
+
+                def developerNode = asNode().appendNode('developers').appendNode('developer')
+                developerNode.appendNode('id', 'fortuna')
+                developerNode.appendNode('name', 'Ben Fortuna')
+            }
+        }
+    }
+}
+
+bintray {
+    user = bintray_user
+    key = bintray_key
+    pkg {
+        repo = 'maven'
+        name = 'mstor'
+        userOrg = 'fortuna'
+        licenses = ['BSD']
+        vcsUrl = 'https://github.com/benfortuna/mstor.git'
+        version {
+            name = scmVersion.version
+            desc = "mstor $scmVersion.version"
+            released  = new Date()
+            vcsTag = "mstor-$scmVersion.version"
+            gpg {
+                sign = isReleaseVersion
+            }
+            mavenCentralSync {
+                sync = isReleaseVersion
+                user = sonatype_username //OSS user token: mandatory
+                password = sonatype_password //OSS user password: mandatory
+//                close = '0' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
+            }
+        }
+    }
+//    configurations = ['archives']
+    publications = ['mavenArtifacts']
 }
