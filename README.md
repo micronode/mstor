@@ -1,6 +1,7 @@
 # mstor - email storage and archiving
 
 [RFC5322]: https://tools.ietf.org/html/rfc5322
+[RFC2822]: https://tools.ietf.org/html/rfc2822
 
 [Bintray Releases]: https://bintray.com/benfortuna/maven/mstor
 
@@ -140,6 +141,10 @@ provides the following benefits:
 
 
 ## References
+
+### Specifications
+
+* [RFC5322] (Supersedes [RFC2822])
 
 ## Limitations
 
