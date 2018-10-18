@@ -11,6 +11,7 @@ buildscript {
 plugins {
     id "nebula.provided-base" version "3.0.3"
     id "com.jfrog.bintray" version "1.7.3"
+    id "org.sonarqube" version "1.2"
 }
 
 apply plugin: 'java'
@@ -96,7 +97,7 @@ ext {
     spockVersion = '0.7-groovy-2.0'
     logbackVersion = '1.0.6'
     junitVersion = '4.11'
-    
+
     isReleaseVersion = !version.endsWith("SNAPSHOT")
 
     // sonatype credentials
