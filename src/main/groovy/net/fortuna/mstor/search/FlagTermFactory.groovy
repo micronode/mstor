@@ -31,15 +31,8 @@
  */
 package net.fortuna.mstor.search
 
-import java.util.Map;
-
-import javax.mail.Flags;
-import javax.mail.search.FlagTerm;
-import javax.mail.search.SentDateTerm;
-import javax.mail.search.SizeTerm;
-
-import groovy.util.AbstractFactory;
-import groovy.util.FactoryBuilderSupport;
+import javax.mail.Flags
+import javax.mail.search.FlagTerm
 
 /**
  * @author Ben
@@ -53,7 +46,7 @@ class FlagTermFactory extends AbstractFactory {
      * {@inheritDoc}
      */
     @Override
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
             throws InstantiationException, IllegalAccessException {
 
         Flags flags
@@ -64,6 +57,6 @@ class FlagTermFactory extends AbstractFactory {
             flags = attributes['flags']
         }
         FlagTerm result = new FlagTerm(flags, set)
-        return result;
+        return result
     }
 }

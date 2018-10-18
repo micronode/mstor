@@ -145,14 +145,14 @@ public final class MStorFolder extends Folder implements UIDFolder {
     /**
      * {@inheritDoc}
      */
-    public Folder getParent() throws MessagingException {
+    public Folder getParent() {
         return new MStorFolder(mStore, delegate.getParent());
     }
 
     /**
      * {@inheritDoc}
      */
-    public boolean exists() throws MessagingException {
+    public boolean exists() {
         return delegate.exists();
     }
 
@@ -207,7 +207,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
     /**
      * {@inheritDoc}
      */
-    public boolean hasNewMessages() throws MessagingException {
+    public boolean hasNewMessages() {
         // TODO Auto-generated method stub
         return false;
     }

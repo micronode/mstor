@@ -31,15 +31,10 @@
  */
 package net.fortuna.mstor.search
 
-import java.util.Map;
-
-import javax.mail.Address;
-import javax.mail.Message.RecipientType;
-import javax.mail.internet.InternetAddress;
-import javax.mail.search.RecipientTerm;
-
-import groovy.util.AbstractFactory;
-import groovy.util.FactoryBuilderSupport;
+import javax.mail.Address
+import javax.mail.Message.RecipientType
+import javax.mail.internet.InternetAddress
+import javax.mail.search.RecipientTerm
 
 /**
  * @author Ben
@@ -64,7 +59,7 @@ class RecipientTermFactory extends AbstractFactory {
             address = new InternetAddress(value)                
         }
         RecipientTerm result = new RecipientTerm(type, address)
-        return result;
+        return result
     }
 
 }

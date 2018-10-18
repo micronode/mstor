@@ -31,16 +31,7 @@
  */
 package net.fortuna.mstor.search
 
-import java.util.Map;
-
-import javax.mail.Message;
-import javax.mail.search.MessageNumberTerm;
-import javax.mail.search.SentDateTerm;
-
-import net.fortuna.mstor.MStorMessage;
-
-import groovy.util.AbstractFactory;
-import groovy.util.FactoryBuilderSupport;
+import net.fortuna.mstor.MStorMessage
 
 /**
  * @author Ben
@@ -52,7 +43,7 @@ class ReferencesTermFactory extends AbstractFactory {
      * {@inheritDoc}
      */
     @Override
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
             throws InstantiationException, IllegalAccessException {
 
         MStorMessage message
@@ -63,6 +54,6 @@ class ReferencesTermFactory extends AbstractFactory {
             message = attributes['message']
         }
         ReferencesSearchTerm result = new ReferencesSearchTerm(message)
-        return result;
+        return result
     }
 }

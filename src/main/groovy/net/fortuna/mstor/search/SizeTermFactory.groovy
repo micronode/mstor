@@ -31,13 +31,7 @@
  */
 package net.fortuna.mstor.search
 
-import java.util.Map;
-
-import javax.mail.search.SentDateTerm;
-import javax.mail.search.SizeTerm;
-
-import groovy.util.AbstractFactory;
-import groovy.util.FactoryBuilderSupport;
+import javax.mail.search.SizeTerm
 
 /**
  * @author Ben
@@ -51,7 +45,7 @@ class SizeTermFactory extends AbstractFactory {
      * {@inheritDoc}
      */
     @Override
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
             throws InstantiationException, IllegalAccessException {
 
         int size
@@ -62,6 +56,6 @@ class SizeTermFactory extends AbstractFactory {
             size = attributes['size']
         }
         SizeTerm result = new SizeTerm(comparison, size)
-        return result;
+        return result
     }
 }

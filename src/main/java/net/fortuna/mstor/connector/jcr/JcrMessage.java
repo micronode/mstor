@@ -31,29 +31,9 @@
  */
 package net.fortuna.mstor.connector.jcr;
 
-import static net.fortuna.mstor.util.MessageUtils.getFlag;
-import static net.fortuna.mstor.util.MessageUtils.getFlagName;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
-
-import javax.mail.Flags;
-import javax.mail.Flags.Flag;
-import javax.mail.Header;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.Part;
-import javax.mail.internet.InternetHeaders;
-import javax.mail.internet.MimeMessage;
-
 import net.fortuna.mstor.MStorMessage;
-import net.fortuna.mstor.connector.DelegateException;
 import net.fortuna.mstor.connector.MessageDelegate;
 import net.fortuna.mstor.util.MessageUtils;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jcrom.AbstractJcrEntity;
@@ -63,6 +43,18 @@ import org.jcrom.annotations.JcrChildNode;
 import org.jcrom.annotations.JcrFileNode;
 import org.jcrom.annotations.JcrProperty;
 import org.jcrom.annotations.JcrReference;
+
+import javax.mail.*;
+import javax.mail.Flags.Flag;
+import javax.mail.internet.InternetHeaders;
+import javax.mail.internet.MimeMessage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
+
+import static net.fortuna.mstor.util.MessageUtils.getFlag;
+import static net.fortuna.mstor.util.MessageUtils.getFlagName;
 
 /**
  * @author Ben
@@ -195,7 +187,7 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
     /**
      * {@inheritDoc}
      */
-    public void saveChanges() throws DelegateException {
+    public void saveChanges() {
         if (messageDao != null) {
             // XXX: currently only flags needs updating so don't update children..
             messageDao.update(this, "none", -1);

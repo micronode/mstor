@@ -31,18 +31,16 @@
  */
 package net.fortuna.mstor.connector.mbox;
 
-import java.io.File;
-
-import javax.mail.AuthenticationFailedException;
-import javax.mail.Folder;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.URLName;
-
 import net.fortuna.mstor.MStorFolder;
 import net.fortuna.mstor.MStorStore;
 import net.fortuna.mstor.connector.AbstractProtocolConnector;
 import net.fortuna.mstor.util.Configurator;
+
+import javax.mail.Folder;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.URLName;
+import java.io.File;
 
 /**
  * An mbox-based protocol handler.
@@ -99,7 +97,7 @@ public class MboxConnector extends AbstractProtocolConnector {
     /**
      * {@inheritDoc}
      */
-    public boolean connect() throws AuthenticationFailedException, MessagingException {
+    public boolean connect() {
         // Authentication not supported..
         return true;
     }
@@ -107,7 +105,7 @@ public class MboxConnector extends AbstractProtocolConnector {
     /**
      * {@inheritDoc}
      */
-    public void disconnect() throws MessagingException {
+    public void disconnect() {
         // No cleanup required..
     }
 
@@ -121,7 +119,7 @@ public class MboxConnector extends AbstractProtocolConnector {
     /**
      * {@inheritDoc}
      */
-    public Folder getFolder(String name) throws MessagingException {
+    public Folder getFolder(String name) {
 
         File file = new File(name);
 

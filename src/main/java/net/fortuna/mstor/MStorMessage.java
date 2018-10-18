@@ -31,29 +31,19 @@
  */
 package net.fortuna.mstor;
 
-import java.io.InputStream;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.List;
-
-import javax.mail.Flags;
-import javax.mail.Flags.Flag;
-import javax.mail.Folder;
-import javax.mail.Header;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.internet.InternetHeaders;
-import javax.mail.internet.MimeMessage;
-
 import net.fortuna.mstor.connector.MessageDelegate;
 import net.fortuna.mstor.tag.Taggable;
 import net.fortuna.mstor.tag.Tags;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import javax.mail.*;
+import javax.mail.Flags.Flag;
+import javax.mail.internet.InternetHeaders;
+import javax.mail.internet.MimeMessage;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * Implementation of a message for the mstor javamail provider.
@@ -198,10 +188,10 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
     public Enumeration<String> getAllHeaderLines() throws MessagingException {
         InternetHeaders headers = getHeaders();
         if (headers != null) {
-            return (Enumeration<String>) headers.getAllHeaderLines();
+            return headers.getAllHeaderLines();
         }
         checkParse();
-        return (Enumeration<String>) super.getAllHeaderLines();
+        return super.getAllHeaderLines();
     }
 
     /**
@@ -211,10 +201,10 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
     public Enumeration<Header> getAllHeaders() throws MessagingException {
         InternetHeaders headers = getHeaders();
         if (headers != null) {
-            return (Enumeration<Header>) headers.getAllHeaders();
+            return headers.getAllHeaders();
         }
         checkParse();
-        return (Enumeration<Header>) super.getAllHeaders();
+        return super.getAllHeaders();
     }
 
     /**
@@ -254,10 +244,10 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
         
         InternetHeaders headers = getHeaders();
         if (headers != null) {
-            return (Enumeration<String>) headers.getMatchingHeaderLines(names);
+            return headers.getMatchingHeaderLines(names);
         }
         checkParse();
-        return (Enumeration<String>) super.getMatchingHeaderLines(names);
+        return super.getMatchingHeaderLines(names);
     }
 
     /**
@@ -269,10 +259,10 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
         
         InternetHeaders headers = getHeaders();
         if (headers != null) {
-            return (Enumeration<Header>) headers.getMatchingHeaders(names);
+            return headers.getMatchingHeaders(names);
         }
         checkParse();
-        return (Enumeration<Header>) super.getMatchingHeaders(names);
+        return super.getMatchingHeaders(names);
     }
 
     /**
@@ -284,10 +274,10 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
         
         InternetHeaders headers = getHeaders();
         if (headers != null) {
-            return (Enumeration<String>) headers.getNonMatchingHeaderLines(names);
+            return headers.getNonMatchingHeaderLines(names);
         }
         checkParse();
-        return (Enumeration<String>) super.getNonMatchingHeaderLines(names);
+        return super.getNonMatchingHeaderLines(names);
     }
 
     /**
@@ -299,10 +289,10 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
         
         InternetHeaders headers = getHeaders();
         if (headers != null) {
-            return (Enumeration<Header>) headers.getNonMatchingHeaders(names);
+            return headers.getNonMatchingHeaders(names);
         }
         checkParse();
-        return (Enumeration<Header>) super.getNonMatchingHeaders(names);
+        return super.getNonMatchingHeaders(names);
     }
 
     /**

@@ -199,9 +199,8 @@ public class MboxFile {
 
     /**
      * @param file a reference to an mbox data file
-     * @throws FileNotFoundException where the specified file doesn't exist
      */
-    public MboxFile(final File file) throws FileNotFoundException {
+    public MboxFile(final File file) {
         this(file, READ_ONLY);
     }
 

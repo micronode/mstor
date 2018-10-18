@@ -31,7 +31,8 @@
  */
 package net.fortuna.mstor.data;
 
-import java.io.IOException;
+import net.fortuna.mstor.util.Configurator;
+
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.InvalidMarkException;
@@ -40,8 +41,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import net.fortuna.mstor.util.Configurator;
 
 /**
  * @author Ben
@@ -100,7 +99,7 @@ public class MessageInputStream extends InputStream {
     /**
      * {@inheritDoc}
      */
-    public final int read() throws IOException {
+    public final int read() {
         if (!buffer.hasRemaining()) {
             return -1;
         }
@@ -111,7 +110,7 @@ public class MessageInputStream extends InputStream {
      * {@inheritDoc}
      */
     public final int read(final byte[] bytes, final int offset,
-            final int length) throws IOException {
+            final int length) {
         
         if (!buffer.hasRemaining()) {
             return -1;

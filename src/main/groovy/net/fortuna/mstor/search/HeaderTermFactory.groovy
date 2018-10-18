@@ -31,14 +31,7 @@
  */
 package net.fortuna.mstor.search
 
-import java.util.Map;
-
-import javax.mail.Message.RecipientType;
-import javax.mail.search.BodyTerm;
-import javax.mail.search.HeaderTerm;
-
-import groovy.util.AbstractFactory;
-import groovy.util.FactoryBuilderSupport;
+import javax.mail.search.HeaderTerm
 
 /**
  * @author Ben
@@ -62,7 +55,7 @@ class HeaderTermFactory extends AbstractFactory {
             String pattern = attributes['pattern']
             result = new HeaderTerm(header, pattern)
         }
-        return result;
+        return result
     }
 
 }

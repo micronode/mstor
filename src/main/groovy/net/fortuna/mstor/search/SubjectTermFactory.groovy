@@ -31,13 +31,7 @@
  */
 package net.fortuna.mstor.search
 
-import java.util.Map;
-
-import javax.mail.Message.RecipientType;
-import javax.mail.search.SubjectTerm;
-
-import groovy.util.AbstractFactory;
-import groovy.util.FactoryBuilderSupport;
+import javax.mail.search.SubjectTerm
 
 /**
  * @author Ben
@@ -60,7 +54,7 @@ class SubjectTermFactory extends AbstractFactory {
             pattern = attributes['pattern']
         }
         SubjectTerm result = new SubjectTerm(pattern)
-        return result;
+        return result
     }
 
 }

@@ -31,23 +31,21 @@
  */
 package net.fortuna.mstor.connector.mbox;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.mail.Flags;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-
 import net.fortuna.mstor.connector.DelegateException;
 import net.fortuna.mstor.connector.FolderDelegate;
 import net.fortuna.mstor.connector.MessageDelegate;
 import net.fortuna.mstor.data.yaml.FolderExt;
 import net.fortuna.mstor.data.yaml.MessageExt;
-
 import org.ho.yaml.Yaml;
 import org.ho.yaml.YamlDecoder;
+
+import javax.mail.Flags;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Ben
@@ -157,7 +155,7 @@ public class YamlMetaFolder extends AbstractMetaFolder<YamlMetaMessage> {
     /**
      * {@inheritDoc}
      */
-    protected YamlMetaMessage createMessage(int messageNumber) throws DelegateException {
+    protected YamlMetaMessage createMessage(int messageNumber) {
         MessageExt messageExt = new MessageExt(messageNumber);
         messageExt.setFlags(new Flags());
         YamlMetaMessage delegate = new YamlMetaMessage(messageExt, this);
@@ -171,8 +169,7 @@ public class YamlMetaFolder extends AbstractMetaFolder<YamlMetaMessage> {
     /**
      * {@inheritDoc}
      */
-    protected void setLastUid(long uid) throws UnsupportedOperationException,
-            DelegateException {
+    protected void setLastUid(long uid) throws UnsupportedOperationException {
         folderExt.setLastUid(uid);
     }
 
