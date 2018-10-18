@@ -31,16 +31,16 @@
  */
 package net.fortuna.mstor.data.xml;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * @author Ben Fortuna
@@ -82,7 +82,7 @@ public class DocumentBinding extends XmlBinding {
      * Returns the JDOM document associated with this meta folder.
      * 
      * @return a JDOM document
-     * @throws JDOMException thrown if the specified file is not a valid XML document
+     * @throws org.jdom.JDOMException thrown if the specified file is not a valid XML document
      * @throws IOException thrown if an error occurs reading the specified file
      */
     public final Document getDocument() {
@@ -107,12 +107,9 @@ public class DocumentBinding extends XmlBinding {
     public final void save() throws IOException {
         XMLOutputter xmlOut = new XMLOutputter(Format.getPrettyFormat());
         xmlOut.getFormat().setIndent("  ");
-        FileOutputStream fout = new FileOutputStream(file);
-        try {
+
+        try (FileOutputStream fout = new FileOutputStream(file)) {
             xmlOut.output(getDocument(), fout);
-        }
-        finally {
-            fout.close();
         }
     }
 }

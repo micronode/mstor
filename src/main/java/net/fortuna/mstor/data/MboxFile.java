@@ -31,17 +31,14 @@
  */
 package net.fortuna.mstor.data;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.RandomAccessFile;
+import net.fortuna.mstor.util.CacheAdapter;
+import net.fortuna.mstor.util.CapabilityHints;
+import net.fortuna.mstor.util.Configurator;
+import net.fortuna.mstor.util.EhCacheAdapter;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
@@ -52,14 +49,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import net.fortuna.mstor.util.CacheAdapter;
-import net.fortuna.mstor.util.CapabilityHints;
-import net.fortuna.mstor.util.Configurator;
-import net.fortuna.mstor.util.EhCacheAdapter;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Provides access to an mbox-formatted file. To read an mbox file using a non-standard file
@@ -539,42 +528,42 @@ public class MboxFile {
         File newFile = new File(System.getProperty("java.io.tmpdir"),
                 file.getName() + TEMP_FILE_EXTENSION);
 
-        FileOutputStream newOut = new FileOutputStream(newFile);
-        FileChannel newChannel = newOut.getChannel();
-        MessageAppender appender = new MessageAppender(newChannel);
+        try (FileOutputStream newOut = new FileOutputStream(newFile)) {
+            FileChannel newChannel = newOut.getChannel();
+            MessageAppender appender = new MessageAppender(newChannel);
 
-        // synchronise purging and appending to avoid message loss..
-        synchronized (file) {
-            
-            loop: for (int i = 0; i < getMessagePositions().length; i++) {
-                for (int msgnum : msgnums) {
-                    if (msgnum == i) {
-                        // don't save message to file if in purge list..
-                        continue loop;
+            // synchronise purging and appending to avoid message loss..
+            synchronized (file) {
+
+                loop:
+                for (int i = 0; i < getMessagePositions().length; i++) {
+                    for (int msgnum : msgnums) {
+                        if (msgnum == i) {
+                            // don't save message to file if in purge list..
+                            continue loop;
+                        }
                     }
+                    // append current message to new file..
+                    appender.appendMessage(getMessage(i));
                 }
-                // append current message to new file..
-                appender.appendMessage(getMessage(i));
+
+                // release system resources..
+                close();
+
+                // Create the new file in the temp directory which is always read/write
+                File tempFile = new File(System.getProperty("java.io.tmpdir"),
+                        file.getName() + "." + System.currentTimeMillis());
+
+                if (!renameTo(file, tempFile)) {
+                    throw new IOException("Unable to rename existing file");
+                }
+                // wait until exit to delete in case program terminates
+                // abnormally and need to recover data..
+                tempFile.deleteOnExit();
+
+                // rename new file..
+                renameTo(newFile, file);
             }
-            // ensure new file is properly written..
-            newOut.close();
-
-            // release system resources..
-            close();
-
-            // Create the new file in the temp directory which is always read/write
-            File tempFile = new File(System.getProperty("java.io.tmpdir"),
-                    file.getName() + "." + System.currentTimeMillis());
-            
-            if (!renameTo(file, tempFile)) {
-                throw new IOException("Unable to rename existing file");
-            }
-            // wait until exit to delete in case program terminates
-            // abnormally and need to recover data..
-            tempFile.deleteOnExit();
-
-            // rename new file..
-            renameTo(newFile, file);
         }
     }
 
@@ -595,17 +584,13 @@ public class MboxFile {
         }
         boolean success = source.renameTo(dest);
         if (!success) {
-            try {
-                InputStream in = new FileInputStream(source);
-                OutputStream out = new FileOutputStream(dest);
+            try (InputStream in = new FileInputStream(source); OutputStream out = new FileOutputStream(dest)) {
                 int length;
                 byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
                 while ((length = in.read(buffer)) >= 0) {
                     out.write(buffer, 0, length);
                 }
-                in.close();
-                out.close();
-                
+
                 try {
                     success = source.delete();
                 }
@@ -649,11 +634,9 @@ public class MboxFile {
      * @return true if the specified file is a valid mbox file
      */
     public static boolean isValid(final File file) {
-        BufferedReader reader = null;
 
-        try {
-            reader = new BufferedReader(new InputStreamReader(new FileInputStream(file),
-            		Charset.forName("UTF-8")));
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file),
+                Charset.forName("UTF-8")))) {
 
             // check that first message is correct..
             String line = reader.readLine();
@@ -663,17 +646,6 @@ public class MboxFile {
         catch (Exception e) {
             Log log = LogFactory.getLog(MboxFile.class);
             log.info("Not a valid mbox file [" + file + "]", e);
-        }
-        finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                }
-                catch (IOException ioe) {
-                    Log log = LogFactory.getLog(MboxFile.class);
-                    log.info("Error closing stream [" + file + "]", ioe);
-                }
-            }
         }
 
         return false;

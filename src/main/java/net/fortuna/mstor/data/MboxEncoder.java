@@ -69,24 +69,23 @@ public final class MboxEncoder {
      */
     public static byte[] encode(final byte[] bytes) throws IOException {
         byte[] buffer = new byte[FROM__PATTERN.length];
-        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        try (ByteArrayOutputStream bout = new ByteArrayOutputStream()) {
 
-        for (int i = 0; i < bytes.length; i++) {
-            // read ahead to see if we need to escape..
-            for (int j = 0; j < buffer.length && i + j < bytes.length; j++) {
-                buffer[j] = bytes[i + j];
-            }
+            for (int i = 0; i < bytes.length; i++) {
+                // read ahead to see if we need to escape..
+                for (int j = 0; j < buffer.length && i + j < bytes.length; j++) {
+                    buffer[j] = bytes[i + j];
+                }
 
-            // insert mask if required..
-            if (Arrays.equals(buffer, FROM__PATTERN)) {
-                bout.write(MASKED_FROM__PATTERN);
-                i += MASKED_FROM__PATTERN.length - 2;
+                // insert mask if required..
+                if (Arrays.equals(buffer, FROM__PATTERN)) {
+                    bout.write(MASKED_FROM__PATTERN);
+                    i += MASKED_FROM__PATTERN.length - 2;
+                } else {
+                    bout.write(new byte[]{bytes[i]});
+                }
             }
-            else {
-                bout.write(new byte[] {bytes[i]});
-            }
+            return bout.toByteArray();
         }
-        bout.close();
-        return bout.toByteArray();
     }
 }
