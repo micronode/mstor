@@ -18,7 +18,7 @@
 
 #### Table of Contents
 
-1. [Introduction - What is iCal4j?][Introduction]
+1. [Introduction - What is mstor?][Introduction]
 2. [Concepts][Concepts]
 3. [Configuration options][Configuration]
 4. [Reference - Specification][References]
