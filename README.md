@@ -1,9 +1,35 @@
-=======================
- mstor - Release Notes
-=======================
+# mstor - email storage and archiving
 
- Mstor is a JavaMail provider for persistent email storage. mstor builds on the mbox format and
- provides the following benefits:
+[RFC5322]: https://tools.ietf.org/html/rfc5322
+[RFC2822]: https://tools.ietf.org/html/rfc2822
+
+[Bintray Releases]: https://bintray.com/benfortuna/maven/mstor
+
+[Introduction]: #introduction
+
+[Concepts]: #concepts
+
+[Configuration]: #configuration
+
+[References]: #references
+
+[Limitations]: #limitations
+
+[Development]: #development
+
+#### Table of Contents
+
+1. [Introduction - What is mstor?][Introduction]
+2. [Concepts][Concepts]
+3. [Configuration options][Configuration]
+4. [Reference - Specification][References]
+5. [Limitations - memory usage, etc.][Limitations]
+6. [Development - Guide for contributing to the mstor project][Development]
+
+## Introduction
+
+Mstor is a JavaMail provider for persistent email storage. mstor builds on the mbox format and
+provides the following benefits:
 
  * implemented using Java "New I/O" (java.nio.*) to (theoretically) provide better
  performance
@@ -21,35 +47,61 @@
  Detailed descriptions of changes included in each release may be found
  in the CHANGELOG.
 
-
---------------
- How to build
---------------
- 
- Using Maven:
-
- If you have downloaded the source distribution, you should be able to package a JAR
- file simply by running maven in the root directory. e.g:
- 
-   C:\Libs\mstor-0.9.12-src\>mvn package
+## Concepts
 
 
- Using Ant:
+### Metadata
+
+
+ By default mstor provides the ability to extend the standard JavaMail features
+ through the use of metadata. This metadata is stored in an XML-based document
+ for each folder in the store. Current metadata includes the following:
  
- If you have downloaded the source distribution, you should be able to package a JAR
- file simply by running ant in the root directory. e.g:
+  - received date
+  - flags
+  - headers (NOTE: although headers are already saved to the underlying mbox
+  file, duplicating in metadata allows them to be read without needing to parse
+  the entire message content - thus increasing performance..hopefully!)
  
-   C:\Libs\mstor-0.9.12-src\>ant
+ If you decide not to use mstor's metadata feature, you can disable it by
+ specifying the following session property:
  
- If for some reason you would like to override the default build classpath, I would
- suggest creating a "build.properties" file (see the provided sample) in the root directory
- and add overridden properties to this. You can also override properties via Java system
- properties (e.g. -Dproject.classpath="..."). You shouldn't need to modify the "build.xml" at all,
- so if you do find a need let me know and I'll try to rectify this.
+ 	`mstor.metadata=disabled`
+ 	
+ e.g.
+```
+ 	Properties p = new Properties();
+ 	p.setProperty("mstor.metadata", "disabled");
+ 	Session session = Session.getDefaultInstance(p);
+```
+
+
+### Mbox File Encoding
+
+
+ The mbox format is essentially a concatenation of RFC822 (or RFC2822) messages
+ with an additional "From_" line inserted at the start of each message. Instances
+ of "From_" within the message body are also escaped with a preceding ">"
+ character.
  
--------------------
- System Properties
--------------------
+ Although mstor doesn't encode/decode message content (it is assumed appended
+ messages are valid RFC822 messages), we still need to use an encoding to
+ interpret and create the "From_" line.
+ 
+ Because mbox is just RFC822 messages, file encoding should always be "US-ASCII",
+ however JavaMail seems to use "ISO-8859-1" encoding and as such mstor will also
+ use this encoding as the default.
+ 
+ It is possible however, to override the mbox file encoding used by specifying the
+ following system property:
+ 
+     `-Dmstor.mbox.encoding=<some_encoding>`
+ 
+ 
+## Configuration
+
+
+### System Properties
 
  A number of system properties may be specified in order to configure the operation
  of mstor to suit your purpose. These are as follows:
@@ -86,58 +138,20 @@
   drastically reduce the memory consumption. Apart from that setting this property
   to 'true' will allow you to exclude ehcache from the list of jars you need to
   ship with your application.
- 
-----------
- Metadata
-----------
 
- By default mstor provides the ability to extend the standard JavaMail features
- through the use of metadata. This metadata is stored in an XML-based document
- for each folder in the store. Current metadata includes the following:
- 
-  - received date
-  - flags
-  - headers (NOTE: although headers are already saved to the underlying mbox
-  file, duplicating in metadata allows them to be read without needing to parse
-  the entire message content - thus increasing performance..hopefully!)
- 
- If you decide not to use mstor's metadata feature, you can disable it by
- specifying the following session property:
- 
- 	`mstor.metadata=disabled`
- 	
- e.g.
-```
- 	Properties p = new Properties();
- 	p.setProperty("mstor.metadata", "disabled");
- 	Session session = Session.getDefaultInstance(p);
-```
---------------------
- Mbox File Encoding
---------------------
 
- The mbox format is essentially a concatenation of RFC822 (or RFC2822) messages
- with an additional "From_" line inserted at the start of each message. Instances
- of "From_" within the message body are also escaped with a preceding ">"
- character.
- 
- Although mstor doesn't encode/decode message content (it is assumed appended
- messages are valid RFC822 messages), we still need to use an encoding to
- interpret and create the "From_" line.
- 
- Because mbox is just RFC822 messages, file encoding should always be "US-ASCII",
- however JavaMail seems to use "ISO-8859-1" encoding and as such mstor will also
- use this encoding as the default.
- 
- It is possible however, to override the mbox file encoding used by specifying the
- following system property:
- 
-     `-Dmstor.mbox.encoding=<some_encoding>`
- 
+## References
 
-------------------
- OutOfMemoryError
-------------------
+### Specifications
+
+* [RFC5322] (Supersedes [RFC2822])
+
+## Limitations
+
+
+
+### OutOfMemoryError
+
 
  You may encounter errors when trying to load a large mailbox into memory all
  at once. Here are some pointers to help avoid this problem:
@@ -171,3 +185,33 @@
  In some cases you might even consider turning the cache off altogether.
  See the description of the 'mstor.cache.disabled' system property for
  more details.
+
+
+## Development
+
+
+### How to build
+
+ 
+ Using Maven:
+
+ If you have downloaded the source distribution, you should be able to package a JAR
+ file simply by running maven in the root directory. e.g:
+ 
+   C:\Libs\mstor-0.9.12-src\>mvn package
+
+
+ Using Ant:
+ 
+ If you have downloaded the source distribution, you should be able to package a JAR
+ file simply by running ant in the root directory. e.g:
+ 
+   C:\Libs\mstor-0.9.12-src\>ant
+ 
+ If for some reason you would like to override the default build classpath, I would
+ suggest creating a "build.properties" file (see the provided sample) in the root directory
+ and add overridden properties to this. You can also override properties via Java system
+ properties (e.g. -Dproject.classpath="..."). You shouldn't need to modify the "build.xml" at all,
+ so if you do find a need let me know and I'll try to rectify this.
+ 
+

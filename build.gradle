@@ -30,6 +30,11 @@ apply plugin: 'signing'
 apply plugin: 'pl.allegro.tech.build.axion-release'
 apply plugin: 'nebula.optional-base'
 
+group = 'org.mnode.mstor'
+description = '''
+A JavaMail provider for persistent email storage
+'''
+
 [checkstyle, findbugs, pmd]*.ignoreFailures = true
 checkstyle.configProperties = ['checkstyle.suppressions.file': "${project.projectDir}/config/checkstyle/default-suppressions.xml"]
 
@@ -229,8 +234,8 @@ bintray {
     key = bintray_key
     pkg {
         repo = 'maven'
-        name = 'ical4j'
-        userOrg = 'ical4j'
+        name = 'mstor'
+        userOrg = 'fortuna'
         licenses = ['BSD']
         vcsUrl = 'https://github.com/benfortuna/mstor.git'
         version {
