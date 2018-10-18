@@ -35,7 +35,7 @@ import net.fortuna.mstor.MStorMessage;
 import net.fortuna.mstor.connector.MessageDelegate;
 import net.fortuna.mstor.util.MessageUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jcrom.AbstractJcrEntity;
 import org.jcrom.JcrDataProviderImpl;
 import org.jcrom.JcrFile;

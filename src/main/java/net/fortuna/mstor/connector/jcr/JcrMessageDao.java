@@ -31,15 +31,14 @@
  */
 package net.fortuna.mstor.connector.jcr;
 
-import java.util.List;
+import net.fortuna.mstor.util.MessageUtils;
+import org.jcrom.Jcrom;
+import org.jcrom.dao.AbstractJcrDAO;
+import org.jcrom.util.NodeFilter;
 
 import javax.jcr.Session;
 import javax.mail.Flags.Flag;
-
-import net.fortuna.mstor.util.MessageUtils;
-
-import org.jcrom.Jcrom;
-import org.jcrom.dao.AbstractJcrDAO;
+import java.util.List;
 
 /**
  * @author Ben
@@ -68,7 +67,8 @@ public class JcrMessageDao extends AbstractJcrDAO<JcrMessage> {
      * @return
      */
     public List<JcrMessage> findByMessageNumber(String path, int messageNumber) {
-        return updateDao(super.findByXPath("/jcr:root" + path + "/*[@messageNumber=" + messageNumber + "]", "*", -1));
+        return updateDao(super.findByXPath("/jcr:root" + path + "/*[@messageNumber=" + messageNumber + "]",
+                new NodeFilter("*", -1)));
     }
 
     /**
@@ -89,7 +89,8 @@ public class JcrMessageDao extends AbstractJcrDAO<JcrMessage> {
         }
         return messages;
         */
-        return updateDao(super.findByXPath("/jcr:root" + path + "/*[@messageId='" + messageId + "']", "*", -1));
+        return updateDao(super.findByXPath("/jcr:root" + path + "/*[@messageId='" + messageId + "']",
+                new NodeFilter("*", -1)));
     }
     
     /**
@@ -100,7 +101,8 @@ public class JcrMessageDao extends AbstractJcrDAO<JcrMessage> {
      */
     public List<JcrMessage> findByHeader(String path, String name, String value) {
         // parent axis not supported in jackrabbit.. hopefully will be soon.
-        return updateDao(super.findByXPath("/jcr:root" + path + "/*/headers[@" + name + "='" + value + "']/..", "*", -1));
+        return updateDao(super.findByXPath("/jcr:root" + path + "/*/headers[@" + name + "='" + value + "']/..",
+                new NodeFilter("*", -1)));
     }
 
     /**
@@ -109,7 +111,8 @@ public class JcrMessageDao extends AbstractJcrDAO<JcrMessage> {
      * @return
      */
     public List<JcrMessage> findByFlag(String path, Flag flag) {
-        return updateDao(super.findByXPath("/jcr:root" + path + "/*[jcr:like(@flags, '" + MessageUtils.getFlagName(flag) + "')]", "*", -1));
+        return updateDao(super.findByXPath("/jcr:root" + path + "/*[jcr:like(@flags, '" + MessageUtils.getFlagName(flag) + "')]",
+                new NodeFilter("*", -1)));
     }
 
     private List<JcrMessage> updateDao(List<JcrMessage> messages) {

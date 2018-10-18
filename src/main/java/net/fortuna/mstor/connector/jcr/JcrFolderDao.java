@@ -31,12 +31,12 @@
  */
 package net.fortuna.mstor.connector.jcr;
 
-import java.util.List;
-
-import javax.jcr.Session;
-
 import org.jcrom.Jcrom;
 import org.jcrom.dao.AbstractJcrDAO;
+import org.jcrom.util.NodeFilter;
+
+import javax.jcr.Session;
+import java.util.List;
 
 /**
  * @author Ben
@@ -65,7 +65,7 @@ public class JcrFolderDao extends AbstractJcrDAO<JcrFolder> {
      * @return
      */
     public List<JcrFolder> findByName(String path, String name) {
-        return super.findByXPath("/jcr:root" + path + "/*[@folderName='" + name + "']", "*", -1);
+        return super.findByXPath("/jcr:root" + path + "/*[@folderName='" + name + "']", new NodeFilter("*", -1));
     }
     
     /**
@@ -74,6 +74,6 @@ public class JcrFolderDao extends AbstractJcrDAO<JcrFolder> {
      * @return
      */
     public List<JcrFolder> findByPattern(String path, String pattern) {
-        return super.findByXPath("/jcr:root" + path + "/*[jcr:like(@folderName, '" + pattern + "')]", "*", -1);
+        return super.findByXPath("/jcr:root" + path + "/*[jcr:like(@folderName, '" + pattern + "')]", new NodeFilter("*", -1));
     }
 }

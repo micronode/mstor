@@ -58,15 +58,15 @@ dependencies {
 //        'javax.mail:javax.mail-api:1.6.2'
         'com.sun.mail:javax.mail:1.6.2'
 
-    implementation 'commons-lang:commons-lang:2.6',
-        'commons-net:commons-net:3.0.1',
-        'jdom:jdom:1.0',
+    implementation 'org.apache.commons:commons-lang3:3.6',
+        'commons-net:commons-net:3.6',
+        'jdom:jdom:1.1',
         'com.thoughtworks.xstream:xstream:1.4.2',
         'org.jyaml:jyaml:1.3',
         'javax.jcr:jcr:2.0',
-        'org.jcrom:jcrom:2.0.0',
-        'net.sf.ehcache:ehcache-core:2.5.0',
-        'commons-io:commons-io:2.1',
+        'org.jcrom:jcrom:2.2.0',
+        'net.sf.ehcache:ehcache-core:2.6.11',
+        'commons-io:commons-io:2.6',
         "org.codehaus.groovy:groovy-all:$groovyVersion",
         'cglib:cglib:2.2.2',
         "org.slf4j:jul-to-slf4j:$slf4jVersion",
