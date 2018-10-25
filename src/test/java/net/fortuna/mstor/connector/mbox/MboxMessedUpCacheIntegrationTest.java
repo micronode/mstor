@@ -31,12 +31,12 @@
  */
 package net.fortuna.mstor.connector.mbox;
 
-import java.util.Properties;
-
 import junit.framework.TestSuite;
+import net.fortuna.mstor.model.MessedUpCacheTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.AllTests;
-import net.fortuna.mstor.MessedUpCacheTest;
+
+import java.util.Properties;
 
 /**
  * @author Ben

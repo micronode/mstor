@@ -31,16 +31,14 @@
  */
 package net.fortuna.mstor.connector.mbox;
 
-import java.io.File;
-import java.util.Properties;
+import net.fortuna.mstor.model.StoreLifecycle;
+import org.apache.commons.io.FileUtils;
 
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.URLName;
-
-import net.fortuna.mstor.StoreLifecycle;
-
-import org.apache.commons.io.FileUtils;
+import java.io.File;
+import java.util.Properties;
 
 /**
  * @author Ben

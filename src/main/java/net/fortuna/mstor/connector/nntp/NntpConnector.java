@@ -31,8 +31,8 @@
  */
 package net.fortuna.mstor.connector.nntp;
 
-import net.fortuna.mstor.MStorStore;
 import net.fortuna.mstor.connector.AbstractProtocolConnector;
+import net.fortuna.mstor.model.MStorStore;
 import org.apache.commons.net.nntp.NNTPClient;
 
 import javax.mail.Folder;

@@ -29,18 +29,17 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.mstor;
+package net.fortuna.mstor.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.UIDFolder;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Unit tests applicable to UIDFolder support for mstor.
@@ -82,7 +81,7 @@ public class UIDFolderTest extends AbstractMStorTest {
     /*
      * (non-Javadoc)
      * 
-     * @see net.fortuna.mstor.AbstractMStorTest#setUp()
+     * @see net.fortuna.mstor.model.AbstractMStorTest#setUp()
      */
     protected void setUp() throws Exception {
         super.setUp();
@@ -97,7 +96,7 @@ public class UIDFolderTest extends AbstractMStorTest {
     }
 
     /* (non-Javadoc)
-     * @see net.fortuna.mstor.AbstractMStorTest#tearDown()
+     * @see net.fortuna.mstor.model.AbstractMStorTest#tearDown()
      */
     protected void tearDown() throws Exception {
         for (int i = 0; i < uidFolders.length; i++) {

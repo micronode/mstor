@@ -31,18 +31,16 @@
  */
 package net.fortuna.mstor.search;
 
-import java.io.StringReader;
-import java.io.StringWriter;
+import junit.framework.TestCase;
+import net.fortuna.mstor.model.Tags;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.mail.search.AddressStringTerm;
 import javax.mail.search.FromStringTerm;
 import javax.mail.search.OrTerm;
-
-import junit.framework.TestCase;
-import net.fortuna.mstor.tag.Tags;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.StringReader;
+import java.io.StringWriter;
 
 /**
  * @author Ben Fortuna
