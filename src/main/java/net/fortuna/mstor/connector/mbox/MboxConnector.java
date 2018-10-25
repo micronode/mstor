@@ -37,7 +37,6 @@ import net.fortuna.mstor.model.MStorStore;
 import net.fortuna.mstor.util.Configurator;
 
 import javax.mail.Folder;
-import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.URLName;
 import java.io.File;
@@ -112,7 +111,7 @@ public class MboxConnector extends AbstractProtocolConnector {
     /**
      * {@inheritDoc}
      */
-    public Folder getDefaultFolder() throws MessagingException {
+    public Folder getDefaultFolder() {
         return getFolder("");
     }
     
@@ -143,7 +142,7 @@ public class MboxConnector extends AbstractProtocolConnector {
     /**
      * {@inheritDoc}
      */
-    public Folder getFolder(URLName url) throws MessagingException {
+    public Folder getFolder(URLName url) {
         return getFolder(url.getFile());
     }
 }
