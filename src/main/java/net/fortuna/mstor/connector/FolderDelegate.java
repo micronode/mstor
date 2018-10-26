@@ -31,14 +31,15 @@
  */
 package net.fortuna.mstor.connector;
 
-import java.io.IOException;
-import java.io.InputStream;
+import net.fortuna.mstor.model.MStorFolder;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
- * Implementors support delegation of specific functions from {@link net.fortuna.mstor.MStorFolder}.
+ * Implementors support delegation of specific functions from {@link MStorFolder}.
  * 
  * @param <T> the type of message delegate supported
  * @author Ben

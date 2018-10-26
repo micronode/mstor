@@ -31,18 +31,17 @@
  */
 package net.fortuna.mstor.connector.mbox;
 
+import junit.framework.TestSuite;
+import net.fortuna.mstor.connector.mbox.MboxConnector.MetadataStrategy;
+import net.fortuna.mstor.model.MStorFolderTest;
+import org.apache.commons.io.filefilter.DirectoryFileFilter;
+import org.apache.commons.io.filefilter.NotFileFilter;
+import org.junit.runner.RunWith;
+import org.junit.runners.AllTests;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.util.Properties;
-
-import junit.framework.TestSuite;
-import org.junit.runner.RunWith;
-import org.junit.runners.AllTests;
-import net.fortuna.mstor.MStorFolderTest;
-import net.fortuna.mstor.connector.mbox.MboxConnector.MetadataStrategy;
-
-import org.apache.commons.io.filefilter.DirectoryFileFilter;
-import org.apache.commons.io.filefilter.NotFileFilter;
 
 /**
  * @author Ben

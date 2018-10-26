@@ -29,16 +29,12 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.mstor;
-
-import javax.mail.Folder;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Store;
-import javax.mail.URLName;
+package net.fortuna.mstor.model;
 
 import net.fortuna.mstor.connector.ProtocolConnector;
 import net.fortuna.mstor.connector.ProtocolConnectorFactory;
+
+import javax.mail.*;
 
 /**
  * Implementation of a javamail store for the mstor provider.

@@ -29,15 +29,14 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.mstor;
+package net.fortuna.mstor.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import junit.framework.TestCase;
 
 import javax.mail.Folder;
 import javax.mail.Store;
-
-import junit.framework.TestCase;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Abstract base class for MStor unit tests. Provides setup of a mail store.

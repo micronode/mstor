@@ -31,8 +31,8 @@
  */
 package net.fortuna.mstor.connector.jcr;
 
-import net.fortuna.mstor.MStorMessage;
 import net.fortuna.mstor.connector.MessageDelegate;
+import net.fortuna.mstor.model.MStorMessage;
 import net.fortuna.mstor.util.MessageUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;

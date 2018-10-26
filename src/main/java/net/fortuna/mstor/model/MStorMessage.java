@@ -29,11 +29,9 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.mstor;
+package net.fortuna.mstor.model;
 
 import net.fortuna.mstor.connector.MessageDelegate;
-import net.fortuna.mstor.tag.Taggable;
-import net.fortuna.mstor.tag.Tags;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -408,7 +406,7 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
     }
 
     /**
-     * @param tag a message tag
+     * @param tag a message model
      * @throws MessagingException where an error occurs updating tags
      */
     public void addTag(final String tag) throws MessagingException {
@@ -420,14 +418,14 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
     }
 
     /**
-     * @param tag a message tag
+     * @param tag a message model
      * @throws MessagingException where an error occurs updating tags
      */
     public void removeTag(final String tag) throws MessagingException {
         // Flags flags = new Flags();
         // Tags tags = getTags();
         tags.remove(tag);
-        // tags.add(tag);
+        // tags.add(model);
         // setFlags(flags, false);
         updateFlags();
     }

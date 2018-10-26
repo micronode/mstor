@@ -31,9 +31,9 @@
  */
 package net.fortuna.mstor.connector.jcr;
 
-import net.fortuna.mstor.MStorFolder;
-import net.fortuna.mstor.MStorStore;
 import net.fortuna.mstor.connector.AbstractProtocolConnector;
+import net.fortuna.mstor.model.MStorFolder;
+import net.fortuna.mstor.model.MStorStore;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.rmi.client.ClientRepositoryFactory;
 import org.jcrom.Jcrom;

@@ -31,13 +31,13 @@
  */
 package net.fortuna.mstor.connector.jcr;
 
-import java.io.File;
-import java.util.Properties;
-
 import junit.framework.TestSuite;
+import net.fortuna.mstor.model.MStorFolderTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.AllTests;
-import net.fortuna.mstor.MStorFolderTest;
+
+import java.io.File;
+import java.util.Properties;
 
 /**
  * @author Ben
