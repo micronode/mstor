@@ -31,8 +31,8 @@
  */
 package net.fortuna.mstor.search;
 
-import net.fortuna.mstor.model.Taggable;
-import net.fortuna.mstor.model.Tags;
+import net.fortuna.mstor.provider.Taggable;
+import net.fortuna.mstor.provider.Tags;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

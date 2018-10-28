@@ -34,7 +34,7 @@
  */
 package net.fortuna.mstor.connector.jcr;
 
-import net.fortuna.mstor.model.StoreLifecycle;
+import net.fortuna.mstor.provider.StoreLifecycle;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.apache.commons.logging.Log;

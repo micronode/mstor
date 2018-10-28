@@ -33,7 +33,7 @@ package net.fortuna.mstor.connector;
 
 import net.fortuna.mstor.connector.jcr.JcrConnector;
 import net.fortuna.mstor.connector.mbox.MboxConnector;
-import net.fortuna.mstor.model.MStorStore;
+import net.fortuna.mstor.provider.MStorStore;
 
 import javax.mail.Session;
 import javax.mail.URLName;

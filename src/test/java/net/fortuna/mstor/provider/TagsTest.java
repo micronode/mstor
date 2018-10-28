@@ -29,7 +29,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.mstor.model;
+package net.fortuna.mstor.provider;
 
 import junit.framework.TestCase;
 import org.apache.commons.logging.Log;
@@ -42,7 +42,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * Unit tests for {@link net.fortuna.mstor.model.Tags}.
+ * Unit tests for {@link net.fortuna.mstor.provider.Tags}.
  * 
  * @author Ben Fortuna
  * 

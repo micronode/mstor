@@ -33,7 +33,7 @@ package net.fortuna.mstor.connector.mbox;
 
 import junit.framework.TestSuite;
 import net.fortuna.mstor.connector.mbox.MboxConnector.MetadataStrategy;
-import net.fortuna.mstor.model.MStorMessageTest;
+import net.fortuna.mstor.provider.MStorMessageTest;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.NotFileFilter;
 import org.junit.runner.RunWith;

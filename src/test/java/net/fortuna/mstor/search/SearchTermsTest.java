@@ -32,7 +32,7 @@
 package net.fortuna.mstor.search;
 
 import junit.framework.TestCase;
-import net.fortuna.mstor.model.Tags;
+import net.fortuna.mstor.provider.Tags;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

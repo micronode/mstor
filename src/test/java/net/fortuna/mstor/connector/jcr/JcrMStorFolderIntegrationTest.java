@@ -32,7 +32,7 @@
 package net.fortuna.mstor.connector.jcr;
 
 import junit.framework.TestSuite;
-import net.fortuna.mstor.model.MStorFolderTest;
+import net.fortuna.mstor.provider.MStorFolderTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.AllTests;
 

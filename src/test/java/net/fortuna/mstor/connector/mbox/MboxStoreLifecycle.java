@@ -31,7 +31,7 @@
  */
 package net.fortuna.mstor.connector.mbox;
 
-import net.fortuna.mstor.model.StoreLifecycle;
+import net.fortuna.mstor.provider.StoreLifecycle;
 import org.apache.commons.io.FileUtils;
 
 import javax.mail.Session;

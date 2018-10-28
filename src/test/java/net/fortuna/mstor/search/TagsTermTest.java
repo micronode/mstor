@@ -34,9 +34,9 @@ package net.fortuna.mstor.search;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import junit.framework.TestCase;
-import net.fortuna.mstor.model.StoreLifecycle;
-import net.fortuna.mstor.model.Taggable;
-import net.fortuna.mstor.model.Tags;
+import net.fortuna.mstor.provider.StoreLifecycle;
+import net.fortuna.mstor.provider.Taggable;
+import net.fortuna.mstor.provider.Tags;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -116,7 +116,7 @@ public class TagsTermTest extends TestCase {
 //        inbox.open(Folder.READ_WRITE);
 //
 //        Taggable message = (Taggable) inbox.getMessage(1);
-//        message.addTag(model);
+//        message.addTag(provider);
     }
 
     /*
@@ -131,7 +131,7 @@ public class TagsTermTest extends TestCase {
         super.tearDown();
 
         // Taggable message = (Taggable) inbox.getMessage(2);
-        // message.removeTag(model);
+        // message.removeTag(provider);
     }
 
     /**
@@ -166,7 +166,7 @@ public class TagsTermTest extends TestCase {
      * public final void testPersistTagTerm() throws IOException,
      * MappingException, ValidationException, MarshalException {
      * 
-     * Tags tags = new Tags(); tags.add(model);
+     * Tags tags = new Tags(); tags.add(provider);
      * 
      * Mapping mapping = new Mapping(); // 1. Load the mapping information from
      * the file
@@ -186,7 +186,7 @@ public class TagsTermTest extends TestCase {
 
     /*
      * public void testXmlEncodeTagTerm() { Tags tags = new Tags();
-     * tags.add(model);
+     * tags.add(provider);
      * 
      * TagsTerm term = new TagsTerm(tags);
      * 

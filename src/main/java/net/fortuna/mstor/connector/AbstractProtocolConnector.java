@@ -31,7 +31,7 @@
  */
 package net.fortuna.mstor.connector;
 
-import net.fortuna.mstor.model.MStorStore;
+import net.fortuna.mstor.provider.MStorStore;
 
 import javax.mail.URLName;
 

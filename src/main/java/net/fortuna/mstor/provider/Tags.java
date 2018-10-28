@@ -29,7 +29,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.mstor.model;
+package net.fortuna.mstor.provider;
 
 import javax.mail.Flags;
 import javax.mail.Message;
@@ -249,11 +249,11 @@ public class Tags implements Set<String>, Serializable {
     }
 
     /**
-     * Adds the specified model to a message.
+     * Adds the specified provider to a message.
      * 
      * @param tag
      * @param message
-     * @throws MessagingException when unable to model the given message
+     * @throws MessagingException when unable to provider the given message
      * @throws UnsupportedOperationException if the given message does not support tags
      */
     public static void addTag(final String tag, final Message message)
@@ -267,11 +267,11 @@ public class Tags implements Set<String>, Serializable {
     }
 
     /**
-     * Remove the specified model from a message.
+     * Remove the specified provider from a message.
      * 
      * @param tag
      * @param message
-     * @throws MessagingException when unable to remove the model from the given message
+     * @throws MessagingException when unable to remove the provider from the given message
      * @throws UnsupportedOperationException if the given message does not support tags
      */
     public static void removeTag(final String tag, final Message message)

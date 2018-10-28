@@ -29,7 +29,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.mstor.model;
+package net.fortuna.mstor.provider;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -81,7 +81,7 @@ public class UIDFolderTest extends AbstractMStorTest {
     /*
      * (non-Javadoc)
      * 
-     * @see net.fortuna.mstor.model.AbstractMStorTest#setUp()
+     * @see net.fortuna.mstor.provider.AbstractMStorTest#setUp()
      */
     protected void setUp() throws Exception {
         super.setUp();
@@ -96,7 +96,7 @@ public class UIDFolderTest extends AbstractMStorTest {
     }
 
     /* (non-Javadoc)
-     * @see net.fortuna.mstor.model.AbstractMStorTest#tearDown()
+     * @see net.fortuna.mstor.provider.AbstractMStorTest#tearDown()
      */
     protected void tearDown() throws Exception {
         for (int i = 0; i < uidFolders.length; i++) {

@@ -1,1 +1,1 @@
-protocol=mstor; type=store; class=net.fortuna.mstor.model.MStorStore; vendor=Ben Fortuna;
+protocol=mstor; type=store; class=net.fortuna.mstor.provider.MStorStore; vendor=Ben Fortuna;

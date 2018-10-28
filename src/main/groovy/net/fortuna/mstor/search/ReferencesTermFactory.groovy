@@ -31,7 +31,8 @@
  */
 package net.fortuna.mstor.search
 
-import net.fortuna.mstor.model.MStorMessage
+
+import net.fortuna.mstor.provider.MStorMessage
 
 /**
  * @author Ben

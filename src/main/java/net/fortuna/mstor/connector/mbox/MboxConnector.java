@@ -32,8 +32,8 @@
 package net.fortuna.mstor.connector.mbox;
 
 import net.fortuna.mstor.connector.AbstractProtocolConnector;
-import net.fortuna.mstor.model.MStorFolder;
-import net.fortuna.mstor.model.MStorStore;
+import net.fortuna.mstor.provider.MStorFolder;
+import net.fortuna.mstor.provider.MStorStore;
 import net.fortuna.mstor.util.Configurator;
 
 import javax.mail.Folder;

@@ -32,7 +32,7 @@
 package net.fortuna.mstor.connector.mbox;
 
 import junit.framework.TestSuite;
-import net.fortuna.mstor.model.MessedUpCacheTest;
+import net.fortuna.mstor.provider.MessedUpCacheTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.AllTests;
 

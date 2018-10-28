@@ -29,7 +29,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.mstor.model;
+package net.fortuna.mstor.provider;
 
 import javax.mail.MessagingException;
 
@@ -48,14 +48,14 @@ import javax.mail.MessagingException;
 public interface Taggable {
 
     /**
-     * Add the specified model to the associated tags.
+     * Add the specified provider to the associated tags.
      *
      * @param tag
      */
     void addTag(String tag) throws MessagingException;
 
     /**
-     * Remove the specified model from the associated tags.
+     * Remove the specified provider from the associated tags.
      *
      * @param tag
      */
