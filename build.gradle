@@ -14,9 +14,9 @@ apply plugin: 'java'
 apply plugin: 'java-library'
 apply plugin: 'eclipse'
 apply plugin: 'groovy'
-apply plugin: 'checkstyle'
+//apply plugin: 'checkstyle'
 //apply plugin: 'findbugs'
-apply plugin: 'pmd'
+//apply plugin: 'pmd'
 //apply plugin: 'codenarc'
 apply plugin: 'maven-publish'
 apply plugin: 'jacoco'
@@ -31,8 +31,8 @@ A JavaMail provider for persistent email storage
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-[checkstyle, pmd]*.ignoreFailures = true
-checkstyle.configProperties = ['checkstyle.suppressions.file': "${project.projectDir}/config/checkstyle/default-suppressions.xml"]
+//[checkstyle, pmd]*.ignoreFailures = true
+//checkstyle.configProperties = ['checkstyle.suppressions.file': 'config/checkstyle/default-suppressions.xml']
 
 repositories {
     mavenCentral()

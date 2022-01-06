@@ -35,6 +35,7 @@ import junit.framework.TestCase;
 import net.fortuna.mstor.model.Tags;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.Ignore;
 
 import javax.mail.search.AddressStringTerm;
 import javax.mail.search.FromStringTerm;
@@ -52,6 +53,7 @@ import java.io.StringWriter;
  * </pre>
  * 
  */
+@Ignore
 public class SearchTermsTest extends TestCase {
     
     private static final Log LOG = LogFactory.getLog(SearchTermsTest.class);
