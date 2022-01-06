@@ -31,16 +31,8 @@
  */
 package net.fortuna.mstor.search
 
-import java.util.Map;
-
-import javax.mail.search.AndTerm;
-import javax.mail.search.OrTerm;
-import javax.mail.search.SearchTerm;
-import javax.swing.JSplitPane;
-
-
-import groovy.util.AbstractFactory;
-import groovy.util.FactoryBuilderSupport;
+import javax.mail.search.OrTerm
+import javax.mail.search.SearchTerm
 
 /**
  * @author Ben
@@ -52,12 +44,12 @@ class OrTermFactory extends AbstractFactory {
      * {@inheritDoc}
      */
     @Override
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
                 throws InstantiationException, IllegalAccessException {
         return new OrTermEx()
     }
-                
-    public void setChild(FactoryBuilderSupport build, Object parent, Object child) {
+
+    void setChild(FactoryBuilderSupport build, Object parent, Object child) {
         parent.addTerm(child)
     }
     

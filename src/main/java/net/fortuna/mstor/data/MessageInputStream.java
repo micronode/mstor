@@ -31,7 +31,8 @@
  */
 package net.fortuna.mstor.data;
 
-import java.io.IOException;
+import net.fortuna.mstor.util.Configurator;
+
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.InvalidMarkException;
@@ -40,8 +41,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import net.fortuna.mstor.util.Configurator;
 
 /**
  * @author Ben
@@ -59,13 +58,12 @@ public class MessageInputStream extends InputStream {
     /**
      * Pattern used to match the From_ line within a message buffer.
      */
-//    static final Pattern FROM__LINE_PATTERN = Pattern.compile("[\\n{2}|(\\r\\n){2}]^From .*$\\s*^", Pattern.MULTILINE);
     static final Pattern FROM__LINE_PATTERN = Pattern.compile("(\\A|\\n{2}|(\\r\\n){2})^From .*$\\s*^", Pattern.MULTILINE);
 
-    private ByteBuffer buffer;
+    private final ByteBuffer buffer;
 
     /**
-     * @param buffer
+     * @param b
      */
     public MessageInputStream(final ByteBuffer b) throws CharacterCodingException {
         this(b, Charset.forName(Configurator.getProperty("mstor.mbox.encoding", "ISO-8859-1")));
@@ -91,8 +89,7 @@ public class MessageInputStream extends InputStream {
         // rewind for a re-read of buffer data..
         try {
             buffer.reset();
-        }
-        catch (InvalidMarkException ime) {
+        } catch (InvalidMarkException ime) {
             buffer.rewind();
         }
     }
@@ -100,7 +97,8 @@ public class MessageInputStream extends InputStream {
     /**
      * {@inheritDoc}
      */
-    public final int read() throws IOException {
+    @Override
+    public final int read() {
         if (!buffer.hasRemaining()) {
             return -1;
         }
@@ -110,8 +108,8 @@ public class MessageInputStream extends InputStream {
     /**
      * {@inheritDoc}
      */
-    public final int read(final byte[] bytes, final int offset,
-            final int length) throws IOException {
+    @Override
+    public final int read(final byte[] bytes, final int offset, final int length) {
         
         if (!buffer.hasRemaining()) {
             return -1;

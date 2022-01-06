@@ -31,9 +31,7 @@
  */
 package net.fortuna.mstor
 
-import javax.mail.Message.RecipientType;
-
-import groovy.util.FactoryBuilderSupport;
+import javax.mail.Message.RecipientType
 
 class MessageBuilder extends FactoryBuilderSupport {
     

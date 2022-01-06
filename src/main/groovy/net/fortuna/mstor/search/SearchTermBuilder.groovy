@@ -31,10 +31,8 @@
  */
 package net.fortuna.mstor.search
 
-import javax.mail.Message.RecipientType;
-import javax.mail.search.ComparisonTerm;
-
-import groovy.util.FactoryBuilderSupport;
+import javax.mail.Message.RecipientType
+import javax.mail.search.ComparisonTerm
 
 /**
  * @author Ben

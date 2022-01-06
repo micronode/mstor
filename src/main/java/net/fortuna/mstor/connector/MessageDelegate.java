@@ -31,17 +31,18 @@
  */
 package net.fortuna.mstor.connector;
 
+import net.fortuna.mstor.model.MStorMessage;
+
+import javax.mail.Flags;
+import javax.mail.Header;
+import javax.mail.internet.InternetHeaders;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 
-import javax.mail.Flags;
-import javax.mail.Header;
-import javax.mail.internet.InternetHeaders;
-
 /**
- * Implementors support delegation of specific functions from {@link net.fortuna.mstor.MStorMessage}.
+ * Implementors support delegation of specific functions from {@link MStorMessage}.
  * 
  * @author Ben
  * 

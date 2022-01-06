@@ -31,15 +31,14 @@
  */
 package net.fortuna.mstor.search;
 
+import net.fortuna.mstor.model.Taggable;
+import net.fortuna.mstor.model.Tags;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.search.SearchTerm;
-
-import net.fortuna.mstor.tag.Taggable;
-import net.fortuna.mstor.tag.Tags;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * A Search Term that matches all messages with a given set of tags.

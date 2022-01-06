@@ -31,27 +31,20 @@
  */
 package net.fortuna.mstor.connector.mbox;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-
 import net.fortuna.mstor.connector.AbstractFolderDelegate;
-import net.fortuna.mstor.connector.DelegateException;
 import net.fortuna.mstor.connector.FolderDelegate;
 import net.fortuna.mstor.connector.MessageDelegate;
 import net.fortuna.mstor.data.MboxFile;
 import net.fortuna.mstor.util.CapabilityHints;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Ben
@@ -80,11 +73,8 @@ public class MboxFolder extends AbstractFolderDelegate<MessageDelegate> {
             else if (pathname.getName().endsWith(DIR_EXTENSION)) {
                 return false;
             }
-            else if (!pathname.isDirectory() && !pathname.getName().startsWith(".")
-                    && pathname.length() >= 0 && !MboxFile.isValid(pathname)) {
-                return false;
-            }
-            return true;
+            else return pathname.isDirectory() || pathname.getName().startsWith(".")
+                        || pathname.length() < 0 || MboxFile.isValid(pathname);
         }
     };
     
@@ -377,7 +367,7 @@ public class MboxFolder extends AbstractFolderDelegate<MessageDelegate> {
     /**
      * {@inheritDoc}
      */
-    protected MessageDelegate createMessage(int messageNumber) throws DelegateException {
+    protected MessageDelegate createMessage(int messageNumber) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -385,7 +375,7 @@ public class MboxFolder extends AbstractFolderDelegate<MessageDelegate> {
     /**
      * {@inheritDoc}
      */
-    public MessageDelegate getMessage(int messageNumber) throws DelegateException {
+    public MessageDelegate getMessage(int messageNumber) {
         // TODO Auto-generated method stub
         return null;
     }

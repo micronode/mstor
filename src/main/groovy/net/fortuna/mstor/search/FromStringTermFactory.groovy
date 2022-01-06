@@ -31,14 +31,7 @@
  */
 package net.fortuna.mstor.search
 
-import java.util.Map;
-
-import javax.mail.Address;
-import javax.mail.search.FromStringTerm;
-import javax.mail.search.FromTerm;
-
-import groovy.util.AbstractFactory;
-import groovy.util.FactoryBuilderSupport;
+import javax.mail.search.FromStringTerm
 
 /**
  * @author Ben
@@ -60,7 +53,7 @@ class FromStringTermFactory extends AbstractFactory {
         else {
             pattern = attributes['pattern']
         }
-        FromStringTerm result = new FromStringTerm(pattern);
+        FromStringTerm result = new FromStringTerm(pattern)
         return result
     }
 

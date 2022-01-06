@@ -31,17 +31,14 @@
  */
 package net.fortuna.mstor.connector.nntp;
 
-import java.io.IOException;
+import net.fortuna.mstor.connector.AbstractProtocolConnector;
+import net.fortuna.mstor.model.MStorStore;
+import org.apache.commons.net.nntp.NNTPClient;
 
-import javax.mail.AuthenticationFailedException;
 import javax.mail.Folder;
 import javax.mail.MessagingException;
 import javax.mail.URLName;
-
-import net.fortuna.mstor.MStorStore;
-import net.fortuna.mstor.connector.AbstractProtocolConnector;
-
-import org.apache.commons.net.nntp.NNTPClient;
+import java.io.IOException;
 
 /**
  * @author Ben
@@ -70,7 +67,7 @@ public class NntpConnector extends AbstractProtocolConnector {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.connector.ProtocolConnector#connect(java.lang.String, int, java.lang.String, java.lang.String)
      */
-    public boolean connect() throws AuthenticationFailedException, MessagingException {
+    public boolean connect() {
 /*
         try {
             client.connect(host, port);
@@ -106,7 +103,7 @@ public class NntpConnector extends AbstractProtocolConnector {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.connector.ProtocolConnector#getDefaultFolder()
      */
-    public Folder getDefaultFolder() throws MessagingException {
+    public Folder getDefaultFolder() {
         // TODO Auto-generated method stub
         return null;
     }
@@ -114,7 +111,7 @@ public class NntpConnector extends AbstractProtocolConnector {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.connector.ProtocolConnector#getFolder(java.lang.String)
      */
-    public Folder getFolder(String name) throws MessagingException {
+    public Folder getFolder(String name) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -122,7 +119,7 @@ public class NntpConnector extends AbstractProtocolConnector {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.connector.ProtocolConnector#getFolder(javax.mail.URLName)
      */
-    public Folder getFolder(URLName url) throws MessagingException {
+    public Folder getFolder(URLName url) {
         // TODO Auto-generated method stub
         return null;
     }

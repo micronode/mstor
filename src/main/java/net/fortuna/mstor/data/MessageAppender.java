@@ -31,6 +31,10 @@
  */
 package net.fortuna.mstor.data;
 
+import net.fortuna.mstor.util.Configurator;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -45,11 +49,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
-
-import net.fortuna.mstor.util.Configurator;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * @author Ben
@@ -78,18 +77,18 @@ public class MessageAppender {
 
     private static final String FROM__DATE_PATTERN = "EEE MMM d HH:mm:ss yyyy";
 
-    private Log log = LogFactory.getLog(MessageAppender.class);
+    private final Log log = LogFactory.getLog(MessageAppender.class);
 
-    private CharsetDecoder decoder;
+    private final CharsetDecoder decoder;
 
-    private CharsetEncoder encoder;
+    private final CharsetEncoder encoder;
 
     private final DateFormat from_DateFormat = new SimpleDateFormat(FROM__DATE_PATTERN, Locale.US);
     {
         from_DateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
     
-    private FileChannel channel;
+    private final FileChannel channel;
     
     /**
      * @param channel
@@ -105,7 +104,6 @@ public class MessageAppender {
     public MessageAppender(FileChannel channel, Charset charset) {
         this.channel = channel;
         decoder = charset.newDecoder();
-        // decoder.onMalformedInput(CodingErrorAction.REPLACE);
         encoder = charset.newEncoder();
         encoder.onUnmappableCharacter(CodingErrorAction.REPLACE);
     }
@@ -117,23 +115,8 @@ public class MessageAppender {
      */
     public long appendMessage(byte[] message) throws IOException {
         long messagePosition = channel.size();
-        
-        // ByteBuffer buffer = ByteBuffer.allocate(message.length());
-
-        /*
-         * // copy message to avoid modifying method arguments directly.. CharSequence newMessage =
-         * message.toString(); // encoder.reset(); // add ">" characters to message content matching
-         * the "From_" line pattern // to maintain integrity of mbox file.. // NOTE: This shouldn't
-         * replace any existing "From_" line as the from pattern // contains a newline.. //Pattern
-         * fromPattern = Pattern.compile("\n\r\n" + FROM_); Pattern fromPattern =
-         * Pattern.compile(FROM__PATTERN); //Matcher matcher =
-         * fromPattern.matcher(buffer.asCharBuffer()); Matcher matcher =
-         * fromPattern.matcher(newMessage); if (matcher.find()) { matcher.reset(); newMessage =
-         * matcher.replaceAll(MASKED_FROM__PATTERN); }
-         */
 
         ByteBuffer buffer = ByteBuffer.wrap(MboxEncoder.encode(message));
-        // ByteBuffer buffer = ByteBuffer.wrap(message);
         CharBuffer decoded = decoder.decode(buffer);
 
         // debugging..
@@ -148,17 +131,11 @@ public class MessageAppender {
             }
             
             channel.write(encoder.encode(CharBuffer.wrap(createFromLine())), channel.size());
-            // encoder.encode(CharBuffer.wrap(DEFAULT_FROM__LINE), buffer,
-            // false);
         }
         buffer.rewind();
 
         channel.write(buffer, channel.size());
-        // encoder.encode(CharBuffer.wrap(message), buffer, true);
-        // encoder.flush(buffer);
 
-        // channel.write(buffer, channel.size());
-        
         return messagePosition;
     }
 
@@ -181,15 +158,10 @@ public class MessageAppender {
         
         // if not first message add required newlines..
         if (channel.size() > 0) {
-            from_Line.append(DEFAULT_LINE_SEPARATOR);
-            from_Line.append(DEFAULT_LINE_SEPARATOR);
-//            channel.write(encoder.encode(CharBuffer.wrap(DEFAULT_LINE_SEPARATOR)), channel.size());
-            // encoder.encode(CharBuffer.wrap("\n\n"), buffer, false);
+            from_Line.append(DEFAULT_LINE_SEPARATOR).append(DEFAULT_LINE_SEPARATOR);
         }
-        from_Line.append(FROM__PREFIX);
-        from_Line.append("- ");
-        from_Line.append(from_DateFormat.format(new Date()));
-        from_Line.append(DEFAULT_LINE_SEPARATOR);
+        from_Line.append(FROM__PREFIX).append("- ").append(from_DateFormat.format(new Date()))
+            .append(DEFAULT_LINE_SEPARATOR);
         return from_Line.toString();
     }
 }

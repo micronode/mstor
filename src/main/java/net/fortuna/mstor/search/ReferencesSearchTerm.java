@@ -31,13 +31,12 @@
  */
 package net.fortuna.mstor.search;
 
-import javax.mail.Message;
-import javax.mail.search.SearchTerm;
-
+import net.fortuna.mstor.model.MStorMessage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import net.fortuna.mstor.MStorMessage;
+import javax.mail.Message;
+import javax.mail.search.SearchTerm;
 
 /**
  * @author Ben

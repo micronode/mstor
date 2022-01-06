@@ -31,13 +31,7 @@
  */
 package net.fortuna.mstor.search
 
-import java.util.Map;
-
-import javax.mail.search.MessageNumberTerm;
-import javax.mail.search.SentDateTerm;
-
-import groovy.util.AbstractFactory;
-import groovy.util.FactoryBuilderSupport;
+import javax.mail.search.MessageNumberTerm
 
 /**
  * @author Ben
@@ -49,7 +43,7 @@ class MessageNumberTermFactory extends AbstractFactory {
      * {@inheritDoc}
      */
     @Override
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
             throws InstantiationException, IllegalAccessException {
 
         int messageNum
@@ -60,6 +54,6 @@ class MessageNumberTermFactory extends AbstractFactory {
             messageNum = attributes['messageNumber']
         }
         MessageNumberTerm result = new MessageNumberTerm(messageNum)
-        return result;
+        return result
     }
 }

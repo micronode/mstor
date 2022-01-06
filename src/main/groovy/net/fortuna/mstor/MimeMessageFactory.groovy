@@ -31,18 +31,13 @@
  */
 package net.fortuna.mstor
 
-import java.util.Map;
-
-import javax.mail.Session;
-import javax.mail.internet.MimeMessage;
-
-import groovy.util.AbstractFactory;
-import groovy.util.FactoryBuilderSupport;
+import javax.mail.Session
+import javax.mail.internet.MimeMessage
 
 class MimeMessageFactory extends AbstractFactory {
 
     @Override
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
             throws InstantiationException, IllegalAccessException {
                 
         MimeMessage message
@@ -50,7 +45,7 @@ class MimeMessageFactory extends AbstractFactory {
             Session session = value
             message = new MimeMessage(session)
         }
-        return message;
+        return message
     }
 
 }

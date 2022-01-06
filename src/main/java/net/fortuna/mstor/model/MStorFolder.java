@@ -29,28 +29,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.mstor;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CompletionService;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorCompletionService;
-import java.util.concurrent.Executors;
-
-import javax.mail.Flags;
-import javax.mail.Folder;
-import javax.mail.FolderNotFoundException;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.UIDFolder;
-import javax.mail.event.ConnectionEvent;
-import javax.mail.event.FolderEvent;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+package net.fortuna.mstor.model;
 
 import net.fortuna.mstor.connector.DelegateException;
 import net.fortuna.mstor.connector.FolderDelegate;
@@ -58,6 +37,16 @@ import net.fortuna.mstor.connector.MessageDelegate;
 import net.fortuna.mstor.util.CacheAdapter;
 import net.fortuna.mstor.util.Configurator;
 import net.fortuna.mstor.util.EhCacheAdapter;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import javax.mail.*;
+import javax.mail.event.ConnectionEvent;
+import javax.mail.event.FolderEvent;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.*;
 
 /**
  * A folder implementation for the mstor javamail provider.
@@ -156,14 +145,14 @@ public final class MStorFolder extends Folder implements UIDFolder {
     /**
      * {@inheritDoc}
      */
-    public Folder getParent() throws MessagingException {
+    public Folder getParent() {
         return new MStorFolder(mStore, delegate.getParent());
     }
 
     /**
      * {@inheritDoc}
      */
-    public boolean exists() throws MessagingException {
+    public boolean exists() {
         return delegate.exists();
     }
 
@@ -218,7 +207,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
     /**
      * {@inheritDoc}
      */
-    public boolean hasNewMessages() throws MessagingException {
+    public boolean hasNewMessages() {
         // TODO Auto-generated method stub
         return false;
     }
@@ -568,6 +557,14 @@ public final class MStorFolder extends Folder implements UIDFolder {
             throw new MessagingException("Incompatible message type");
         }
         return ((MStorMessage) message).getUid();
+    }
+
+    @Override
+    public long getUIDNext() {
+        if (delegate != null) {
+            return delegate.getLastUid() + 1;
+        }
+        return -1;
     }
 
     /**

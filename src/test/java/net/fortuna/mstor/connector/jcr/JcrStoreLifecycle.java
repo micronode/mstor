@@ -34,27 +34,19 @@
  */
 package net.fortuna.mstor.connector.jcr;
 
-import java.io.File;
-import java.util.Hashtable;
-import java.util.Properties;
-
-import javax.mail.Authenticator;
-import javax.mail.Folder;
-import javax.mail.NoSuchProviderException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Store;
-import javax.mail.URLName;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-
-import net.fortuna.mstor.StoreLifecycle;
-
+import net.fortuna.mstor.model.StoreLifecycle;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.time.DurationFormatUtils;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.core.jndi.RegistryHelper;
+
+import javax.mail.*;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import java.io.File;
+import java.util.Hashtable;
+import java.util.Properties;
 
 /**
  * @author fortuna

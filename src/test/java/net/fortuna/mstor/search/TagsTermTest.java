@@ -31,8 +31,14 @@
  */
 package net.fortuna.mstor.search;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+import junit.framework.TestCase;
+import net.fortuna.mstor.model.StoreLifecycle;
+import net.fortuna.mstor.model.Taggable;
+import net.fortuna.mstor.model.Tags;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -41,17 +47,8 @@ import javax.mail.Store;
 import javax.mail.search.AddressStringTerm;
 import javax.mail.search.FromStringTerm;
 import javax.mail.search.OrTerm;
-
-import junit.framework.TestCase;
-import net.fortuna.mstor.StoreLifecycle;
-import net.fortuna.mstor.tag.Taggable;
-import net.fortuna.mstor.tag.Tags;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Unit tests for {@link net.fortuna.mstor.search.TagsTerm}.
@@ -119,7 +116,7 @@ public class TagsTermTest extends TestCase {
 //        inbox.open(Folder.READ_WRITE);
 //
 //        Taggable message = (Taggable) inbox.getMessage(1);
-//        message.addTag(tag);
+//        message.addTag(model);
     }
 
     /*
@@ -134,7 +131,7 @@ public class TagsTermTest extends TestCase {
         super.tearDown();
 
         // Taggable message = (Taggable) inbox.getMessage(2);
-        // message.removeTag(tag);
+        // message.removeTag(model);
     }
 
     /**
@@ -169,7 +166,7 @@ public class TagsTermTest extends TestCase {
      * public final void testPersistTagTerm() throws IOException,
      * MappingException, ValidationException, MarshalException {
      * 
-     * Tags tags = new Tags(); tags.add(tag);
+     * Tags tags = new Tags(); tags.add(model);
      * 
      * Mapping mapping = new Mapping(); // 1. Load the mapping information from
      * the file
@@ -189,7 +186,7 @@ public class TagsTermTest extends TestCase {
 
     /*
      * public void testXmlEncodeTagTerm() { Tags tags = new Tags();
-     * tags.add(tag);
+     * tags.add(model);
      * 
      * TagsTerm term = new TagsTerm(tags);
      * 

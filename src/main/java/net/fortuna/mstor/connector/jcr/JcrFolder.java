@@ -31,30 +31,26 @@
  */
 package net.fortuna.mstor.connector.jcr;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Date;
-import java.util.List;
-
-import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Flags.Flag;
-
-import net.fortuna.mstor.connector.DelegateException;
 import net.fortuna.mstor.connector.FolderDelegate;
 import net.fortuna.mstor.connector.MessageDelegate;
 import net.fortuna.mstor.util.MessageUtils;
-
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jcrom.AbstractJcrEntity;
 import org.jcrom.JcrMappingException;
 import org.jcrom.annotations.JcrProperty;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+import javax.mail.Flags.Flag;
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author Ben
@@ -110,7 +106,7 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
     /**
      * {@inheritDoc}
      */
-    public synchronized long allocateUid(MessageDelegate message) throws UnsupportedOperationException, DelegateException {
+    public synchronized long allocateUid(MessageDelegate message) throws UnsupportedOperationException {
         Long uid = lastUid + 1;
         message.setUid(uid);
         lastUid = uid;
@@ -186,13 +182,8 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
                 LOG.error("Unexpected error", e);
             }
         }
-        try {
-            saveChanges();
-        }
-        catch (RepositoryException e) {
-            throw new MessagingException("Unexpected error", e);
-        }
-        
+        saveChanges();
+
         // reset cached message count..
         messageCount = -1;
     }
@@ -200,14 +191,8 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
     /**
      * {@inheritDoc}
      */
-    public void close() throws MessagingException {
-      try {
-          saveChanges();
-      }
-      catch (RepositoryException e) {
-//          throw new MessagingException("Unexpected error", e);
-          LOG.error("Unexpected error", e);
-      }
+    public void close() {
+        saveChanges();
     }
 
     /**
@@ -287,7 +272,7 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
     /**
      * {@inheritDoc}
      */
-    public void expunge(Message[] deleted) throws MessagingException {
+    public void expunge(Message[] deleted) {
 //        for (JcrMessage jcrMessage : messages) {
             for (Message message : deleted) {
 //                if (jcrMessage.getMessageNumber() == message.getMessageNumber()) {
@@ -308,7 +293,7 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
     /**
      * {@inheritDoc}
      */
-    public FolderDelegate<JcrMessage> getFolder(String name) throws MessagingException {
+    public FolderDelegate<JcrMessage> getFolder(String name) {
         JcrFolder retVal = null;
 
 //        List<JcrFolder> folders = getFolderDao().findAll(getConnector().getJcrom().getPath(this) + "/folders");
@@ -368,7 +353,7 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
     /**
      * {@inheritDoc}
      */
-    public JcrMessage getMessage(int messageNumber) throws DelegateException {
+    public JcrMessage getMessage(int messageNumber) {
         List<JcrMessage> messages = getMessageDao().findByMessageNumber(getConnector().getJcrom().getPath(this) + "/messages",
                 messageNumber);
         
@@ -386,7 +371,7 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
     /**
      * {@inheritDoc}
      */
-    public InputStream getMessageAsStream(int index) throws IOException {
+    public InputStream getMessageAsStream(int index) {
         List<JcrMessage> messages = getMessageDao().findAll(getConnector().getJcrom().getPath(this) + "/messages",
                 index - 1, 1);
         if (!messages.isEmpty()) {
@@ -398,7 +383,7 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
     /**
      * {@inheritDoc}
      */
-    public int getMessageCount() throws MessagingException {
+    public int getMessageCount() {
 //        return messages.size();
         if (messageCount < 0) {
             messageCount = (int) getMessageDao().getSize(getConnector().getJcrom().getPath(this) + "/messages");
@@ -409,7 +394,7 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
     /**
      * {@inheritDoc}
      */
-    public int getDeletedMessageCount() throws MessagingException, UnsupportedOperationException {
+    public int getDeletedMessageCount() throws UnsupportedOperationException {
         return getMessageDao().findByFlag(getConnector().getJcrom().getPath(this) + "/messages", Flag.DELETED).size();
     }
     
@@ -440,7 +425,7 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
     /**
      * {@inheritDoc}
      */
-    public long getUidValidity() throws UnsupportedOperationException, MessagingException {
+    public long getUidValidity() throws UnsupportedOperationException {
         return uidValidity;
     }
 
@@ -478,7 +463,7 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
         return folderName;
     }
 
-    private Node getNode() throws PathNotFoundException, JcrMappingException, RepositoryException {
+    private Node getNode() throws JcrMappingException, RepositoryException {
         String path = getConnector().getJcrom().getPath(this);
         if (path != null) {
             return getConnector().getSession().getRootNode().getNode(path.substring(1));
@@ -530,7 +515,7 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
         return connector;
     }
     
-    private void saveChanges() throws JcrMappingException, PathNotFoundException, RepositoryException {
+    private void saveChanges() throws JcrMappingException {
 //        getConnector().getJcrom().updateNode(getNode(), this);
 //        getNode().save();
         getFolderDao().update(this);

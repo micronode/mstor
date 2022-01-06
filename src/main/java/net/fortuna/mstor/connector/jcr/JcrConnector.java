@@ -31,30 +31,19 @@
  */
 package net.fortuna.mstor.connector.jcr;
 
-import javax.jcr.Credentials;
-import javax.jcr.LoginException;
-import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.Repository;
-import javax.jcr.RepositoryException;
+import net.fortuna.mstor.connector.AbstractProtocolConnector;
+import net.fortuna.mstor.model.MStorFolder;
+import net.fortuna.mstor.model.MStorStore;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.jackrabbit.rmi.client.ClientRepositoryFactory;
+import org.jcrom.Jcrom;
+
+import javax.jcr.*;
 import javax.jcr.Session;
-import javax.jcr.SimpleCredentials;
-import javax.mail.AuthenticationFailedException;
-import javax.mail.Folder;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.URLName;
+import javax.mail.*;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-
-import net.fortuna.mstor.MStorFolder;
-import net.fortuna.mstor.MStorStore;
-import net.fortuna.mstor.connector.AbstractProtocolConnector;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.jackrabbit.rmi.client.ClientRepositoryFactory;
-import org.jcrom.Jcrom;
 
 /**
  * @author Ben
@@ -91,7 +80,7 @@ public class JcrConnector extends AbstractProtocolConnector {
     /**
      * {@inheritDoc}
      */
-    public boolean connect() throws AuthenticationFailedException, MessagingException {
+    public boolean connect() throws MessagingException {
         Repository repository;
 
         if (StringUtils.isEmpty(mailSession.getProperty("mstor.repository.provider.url"))) {
@@ -142,7 +131,7 @@ public class JcrConnector extends AbstractProtocolConnector {
     /**
      * {@inheritDoc}
      */
-    public void disconnect() throws MessagingException {
+    public void disconnect() {
         session.logout();
     }
 

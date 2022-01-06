@@ -31,16 +31,8 @@
  */
 package net.fortuna.mstor.search
 
-import java.util.Map;
-
-import javax.mail.search.AndTerm;
-import javax.mail.search.SearchTerm;
-import javax.swing.JSplitPane;
-
-
-import groovy.util.AbstractFactory;
-import groovy.util.FactoryBuilderSupport;
-import groovyjarjarasm.asm.commons.SerialVersionUIDAdder;
+import javax.mail.search.AndTerm
+import javax.mail.search.SearchTerm
 
 /**
  * @author Ben
@@ -52,7 +44,7 @@ class AndTermFactory extends AbstractFactory {
      * {@inheritDoc}
      */
     @Override
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
                 throws InstantiationException, IllegalAccessException {
         
 //        AndTerm result            
@@ -66,8 +58,8 @@ class AndTermFactory extends AbstractFactory {
 //        return result
         return new AndTermEx()
     }
-                
-    public void setChild(FactoryBuilderSupport build, Object parent, Object child) {
+
+    void setChild(FactoryBuilderSupport build, Object parent, Object child) {
         parent.addTerm(child)
     }
     

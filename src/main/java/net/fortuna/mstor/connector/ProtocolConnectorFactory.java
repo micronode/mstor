@@ -31,12 +31,12 @@
  */
 package net.fortuna.mstor.connector;
 
-import javax.mail.Session;
-import javax.mail.URLName;
-
-import net.fortuna.mstor.MStorStore;
 import net.fortuna.mstor.connector.jcr.JcrConnector;
 import net.fortuna.mstor.connector.mbox.MboxConnector;
+import net.fortuna.mstor.model.MStorStore;
+
+import javax.mail.Session;
+import javax.mail.URLName;
 
 /**
  * @author Ben

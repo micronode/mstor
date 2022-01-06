@@ -31,12 +31,7 @@
  */
 package net.fortuna.mstor.search
 
-import java.util.Map;
-
-import javax.mail.search.ReceivedDateTerm;
-
-import groovy.util.AbstractFactory;
-import groovy.util.FactoryBuilderSupport;
+import javax.mail.search.ReceivedDateTerm
 
 /**
  * @author Ben
@@ -50,7 +45,7 @@ class ReceivedDateTermFactory extends AbstractFactory {
      * {@inheritDoc}
      */
     @Override
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes)
             throws InstantiationException, IllegalAccessException {
 
         Date date
@@ -61,6 +56,6 @@ class ReceivedDateTermFactory extends AbstractFactory {
             date = attributes['date']
         }
         ReceivedDateTerm result = new ReceivedDateTerm(comparison, date)
-        return result;
+        return result
     }
 }

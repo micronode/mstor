@@ -31,20 +31,15 @@
  */
 package net.fortuna.mstor.connector.nntp;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-
+import net.fortuna.mstor.connector.AbstractFolderDelegate;
+import net.fortuna.mstor.connector.FolderDelegate;
+import net.fortuna.mstor.connector.MessageDelegate;
 import org.apache.commons.net.nntp.NNTPClient;
 import org.apache.commons.net.nntp.NewsgroupInfo;
 
-import net.fortuna.mstor.connector.AbstractFolderDelegate;
-import net.fortuna.mstor.connector.DelegateException;
-import net.fortuna.mstor.connector.FolderDelegate;
-import net.fortuna.mstor.connector.MessageDelegate;
+import javax.mail.Folder;
+import javax.mail.Message;
+import java.io.InputStream;
 
 /**
  * @author Ben
@@ -74,8 +69,7 @@ public class NntpFolder extends AbstractFolderDelegate<MessageDelegate> {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.connector.AbstractFolderDelegate#createMessage(int)
      */
-    protected MessageDelegate createMessage(int messageNumber)
-            throws DelegateException {
+    protected MessageDelegate createMessage(int messageNumber) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -83,8 +77,7 @@ public class NntpFolder extends AbstractFolderDelegate<MessageDelegate> {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.connector.AbstractFolderDelegate#setLastUid(long)
      */
-    protected void setLastUid(long uid) throws UnsupportedOperationException,
-            DelegateException {
+    protected void setLastUid(long uid) throws UnsupportedOperationException {
         // TODO Auto-generated method stub
 
     }
@@ -92,7 +85,7 @@ public class NntpFolder extends AbstractFolderDelegate<MessageDelegate> {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.connector.FolderDelegate#appendMessages(javax.mail.Message[])
      */
-    public void appendMessages(Message[] messages) throws MessagingException {
+    public void appendMessages(Message[] messages) {
         // TODO Auto-generated method stub
 
     }
@@ -100,7 +93,7 @@ public class NntpFolder extends AbstractFolderDelegate<MessageDelegate> {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.connector.FolderDelegate#close()
      */
-    public void close() throws MessagingException {
+    public void close() {
         // TODO Auto-generated method stub
 
     }
@@ -108,7 +101,7 @@ public class NntpFolder extends AbstractFolderDelegate<MessageDelegate> {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.connector.FolderDelegate#create(int)
      */
-    public boolean create(int type) throws MessagingException {
+    public boolean create(int type) {
         // TODO Auto-generated method stub
         return false;
     }
@@ -132,7 +125,7 @@ public class NntpFolder extends AbstractFolderDelegate<MessageDelegate> {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.connector.FolderDelegate#expunge(javax.mail.Message[])
      */
-    public void expunge(Message[] deleted) throws MessagingException {
+    public void expunge(Message[] deleted) {
         // TODO Auto-generated method stub
 
     }
@@ -172,8 +165,7 @@ public class NntpFolder extends AbstractFolderDelegate<MessageDelegate> {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.connector.FolderDelegate#getMessage(int)
      */
-    public MessageDelegate getMessage(int messageNumber)
-            throws DelegateException {
+    public MessageDelegate getMessage(int messageNumber) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -181,7 +173,7 @@ public class NntpFolder extends AbstractFolderDelegate<MessageDelegate> {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.connector.FolderDelegate#getMessageAsStream(int)
      */
-    public InputStream getMessageAsStream(int index) throws IOException {
+    public InputStream getMessageAsStream(int index) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -189,7 +181,7 @@ public class NntpFolder extends AbstractFolderDelegate<MessageDelegate> {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.connector.FolderDelegate#getMessageCount()
      */
-    public int getMessageCount() throws MessagingException {
+    public int getMessageCount() {
         return newsgroupInfo.getArticleCount();
     }
 
@@ -226,8 +218,7 @@ public class NntpFolder extends AbstractFolderDelegate<MessageDelegate> {
     /* (non-Javadoc)
      * @see net.fortuna.mstor.connector.FolderDelegate#getUidValidity()
      */
-    public long getUidValidity() throws UnsupportedOperationException,
-            MessagingException {
+    public long getUidValidity() throws UnsupportedOperationException {
         // TODO Auto-generated method stub
         return 0;
     }
