@@ -50,11 +50,9 @@ import java.util.Arrays;
  */
 public final class MboxEncoder {
 
-    private static final byte[] FROM__PATTERN = {'\n', '\n', 'F', 'r', 'o',
-            'm', ' '};
+    private static final byte[] FROM__PATTERN = {'\n', '\n', 'F', 'r', 'o', 'm', ' '};
 
-    private static final byte[] MASKED_FROM__PATTERN = {'\n', '\n', '>', 'F',
-            'r', 'o', 'm', ' '};
+    private static final byte[] MASKED_FROM__PATTERN = {'\n', '\n', '>', 'F', 'r', 'o', 'm', ' '};
 
     /**
      * Constructor made private to prevent instantiation.
