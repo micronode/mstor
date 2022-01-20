@@ -31,6 +31,10 @@ A JavaMail provider for persistent email storage
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+compileJava {
+    options.release = 8
+}
+
 //[checkstyle, pmd]*.ignoreFailures = true
 //checkstyle.configProperties = ['checkstyle.suppressions.file': 'config/checkstyle/default-suppressions.xml']
 
