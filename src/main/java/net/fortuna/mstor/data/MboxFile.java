@@ -45,8 +45,8 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.CodingErrorAction;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -135,7 +135,7 @@ public class MboxFile {
      */
     private static final Pattern FROM__LINE_PATTERN = Pattern.compile("(\\A|\\n{2}|(\\r\\n){2})^From .*$",
             Pattern.MULTILINE);
-    
+
     /*
      * this differs from the FROM__LINE_PATTERN in that it supports
      *  - files where there is no blank line before the FROM_ line 
@@ -284,7 +284,7 @@ public class MboxFile {
      */
     private Long[] getMessagePositions() throws IOException {
         if (messagePositions == null) {
-            List<Long> posList = new ArrayList<Long>();
+            Set<Long> posList = new HashSet<>();
 
             // debugging..
             log.debug("Channel size [" + getChannel().size() + "] bytes");
