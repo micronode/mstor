@@ -135,7 +135,7 @@ public class MboxFile {
      */
     private static final Pattern FROM__LINE_PATTERN = Pattern.compile("(\\A|\\n{2}|(\\r\\n){2})^From .*$",
             Pattern.MULTILINE);
-    
+
     /*
      * this differs from the FROM__LINE_PATTERN in that it supports
      *  - files where there is no blank line before the FROM_ line 
@@ -284,7 +284,8 @@ public class MboxFile {
      */
     private Long[] getMessagePositions() throws IOException {
         if (messagePositions == null) {
-            List<Long> posList = new ArrayList<Long>();
+            List<Long> posList = new ArrayList<>();
+            long lastPosition = -1;
 
             // debugging..
             log.debug("Channel size [" + getChannel().size() + "] bytes");
@@ -313,7 +314,11 @@ public class MboxFile {
                     // debugging..
                     log.debug("Found match at [" + (offset + matcher.start()) + "]");
 
-                    posList.add(offset + matcher.start());
+                    long position = offset + matcher.start();
+                    if (position != lastPosition) {
+                        posList.add(position);
+                        lastPosition = position;
+                    }
                 }
 
                 if (offset + bufferSize >= getChannel().size()) {
@@ -328,7 +333,6 @@ public class MboxFile {
                     cs = decoder.decode(buffer);
                 }
             }
-
             messagePositions = posList.toArray(new Long[0]);
         }
         return messagePositions;
