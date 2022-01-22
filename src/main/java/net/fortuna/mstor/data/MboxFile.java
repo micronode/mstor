@@ -45,8 +45,8 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.CodingErrorAction;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -284,7 +284,8 @@ public class MboxFile {
      */
     private Long[] getMessagePositions() throws IOException {
         if (messagePositions == null) {
-            Set<Long> posList = new HashSet<>();
+            List<Long> posList = new ArrayList<>();
+            long lastPosition = -1;
 
             // debugging..
             log.debug("Channel size [" + getChannel().size() + "] bytes");
@@ -313,7 +314,11 @@ public class MboxFile {
                     // debugging..
                     log.debug("Found match at [" + (offset + matcher.start()) + "]");
 
-                    posList.add(offset + matcher.start());
+                    long position = offset + matcher.start();
+                    if (position != lastPosition) {
+                        posList.add(position);
+                        lastPosition = position;
+                    }
                 }
 
                 if (offset + bufferSize >= getChannel().size()) {
@@ -328,7 +333,6 @@ public class MboxFile {
                     cs = decoder.decode(buffer);
                 }
             }
-
             messagePositions = posList.toArray(new Long[0]);
         }
         return messagePositions;
