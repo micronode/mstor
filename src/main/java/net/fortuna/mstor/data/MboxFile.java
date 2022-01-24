@@ -41,10 +41,7 @@ import org.apache.commons.logging.LogFactory;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CharsetEncoder;
-import java.nio.charset.CodingErrorAction;
+import java.nio.charset.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -127,13 +124,13 @@ public class MboxFile {
     /**
      * A pattern representing the format of the "From_" line for the first message in an mbox file.
      */
-    private static final Pattern VALID_MBOX_PATTERN = Pattern.compile("^" + FROM__PREFIX + ".*",
+    private static final Pattern VALID_MBOX_PATTERN = Pattern.compile("^" + FROM__PREFIX + ".+",
             Pattern.DOTALL);
 
     /**
      * Pattern used to match the From_ line within a message buffer.
      */
-    private static final Pattern FROM__LINE_PATTERN = Pattern.compile("(\\A|\\n{2}|(\\r\\n){2})^From .*$",
+    private static final Pattern FROM__LINE_PATTERN = Pattern.compile("(\\A|\\n{2}|(\\r\\n){2})^From .+$",
             Pattern.MULTILINE);
 
     /*
@@ -144,7 +141,7 @@ public class MboxFile {
      */
     private static final Pattern RELAXED_FROM__LINE_PATTERN = 
     	Pattern.compile("^(" +                                          // at the beginning of a line begins either a
-    			"From .*" +                                             // normal From_ line 
+    			"From .+" +                                             // normal From_ line
     			")|(" +                                                 // or
     			"\\u0010\\u0010\\u0010\\u0010\\u0010\\u0010\\u0010" +   // 7 0x10 bytes 
     			"\\u0011\\u0011\\u0011\\u0011\\u0011\\u0011\\u0053" +   // 6 0x11 bytes and an 'S' (0x53) (a foxmail signature)
@@ -153,7 +150,7 @@ public class MboxFile {
     private static final int DEFAULT_BUFFER_SIZE = 8192;
 
     // Charset and decoder for ISO-8859-15
-    private static Charset charset = Charset.forName(Configurator.getProperty(
+    private static final Charset charset = Charset.forName(Configurator.getProperty(
             "mstor.mbox.encoding", "ISO-8859-1"));
 
     private final Log log = LogFactory.getLog(MboxFile.class);
@@ -546,7 +543,7 @@ public class MboxFile {
     public static boolean isValid(final File file) {
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file),
-                Charset.forName("UTF-8")))) {
+                StandardCharsets.UTF_8))) {
 
             // check that first message is correct..
             String line = reader.readLine();
