@@ -182,7 +182,6 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
     public Enumeration<String> getAllHeaderLines() throws MessagingException {
         InternetHeaders headers = getHeaders();
         if (headers != null) {
@@ -195,7 +194,6 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
     public Enumeration<Header> getAllHeaders() throws MessagingException {
         InternetHeaders headers = getHeaders();
         if (headers != null) {
@@ -236,7 +234,6 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
     public Enumeration<String> getMatchingHeaderLines(final String[] names)
             throws MessagingException {
         
@@ -251,7 +248,6 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
     public Enumeration<Header> getMatchingHeaders(final String[] names)
             throws MessagingException {
         
@@ -266,7 +262,6 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
     public Enumeration<String> getNonMatchingHeaderLines(final String[] names)
             throws MessagingException {
         
@@ -281,7 +276,6 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
     public Enumeration<Header> getNonMatchingHeaders(final String[] names)
             throws MessagingException {
         

@@ -160,7 +160,6 @@ public abstract class AbstractMetaFolder<T extends MessageDelegate> extends Abst
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
     public final void appendMessages(Message[] messages) throws MessagingException {
         try {
             Date received = new Date();

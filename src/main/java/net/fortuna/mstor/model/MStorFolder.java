@@ -170,7 +170,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
         for (FolderDelegate<? extends MessageDelegate> childDelegate : childDelegates) {
             folders.add(new MStorFolder(mStore, childDelegate));
         }
-        return folders.toArray(new Folder[folders.size()]);
+        return folders.toArray(new Folder[0]);
     }
 
     /**
@@ -442,7 +442,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
             }
         }
 
-        final MStorMessage[] deleted = deletedList.toArray(new MStorMessage[deletedList.size()]);
+        final MStorMessage[] deleted = deletedList.toArray(new MStorMessage[0]);
 
         delegate.expunge(deleted);
 
@@ -528,7 +528,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
         for (long uid = start; uid <= lastUid; uid++) {
             messages.add(getMessageByUID(uid));
         }
-        return messages.toArray(new Message[messages.size()]);
+        return messages.toArray(new Message[0]);
     }
 
     /**
@@ -539,7 +539,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
         for (long uid : uids) {
             messages.add(getMessageByUID(uid));
         }
-        return messages.toArray(new Message[messages.size()]);
+        return messages.toArray(new Message[0]);
     }
 
     /**

@@ -109,7 +109,7 @@ public class YamlMetaFolder extends AbstractMetaFolder<YamlMetaMessage> {
                 }
             }
         }
-        return metas.toArray(new YamlMetaMessage[metas.size()]);
+        return metas.toArray(new YamlMetaMessage[0]);
     }
 
 
@@ -238,7 +238,7 @@ public class YamlMetaFolder extends AbstractMetaFolder<YamlMetaMessage> {
         for (FolderDelegate<MessageDelegate> folder : folders) {
             folderList.add(new YamlMetaFolder(folder));
         }
-        return folderList.toArray(new YamlMetaFolder[folderList.size()]);
+        return folderList.toArray(new YamlMetaFolder[0]);
     }
 
 }

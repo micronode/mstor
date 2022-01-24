@@ -169,7 +169,7 @@ public class MboxFolder extends AbstractFolderDelegate<MessageDelegate> {
         for (int i = 0; files != null && i < files.length; i++) {
             folders.add(new MboxFolder(files[i]));
         }
-        return folders.toArray(new MboxFolder[folders.size()]);
+        return folders.toArray(new MboxFolder[0]);
     }
     
     /**

@@ -107,7 +107,7 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
      * {@inheritDoc}
      */
     public synchronized long allocateUid(MessageDelegate message) throws UnsupportedOperationException {
-        Long uid = lastUid + 1;
+        long uid = lastUid + 1;
         message.setUid(uid);
         lastUid = uid;
         return uid;
@@ -116,7 +116,6 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
     public void appendMessages(Message[] messages) throws MessagingException {
     	final Date defaultReceivedDate = new Date();
     	
@@ -339,7 +338,7 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
      */
     public long getLastUid() throws UnsupportedOperationException {
         if (lastUid == null) {
-            lastUid = 1l;
+            lastUid = 1L;
         }
         return lastUid;
     }
@@ -437,7 +436,7 @@ public class JcrFolder extends AbstractJcrEntity implements FolderDelegate<JcrMe
         for (JcrFolder folder : folders) {
             folder.setParent(this);
         }
-        return folders.toArray(new JcrFolder[folders.size()]);
+        return folders.toArray(new JcrFolder[0]);
     }
 
     /**

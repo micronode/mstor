@@ -237,7 +237,6 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
     public void setHeaders(InternetHeaders headers) {
         setHeaders(headers.getAllHeaders());
     }
@@ -343,7 +342,6 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
         return body;
     }
     
-    @SuppressWarnings("unchecked")
     private void appendAttachments(final Part part) throws MessagingException, IOException {
         if (part.isMimeType("message/*")) {
             JcrMessage jcrMessage = new JcrMessage();

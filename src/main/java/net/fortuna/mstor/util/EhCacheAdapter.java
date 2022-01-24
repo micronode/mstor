@@ -58,7 +58,7 @@ public class EhCacheAdapter extends CacheAdapter {
         Element cacheElement = getMessageCache().get(index);
         
         if (cacheElement != null) {
-            return cacheElement.getValue();
+            return cacheElement.getObjectValue();
         } else {
             return null;
         }

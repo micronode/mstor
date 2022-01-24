@@ -119,7 +119,7 @@ public class MetaFolder extends AbstractMetaFolder<MetaMessage> {
             folders.add(new MetaFolder(aDelegateList));
         }
         
-        return folders.toArray(new MetaFolder[folders.size()]);
+        return folders.toArray(new MetaFolder[0]);
     }
     
     /*
@@ -236,7 +236,7 @@ public class MetaFolder extends AbstractMetaFolder<MetaMessage> {
                 }
             }
         }
-        return metas.toArray(new MetaMessage[metas.size()]);
+        return metas.toArray(new MetaMessage[0]);
     }
 
     /**

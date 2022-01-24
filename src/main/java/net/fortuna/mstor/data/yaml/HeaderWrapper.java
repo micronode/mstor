@@ -31,9 +31,9 @@
  */
 package net.fortuna.mstor.data.yaml;
 
-import javax.mail.Header;
-
 import org.ho.yaml.wrapper.DelayedCreationBeanWrapper;
+
+import javax.mail.Header;
 
 /**
  * @author Ben
@@ -64,7 +64,7 @@ public class HeaderWrapper extends DelayedCreationBeanWrapper {
 
     public Object getProperty(Object obj, String name) {
         if ("value".equals(name)) {
-            return ((Header) obj).getValue().replaceAll("\\x1F|\\x0C", "");
+            return ((Header) obj).getValue().replaceAll("[\\x1F\\x0C]", "");
         }
         return super.getProperty(obj, name);
     }
