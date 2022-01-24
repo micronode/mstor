@@ -56,7 +56,7 @@ public class Tags implements Set<String>, Serializable {
 
     protected static final String TAG_PREFIX = "tag_";
 
-    private Flags flags;
+    private final Flags flags;
 
     /**
      * Default constructor.

@@ -55,7 +55,7 @@ public final class MStorStore extends Store {
      */
     public static final String INBOX = "Inbox";
     
-    private ProtocolConnector protocolHandler;
+    private final ProtocolConnector protocolHandler;
 
     /**
      * Constructor.
@@ -72,6 +72,7 @@ public final class MStorStore extends Store {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Folder getDefaultFolder() throws MessagingException {
         if (!isConnected()) {
             throw new IllegalStateException("Store not connected");
@@ -82,6 +83,7 @@ public final class MStorStore extends Store {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Folder getFolder(final String name) throws MessagingException {
         if (!isConnected()) {
             throw new IllegalStateException("Store not connected");
@@ -92,6 +94,7 @@ public final class MStorStore extends Store {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Folder getFolder(final URLName url) throws MessagingException {
         if (!isConnected()) {
             throw new IllegalStateException("Store not connected");
@@ -102,6 +105,7 @@ public final class MStorStore extends Store {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected boolean protocolConnect(final String host, final int port,
             final String user, final String password) throws MessagingException {
         
@@ -112,6 +116,7 @@ public final class MStorStore extends Store {
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized void close() throws MessagingException {
         Folder[] folders = getDefaultFolder().list();
         for (Folder folder : folders) {

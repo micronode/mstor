@@ -76,7 +76,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
     /**
      * A delegate supporting additional functions not inherently supported by {@link Folder}.
      */
-    private FolderDelegate<? extends MessageDelegate> delegate;
+    private final FolderDelegate<? extends MessageDelegate> delegate;
     
     /**
      * An adapter for the cache for messages.
@@ -88,7 +88,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
      */
 //    private Map messageCache;
 
-    private MStorStore mStore;
+    private final MStorStore mStore;
 
     /**
      * Constructs a new mstor folder instance.

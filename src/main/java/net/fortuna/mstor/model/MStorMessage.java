@@ -57,7 +57,7 @@ import java.util.*;
  */
 public final class MStorMessage extends MimeMessage implements Serializable, Taggable {
 
-    private Log log = LogFactory.getLog(MStorMessage.class);
+    private final Log log = LogFactory.getLog(MStorMessage.class);
 
     /**
      * Delegate for providing additional functions not supported by MimeMessage.
@@ -68,7 +68,7 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
 
     private boolean loaded;
 
-    private Tags tags;
+    private final Tags tags;
 
     /**
      * @param session the session associated with the message
