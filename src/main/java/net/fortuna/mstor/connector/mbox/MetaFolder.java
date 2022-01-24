@@ -31,21 +31,19 @@
  */
 package net.fortuna.mstor.connector.mbox;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.mail.Message;
-import javax.mail.MessagingException;
-
 import net.fortuna.mstor.connector.DelegateException;
 import net.fortuna.mstor.connector.FolderDelegate;
 import net.fortuna.mstor.connector.MessageDelegate;
 import net.fortuna.mstor.data.xml.DocumentBinding;
-
 import org.jdom.Element;
 import org.jdom.Namespace;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * A JDOM-based implementation of a meta folder.
@@ -73,7 +71,7 @@ public class MetaFolder extends AbstractMetaFolder<MetaMessage> {
 
     public static final String FILE_EXTENSION = ".emf";
     
-    private DocumentBinding binding;
+    private final DocumentBinding binding;
     
     /**
      * Constructs a new meta folder instance.

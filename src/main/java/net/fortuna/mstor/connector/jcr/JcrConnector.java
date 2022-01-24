@@ -38,8 +38,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.rmi.client.ClientRepositoryFactory;
 import org.jcrom.Jcrom;
 
-import javax.jcr.*;
 import javax.jcr.Session;
+import javax.jcr.*;
 import javax.mail.*;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -58,11 +58,11 @@ import javax.naming.NamingException;
  */
 public class JcrConnector extends AbstractProtocolConnector {
 
-    private Jcrom jcrom;
+    private final Jcrom jcrom;
 
     private Session session;
     
-    private javax.mail.Session mailSession;
+    private final javax.mail.Session mailSession;
     
     /**
      * @param url

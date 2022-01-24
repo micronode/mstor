@@ -75,9 +75,9 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
     
     @JcrProperty private String messageId;
 
-    @JcrProperty private Map<String, String> headers;
+    @JcrProperty private final Map<String, String> headers;
 
-    @JcrProperty private List<String> flags;
+    @JcrProperty private final List<String> flags;
     
     @JcrProperty private Date received;
     
@@ -91,15 +91,15 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
     
     @JcrFileNode(lazy=true) private JcrFile content;
 
-    @JcrChildNode(lazy=true) private List<JcrMessage> messages;
+    @JcrChildNode(lazy=true) private final List<JcrMessage> messages;
     
     @JcrFileNode(lazy=true) private JcrFile body;
     
-    @JcrFileNode(lazy=true) private List<JcrFile> attachments;
+    @JcrFileNode(lazy=true) private final List<JcrFile> attachments;
     
     @JcrReference(byPath=true, lazy=true) private JcrMessage inReplyTo;
     
-    @JcrReference(byPath=true, lazy=true) private List<JcrMessage> references;
+    @JcrReference(byPath=true, lazy=true) private final List<JcrMessage> references;
     
     private transient JcrMessageDao messageDao;
     

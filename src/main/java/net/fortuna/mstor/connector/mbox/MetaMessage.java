@@ -31,9 +31,22 @@
  */
 package net.fortuna.mstor.connector.mbox;
 
-import static net.fortuna.mstor.util.MessageUtils.getFlag;
-import static net.fortuna.mstor.util.MessageUtils.getFlagName;
+import net.fortuna.mstor.connector.AbstractMessageDelegate;
+import net.fortuna.mstor.connector.DelegateException;
+import net.fortuna.mstor.connector.MessageDelegate;
+import net.fortuna.mstor.data.MboxFile;
+import net.fortuna.mstor.data.xml.ElementBinding;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.jdom.Element;
+import org.jdom.IllegalDataException;
+import org.jdom.IllegalNameException;
+import org.jdom.Namespace;
 
+import javax.mail.Flags;
+import javax.mail.Flags.Flag;
+import javax.mail.Header;
+import javax.mail.internet.InternetHeaders;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -42,23 +55,8 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
 
-import javax.mail.Flags;
-import javax.mail.Header;
-import javax.mail.Flags.Flag;
-import javax.mail.internet.InternetHeaders;
-
-import net.fortuna.mstor.connector.AbstractMessageDelegate;
-import net.fortuna.mstor.connector.DelegateException;
-import net.fortuna.mstor.connector.MessageDelegate;
-import net.fortuna.mstor.data.MboxFile;
-import net.fortuna.mstor.data.xml.ElementBinding;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.jdom.Element;
-import org.jdom.IllegalDataException;
-import org.jdom.IllegalNameException;
-import org.jdom.Namespace;
+import static net.fortuna.mstor.util.MessageUtils.getFlag;
+import static net.fortuna.mstor.util.MessageUtils.getFlagName;
 
 /**
  * A JDOM-based implementation of a meta message.
@@ -101,9 +99,9 @@ public class MetaMessage extends AbstractMessageDelegate {
     private static final DateFormat MESSAGE_DATE_FORMAT = new SimpleDateFormat(
             META_DATE_PATTERN, Locale.US);
 
-    private Log log = LogFactory.getLog(MetaMessage.class);
+    private final Log log = LogFactory.getLog(MetaMessage.class);
 
-    private ElementBinding binding;
+    private final ElementBinding binding;
     
     private MetaFolder metaFolder;
     

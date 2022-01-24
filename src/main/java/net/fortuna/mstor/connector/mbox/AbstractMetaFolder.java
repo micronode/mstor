@@ -31,19 +31,18 @@
  */
 package net.fortuna.mstor.connector.mbox;
 
+import net.fortuna.mstor.connector.AbstractFolderDelegate;
+import net.fortuna.mstor.connector.DelegateException;
+import net.fortuna.mstor.connector.FolderDelegate;
+import net.fortuna.mstor.connector.MessageDelegate;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.Random;
-
-import javax.mail.Message;
-import javax.mail.MessagingException;
-
-import net.fortuna.mstor.connector.AbstractFolderDelegate;
-import net.fortuna.mstor.connector.DelegateException;
-import net.fortuna.mstor.connector.FolderDelegate;
-import net.fortuna.mstor.connector.MessageDelegate;
 
 /**
  * Base implementation of a meta folder.
@@ -62,12 +61,12 @@ public abstract class AbstractMetaFolder<T extends MessageDelegate> extends Abst
 
     private static final Random UID_VALIDITY_GENERATOR = new Random();
 
-    private File file;
+    private final File file;
     
     /**
      * A delegate used by metafolder to perform operations not supported in metadata.
      */
-    private FolderDelegate<MessageDelegate> delegate;
+    private final FolderDelegate<MessageDelegate> delegate;
     
     /**
      * Constructs a new meta folder instance.

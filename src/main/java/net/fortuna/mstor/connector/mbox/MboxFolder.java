@@ -78,9 +78,9 @@ public class MboxFolder extends AbstractFolderDelegate<MessageDelegate> {
         }
     };
     
-    private Log log = LogFactory.getLog(MboxFolder.class);
+    private final Log log = LogFactory.getLog(MboxFolder.class);
     
-    private File file;
+    private final File file;
     
     private MboxFile mbox;
     
