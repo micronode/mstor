@@ -107,11 +107,11 @@ public class JcrMessage extends AbstractJcrEntity implements MessageDelegate {
      * 
      */
     public JcrMessage() {
-        headers = new HashMap<String, String>();
-        flags = new ArrayList<String>();
-        messages = new ArrayList<JcrMessage>();
-        attachments = new ArrayList<JcrFile>();
-        references = new ArrayList<JcrMessage>();
+        headers = new HashMap<>();
+        flags = new ArrayList<>();
+        messages = new ArrayList<>();
+        attachments = new ArrayList<>();
+        references = new ArrayList<>();
     }
     
     /**

@@ -533,7 +533,7 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
      * @return a list of message instances related to this message
      */
     public List<MStorMessage> getReferences() {
-        List<MStorMessage> references = new ArrayList<MStorMessage>();
+        List<MStorMessage> references = new ArrayList<>();
         for (MessageDelegate delegateRef : delegate.getReferences()) {
             references.add(new MStorMessage(delegateRef));
         }

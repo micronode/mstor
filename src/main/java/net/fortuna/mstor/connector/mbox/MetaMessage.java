@@ -239,7 +239,7 @@ public class MetaMessage extends AbstractMessageDelegate {
     public final boolean isExpunged() {
         Element expunged = binding.getElement(ELEMENT_EXPUNGED);
         try {
-            return Boolean.valueOf(expunged.getText());
+            return Boolean.parseBoolean(expunged.getText());
         }
         catch (Exception e) {
             log.warn("Invalid expunged value [" + expunged.getText() + "]");
@@ -324,18 +324,11 @@ public class MetaMessage extends AbstractMessageDelegate {
                             .setText(header.getValue()));
                 }
             }
-            catch (IllegalNameException ine) {
+            catch (IllegalNameException | IllegalDataException ine) {
                 log.warn("Invalid header (ignored): " + header.getName() + "="
                         + header.getValue());
                 if (log.isDebugEnabled()) {
                     log.debug(ine);
-                }
-            }
-            catch (IllegalDataException ide) {
-                log.warn("Invalid header (ignored): " + header.getName() + "="
-                        + header.getValue());
-                if (log.isDebugEnabled()) {
-                    log.debug(ide);
                 }
             }
         }

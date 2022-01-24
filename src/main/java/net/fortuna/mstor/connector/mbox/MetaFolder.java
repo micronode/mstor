@@ -112,7 +112,7 @@ public class MetaFolder extends AbstractMetaFolder<MetaMessage> {
      * {@inheritDoc}
      */
     public MetaFolder[] list(String pattern) {
-        List<MetaFolder> folders = new ArrayList<MetaFolder>();
+        List<MetaFolder> folders = new ArrayList<>();
         
         FolderDelegate<MessageDelegate>[] delegateList = getDelegate().list(pattern);
         for (FolderDelegate<MessageDelegate> aDelegateList : delegateList) {
@@ -215,7 +215,7 @@ public class MetaFolder extends AbstractMetaFolder<MetaMessage> {
      */
     @SuppressWarnings("unchecked")
     protected MetaMessage[] removeMessages(Message[] messages) {
-        List<MetaMessage> metas = new ArrayList<MetaMessage>();
+        List<MetaMessage> metas = new ArrayList<>();
 
         for (Iterator<Element> i = binding.getDocument().getRootElement().getChildren(
                 MetaMessage.ELEMENT_MESSAGE, binding.getNamespace()).iterator(); i

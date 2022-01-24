@@ -164,7 +164,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
             throw new MessagingException(INVALID_FOLDER_TYPE_MESSAGE);
         }
 
-        final List<Folder> folders = new ArrayList<Folder>();
+        final List<Folder> folders = new ArrayList<>();
 
         final FolderDelegate<? extends MessageDelegate>[] childDelegates = delegate.list(pattern);
         for (FolderDelegate<? extends MessageDelegate> childDelegate : childDelegates) {
@@ -228,7 +228,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
         boolean deleted = false;
         if ((getType() & HOLDS_FOLDERS) > 0) {
             if (recurse) {
-                final CompletionService<Boolean> processor = new ExecutorCompletionService<Boolean>(
+                final CompletionService<Boolean> processor = new ExecutorCompletionService<>(
                         Executors.newCachedThreadPool());
                 
                 final Folder[] subfolders = list();
@@ -243,10 +243,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
                         if (!processor.take().get()) {
                             deleted = false;
                         }
-                    } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
+                    } catch (InterruptedException | ExecutionException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
@@ -398,13 +395,9 @@ public final class MStorFolder extends Folder implements UIDFolder {
                 }
                 putMessageIntoCache(index,message);
             }
-            catch (IOException ioe) {
+            catch (IOException | DelegateException ioe) {
                 throw new MessagingException("Error ocurred reading message ["
                         + index + "]", ioe);
-            }
-            catch (DelegateException de) {
-                throw new MessagingException("Error ocurred reading message ["
-                        + index + "]", de);
             }
         }
 
@@ -441,7 +434,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
 
         final int count = getDeletedMessageCount();
 
-        final List<Message> deletedList = new ArrayList<Message>();
+        final List<Message> deletedList = new ArrayList<>();
         for (int i = 1; i <= getMessageCount() && deletedList.size() < count; i++) {
             final Message message = getMessage(i);
             if (message.isSet(Flags.Flag.DELETED)) {
@@ -531,7 +524,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
                 throw new MessagingException("Error retrieving UID", uoe);
             }
         }
-        final List<Message> messages = new ArrayList<Message>();
+        final List<Message> messages = new ArrayList<>();
         for (long uid = start; uid <= lastUid; uid++) {
             messages.add(getMessageByUID(uid));
         }
@@ -542,7 +535,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
      * {@inheritDoc}
      */
     public Message[] getMessagesByUID(long[] uids) throws MessagingException {
-        final List<Message> messages = new ArrayList<Message>();
+        final List<Message> messages = new ArrayList<>();
         for (long uid : uids) {
             messages.add(getMessageByUID(uid));
         }

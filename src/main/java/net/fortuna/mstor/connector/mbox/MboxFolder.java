@@ -63,19 +63,16 @@ public class MboxFolder extends AbstractFolderDelegate<MessageDelegate> {
 
     private static final int DEFAULT_BUFFER_SIZE = 1024;
 
-    private static final FileFilter SUBFOLDER_FILTER = new FileFilter() {
-        
-        public boolean accept(File pathname) {
-            if (pathname.getName().endsWith(MetaFolder.FILE_EXTENSION)
-                    || pathname.getName().endsWith(YamlMetaFolder.FILE_EXTENSION)) {
-                return false;
-            }
-            else if (pathname.getName().endsWith(DIR_EXTENSION)) {
-                return false;
-            }
-            else return pathname.isDirectory() || pathname.getName().startsWith(".")
-                        || pathname.length() < 0 || MboxFile.isValid(pathname);
+    private static final FileFilter SUBFOLDER_FILTER = pathname -> {
+        if (pathname.getName().endsWith(MetaFolder.FILE_EXTENSION)
+                || pathname.getName().endsWith(YamlMetaFolder.FILE_EXTENSION)) {
+            return false;
         }
+        else if (pathname.getName().endsWith(DIR_EXTENSION)) {
+            return false;
+        }
+        else return pathname.isDirectory() || pathname.getName().startsWith(".")
+                    || pathname.length() < 0 || MboxFile.isValid(pathname);
     };
     
     private final Log log = LogFactory.getLog(MboxFolder.class);
@@ -158,7 +155,7 @@ public class MboxFolder extends AbstractFolderDelegate<MessageDelegate> {
      * {@inheritDoc}
      */
     public final FolderDelegate<MessageDelegate>[] list(final String pattern) {
-        List<MboxFolder> folders = new ArrayList<MboxFolder>();
+        List<MboxFolder> folders = new ArrayList<>();
 
         File[] files;
         if (file.isDirectory()) {
