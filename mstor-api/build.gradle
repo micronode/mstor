@@ -1,0 +1,9 @@
+dependencies {
+    api "org.slf4j:slf4j-api:$slf4jVersion",
+            "com.sun.mail:jakarta.mail:$jakartaMailVersion"
+
+    implementation "net.sf.ehcache:ehcache-core:$ehcacheVersion"
+
+    implementation "org.jparsec:jparsec:$jparsecVersion", optional
+
+}

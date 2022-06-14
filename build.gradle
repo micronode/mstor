@@ -62,7 +62,7 @@ dependencies {
             "cglib:cglib:$cglibVersion",
             "org.slf4j:jul-to-slf4j:$slf4jVersion", "org.slf4j:jcl-over-slf4j:$slf4jVersion",
             "org.apache.jackrabbit:jackrabbit-jcr-rmi:$jackrabbitVersion"
-    
+
     implementation "org.jparsec:jparsec:$jparsecVersion", optional
 
     // used in javadoc generation..
@@ -194,4 +194,118 @@ publishing {
 signing {
     required { isReleaseVersion }
     sign publishing.publications.mstor
+}
+
+configure(subprojects) {
+    apply plugin: 'java-library'
+    apply plugin: 'maven-publish'
+    apply plugin: 'groovy'
+    apply plugin: 'biz.aQute.bnd.builder'
+
+    repositories {
+        mavenCentral()
+    }
+
+    sourceCompatibility = 8
+    targetCompatibility = 8
+
+    group = 'org.mstor'
+    description = '''\
+Message persistence and transport implementations.
+'''
+    version = rootProject.scmVersion.version
+
+    ext {
+        isReleaseVersion = !version.endsWith("SNAPSHOT")
+    }
+
+    dependencies {
+        // testcontainers
+        testImplementation "org.testcontainers:testcontainers:$testcontainersVersion",
+                "org.testcontainers:spock:$testcontainersVersion"
+
+        // used in javadoc generation..
+        compileOnly "biz.aQute.bnd:biz.aQute.bndlib:$bndVersion"
+
+        // junit
+        testImplementation 'org.junit.vintage:junit-vintage-engine:5.8.2'
+
+        // spock
+        testImplementation platform("org.spockframework:spock-bom:2.0-M4-groovy-3.0"),
+                "org.spockframework:spock-core"
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        archiveClassifier.set('javadoc')
+        from 'build/docs/javadoc'
+    }
+
+    task sourcesJar(type: Jar) {
+        from sourceSets.main.allSource
+        archiveClassifier.set('sources')
+    }
+
+    artifacts {
+        archives jar
+        archives javadocJar
+        archives sourcesJar
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+    javadoc {
+        if (JavaVersion.current().isJava8Compatible()) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+        options {
+            links 'https://docs.oracle.com/en/java/javase/11/docs/api/'
+        }
+    }
+
+    publishing {
+        publications {
+            "$name"(MavenPublication) {
+                from components.java
+                artifact javadocJar
+                artifact sourcesJar
+                pom.withXml {
+                    asNode().appendNode('name', name)
+                    asNode().appendNode('description', description)
+                    asNode().appendNode('url', 'http://mstor.github.io')
+
+                    def scmNode = asNode().appendNode('scm')
+                    scmNode.appendNode('url', 'https://github.com/micronode/mstor')
+                    scmNode.appendNode('connection', 'scm:git@github.com:micronode/mstor.git')
+                    scmNode.appendNode('developerConnection', 'scm:git@github.com:micronode/mstor.git')
+
+                    def licenseNode = asNode().appendNode('licenses').appendNode('license')
+                    licenseNode.appendNode('name', 'mstor - License')
+                    licenseNode.appendNode('url', 'https://raw.githubusercontent.com/micronode/mstor/master/LICENSE')
+                    licenseNode.appendNode('distribution', 'repo')
+
+                    def developerNode = asNode().appendNode('developers').appendNode('developer')
+                    developerNode.appendNode('id', 'fortuna')
+                    developerNode.appendNode('name', 'Ben Fortuna')
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                name = "OSSRH"
+                url = version.endsWith('SNAPSHOT') ? "https://s01.oss.sonatype.org/content/repositories/snapshots/" : "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+                credentials {
+                    username = System.getenv("MAVEN_USERNAME")
+                    password = System.getenv("MAVEN_PASSWORD")
+                }
+            }
+        }
+    }
+
+    signing {
+        required { isReleaseVersion }
+        sign publishing.publications[name]
+    }
 }

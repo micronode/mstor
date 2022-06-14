@@ -1,0 +1,13 @@
+minimalOutput: true
+indentAmount: "  "
+suppressWarnings: true
+encoding: "ISO-8859-1"
+transfers:
+  folder: org.mstor.mbox.data.yaml.FolderExt
+  message: org.mstor.mbox.data.yaml.MessageExt
+  header: jakarta.mail.Header
+handlers:
+  jakarta.mail.Flags: org.mstor.mbox.data.yaml.FlagsWrapper
+  jakarta.mail.Flags$Flag: org.mstor.mbox.data.yaml.FlagWrapper
+  jakarta.mail.internet.InternetHeaders: org.mstor.mbox.data.yaml.InternetHeadersWrapper
+  jakarta.mail.Header: org.mstor.mbox.data.yaml.HeaderWrapper
