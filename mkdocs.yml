@@ -7,6 +7,9 @@ theme:
 repo_url: https://github.com/micronode/mstor
 repo_name: micronode/mstor
 extra:
+  analytics:
+    provider: google
+    property: UA-402774-13
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/micronode
@@ -15,6 +18,7 @@ extra:
 nav:
   - Overview:
     - Introduction: index.md
+    - Javamail: javamail.md
   - References:
     - Resources: resources.md
   - FAQ: faq.md
