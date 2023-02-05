@@ -1,0 +1,20 @@
+site_name: Mstor
+site_url: https://www.mstor.org
+theme:
+  name: material
+  favicon: images/cherry.png
+  logo: images/mnode_logo.png
+repo_url: https://github.com/micronode/mstor
+repo_name: micronode/mstor
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/micronode
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/micronode
+nav:
+  - Overview:
+    - Introduction: index.md
+  - References:
+    - Resources: resources.md
+  - FAQ: faq.md
