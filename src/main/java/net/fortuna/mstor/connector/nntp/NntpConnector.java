@@ -53,7 +53,7 @@ import java.io.IOException;
  */
 public class NntpConnector extends AbstractProtocolConnector {
 
-    private NNTPClient client;
+    private final NNTPClient client;
     
     /**
      * @param url

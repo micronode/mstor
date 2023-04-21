@@ -57,7 +57,7 @@ import java.util.*;
  */
 public final class MStorMessage extends MimeMessage implements Serializable, Taggable {
 
-    private Log log = LogFactory.getLog(MStorMessage.class);
+    private final Log log = LogFactory.getLog(MStorMessage.class);
 
     /**
      * Delegate for providing additional functions not supported by MimeMessage.
@@ -68,7 +68,7 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
 
     private boolean loaded;
 
-    private Tags tags;
+    private final Tags tags;
 
     /**
      * @param session the session associated with the message
@@ -182,7 +182,6 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
     public Enumeration<String> getAllHeaderLines() throws MessagingException {
         InternetHeaders headers = getHeaders();
         if (headers != null) {
@@ -195,7 +194,6 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
     public Enumeration<Header> getAllHeaders() throws MessagingException {
         InternetHeaders headers = getHeaders();
         if (headers != null) {
@@ -236,7 +234,6 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
     public Enumeration<String> getMatchingHeaderLines(final String[] names)
             throws MessagingException {
         
@@ -251,7 +248,6 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
     public Enumeration<Header> getMatchingHeaders(final String[] names)
             throws MessagingException {
         
@@ -266,7 +262,6 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
     public Enumeration<String> getNonMatchingHeaderLines(final String[] names)
             throws MessagingException {
         
@@ -281,7 +276,6 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
     public Enumeration<Header> getNonMatchingHeaders(final String[] names)
             throws MessagingException {
         
@@ -533,7 +527,7 @@ public final class MStorMessage extends MimeMessage implements Serializable, Tag
      * @return a list of message instances related to this message
      */
     public List<MStorMessage> getReferences() {
-        List<MStorMessage> references = new ArrayList<MStorMessage>();
+        List<MStorMessage> references = new ArrayList<>();
         for (MessageDelegate delegateRef : delegate.getReferences()) {
             references.add(new MStorMessage(delegateRef));
         }

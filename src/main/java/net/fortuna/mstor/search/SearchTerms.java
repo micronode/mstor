@@ -31,13 +31,12 @@
  */
 package net.fortuna.mstor.search;
 
-import java.io.Reader;
-import java.io.Writer;
-
-import javax.mail.search.SearchTerm;
-
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
+
+import javax.mail.search.SearchTerm;
+import java.io.Reader;
+import java.io.Writer;
 
 /**
  * @author Ben Fortuna
@@ -51,7 +50,7 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
  */
 public final class SearchTerms {
 
-    private static XStream xstream = new XStream(new DomDriver());
+    private static final XStream xstream = new XStream(new DomDriver());
 
     /**
      * Constructor made private to enforce static nature.

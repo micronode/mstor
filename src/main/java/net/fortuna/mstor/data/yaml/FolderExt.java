@@ -50,7 +50,7 @@ public class FolderExt {
      * Default constructor.
      */
     public FolderExt() {
-        messages = new CopyOnWriteArrayList<MessageExt>();
+        messages = new CopyOnWriteArrayList<>();
     }
 
     /**

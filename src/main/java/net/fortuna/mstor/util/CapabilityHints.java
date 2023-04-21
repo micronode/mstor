@@ -64,7 +64,7 @@ public final class CapabilityHints {
      */
     public static final String KEY_MBOX_RELAXED_PARSING = "mstor.mbox.parsing.relaxed";
 
-    private static final Map<String, Boolean> HINTS = new HashMap<String, Boolean>();
+    private static final Map<String, Boolean> HINTS = new HashMap<>();
 
     /**
      * Constructor made private to enforce static nature.
@@ -86,7 +86,7 @@ public final class CapabilityHints {
      */
     public static boolean isHintEnabled(final String key) {
         if (Configurator.getProperty(key) != null) {
-            return Boolean.valueOf(Configurator.getProperty(key));
+            return Boolean.parseBoolean(Configurator.getProperty(key));
         }
         return Boolean.TRUE.equals(HINTS.get(key));
     }

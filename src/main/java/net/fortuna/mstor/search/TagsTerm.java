@@ -54,11 +54,11 @@ import javax.mail.search.SearchTerm;
  */
 public class TagsTerm extends SearchTerm {
 
-    private Log log = LogFactory.getLog(TagsTerm.class);
+    private final Log log = LogFactory.getLog(TagsTerm.class);
 
     private static final long serialVersionUID = 7893903141033644620L;
 
-    private Tags tags;
+    private final Tags tags;
 
     /**
      * Default constructor.

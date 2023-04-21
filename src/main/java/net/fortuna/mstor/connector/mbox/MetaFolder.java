@@ -31,21 +31,19 @@
  */
 package net.fortuna.mstor.connector.mbox;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.mail.Message;
-import javax.mail.MessagingException;
-
 import net.fortuna.mstor.connector.DelegateException;
 import net.fortuna.mstor.connector.FolderDelegate;
 import net.fortuna.mstor.connector.MessageDelegate;
 import net.fortuna.mstor.data.xml.DocumentBinding;
-
 import org.jdom.Element;
 import org.jdom.Namespace;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * A JDOM-based implementation of a meta folder.
@@ -73,7 +71,7 @@ public class MetaFolder extends AbstractMetaFolder<MetaMessage> {
 
     public static final String FILE_EXTENSION = ".emf";
     
-    private DocumentBinding binding;
+    private final DocumentBinding binding;
     
     /**
      * Constructs a new meta folder instance.
@@ -114,14 +112,14 @@ public class MetaFolder extends AbstractMetaFolder<MetaMessage> {
      * {@inheritDoc}
      */
     public MetaFolder[] list(String pattern) {
-        List<MetaFolder> folders = new ArrayList<MetaFolder>();
+        List<MetaFolder> folders = new ArrayList<>();
         
         FolderDelegate<MessageDelegate>[] delegateList = getDelegate().list(pattern);
         for (FolderDelegate<MessageDelegate> aDelegateList : delegateList) {
             folders.add(new MetaFolder(aDelegateList));
         }
         
-        return folders.toArray(new MetaFolder[folders.size()]);
+        return folders.toArray(new MetaFolder[0]);
     }
     
     /*
@@ -217,7 +215,7 @@ public class MetaFolder extends AbstractMetaFolder<MetaMessage> {
      */
     @SuppressWarnings("unchecked")
     protected MetaMessage[] removeMessages(Message[] messages) {
-        List<MetaMessage> metas = new ArrayList<MetaMessage>();
+        List<MetaMessage> metas = new ArrayList<>();
 
         for (Iterator<Element> i = binding.getDocument().getRootElement().getChildren(
                 MetaMessage.ELEMENT_MESSAGE, binding.getNamespace()).iterator(); i
@@ -238,7 +236,7 @@ public class MetaFolder extends AbstractMetaFolder<MetaMessage> {
                 }
             }
         }
-        return metas.toArray(new MetaMessage[metas.size()]);
+        return metas.toArray(new MetaMessage[0]);
     }
 
     /**

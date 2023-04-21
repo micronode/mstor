@@ -1,0 +1,37 @@
+site_name: mstor
+site_url: https://www.mstor.org
+theme:
+  name: material
+  favicon: images/favicon.png
+  logo: images/logo-48.png
+repo_url: https://github.com/micronode/mstor
+repo_name: micronode/mstor
+google_analytics:
+  - auto
+extra:
+  analytics:
+    provider: google
+    property: 
+  disqus: mstor
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/benfortuna
+    - icon: fontawesome/brands/linkedin
+      link: https://linkedin.com/in/benfortuna
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/micronode
+nav:
+  - Overview:
+    - Introduction: index.md
+    - Getting Started: getting-started.md
+    - Examples:
+        - Overview: examples/overview.md
+  - Features:
+    - Filtering: filtering.md
+    - Groovy: groovy.md
+    - Indexing: indexing.md
+    - Parsing: parser.md
+  - References:
+    - RFC Compliance: rfcs.md
+    - Resources: resources.md
+  - FAQ: faq.md

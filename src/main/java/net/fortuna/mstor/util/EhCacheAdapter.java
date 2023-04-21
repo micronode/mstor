@@ -31,8 +31,6 @@
  */
 package net.fortuna.mstor.util;
 
-import javax.mail.Message;
-
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
@@ -42,7 +40,7 @@ import net.sf.ehcache.Element;
  */
 public class EhCacheAdapter extends CacheAdapter {
 
-    private String cacheName;
+    private final String cacheName;
     
     public EhCacheAdapter(String cacheName) {
         this.cacheName = cacheName;
@@ -60,7 +58,7 @@ public class EhCacheAdapter extends CacheAdapter {
         Element cacheElement = getMessageCache().get(index);
         
         if (cacheElement != null) {
-            return cacheElement.getValue();
+            return cacheElement.getObjectValue();
         } else {
             return null;
         }

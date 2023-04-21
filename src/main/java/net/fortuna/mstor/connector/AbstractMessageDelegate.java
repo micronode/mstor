@@ -50,7 +50,6 @@ public abstract class AbstractMessageDelegate implements MessageDelegate {
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("unchecked")
     public final void setHeaders(final InternetHeaders headers) {
         setHeaders(headers.getAllHeaders());
     }

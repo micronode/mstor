@@ -54,11 +54,11 @@ import java.io.IOException;
  */
 public class DocumentBinding extends XmlBinding {
 
-    private File file;
+    private final File file;
 
     private Document document;
     
-    private String rootElementName;
+    private final String rootElementName;
 
     /**
      * @param file

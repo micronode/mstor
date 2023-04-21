@@ -31,19 +31,18 @@
  */
 package net.fortuna.mstor.connector.mbox;
 
-import java.io.InputStream;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.List;
-
-import javax.mail.Flags;
-import javax.mail.Header;
-import javax.mail.internet.InternetHeaders;
-
 import net.fortuna.mstor.connector.AbstractMessageDelegate;
 import net.fortuna.mstor.connector.DelegateException;
 import net.fortuna.mstor.connector.MessageDelegate;
 import net.fortuna.mstor.data.yaml.MessageExt;
+
+import javax.mail.Flags;
+import javax.mail.Header;
+import javax.mail.internet.InternetHeaders;
+import java.io.InputStream;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.List;
 
 /**
  * @author Ben
@@ -58,9 +57,9 @@ import net.fortuna.mstor.data.yaml.MessageExt;
  */
 public class YamlMetaMessage extends AbstractMessageDelegate {
 
-    private MessageExt messageExt;
+    private final MessageExt messageExt;
     
-    private YamlMetaFolder folder;
+    private final YamlMetaFolder folder;
     
     /**
      * @param messageNumber

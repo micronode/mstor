@@ -51,7 +51,7 @@ import javax.mail.URLName;
  */
 public class ProtocolConnectorFactory {
 
-    private static ProtocolConnectorFactory instance = new ProtocolConnectorFactory();
+    private static final ProtocolConnectorFactory instance = new ProtocolConnectorFactory();
     
     /**
      * @param url a URL location of a connector-specific store

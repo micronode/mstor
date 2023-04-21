@@ -76,7 +76,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
     /**
      * A delegate supporting additional functions not inherently supported by {@link Folder}.
      */
-    private FolderDelegate<? extends MessageDelegate> delegate;
+    private final FolderDelegate<? extends MessageDelegate> delegate;
     
     /**
      * An adapter for the cache for messages.
@@ -88,7 +88,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
      */
 //    private Map messageCache;
 
-    private MStorStore mStore;
+    private final MStorStore mStore;
 
     /**
      * Constructs a new mstor folder instance.
@@ -164,13 +164,13 @@ public final class MStorFolder extends Folder implements UIDFolder {
             throw new MessagingException(INVALID_FOLDER_TYPE_MESSAGE);
         }
 
-        final List<Folder> folders = new ArrayList<Folder>();
+        final List<Folder> folders = new ArrayList<>();
 
         final FolderDelegate<? extends MessageDelegate>[] childDelegates = delegate.list(pattern);
         for (FolderDelegate<? extends MessageDelegate> childDelegate : childDelegates) {
             folders.add(new MStorFolder(mStore, childDelegate));
         }
-        return folders.toArray(new Folder[folders.size()]);
+        return folders.toArray(new Folder[0]);
     }
 
     /**
@@ -228,7 +228,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
         boolean deleted = false;
         if ((getType() & HOLDS_FOLDERS) > 0) {
             if (recurse) {
-                final CompletionService<Boolean> processor = new ExecutorCompletionService<Boolean>(
+                final CompletionService<Boolean> processor = new ExecutorCompletionService<>(
                         Executors.newCachedThreadPool());
                 
                 final Folder[] subfolders = list();
@@ -243,10 +243,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
                         if (!processor.take().get()) {
                             deleted = false;
                         }
-                    } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
+                    } catch (InterruptedException | ExecutionException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
@@ -398,13 +395,9 @@ public final class MStorFolder extends Folder implements UIDFolder {
                 }
                 putMessageIntoCache(index,message);
             }
-            catch (IOException ioe) {
+            catch (IOException | DelegateException ioe) {
                 throw new MessagingException("Error ocurred reading message ["
                         + index + "]", ioe);
-            }
-            catch (DelegateException de) {
-                throw new MessagingException("Error ocurred reading message ["
-                        + index + "]", de);
             }
         }
 
@@ -441,7 +434,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
 
         final int count = getDeletedMessageCount();
 
-        final List<Message> deletedList = new ArrayList<Message>();
+        final List<Message> deletedList = new ArrayList<>();
         for (int i = 1; i <= getMessageCount() && deletedList.size() < count; i++) {
             final Message message = getMessage(i);
             if (message.isSet(Flags.Flag.DELETED)) {
@@ -449,7 +442,7 @@ public final class MStorFolder extends Folder implements UIDFolder {
             }
         }
 
-        final MStorMessage[] deleted = deletedList.toArray(new MStorMessage[deletedList.size()]);
+        final MStorMessage[] deleted = deletedList.toArray(new MStorMessage[0]);
 
         delegate.expunge(deleted);
 
@@ -531,22 +524,22 @@ public final class MStorFolder extends Folder implements UIDFolder {
                 throw new MessagingException("Error retrieving UID", uoe);
             }
         }
-        final List<Message> messages = new ArrayList<Message>();
+        final List<Message> messages = new ArrayList<>();
         for (long uid = start; uid <= lastUid; uid++) {
             messages.add(getMessageByUID(uid));
         }
-        return messages.toArray(new Message[messages.size()]);
+        return messages.toArray(new Message[0]);
     }
 
     /**
      * {@inheritDoc}
      */
     public Message[] getMessagesByUID(long[] uids) throws MessagingException {
-        final List<Message> messages = new ArrayList<Message>();
+        final List<Message> messages = new ArrayList<>();
         for (long uid : uids) {
             messages.add(getMessageByUID(uid));
         }
-        return messages.toArray(new Message[messages.size()]);
+        return messages.toArray(new Message[0]);
     }
 
     /**

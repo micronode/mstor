@@ -58,7 +58,7 @@ public class ReferencesSearchTerm extends SearchTerm {
 
     private static final Log LOG = LogFactory.getLog(ReferencesSearchTerm.class);
     
-    private MStorMessage message;
+    private final MStorMessage message;
     
     /**
      * 

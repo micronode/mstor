@@ -56,7 +56,7 @@ public class Tags implements Set<String>, Serializable {
 
     protected static final String TAG_PREFIX = "tag_";
 
-    private Flags flags;
+    private final Flags flags;
 
     /**
      * Default constructor.
@@ -119,7 +119,7 @@ public class Tags implements Set<String>, Serializable {
      * @return
      */
     private Set<String> getTagSet() {
-        Set<String> tags = new HashSet<String>();
+        Set<String> tags = new HashSet<>();
         String[] userFlags = flags.getUserFlags();
         for (String userFlag : userFlags) {
             if (userFlag.startsWith(TAG_PREFIX)) {

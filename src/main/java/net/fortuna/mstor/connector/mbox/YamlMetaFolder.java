@@ -94,7 +94,7 @@ public class YamlMetaFolder extends AbstractMetaFolder<YamlMetaMessage> {
      * {@inheritDoc}
      */
     protected YamlMetaMessage[] removeMessages(Message[] deleted) {
-        List<YamlMetaMessage> metas = new ArrayList<YamlMetaMessage>();
+        List<YamlMetaMessage> metas = new ArrayList<>();
 
         for (MessageExt messageExt : folderExt.getMessages()) {
 
@@ -109,7 +109,7 @@ public class YamlMetaFolder extends AbstractMetaFolder<YamlMetaMessage> {
                 }
             }
         }
-        return metas.toArray(new YamlMetaMessage[metas.size()]);
+        return metas.toArray(new YamlMetaMessage[0]);
     }
 
 
@@ -234,11 +234,11 @@ public class YamlMetaFolder extends AbstractMetaFolder<YamlMetaMessage> {
      */
     public YamlMetaFolder[] list(String pattern) {
         FolderDelegate<MessageDelegate>[] folders = getDelegate().list(pattern);
-        List<YamlMetaFolder> folderList = new ArrayList<YamlMetaFolder>();
+        List<YamlMetaFolder> folderList = new ArrayList<>();
         for (FolderDelegate<MessageDelegate> folder : folders) {
             folderList.add(new YamlMetaFolder(folder));
         }
-        return folderList.toArray(new YamlMetaFolder[folderList.size()]);
+        return folderList.toArray(new YamlMetaFolder[0]);
     }
 
 }

@@ -58,7 +58,7 @@ public class InReplyToSearchTerm extends SearchTerm {
 
     private static final Log LOG = LogFactory.getLog(InReplyToSearchTerm.class);
 
-    private MStorMessage message;
+    private final MStorMessage message;
     
     /**
      * 

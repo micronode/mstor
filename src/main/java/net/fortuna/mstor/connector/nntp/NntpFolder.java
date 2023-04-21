@@ -54,9 +54,9 @@ import java.io.InputStream;
  */
 public class NntpFolder extends AbstractFolderDelegate<MessageDelegate> {
 
-    private NewsgroupInfo newsgroupInfo;
+    private final NewsgroupInfo newsgroupInfo;
     
-    private NNTPClient client;
+    private final NNTPClient client;
     
     /**
      * 

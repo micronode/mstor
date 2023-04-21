@@ -31,15 +31,13 @@
  */
 package net.fortuna.mstor.data.yaml;
 
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
+import org.ho.yaml.wrapper.DelayedCreationBeanWrapper;
 
 import javax.mail.Header;
 import javax.mail.internet.InternetHeaders;
-
-import org.ho.yaml.wrapper.DelayedCreationBeanWrapper;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
 /**
  * @author Ben
@@ -74,7 +72,7 @@ public class InternetHeadersWrapper extends DelayedCreationBeanWrapper {
     public Object getProperty(Object obj, String name) {
         if ("headers".equals(name)) {
             Enumeration<Header> headersEnum = ((InternetHeaders) obj).getAllHeaders();
-            List<Header> headers = new ArrayList<Header>();
+            List<Header> headers = new ArrayList<>();
             while (headersEnum.hasMoreElements()) {
                 headers.add(headersEnum.nextElement());
             }
