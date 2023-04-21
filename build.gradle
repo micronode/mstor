@@ -120,6 +120,10 @@ scmVersion {
     }
     versionCreator 'versionWithBranch'
     branchVersionCreator = ['master': 'simple']
+    nextVersion {
+        suffix = 'pre'
+        separator = '-'
+    }
 }
 
 group = 'org.mnode.mstor'
