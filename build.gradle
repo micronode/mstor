@@ -112,7 +112,10 @@ scmVersion {
         prefix = 'mstor-'
     }
     versionCreator 'versionWithBranch'
-    branchVersionCreator = ['master': 'simple']
+    branchVersionCreator = [
+            'master': 'simple',
+            'feature/refactor': 'simple'
+    ]
     nextVersion {
         suffix = 'pre'
         separator = '-'
