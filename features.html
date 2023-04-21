@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>mstor - Features</title>
+    <link rel="stylesheet" href="css/default.css" type="text/css" />
+    <link rel="alternate" href="http://sourceforge.net/export/rss2_projnews.php?group_id=114229&amp;rss_fulltext=1" type="application/rss+xml" title="mstor - News"/>
+    <meta name="author" content="Ben Fortuna"/>
+    <meta name="description" content="A JavaMail local store provider"/>
+    <meta name="keywords" content="email, mbox, JavaMail, provider, store, local, Java, Library, API"/>
+</head>
+<body>
+<table class="page"><tbody><tr><td>
+
+    <table>
+        <thead>
+            <tr>
+                <td colspan="13" class="title"><span style="background:#6699CC;border:1px solid black;padding-right:2px"><span style="color:white">m</span>stor</span></td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><a href="index.html">Home</a></td>
+                <td>::</td>
+                <td><a href="features.html">Features</a></td>
+                <td>::</td>
+                <td><a href="http://wiki.modularity.net.au/mstor">Wiki</a></td>
+                <td>::</td>
+                <td><a href="apidocs/index.html">Documentation</a></td>
+                <td>::</td>
+                <td><a href="http://sourceforge.net/news/?group_id=114229">News</a></td>
+                <td>::</td>
+                <td><a href="http://sourceforge.net/forum/?group_id=114229">Support</a></td>
+                <td>::</td>
+                <td><a href="http://sourceforge.net/project/showfiles.php?group_id=114229">Download</a></td>
+                <td>::</td>
+                <td style="width:100%"><a href="license.html">License</a></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="features">
+        <thead>
+            <tr>
+                <td>
+                    Features
+                    <a href="#features">&raquo;</a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    mstor includes the following notable features:
+                    <ul>
+                        <li><a href="#mbox">Mbox-compatible</a> email storage</li>
+                        <li>Support for additional <a href="#metadata">metadata</a> not inherently supported by the mbox format</li>
+                        <li>Designed for handling large mailboxes without significant <a href="#performance">performance</a> or memory degradation</li>
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="mbox">
+        <thead>
+            <tr>
+                <td>
+                    Mbox-compatible
+                    <a href="#mbox">&raquo;</a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    Leveraging the wide-spread use of the unofficial mbox format, mstor may also be used
+                    to access email in traditional mbox folders. The modular nature of mstor's design
+                    also means that additional storage formats may also be included in later versions.
+                    <p/>
+                    mstor now provides folders that support both messages and subfolders. In order to maintain
+                    greater compatibility with other mbox implementations mstor uses a filesystem structure
+                    similar to that used by
+                    <a href="http://www.mozilla.org/products/thunderbird/">Mozilla Thunderbird</a>.
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table style="border: 1px solid black; background: silver">
+                        <tbody>
+                            <tr>
+                                <th>
+                                    Anatomy of mstor
+                                </th>
+                            </tr>
+                            <tr><td><pre><code>
+An example of an mstor store filesystem structure is as follows:
+
+MyStore/                 - default folder (holds folders only)
+
+    Inbox                - the mbox file for the Inbox folder
+                         - (holds folders and messages)
+
+    Inbox.emf            - the metadata file for the Inbox folder
+
+    Inbox.sbd/           - the directory that contains subfolders
+                         - of the Inbox folder
+
+        Newsletters      - the mbox file for the Newsletters subfolder
+
+        Newsletters.emf  - the metadata file for the Newsletters subfolder
+                            </code></pre></td></tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="metadata">
+        <thead>
+            <tr>
+                <td>
+                    Metadata
+                    <a href="#metadata">&raquo;</a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    An inherent problem with many of the local store providers available today is that
+                    they don't support all the possible metadata that is accessible via the JavaMail
+                    API (e.g. Received Date/Flags). Those that do support these features tend to use message
+                    headers to store this additional metadata. mstor aims to leave messages "untainted"
+                    as it were, and therefore stores additional metadata in a separate XML file (one
+                    for each folder). One of the benefits of using a separate data format is that a
+                    much richer set of metadata may be collected.
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="performance">
+        <thead>
+            <tr>
+                <td>
+                    Performance
+                    <a href="#performance">&raquo;</a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    Although there are a number of local store providers available, they all seem to
+                    have the same performance deficiences when accessing large mailboxes. Whilst speed
+                    is generally not an issue when using these providers, a major concern is the
+                    memory usage - generally a result of blindy loading the entire mailbox into
+                    memory. mstor aims to provide more control over the performance vs. memory usage
+                    equation by combining smarter caching techniques with efficient data access methods
+                    (based on the Java New I/O API).
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</td></tr></tbody></table>
+
+<div id="footer">
+	<p>
+	    Copyright 2007 &#169;
+	    <a href="mailto:fortuna@users.sourceforge.net">Ben Fortun<span style="background:red">a</span></a>
+    </p>
+    <p>
+	    <a href="http://validator.w3.org/check?uri=referer">
+	      	<img src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0!" height="31" width="88" />
+	    </a>
+    </p>
+</div>
+</body>
+</html>
