@@ -1,0 +1,1 @@
+protocol=mstor; type=store; class=org.mstor.provider.mail.MStorStore; vendor=Micronode;
