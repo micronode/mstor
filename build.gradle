@@ -122,7 +122,7 @@ scmVersion {
     }
 }
 
-group = 'org.mnode.mstor'
+group = 'org.mstor'
 description = '''
 An mbox provider for JavaMail
 '''
