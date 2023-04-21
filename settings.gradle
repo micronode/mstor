@@ -1,3 +1,0 @@
-include 'mstor-api'
-include 'mstor-mbox'
-include 'mstor-jcr'
