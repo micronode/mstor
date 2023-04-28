@@ -29,9 +29,8 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-import ch.qos.logback.classic.Level
-import ch.qos.logback.classic.encoder.PatternLayoutEncoder
-import ch.qos.logback.core.ConsoleAppender
+
+import Level
 
 appender("CONSOLE", ConsoleAppender) {
 	encoder(PatternLayoutEncoder) {

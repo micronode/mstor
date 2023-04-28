@@ -1,6 +1,8 @@
 SHELL:=/bin/bash
 include .env
 
+NEXT_VERSION=$(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+
 .PHONY: all gradlew clean build changelog currentVersion markNextVersion verify release publish
 
 all: test
@@ -25,7 +27,6 @@ currentVersion:
 	./gradlew -q currentVersion
 
 markNextVersion:
-	NEXT_VERSION=$(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
 	./gradlew markNextVersion -Prelease.version=$(NEXT_VERSION)
 
 verify:

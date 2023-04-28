@@ -5,13 +5,13 @@ buildscript {
 }
 
 plugins {
+    id 'java'
+    id 'java-library'
     id 'pl.allegro.tech.build.axion-release' version '1.13.3'
-    id "nebula.provided-base" version "3.0.3"
+    id "nebula.provided-base" version "7.0.0"
     id "biz.aQute.bnd.builder" version "$bndVersion"
 }
 
-apply plugin: 'java'
-apply plugin: 'java-library'
 apply plugin: 'eclipse'
 apply plugin: 'groovy'
 //apply plugin: 'checkstyle'
@@ -46,7 +46,7 @@ repositories {
 }
 
 dependencies {
-    api "com.sun.mail:jakarta.mail:$jakartaMailVersion",
+    api "jakarta.mail:jakarta.mail-api:$jakartaMailVersion",
             "org.slf4j:slf4j-api:$slf4jVersion"
 
     implementation "org.apache.commons:commons-lang3:$commonsLangVersion",
@@ -62,13 +62,13 @@ dependencies {
             "cglib:cglib:$cglibVersion",
             "org.slf4j:jul-to-slf4j:$slf4jVersion", "org.slf4j:jcl-over-slf4j:$slf4jVersion",
             "org.apache.jackrabbit:jackrabbit-jcr-rmi:$jackrabbitVersion"
-    
+
     implementation "org.jparsec:jparsec:$jparsecVersion", optional
 
     // used in javadoc generation..
     compileOnly 'biz.aQute.bnd:bndlib:2.4.0'
 
-    runtime "commons-logging:commons-logging:$commonsLoggingVersion"
+    runtimeOnly "commons-logging:commons-logging:$commonsLoggingVersion"
 
     testImplementation "org.apache.jackrabbit:jackrabbit-core:$jackrabbitVersion",
         "junit:junit:$junitVersion",
@@ -80,6 +80,15 @@ dependencies {
     // spock
     testImplementation platform("org.spockframework:spock-bom:2.0-M4-groovy-3.0"),
             "org.spockframework:spock-core"
+
+    // testcontainers
+    testImplementation "org.testcontainers:testcontainers:$testcontainersVersion",
+            "org.testcontainers:spock:$testcontainersVersion"
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
 jacocoTestReport {
@@ -98,35 +107,22 @@ javadoc {
     }
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    archiveClassifier.set('javadoc')
-    from 'build/docs/javadoc'
-}
-
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allSource
-    archiveClassifier.set('sources')
-}
-
-artifacts {
-    archives jar
-    archives javadocJar
-    archives sourcesJar
-}
-
 scmVersion {
     tag {
         prefix = 'mstor-'
     }
     versionCreator 'versionWithBranch'
-    branchVersionCreator = ['master': 'simple']
+    branchVersionCreator = [
+            'master': 'simple',
+            'feature/refactor': 'simple'
+    ]
     nextVersion {
         suffix = 'pre'
         separator = '-'
     }
 }
 
-group = 'org.mnode.mstor'
+group = 'org.mstor'
 description = '''
 An mbox provider for JavaMail
 '''
@@ -137,6 +133,8 @@ ext {
 }
 
 test {
+    useJUnitPlatform()
+
     include '**/*Test.class'
     include '**/*Spec.class'
 
@@ -159,8 +157,6 @@ publishing {
     publications {
         mstor(MavenPublication) {
             from components.java
-            artifact javadocJar
-            artifact sourcesJar
             pom.withXml {
                 asNode().appendNode('name', project.name)
                 asNode().appendNode('description', project.description)
@@ -186,7 +182,7 @@ publishing {
     repositories {
         maven {
             name = "OSSRH"
-            url = !isReleaseVersion ? "https://oss.sonatype.org/content/repositories/snapshots/" : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            url = !isReleaseVersion ? "https://s01.oss.sonatype.org/content/repositories/snapshots/" : "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
             credentials {
                 username = System.getenv("MAVEN_USERNAME")
                 password = System.getenv("MAVEN_PASSWORD")

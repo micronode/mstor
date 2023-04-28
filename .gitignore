@@ -1,9 +1,9 @@
-/target
+target
 /.settings
 /.classpath
 /.project
-/build
-/.gradle
+build
+.gradle
 /bin
 .idea
 mstor.iml
